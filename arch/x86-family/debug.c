@@ -53,7 +53,12 @@ static uint16_t com_address = 0;
     #define X86_VGA_WIDTH  (8)
     #define X86_VGA_HEIGHT (16)
 
-static size_t vga_offset = 0;
+    #define X86_VGA_MAX_COLS (512)
+    #define X86_VGA_MAX_ROWS (256)
+
+static size_t vga_offset    = 0;
+static uintptr_t vga_mapped = 0;
+static uint8_t vga_text[X86_VGA_MAX_COLS * X86_VGA_MAX_ROWS];
 
 
 static int debug_vga_get_geometry(uintptr_t* address, size_t* cols, size_t* rows, size_t* size, size_t* bytes_per_pixel) {
@@ -84,27 +89,82 @@ static int debug_vga_get_geometry(uintptr_t* address, size_t* cols, size_t* rows
 
     *size = core->framebuffer.pitch * core->framebuffer.height;
 
-    if (core->framebuffer.address > UINTPTR_MAX - KERNEL_HEAP_AREA)
-        return 0;
+    if (vga_mapped) {
 
-    *address = core->framebuffer.address + KERNEL_HEAP_AREA;
+        *address = vga_mapped;
+
+    } else {
+
+        if (core->framebuffer.address > UINTPTR_MAX - KERNEL_HEAP_AREA)
+            return 0;
+
+        *address = core->framebuffer.address + KERNEL_HEAP_AREA;
+    }
 
     if (*address > UINTPTR_MAX - *size)
         return 0;
 
-    *cols = core->framebuffer.width / X86_VGA_WIDTH;
-    *rows = core->framebuffer.height / X86_VGA_HEIGHT;
+    *cols = MIN(core->framebuffer.width / X86_VGA_WIDTH, X86_VGA_MAX_COLS);
+    *rows = MIN(core->framebuffer.height / X86_VGA_HEIGHT, X86_VGA_MAX_ROWS);
 
     return *cols && *rows;
 }
 
-static void debug_vga_scroll(uintptr_t address, size_t cols, size_t rows, size_t size) {
+static void debug_vga_draw_cell(uintptr_t address, size_t cols, size_t cell, size_t bytes_per_pixel) {
 
-    size_t line_size = core->framebuffer.pitch * X86_VGA_HEIGHT;
+    const uint8_t* glyph = &builtin_fontdata[vga_text[cell] * X86_VGA_HEIGHT];
+
+    uint8_t* line = (uint8_t*)address;
+    line += (cell % cols) * X86_VGA_WIDTH * bytes_per_pixel;
+    line += (cell / cols) * X86_VGA_HEIGHT * core->framebuffer.pitch;
+
+    for (int y = 0; y < X86_VGA_HEIGHT; y++, line += core->framebuffer.pitch) {
+
+        uint8_t* ptr = line;
+
+        for (int x = 0; x < X86_VGA_WIDTH; x++, ptr += bytes_per_pixel) {
+
+            bool on = glyph[y] & (1U << (X86_VGA_WIDTH - 1 - x));
+
+            switch (bytes_per_pixel) {
+
+                case 4:
+                    *(volatile uint32_t*)ptr = on ? 0xFFFFFFFF : 0xFF000000;
+                    break;
+
+                case 3:
+                    ptr[0] = on ? 0xFF : 0x00;
+                    ptr[1] = on ? 0xFF : 0x00;
+                    ptr[2] = on ? 0xFF : 0x00;
+                    break;
+
+                case 2:
+                    *(volatile uint16_t*)ptr = on ? 0xFFFF : 0x0000;
+                    break;
+
+                case 1:
+                    *(volatile uint8_t*)ptr = on ? 0xFF : 0x00;
+                    break;
+            }
+        }
+    }
+}
+
+static void debug_vga_scroll(uintptr_t address, size_t cols, size_t rows, size_t bytes_per_pixel) {
 
     while (vga_offset >= cols * rows) {
-        memmove((void*)address, (void*)(address + line_size), size - line_size);
-        memset((void*)(address + size - line_size), 0x00, line_size);
+
+        for (size_t i = 0; i < cols * rows; i++) {
+
+            uint8_t ch = i < cols * (rows - 1) ? vga_text[i + cols] : 0;
+
+            if (vga_text[i] == ch)
+                continue;
+
+            vga_text[i] = ch;
+            debug_vga_draw_cell(address, cols, i, bytes_per_pixel);
+        }
+
         vga_offset -= cols;
     }
 }
@@ -212,7 +272,7 @@ void arch_debug_putc(char ch) {
 
     if (likely(debug_vga_get_geometry(&vga_address, &vga_cols, &vga_rows, &vga_size, &bytes_per_pixel))) {
 
-        debug_vga_scroll(vga_address, vga_cols, vga_rows, vga_size);
+        debug_vga_scroll(vga_address, vga_cols, vga_rows, bytes_per_pixel);
 
         switch (ch) {
 
@@ -239,93 +299,53 @@ void arch_debug_putc(char ch) {
 
             default:
 
-                uint8_t glyph = (uint8_t)ch;
-
-                for (int y = 0; y < X86_VGA_HEIGHT; y++) {
-
-                    uint8_t* ptr = (uint8_t*)vga_address;
-
-                    ptr += (vga_offset % vga_cols) * X86_VGA_WIDTH * bytes_per_pixel;
-                    ptr += (vga_offset / vga_cols) * X86_VGA_HEIGHT * core->framebuffer.pitch;
-                    ptr += (y * core->framebuffer.pitch);
-
-                    for (int x = 0; x < X86_VGA_WIDTH; x++) {
-
-                        if (builtin_fontdata[(glyph * X86_VGA_HEIGHT) + y] & (1U << (X86_VGA_WIDTH - 1 - x))) {
-
-                            switch (core->framebuffer.depth) {
-
-                                case 32:
-
-                                    ptr[0] = 0xFF;
-                                    ptr[1] = 0xFF;
-                                    ptr[2] = 0xFF;
-                                    ptr[3] = 0xFF;
-                                    break;
-
-                                case 24:
-
-                                    ptr[0] = 0xFF;
-                                    ptr[1] = 0xFF;
-                                    ptr[2] = 0xFF;
-                                    break;
-
-                                case 16:
-
-                                    ptr[0] = 0xFF;
-                                    ptr[1] = 0xFF;
-                                    break;
-
-                                case 8:
-
-                                    ptr[0] = 0xFF;
-                                    break;
-                            }
-
-
-                        } else {
-
-                            switch (core->framebuffer.depth) {
-
-                                case 32:
-
-                                    ptr[0] = 0x00;
-                                    ptr[1] = 0x00;
-                                    ptr[2] = 0x00;
-                                    ptr[3] = 0xFF;
-                                    break;
-
-                                case 24:
-
-                                    ptr[0] = 0x00;
-                                    ptr[1] = 0x00;
-                                    ptr[2] = 0x00;
-                                    break;
-
-                                case 16:
-
-                                    ptr[0] = 0x00;
-                                    ptr[1] = 0x00;
-                                    break;
-
-                                case 8:
-
-                                    ptr[0] = 0x00;
-                                    break;
-                            }
-                        }
-
-                        ptr += bytes_per_pixel;
-                    }
-                }
+                vga_text[vga_offset] = (uint8_t)ch;
+                debug_vga_draw_cell(vga_address, vga_cols, vga_offset, bytes_per_pixel);
 
                 vga_offset += 1;
 
                 break;
         }
 
-        debug_vga_scroll(vga_address, vga_cols, vga_rows, vga_size);
+        debug_vga_scroll(vga_address, vga_cols, vga_rows, bytes_per_pixel);
     }
+
+#endif
+}
+
+
+/**
+ * @brief Map the boot framebuffer write-combining and redraw the text console through it.
+ */
+void arch_debug_map(void) {
+
+#if defined(CONFIG_X86_ENABLE_DEBUG_VGA)
+
+    uintptr_t vga_address;
+    size_t vga_cols;
+    size_t vga_rows;
+    size_t vga_size;
+    size_t bytes_per_pixel;
+
+    if (!debug_vga_get_geometry(&vga_address, &vga_cols, &vga_rows, &vga_size, &bytes_per_pixel))
+        return;
+
+    uintptr_t offset = core->framebuffer.address & (PML1_PAGESIZE - 1);
+    uintptr_t span   = (offset + vga_size + PML1_PAGESIZE - 1) & ~(PML1_PAGESIZE - 1);
+
+    if (span > KERNEL_MMIO_SIZE)
+        return;
+
+    uintptr_t virtaddr = KERNEL_MMIO_AREA + KERNEL_MMIO_SIZE - span;
+
+    if (arch_vmm_map(&core->bsp.address_space, virtaddr, core->framebuffer.address - offset, span,
+                     ARCH_VMM_MAP_RDWR | ARCH_VMM_MAP_NOEXEC | ARCH_VMM_MAP_FIXED | ARCH_VMM_MAP_VIDEO_MEMORY) == ARCH_VMM_MAP_FAILED)
+        return;
+
+    vga_mapped = virtaddr + offset;
+
+    for (size_t i = 0; i < vga_cols * vga_rows; i++)
+        debug_vga_draw_cell(vga_mapped, vga_cols, i, bytes_per_pixel);
 
 #endif
 }
