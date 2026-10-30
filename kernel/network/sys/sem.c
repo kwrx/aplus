@@ -146,7 +146,7 @@ u32_t sys_arch_sem_wait(struct sys_sem** sem, u32_t timeout) {
             left = (u32_t)(timeout - elapsed);
         }
 
-        arch_syscall3(SYSCALL_NR_TCPIP_WAIT, &(*sem)->sem, 0, left);
+        arch_syscall3(SYSCALL_NR_KTHREAD_WAIT, &(*sem)->sem, 0, left);
     }
 
     return (u32_t)(arch_timer_generic_getms() - t0);

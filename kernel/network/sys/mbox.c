@@ -164,7 +164,7 @@ u32_t sys_arch_mbox_fetch(struct sys_mbox** mbox, void** msg, u32_t timeout) {
 
                 uint64_t t0 = arch_timer_generic_getms() + timeout;
 
-                if ((e = arch_syscall3(SYSCALL_NR_TCPIP_WAIT, &((*mbox)->queue).size, 0, timeout)) < 0)
+                if ((e = arch_syscall3(SYSCALL_NR_KTHREAD_WAIT, &((*mbox)->queue).size, 0, timeout)) < 0)
                     return e;
 
                 if (arch_timer_generic_getms() >= t0)
@@ -174,7 +174,7 @@ u32_t sys_arch_mbox_fetch(struct sys_mbox** mbox, void** msg, u32_t timeout) {
 
             } else {
 
-                if ((e = arch_syscall3(SYSCALL_NR_TCPIP_WAIT, &((*mbox)->queue).size, 0, 0)) < 0)
+                if ((e = arch_syscall3(SYSCALL_NR_KTHREAD_WAIT, &((*mbox)->queue).size, 0, 0)) < 0)
                     return e;
 
                 r = 1;
