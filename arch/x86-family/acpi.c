@@ -267,7 +267,7 @@ void acpi_init(void) {
         kprintf("x86-acpi: Starting ACPI-B...\n");
 #endif
 
-        while ((inw(fadt->pm1b_control_block) & 1) == 0)
+        while (fadt->pm1b_control_block && (inw(fadt->pm1b_control_block) & 1) == 0)
             __builtin_ia32_pause();
     }
 
