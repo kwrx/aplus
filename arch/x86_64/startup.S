@@ -433,10 +433,13 @@ _start:
         btsl    $1,   %esi                              // R/W
         btsl    $7,   %esi                              // 2MiB
         btsl    $8,   %esi                              // Global
+        movl    $0,   %edx                              // Address bits 32-63
     .L9:
-        movl    %esi, (%edi)
+        movl    %esi, 0(%edi)
+        movl    %edx, 4(%edi)
         addl    $8,   %edi
         addl    $2097152, %esi
+        adcl    $0,   %edx
         loop    .L9
 
         # PML2 - Stack Area
@@ -596,7 +599,8 @@ _start_high64:
         leaq    __raw_args, %rcx
         movq    0(%rcx), %rdi
         movq    8(%rcx), %rsi
-        addq    $KERNEL_HIGH_AREA, %rsi     // High Area
+        movabsq $KERNEL_HEAP_AREA, %rax
+        addq    %rax, %rsi                  // Heap Area
         addq    $8,   %rsi                  // Skip reserved bytes
 
         # Reset RFLAGS
