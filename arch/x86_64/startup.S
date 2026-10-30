@@ -279,7 +279,7 @@ _start:
         # Clear Screen
         movl    $0xB8000, %edi
         movl    $0, %eax
-        movl    80 * 25, %ecx
+        movl    $(80 * 25 * 2), %ecx
         rep stosb
 
 
