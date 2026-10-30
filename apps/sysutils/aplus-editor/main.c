@@ -2104,10 +2104,6 @@ static bool editor_shortcut(uint16_t vkey, bool shift) {
             editor_prompt_show(EDITOR_PROMPT_GOTO, NULL);
             return true;
 
-        case KEY_Q:
-            editor_guard(EDITOR_PENDING_QUIT, NULL);
-            return true;
-
         case KEY_A:
 
             if (text) {
@@ -3030,8 +3026,7 @@ static void editor_usage(FILE* out) {
             "  Ctrl+G                                  go to line\n"
             "  Tab, Shift+Tab                          indent, unindent the selected lines\n"
             "  Ctrl+Left, Ctrl+Right                   move by words\n"
-            "  Ctrl+Up, Ctrl+Down                      scroll without moving the caret\n"
-            "  Ctrl+Q                                  quit\n",
+            "  Ctrl+Up, Ctrl+Down                      scroll without moving the caret\n",
             EDITOR_NAME);
 }
 
