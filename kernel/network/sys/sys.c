@@ -73,30 +73,6 @@ spinlock_t tcpip_lock;
 spinlock_t tcpip_core_locking;
 
 
-SYSCALL(
-    SYSCALL_NR_TCPIP_WAIT, tcpip_wait, long sys_tcpip_wait(uint32_t* s, u32_t value, u32_t timeout) {
-        DEBUG_ASSERT(s);
-
-        if (!timeout) {
-
-            futex_wait(current_task, s, value, NULL);
-
-        } else {
-
-            struct timespec ts;
-            ts.tv_sec  = timeout / 1000;
-            ts.tv_nsec = (timeout % 1000) * 1000000;
-
-            futex_wait(current_task, s, value, &ts);
-        }
-
-        thread_suspend(current_task);
-        thread_restart_sched(current_task);
-
-        return 0;
-    });
-
-
 
 void sys_init(void) {
     spinlock_init(&tcpip_lock);
