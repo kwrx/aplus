@@ -43,6 +43,7 @@
         char* name;                   \
     } __packed __sc_##y = {(int)x, (void*)sys_##y, (char*)#y}
 
+#define SYSCALL_NR_KTHREAD_WAIT 500
 
 __BEGIN_DECLS
 
