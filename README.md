@@ -72,7 +72,7 @@ Networking works end to end: below, BusyBox `httpd` serves a page from the guest
 
 
 ## :electric_plug: Drivers
-Drivers are loadable kernel objects: one directory with a `main.c` per module, each declaring its identity and dependencies through `MODULE_NAME()`/`MODULE_DEPS()` and exporting `init`/`dnit` entry points. The tree currently builds 32 of them, covering device-class interfaces, char and block devices, terminals, input, network, video and virtio.
+Drivers are loadable kernel objects: one directory with a `main.c` per module, each declaring its identity and dependencies through `MODULE_NAME()`/`MODULE_DEPS()` and exporting `init`/`dnit` entry points. The tree currently builds 37 of them, covering device-class interfaces, char and block devices, terminals, input, USB, network, video and virtio.
 
 ### Notable modules
 * **Device Interface**, [dev/*](/drivers/dev), provides a standard interface for drivers (block, char, network, video, pci)
@@ -83,6 +83,7 @@ Drivers are loadable kernel objects: one directory with a `main.c` per module, e
 * **PCNET** (Network device), [platform/pc/network/pcnet](/drivers/platform/pc/network/pcnet/main.c), AMD PCnet NIC driver
 * **PS/2**, [platform/pc/input/ps2](/drivers/platform/pc/input/ps2/main.c), keyboard and mouse
 * **TTY**, [tty/*](/drivers/tty), terminal devices, `/dev/ptmx` and pseudo-terminal pairs
+* **USB**, [usb/*](/drivers/usb), an xHCI host stack — [core](/drivers/usb/core/main.c) enumeration and hubs, the [xHCI](/drivers/usb/xhci/main.c) controller, and [HID](/drivers/usb/hid/main.c) boot-protocol [keyboards](/drivers/usb/keyboard/main.c) and [mice](/drivers/usb/mouse/main.c) feeding `/dev/kbd` and `/dev/mouse`
 * **VirtIO**, [virtio/*](/drivers/virtio), VirtIO device interfaces over VirtIO PCI — [gpu](/drivers/virtio/virtio-gpu/main.c) with damage flushing and a cursor plane, [input](/drivers/virtio/virtio-input/main.c) for absolute pointing devices, [net](/drivers/virtio/virtio-net/main.c) feeding the lwIP stack, plus console and random
 
 ---
@@ -193,6 +194,10 @@ $ ./makew run
 
 ## :globe_with_meridians: Third-Party Software
 `aplus` uses and depends on a large number of third-party open-source tools and libraries which are outside of this repository.
+
+Two of them are vendored in the tree and keep their own licenses:
+* [lwIP](https://savannah.nongnu.org/projects/lwip/) (BSD-3-Clause), the TCP/IP stack under [kernel/network/](/kernel/network)
+* [libpayload](https://github.com/coreboot/coreboot/tree/main/payloads/libpayload) from [coreboot](https://www.coreboot.org/) (BSD-3-Clause), whose USB core, hub and xHCI drivers were ported to [drivers/usb/](/drivers/usb)
 
 The look of the [aplus-wm](/apps/sysutils/aplus-wm) taskbar, with its popups growing out of the bar, was inspired by [Caelestia Shell](https://github.com/caelestia-dots/shell).
 
