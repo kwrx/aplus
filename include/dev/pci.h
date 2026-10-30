@@ -76,7 +76,7 @@ typedef uint32_t pcidev_t;
     #define PCI_INTERRUPT_LINE      0x3C
     #define PCI_INTERRUPT_LINE_NONE 0xFF
 
-    #define PCI_SECONDARY_BUS 0x09
+    #define PCI_SECONDARY_BUS 0x19
 
     #define PCI_CAPABILITIES 0x34
 
