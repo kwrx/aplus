@@ -192,7 +192,7 @@ int vfs_mount(inode_t* dev, inode_t* dir, const char* source, const char* fs, in
         __mount_record(dir, dev, source, &fs_table[i], flags);
 
 
-#if DEBUG_LEVEL_INFO
+#if DEBUG_LEVEL_TRACE
         kprintf("mount: volume %s mounted on %s with %s\n", dev ? dev->name : "nodev", dir->name, fs);
 #endif
 
