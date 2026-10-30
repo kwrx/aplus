@@ -8,14 +8,15 @@
 
 set -euo pipefail
 
-readonly IMAGE_SIZE=2147483648
 readonly EFI_START_SECTOR=2048
 readonly EFI_END_SECTOR=93716
 readonly EFI_SIZE=46934528
 readonly ROOT_START_SECTOR=94208
-readonly ROOT_END_SECTOR=4192255
-readonly ROOT_SIZE=2098200576
 readonly ROOT_LABEL="APLUS"
+
+IMAGE_SIZE=2147483648
+ROOT_END_SECTOR=4192255
+ROOT_SIZE=2098200576
 
 LIVE_MODE=0
 
@@ -149,9 +150,25 @@ mmd -i "$EFI_IMAGE" ::/EFI/BOOT
 mcopy -i "$EFI_IMAGE" "$BOOTX64" ::/EFI/BOOT/BOOTX64.EFI
 
 if [ "$LIVE_MODE" -eq 1 ]; then
-    truncate -s "$ROOT_SIZE" "$ROOT_IMAGE"
-    mkfs.vfat -F 32 -n "$ROOT_LABEL" "$ROOT_IMAGE" >/dev/null
-    mcopy -s -i "$ROOT_IMAGE" "$STAGING_ROOT"/* ::/
+    MIB=$((1024 * 1024))
+    USED=$(du -sb "$STAGING_ROOT" | cut -f1)
+    ROOT_SIZE=$(((USED + USED / 64 + MIB - 1) / MIB * MIB + MIB))
+
+    until rm -f "$ROOT_IMAGE" &&
+        truncate -s "$ROOT_SIZE" "$ROOT_IMAGE" &&
+        mkfs.vfat -F 32 -n "$ROOT_LABEL" "$ROOT_IMAGE" >/dev/null 2>&1 &&
+        mcopy -s -i "$ROOT_IMAGE" "$STAGING_ROOT"/* ::/ 2>/dev/null; do
+
+        ROOT_SIZE=$((ROOT_SIZE + 4 * MIB))
+
+        if [ "$ROOT_SIZE" -gt $((USED * 2 + 64 * MIB)) ]; then
+            echo "gen-image: cannot fit $USED bytes in a FAT32 root partition" >&2
+            exit 1
+        fi
+    done
+
+    ROOT_END_SECTOR=$((ROOT_START_SECTOR + ROOT_SIZE / 512 - 1))
+    IMAGE_SIZE=$(((ROOT_END_SECTOR + 1 + 2048) * 512))
 else
     truncate -s "$ROOT_SIZE" "$ROOT_IMAGE"
     fakeroot -- /bin/sh -c \
