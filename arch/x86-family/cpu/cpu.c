@@ -151,6 +151,23 @@ __percpu void arch_cpu_init(cpuid_t index) {
         core->cpu.cores[index].features[6] = cx;
     }
 
+    if (eex >= 0x80000007) {
+
+        x86_cpuid(0x80000007, &ax, &bx, &cx, &dx);
+
+        if (dx & (1 << 7))
+            core->cpu.cores[index].features[7] |= 1U << (X86_FEATURE_HW_PSTATE & 0x1F);
+
+        if (dx & (1 << 8))
+            core->cpu.cores[index].features[3] |= (1U << (X86_FEATURE_CONSTANT_TSC & 0x1F)) | (1U << (X86_FEATURE_NONSTOP_TSC & 0x1F));
+
+        if (dx & (1 << 9))
+            core->cpu.cores[index].features[7] |= 1U << (X86_FEATURE_CPB & 0x1F);
+
+        if (dx & (1 << 11))
+            core->cpu.cores[index].features[7] |= 1U << (X86_FEATURE_PROC_FEEDBACK & 0x1F);
+    }
+
     if (eex >= 0x80000004) {
         char model[49] = {0};
 
