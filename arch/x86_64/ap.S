@@ -85,10 +85,19 @@ ap32_start:
         movl    AP_RELOC(ap_header_cr3), %eax
         movl    %eax, %cr3
 
+        # Check No-Execute support
+        movl    $0x80000001, %eax
+        cpuid
+        movl    %edx, %ebx
+
         # Enable Long Mode
         movl    $X86_MSR_EFER, %ecx
         rdmsr
         btsl    $8,   %eax      # LME
+        btl     $20,  %ebx
+        jnc     .Lap_efer
+        btsl    $11,  %eax      # NXE
+    .Lap_efer:
         wrmsr
 
         # Enable Paging
