@@ -96,7 +96,7 @@ submenu_end() {
 header >$SYSROOT/boot/grub/grub.cfg
 
 if [ $LIVE_MODE -eq 1 ]; then
-    ARGS="root=/dev/ram0 rootfs=iso9660"
+    ARGS="root=/dev/ram0 rootfs=ext2"
 else
     ARGS="root=/dev/sda2 rootfs=ext2"
 fi

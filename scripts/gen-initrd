@@ -8,7 +8,7 @@
 
 set -euo pipefail
 
-TMPDIR="/tmp/aplus-initrd"
+OUTPUT_DIR="/tmp/aplus-initrd"
 
 if [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ]; then
     echo "Usage: gen-initrd SYSROOT"
@@ -23,16 +23,29 @@ fi
 
 SYSROOT="$1"
 
-rm -rf "$TMPDIR"
-mkdir -p "$TMPDIR"
+for command in fakeroot mke2fs tar; do
+    if ! command -v "$command" >/dev/null 2>&1; then
+        echo "gen-initrd: missing required command: $command" >&2
+        exit 1
+    fi
+done
 
-pushd "$SYSROOT" &> /dev/null
+rm -rf "$OUTPUT_DIR"
+mkdir -p "$OUTPUT_DIR"
 
-mkisofs -R -l -o "$TMPDIR/initrd.img" -find . \
-    ! -path "./boot/*" \
-    ! -path "./boot" \
-    ! -path "./usr/lib/modules/*" \
-    ! -path "./usr/lib/modules" \
-    &> /dev/null
+STAGING_ROOT=$(mktemp -d "${TMPDIR:-/tmp}/aplus-initrd.XXXXXX")
+trap 'rm -rf "$STAGING_ROOT"' EXIT
 
-popd &> /dev/null
+tar -C "$SYSROOT" \
+    --exclude='./boot' \
+    --exclude='./boot/*' \
+    --exclude='./usr/lib/modules' \
+    --exclude='./usr/lib/modules/*' \
+    -cf - . | tar -C "$STAGING_ROOT" -xf -
+
+IMAGE_SIZE_KIB=$(du -sk --apparent-size "$STAGING_ROOT" | cut -f1)
+IMAGE_SIZE_KIB=$((IMAGE_SIZE_KIB + IMAGE_SIZE_KIB / 10 + 8192))
+
+fakeroot -- /bin/sh -c \
+    'chown -R 0:0 "$1" && mke2fs -q -F -t ext2 -m 0 -d "$1" "$2" "${3}K"' \
+    _ "$STAGING_ROOT" "$OUTPUT_DIR/initrd.img" "$IMAGE_SIZE_KIB"
