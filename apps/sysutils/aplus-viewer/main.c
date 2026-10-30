@@ -249,8 +249,6 @@ typedef struct {
 
     uint8_t ctrl;
 
-    bool quit;
-
     char path[PATH_MAX];
 
 } viewer_t;
@@ -1425,11 +1423,6 @@ static bool viewer_on_key(ui_view_t* view, uint16_t vkey, bool down, void* user)
 
     switch (vkey) {
 
-        case KEY_ESC:
-        case KEY_Q:
-            viewer.quit = true;
-            return true;
-
         case KEY_EQUAL:
         case KEY_KPPLUS:
             viewer_zoom_centered(viewer.scale * VIEWER_SCALE_STEP);
@@ -1642,7 +1635,7 @@ static int viewer_build(ui_view_t* view) {
 
 static int viewer_run(void) {
 
-    while (!ui_view_closed(viewer.view) && !viewer.quit) {
+    while (!ui_view_closed(viewer.view)) {
 
         const int timeout = ui_view_timeout(viewer.view);
 
