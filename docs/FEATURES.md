@@ -114,7 +114,12 @@
 - [ ] Intel HD Audio Adapter
 - [x] Serial Port UARTx
 - [x] PS/2 Keyboard/Mouse
-- [ ] USB Support
+- [x] USB xHCI Host Controller
+- [ ] USB EHCI/OHCI/UHCI Host Controllers
+- [x] USB Hubs
+- [x] USB HID Keyboard/Mouse (boot protocol)
+- [ ] USB HID Report Descriptors
+- [ ] USB Mass Storage
 - [x] Intel E1000 Network Adapter
 - [x] PCNET Network Adapter
 - [ ] Realtek RTL8139 Network Adapter
