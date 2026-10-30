@@ -326,14 +326,21 @@ static void init_hostname() {
 
 int main(int argc, char** argv, char** envp) {
 
-    int fd = open("/dev/kmsg", O_RDWR);
+    int null = open("/dev/null", O_RDONLY);
+    int kmsg = open("/dev/kmsg", O_WRONLY);
 
-    if (fd < 0)
+    if (kmsg < 0 || null < 0)
         return 1;
 
-    dup2(fd, STDIN_FILENO);
-    dup2(fd, STDOUT_FILENO);
-    dup2(fd, STDERR_FILENO);
+    dup2(null, STDIN_FILENO);
+    dup2(kmsg, STDOUT_FILENO);
+    dup2(kmsg, STDERR_FILENO);
+
+    if (null > STDERR_FILENO)
+        close(null);
+
+    if (kmsg > STDERR_FILENO)
+        close(kmsg);
 
 
 #if defined(DEBUG)
