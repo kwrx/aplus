@@ -44,6 +44,7 @@
 
 static const char* const wm_command_terminal[] = {"/usr/bin/aplus-terminal", NULL};
 static const char* const wm_command_explorer[] = {"/usr/bin/aplus-explorer", NULL};
+static const char* const wm_command_settings[] = {"/usr/bin/aplus-settings", NULL};
 static const char* const wm_command_launcher[] = {WM_LAUNCHER_PATH, NULL};
 
 
@@ -51,16 +52,22 @@ typedef enum {
 
     WM_ACTION_SPAWN,
     WM_ACTION_CLOSE,
+    WM_ACTION_KILL,
     WM_ACTION_CYCLE_NEXT,
     WM_ACTION_CYCLE_PREV,
     WM_ACTION_MAXIMIZE,
-    WM_ACTION_MINIMIZE,
+    WM_ACTION_RESTORE_OR_MINIMIZE,
+    WM_ACTION_SNAP_LEFT,
+    WM_ACTION_SNAP_RIGHT,
+    WM_ACTION_SHOW_DESKTOP,
+    WM_ACTION_ACTIVATE,
+    WM_ACTION_SESSION,
 
 } wm_action_t;
 
 
 /**
- * @brief The bindings, each matching on the exact set of modifiers held.
+ * @brief The bindings, each matching on the exact set of modifiers held; a lone tap of Super toggles the drawer.
  */
 static const struct {
 
@@ -69,17 +76,36 @@ static const struct {
 
     wm_action_t action;
     const char* const* argv;
+    size_t index;
 
 } wm_bindings[] = {
 
-    {WM_MOD_CTRL | WM_MOD_ALT,  KEY_T,     WM_ACTION_SPAWN,      wm_command_terminal},
-    {WM_MOD_CTRL | WM_MOD_ALT,  KEY_E,     WM_ACTION_SPAWN,      wm_command_explorer},
-    {WM_MOD_SUPER,              KEY_SPACE, WM_ACTION_SPAWN,      wm_command_launcher},
-    {WM_MOD_CTRL | WM_MOD_ALT,  KEY_Q,     WM_ACTION_CLOSE,      NULL               },
-    {WM_MOD_ALT,                KEY_TAB,   WM_ACTION_CYCLE_NEXT, NULL               },
-    {WM_MOD_ALT | WM_MOD_SHIFT, KEY_TAB,   WM_ACTION_CYCLE_PREV, NULL               },
-    {WM_MOD_SUPER,              KEY_UP,    WM_ACTION_MAXIMIZE,   NULL               },
-    {WM_MOD_SUPER,              KEY_DOWN,  WM_ACTION_MINIMIZE,   NULL               },
+    {WM_MOD_SUPER,                KEY_SPACE,   WM_ACTION_SPAWN,               wm_command_launcher, 0},
+    {WM_MOD_SUPER,                KEY_ENTER,   WM_ACTION_SPAWN,               wm_command_terminal, 0},
+    {WM_MOD_SUPER,                KEY_KPENTER, WM_ACTION_SPAWN,               wm_command_terminal, 0},
+    {WM_MOD_SUPER,                KEY_E,       WM_ACTION_SPAWN,               wm_command_explorer, 0},
+    {WM_MOD_SUPER,                KEY_I,       WM_ACTION_SPAWN,               wm_command_settings, 0},
+    {WM_MOD_SUPER,                KEY_Q,       WM_ACTION_CLOSE,               NULL,                0},
+    {WM_MOD_SUPER | WM_MOD_SHIFT, KEY_Q,       WM_ACTION_KILL,                NULL,                0},
+    {WM_MOD_ALT,                  KEY_TAB,     WM_ACTION_CYCLE_NEXT,          NULL,                0},
+    {WM_MOD_ALT | WM_MOD_SHIFT,   KEY_TAB,     WM_ACTION_CYCLE_PREV,          NULL,                0},
+    {WM_MOD_SUPER,                KEY_TAB,     WM_ACTION_CYCLE_NEXT,          NULL,                0},
+    {WM_MOD_SUPER | WM_MOD_SHIFT, KEY_TAB,     WM_ACTION_CYCLE_PREV,          NULL,                0},
+    {WM_MOD_SUPER,                KEY_UP,      WM_ACTION_MAXIMIZE,            NULL,                0},
+    {WM_MOD_SUPER,                KEY_DOWN,    WM_ACTION_RESTORE_OR_MINIMIZE, NULL,                0},
+    {WM_MOD_SUPER,                KEY_LEFT,    WM_ACTION_SNAP_LEFT,           NULL,                0},
+    {WM_MOD_SUPER,                KEY_RIGHT,   WM_ACTION_SNAP_RIGHT,          NULL,                0},
+    {WM_MOD_SUPER,                KEY_D,       WM_ACTION_SHOW_DESKTOP,        NULL,                0},
+    {WM_MOD_SUPER,                KEY_ESC,     WM_ACTION_SESSION,             NULL,                0},
+    {WM_MOD_SUPER,                KEY_1,       WM_ACTION_ACTIVATE,            NULL,                0},
+    {WM_MOD_SUPER,                KEY_2,       WM_ACTION_ACTIVATE,            NULL,                1},
+    {WM_MOD_SUPER,                KEY_3,       WM_ACTION_ACTIVATE,            NULL,                2},
+    {WM_MOD_SUPER,                KEY_4,       WM_ACTION_ACTIVATE,            NULL,                3},
+    {WM_MOD_SUPER,                KEY_5,       WM_ACTION_ACTIVATE,            NULL,                4},
+    {WM_MOD_SUPER,                KEY_6,       WM_ACTION_ACTIVATE,            NULL,                5},
+    {WM_MOD_SUPER,                KEY_7,       WM_ACTION_ACTIVATE,            NULL,                6},
+    {WM_MOD_SUPER,                KEY_8,       WM_ACTION_ACTIVATE,            NULL,                7},
+    {WM_MOD_SUPER,                KEY_9,       WM_ACTION_ACTIVATE,            NULL,                8},
 };
 
 
@@ -295,6 +321,76 @@ static void wm_cycle_step(bool forward) {
 
 
 /**
+ * @brief Moves the focused window one step towards a side: a window snapped to the other half floats again, any other snaps.
+ *
+ * @param side -1 for the left, 1 for the right.
+ */
+static void wm_snap_step(int side) {
+
+    wm_window_t* win = wm.focused;
+
+    if (!win || !wm_window_listed(win)) {
+        return;
+    }
+
+    wm_window_snap(win, win->snapped == -side ? 0 : side);
+}
+
+
+/**
+ * @brief The windows Super+D hid, bottom of the stack first, until it shows them again.
+ */
+static struct {
+
+    size_t count;
+    uint32_t ids[WM_CYCLE_MAX];
+
+} wm_desktop;
+
+
+/**
+ * @brief Minimises every window that is showing, or brings back the ones it hid last time when none is showing.
+ */
+static void wm_desktop_toggle(void) {
+
+    wm_window_t* shown[WM_CYCLE_MAX];
+    size_t count = 0;
+
+    for (wm_window_t* win = wm.windows; win && count < WM_CYCLE_MAX; win = win->next) {
+
+        if (!win->minimized && wm_window_listed(win)) {
+            shown[count++] = win;
+        }
+    }
+
+    if (count > 0) {
+
+        wm_desktop.count = count;
+
+        for (size_t i = 0; i < count; i++) {
+
+            wm_desktop.ids[count - 1 - i] = shown[i]->id;
+
+            wm_window_minimize(shown[i]);
+        }
+
+        return;
+    }
+
+    for (size_t i = 0; i < wm_desktop.count; i++) {
+
+        wm_window_t* win = wm_window_from_id(wm_desktop.ids[i]);
+
+        if (win && win->minimized) {
+            wm_window_restore(win);
+        }
+    }
+
+    wm_desktop.count = 0;
+}
+
+
+/**
  * @brief Acts on a key event, before the focused client sees it.
  *
  * @param vkey The key code.
@@ -308,14 +404,24 @@ bool wm_keys_handle(uint16_t vkey, uint8_t down) {
     if (modifier) {
 
         if (down) {
+
+            wm.keyboard.super_tap = modifier == WM_MOD_SUPER && wm.keyboard.modifiers == 0;
+
             wm.keyboard.modifiers |= modifier;
+
         } else {
 
             wm.keyboard.modifiers &= (uint16_t)~modifier;
 
-            if (modifier == WM_MOD_ALT) {
+            if (modifier == WM_MOD_ALT || modifier == WM_MOD_SUPER) {
                 wm_cycle.active = false;
             }
+
+            if (modifier == WM_MOD_SUPER && wm.keyboard.super_tap) {
+                wm_taskbar_drawer_toggle();
+            }
+
+            wm.keyboard.super_tap = false;
         }
 
         return false;
@@ -329,6 +435,10 @@ bool wm_keys_handle(uint16_t vkey, uint8_t down) {
 
     const size_t word  = vkey / 32;
     const uint32_t bit = 1U << (vkey % 32);
+
+    if (down) {
+        wm.keyboard.super_tap = false;
+    }
 
     if (!down) {
 
@@ -378,6 +488,10 @@ bool wm_keys_handle(uint16_t vkey, uint8_t down) {
                 wm_window_request_close(wm.focused);
                 break;
 
+            case WM_ACTION_KILL:
+                wm_client_kill(wm.focused ? wm.focused->client : NULL);
+                break;
+
             case WM_ACTION_CYCLE_NEXT:
                 wm_cycle_step(true);
                 break;
@@ -390,8 +504,31 @@ bool wm_keys_handle(uint16_t vkey, uint8_t down) {
                 wm_window_toggle_maximize(wm.focused);
                 break;
 
-            case WM_ACTION_MINIMIZE:
-                wm_window_minimize(wm.focused);
+            case WM_ACTION_RESTORE_OR_MINIMIZE:
+
+                if (wm.focused && wm_window_tiled(wm.focused)) {
+                    wm_window_snap(wm.focused, 0);
+                } else {
+                    wm_window_minimize(wm.focused);
+                }
+
+                break;
+
+            case WM_ACTION_SNAP_LEFT:
+            case WM_ACTION_SNAP_RIGHT:
+                wm_snap_step(wm_bindings[i].action == WM_ACTION_SNAP_LEFT ? -1 : 1);
+                break;
+
+            case WM_ACTION_SHOW_DESKTOP:
+                wm_desktop_toggle();
+                break;
+
+            case WM_ACTION_ACTIVATE:
+                wm_taskbar_activate(wm_bindings[i].index);
+                break;
+
+            case WM_ACTION_SESSION:
+                wm_taskbar_session_toggle();
                 break;
         }
 

@@ -1310,6 +1310,33 @@ void wm_taskbar_pins_changed(void) {
 
 
 /**
+ * @brief Shows a minimised window, hides the focused one, or raises and focuses any other.
+ *
+ * @param win The window, or NULL for none.
+ */
+static void wm_taskbar_window_toggle(wm_window_t* win) {
+
+    if (!win) {
+        return;
+    }
+
+    if (win->minimized) {
+
+        wm_window_restore(win);
+
+    } else if (win == wm.focused && win == wm_window_topmost()) {
+
+        wm_window_minimize(win);
+
+    } else {
+
+        wm_window_raise(win);
+        wm_window_focus(win);
+    }
+}
+
+
+/**
  * @brief Acts on a release over the item the press went down on: open or close the launcher or the session menu,
  * restart or power off, do what a context menu row says or tell its client it was picked, open a pinned application,
  * or show, raise or hide a window.
@@ -1372,37 +1399,66 @@ bool wm_taskbar_release(int x, int y) {
 
     if (pressed == WM_TASKBAR_LAUNCHER) {
 
-        if (wm.drawer.window) {
-            wm_window_request_close(wm.drawer.window);
-        } else {
-            wm_spawn(wm_taskbar_command);
-        }
+        wm_taskbar_drawer_toggle();
 
         return true;
     }
 
 
-    wm_window_t* win = wm_window_from_id(pressed);
-
-    if (!win) {
-        return true;
-    }
-
-    if (win->minimized) {
-
-        wm_window_restore(win);
-
-    } else if (win == wm.focused && win == wm_window_topmost()) {
-
-        wm_window_minimize(win);
-
-    } else {
-
-        wm_window_raise(win);
-        wm_window_focus(win);
-    }
+    wm_taskbar_window_toggle(wm_window_from_id(pressed));
 
     return true;
+}
+
+
+/**
+ * @brief Slides the drawer out of the rail, or back in when it is already out.
+ */
+void wm_taskbar_drawer_toggle(void) {
+
+    if (wm.drawer.window) {
+
+        wm_window_request_close(wm.drawer.window);
+
+        return;
+    }
+
+    while (wm_taskbar_dismiss()) {
+        ;
+    }
+
+    wm_spawn(wm_taskbar_command);
+}
+
+
+/**
+ * @brief Slides the session menu out beside the power button, or back in when it is already out.
+ */
+void wm_taskbar_session_toggle(void) {
+
+    wm_taskbar_session(!wm_taskbar_session_open());
+}
+
+
+/**
+ * @brief Does what a press on the rail's entry at a place does: opens a pinned application with no window, or shows,
+ * raises or hides a window.
+ *
+ * @param index The entry's place on the rail, counting from 0 at the top.
+ */
+void wm_taskbar_activate(size_t index) {
+
+    wm_taskbar_entry_t entries[WM_TASKBAR_ENTRIES_MAX + WM_PINS_MAX];
+
+    if (index >= wm_taskbar_entries(entries)) {
+        return;
+    }
+
+    if (entries[index].win) {
+        wm_taskbar_window_toggle(entries[index].win);
+    } else {
+        wm_app_launch(&wm.taskbar.pins[entries[index].pin].app);
+    }
 }
 
 

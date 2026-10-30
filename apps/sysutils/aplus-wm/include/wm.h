@@ -98,6 +98,11 @@
  */
 #define WM_UNMAXIMIZE_SLOP 6
 
+/**
+ * @brief The space left between two windows snapped to either half of the work area.
+ */
+#define WM_SNAP_GAP WM_TASKBAR_BORDER
+
 
 /**
  * @brief The default palette, as component lists, for whatever the theme file leaves out or when there is none.
@@ -617,11 +622,13 @@ typedef struct wm_window {
     ui_anim_t minimize;
 
     bool maximized;
+    int snapped;
     wm_rect_t restore;
 
     cairo_surface_t* morph;
     wm_rect_t morph_rect;
     wm_rect_t morph_from;
+    int morph_radius;
     ui_anim_t morph_anim;
 
     wm_blur_t backdrop;
@@ -634,6 +641,7 @@ typedef struct wm_window {
 struct wm_client {
 
     int fd;
+    int32_t pid;
 
     bool hello;
     bool dead;
@@ -719,6 +727,7 @@ typedef struct {
 
     struct {
         uint16_t modifiers;
+        bool super_tap;
     } keyboard;
 
     struct {
@@ -894,6 +903,9 @@ void wm_taskbar_dismiss_at(int x, int y);
 bool wm_taskbar_dismiss(void);
 bool wm_taskbar_context(int x, int y);
 bool wm_taskbar_menu_key(uint16_t vkey);
+void wm_taskbar_drawer_toggle(void);
+void wm_taskbar_session_toggle(void);
+void wm_taskbar_activate(size_t index);
 void wm_taskbar_pins_changed(void);
 int wm_taskbar_open(void);
 void wm_taskbar_tick(int fd);
@@ -984,6 +996,8 @@ ui_anim_t* wm_window_button_hover(wm_window_t* win, wm_region_t region);
 int wm_window_radius(const wm_window_t* win);
 bool wm_window_opaque(const wm_window_t* win);
 void wm_window_toggle_maximize(wm_window_t* win);
+void wm_window_snap(wm_window_t* win, int side);
+bool wm_window_tiled(const wm_window_t* win);
 void wm_window_unmaximize_at(wm_window_t* win, int pointer_x, int pointer_y);
 wm_region_t wm_window_hit_test(int x, int y, wm_window_t** out);
 void wm_window_raise(wm_window_t* win);
@@ -1001,6 +1015,7 @@ int wm_window_damage_content(wm_window_t* win, int x, int y, int width, int heig
  */
 wm_client_t* wm_client_accept(int listener, bool control);
 void wm_client_destroy(wm_client_t* client);
+void wm_client_kill(wm_client_t* client);
 int wm_client_read(wm_client_t* client);
 int wm_client_flush(wm_client_t* client);
 bool wm_client_wants_write(const wm_client_t* client);

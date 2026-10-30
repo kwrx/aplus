@@ -722,7 +722,7 @@ static wm_region_t wm_window_region(const wm_window_t* win, int x, int y) {
         return WM_REGION_MINIMIZE;
     }
 
-    if (win->maximized) {
+    if (wm_window_tiled(win)) {
         return WM_REGION_TITLEBAR;
     }
 
@@ -1066,13 +1066,27 @@ static void wm_window_begin_morph(wm_window_t* win, cairo_surface_t* snapshot, c
 
 
 /**
- * @brief Fills the display with a window, or puts it back where it was before it did.
+ * @brief Reports whether a window is maximised or snapped, holding the frame it goes back to in its restore rectangle.
  *
- * @param win The window, which must have a titlebar to be maximised at all.
+ * @param win The window.
+ * @return true when it is tiled.
  */
-void wm_window_toggle_maximize(wm_window_t* win) {
+bool wm_window_tiled(const wm_window_t* win) {
 
-    if (!win || wm_window_borderless(win)) {
+    return win->maximized || win->snapped != 0;
+}
+
+
+/**
+ * @brief Moves a window between floating, maximised and snapped to either half of the work area, morphing it across.
+ *
+ * @param win The window, which must have a titlebar.
+ * @param maximized Whether it fills the work area.
+ * @param snapped -1 or 1 for the left or right half, 0 for neither.
+ */
+static void wm_window_arrange(wm_window_t* win, bool maximized, int snapped) {
+
+    if (!win || wm_window_borderless(win) || (win->maximized == maximized && win->snapped == snapped)) {
         return;
     }
 
@@ -1083,12 +1097,23 @@ void wm_window_toggle_maximize(wm_window_t* win) {
 
     cairo_surface_t* snapshot = win->committed ? wm_window_snapshot(win, &snapshot_rect) : NULL;
 
+    win->morph_radius = wm_window_radius(win);
+
 
     wm_damage_window(win);
 
-    if (win->maximized) {
+    if (!wm_window_tiled(win)) {
 
-        win->maximized = false;
+        win->restore.x      = win->x;
+        win->restore.y      = win->y;
+        win->restore.width  = win->width;
+        win->restore.height = win->height;
+    }
+
+    win->maximized = maximized;
+    win->snapped   = snapped;
+
+    if (!wm_window_tiled(win)) {
 
         win->x = win->restore.x;
         win->y = win->restore.y;
@@ -1098,19 +1123,21 @@ void wm_window_toggle_maximize(wm_window_t* win) {
     } else {
 
         const wm_insets_t in = wm_window_insets(win);
-        const wm_rect_t work = wm_workarea();
 
-        win->restore.x      = win->x;
-        win->restore.y      = win->y;
-        win->restore.width  = win->width;
-        win->restore.height = win->height;
+        wm_rect_t r = wm_workarea();
 
-        win->maximized = true;
+        if (snapped) {
 
-        win->x = work.x + in.left;
-        win->y = work.y + in.top;
+            const int left = (r.width - WM_SNAP_GAP) / 2;
 
-        wm_window_resize(win, work.width - in.left - in.right, work.height - in.top - in.bottom);
+            r.x += snapped < 0 ? 0 : left + WM_SNAP_GAP;
+            r.width = snapped < 0 ? left : r.width - left - WM_SNAP_GAP;
+        }
+
+        win->x = r.x + in.left;
+        win->y = r.y + in.top;
+
+        wm_window_resize(win, r.width - in.left - in.right, r.height - in.top - in.bottom);
     }
 
     wm_damage_window(win);
@@ -1118,6 +1145,33 @@ void wm_window_toggle_maximize(wm_window_t* win) {
     wm_window_notify_configure(win);
 
     wm_window_begin_morph(win, snapshot, &snapshot_rect, &before);
+}
+
+
+/**
+ * @brief Fills the work area with a window, or puts it back where it floated before.
+ *
+ * @param win The window, which must have a titlebar to be maximised at all.
+ */
+void wm_window_toggle_maximize(wm_window_t* win) {
+
+    if (win) {
+        wm_window_arrange(win, !win->maximized, 0);
+    }
+}
+
+
+/**
+ * @brief Snaps a window to a half of the work area, or lets it float again where it was.
+ *
+ * @param win The window, which must have a titlebar.
+ * @param side -1 or 1 for the left or right half, 0 to float.
+ */
+void wm_window_snap(wm_window_t* win, int side) {
+
+    if (win) {
+        wm_window_arrange(win, false, side);
+    }
 }
 
 
@@ -1130,7 +1184,7 @@ void wm_window_toggle_maximize(wm_window_t* win) {
  */
 void wm_window_unmaximize_at(wm_window_t* win, int pointer_x, int pointer_y) {
 
-    if (!win->maximized) {
+    if (!wm_window_tiled(win)) {
         return;
     }
 
@@ -1152,6 +1206,7 @@ void wm_window_unmaximize_at(wm_window_t* win, int pointer_x, int pointer_y) {
     }
 
     win->maximized = false;
+    win->snapped   = 0;
 
     wm_window_resize(win, win->restore.width, win->restore.height);
 
@@ -1629,7 +1684,7 @@ static void wm_window_paint_morph(cairo_t* cr, wm_window_t* win) {
         .height = (int)lround(ui_lerp(from.height, to.height, t)),
     };
 
-    const double radius = ui_lerp(win->maximized ? UI_WINDOW_RADIUS : 0.0, wm_window_radius(win), t);
+    const double radius = ui_lerp(win->morph_radius, wm_window_radius(win), t);
 
 
     cairo_save(cr);

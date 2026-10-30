@@ -184,7 +184,7 @@ aplus-wm &
 sleep infinity
 ```
 
-The desktop comes up empty; `Ctrl+Alt+T` opens a terminal. A client started from the same script
+The desktop comes up empty; `Super+Enter` opens a terminal. A client started from the same script
 needs no sleep before it, because `ui_connect()` retries — see
 [getting-started.md](getting-started.md#3-connecting).
 
@@ -203,12 +203,21 @@ bindings are worth knowing:
 
 | Keys | |
 |---|---|
-| `Ctrl+Alt+T` | Spawn a new terminal |
-| `Ctrl+Alt+Q` | Close the focused window (sends it `UI_EVENT_CLOSE`) |
-| `Alt+Tab` | Focus and raise the next window down the stack |
-| `Alt+Shift+Tab` | The same walk, the other way round |
+| `Super` | Tap alone to slide the application drawer out of the taskbar, or back in |
+| `Super+Space` | Open the launcher in the middle of the display |
+| `Super+Enter` | Spawn a new terminal |
+| `Super+E` | Open the file explorer |
+| `Super+I` | Open the settings |
+| `Super+Q` | Close the focused window (sends it `UI_EVENT_CLOSE`) |
+| `Super+Shift+Q` | Kill the process behind the focused window, for one that stopped answering |
+| `Alt+Tab` / `Super+Tab` | Focus and raise the next window down the stack |
+| `Alt+Shift+Tab` / `Super+Shift+Tab` | The same walk, the other way round |
 | `Super+Up` | Maximise the focused window, or put it back |
-| `Super+Down` | Minimise the focused window into the taskbar |
+| `Super+Down` | Put a maximised or snapped window back, or minimise it into the taskbar |
+| `Super+Left` / `Super+Right` | Snap the focused window to that half of the display; towards the other side it floats again |
+| `Super+D` | Minimise every window to show the desktop, and bring them back when pressed again |
+| `Super+1` … `Super+9` | Activate the taskbar entry at that place, opening a pinned application with no window |
+| `Super+Escape` | Open or close the session menu |
 | `Super`+drag | Move a window from anywhere on it, decorations or not |
 
 A double click on a titlebar maximises the window too, and so does the button beside the close
@@ -236,7 +245,7 @@ one back. The third titlebar button hides a window too, which then shrinks into 
 borderless window gets no entry, and `Alt+Tab` steps over the hidden ones.
 
 Holding `Alt` down keeps the walk going: the order is taken when the first `Tab` arrives and
-does not move again until `Alt` is released, so a second `Tab` reaches the third window rather
+does not move again until `Alt` (or `Super`) is released, so a second `Tab` reaches the third window rather
 than returning to the first. Tapping the chord and letting go therefore swaps between the two
 most recently used windows.
 

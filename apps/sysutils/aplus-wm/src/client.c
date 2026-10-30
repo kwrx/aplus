@@ -23,6 +23,7 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -109,13 +110,41 @@ wm_client_t* wm_client_accept(int listener, bool control) {
         return NULL;
     }
 
+    struct ucred cred;
+    socklen_t length = sizeof(cred);
+
     client->fd      = fd;
     client->control = control;
+    client->pid     = getsockopt(fd, SOL_SOCKET, SO_PEERCRED, &cred, &length) == 0 && length == sizeof(cred) ? cred.pid : 0;
 
     client->next = wm.clients;
     wm.clients   = client;
 
     return client;
+}
+
+
+/**
+ * @brief Kills the process behind a client and drops its connection, so its windows go away even when it has stopped answering.
+ *
+ * @param client The client.
+ */
+void wm_client_kill(wm_client_t* client) {
+
+    if (!client || client->dead) {
+        return;
+    }
+
+    if (client->pid > 0 && client->pid != getpid()) {
+
+        ulog_infof("killing unresponsive client pid %d", client->pid);
+
+        if (kill(client->pid, SIGKILL) < 0) {
+            ulog_warnf("kill(%d) failed: %s", client->pid, strerror(errno));
+        }
+    }
+
+    client->dead = true;
 }
 
 
@@ -549,7 +578,7 @@ static int wm_client_handle_resize_window(wm_client_t* client, const uint8_t* pa
         return -1;
     }
 
-    if (win->maximized) {
+    if (wm_window_tiled(win)) {
         return wm_window_notify_configure(win);
     }
 

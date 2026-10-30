@@ -108,7 +108,7 @@ client:
 | Resizing | Drag an edge or a corner | Only by asking — `ui_window_request_size()` |
 | Taskbar | An entry, which also minimises it | None, and no minimising |
 
-It still stacks, focuses and casts a shadow like any other window, and `Ctrl+Alt+Q` still
+It still stacks, focuses and casts a shadow like any other window, and `Super+Q` still
 closes it — which is worth remembering, because without a titlebar button that is the only
 way a user can.
 
@@ -452,7 +452,7 @@ several routes on it.
 - **`UI_EVENT_FOCUS`** on gain says nothing about where the pointer is. If you track modifier
   state, clear it on focus *loss* — the release that would have cleared it goes to whoever has
   focus now.
-- **`UI_EVENT_CLOSE`** comes from the titlebar button or `Ctrl+Alt+Q`. Nothing exits on your
+- **`UI_EVENT_CLOSE`** comes from the titlebar button or `Super+Q`. Nothing exits on your
   behalf. A borderless window has no button, so the keybinding is the whole of it.
 
 ## Multiple windows

@@ -140,7 +140,7 @@ has the whole of it, and [tutorial-animation.md](tutorial-animation.md) steps an
 your own alongside the view's.
 
 `ui_view_closed()` becomes true when a `UI_EVENT_CLOSE` is dispatched — the titlebar button,
-`Ctrl+Alt+Q`, or anything else the server decides is a close request. Nothing in the library
+`Super+Q`, or anything else the server decides is a close request. Nothing in the library
 exits on your behalf; a close is a message, and an application with unsaved state is free to
 ignore it.
 
