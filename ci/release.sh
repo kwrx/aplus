@@ -63,6 +63,7 @@ NAME=release-aplus-$(git rev-parse --short HEAD)-${TARGET}
 
 mkdir -p ${NAME}
 mkdir -p ${NAME}-minimal
+mkdir -p ${NAME}-live
 
 mv aplus-minmal.qcow2 ${NAME}-minimal/aplus.qcow2
 mv aplus.qcow2 ${NAME}/aplus.qcow2
