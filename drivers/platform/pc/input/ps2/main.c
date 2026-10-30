@@ -101,6 +101,8 @@ device_t mouse = {
 
 static bool __mouse_buttons[16] = {0};
 static int __mouse_id           = 0;
+static bool __mouse_present     = false;
+static bool __keyboard_present  = false;
 
 
 #define PS2_IO_PORT_DATA    0x60
@@ -153,6 +155,10 @@ static int __mouse_id           = 0;
 #define PS2_MOUSE_REQUEST_STATUS         0xE9
 #define PS2_MOUSE_REQUEST_ID             0xF2
 
+#define PS2_TIMEOUT   100000
+#define PS2_RETRY_MAX 3
+#define PS2_FLUSH_MAX 64
+
 #define PS2_KBD_RESEND 0xFE
 #define PS2_ACK        0xFA
 
@@ -163,39 +169,145 @@ static int __mouse_id           = 0;
 
 
 
-static inline void ps2_wait(uint8_t mask, uint8_t status) {
+/**
+ * @brief Waits until a controller status bit reaches a value.
+ *
+ * @param mask The status bit.
+ * @param status The value it must reach.
+ * @return true if it did before the timeout.
+ */
+static inline bool ps2_wait(uint8_t mask, uint8_t status) {
 
-    int timeout = 100000;
+    for (int timeout = PS2_TIMEOUT; timeout > 0; timeout--) {
 
-    while ((!!(inb(PS2_IO_PORT_STATUS) & mask)) != status && --timeout) {
+        if ((!!(inb(PS2_IO_PORT_STATUS) & mask)) == status)
+            return true;
+
         __cpu_pause();
     }
 
-    if (unlikely(timeout == 0)) {
-
-        DEBUG_ASSERT(0 && "ps2: timeout");
-
-        // TODO: implement module_reset and call it here
-    }
+    return false;
 }
 
-static inline void ps2_write(uint16_t port, uint8_t data) {
+/**
+ * @brief Writes a byte to the controller once its input buffer is empty.
+ *
+ * @param port The command or data port.
+ * @param data The byte.
+ * @return true if the byte was written.
+ */
+static inline bool ps2_write(uint16_t port, uint8_t data) {
 
-    ps2_wait(PS2_STATUS_INPUT, 0);
+    if (!ps2_wait(PS2_STATUS_INPUT, 0))
+        return false;
+
     outb(port, data);
+    return true;
 }
 
-static inline uint8_t ps2_read(uint16_t port) {
+/**
+ * @brief Reads a byte from the controller once its output buffer is full.
+ *
+ * @param port The data port.
+ * @return The byte, or -1 on timeout.
+ */
+static inline int ps2_read(uint16_t port) {
 
-    ps2_wait(PS2_STATUS_OUTPUT, 1);
+    if (!ps2_wait(PS2_STATUS_OUTPUT, 1))
+        return -1;
+
     return inb(port);
 }
 
-static inline void ps2_ack() {
+/**
+ * @brief Discards whatever the controller still holds in its output buffer.
+ */
+static void ps2_flush(void) {
 
-    if (ps2_read(PS2_IO_PORT_DATA) != PS2_ACK) {
-        kpanicf("ps2: PS/2 controller ack error");
+    for (int i = 0; i < PS2_FLUSH_MAX && (inb(PS2_IO_PORT_STATUS) & PS2_STATUS_OUTPUT); i++)
+        inb(PS2_IO_PORT_DATA);
+}
+
+/**
+ * @brief Sends a byte to the auxiliary device and waits for its acknowledge, resending when asked to.
+ *
+ * @param data The byte.
+ * @return true if the device acknowledged it.
+ */
+static bool ps2_mouse_write(uint8_t data) {
+
+    for (int retry = 0; retry < PS2_RETRY_MAX; retry++) {
+
+        if (!ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX) || !ps2_write(PS2_IO_PORT_DATA, data))
+            return false;
+
+        int r = ps2_read(PS2_IO_PORT_DATA);
+
+        if (r == PS2_ACK)
+            return true;
+
+        if (r != PS2_MOUSE_RESEND)
+            return false;
     }
+
+    return false;
+}
+
+/**
+ * @brief Asks the auxiliary device for its id.
+ *
+ * @return The id, or -1 if the device did not answer.
+ */
+static int ps2_mouse_identify(void) {
+
+    if (!ps2_mouse_write(PS2_MOUSE_REQUEST_ID))
+        return -1;
+
+    return ps2_read(PS2_IO_PORT_DATA);
+}
+
+/**
+ * @brief Sends the sample-rate sequence that unlocks a wheel or five-button mode.
+ *
+ * @param a The first rate.
+ * @param b The second rate.
+ * @param c The third rate.
+ * @return true if the device acknowledged every byte.
+ */
+static bool ps2_mouse_knock(uint8_t a, uint8_t b, uint8_t c) {
+
+    const uint8_t rates[] = {a, b, c};
+
+    for (size_t i = 0; i < sizeof(rates); i++) {
+
+        if (!ps2_mouse_write(PS2_MOUSE_SET_SAMPLE_RATE) || !ps2_mouse_write(rates[i]))
+            return false;
+    }
+
+    return true;
+}
+
+/**
+ * @brief Probes the auxiliary port for a mouse, enables its wheel and buttons, and starts its reports.
+ *
+ * @return true if a mouse answered every step.
+ */
+static bool ps2_mouse_init(void) {
+
+    int id = ps2_mouse_identify();
+
+    if (id < 0 || !ps2_mouse_write(PS2_MOUSE_SET_DEFAULTS))
+        return false;
+
+    if (id == 0 && (!ps2_mouse_knock(200, 100, 80) || (id = ps2_mouse_identify()) < 0))
+        return false;
+
+    if (id == 3 && (!ps2_mouse_knock(200, 200, 80) || (id = ps2_mouse_identify()) < 0))
+        return false;
+
+    __mouse_id = id;
+
+    return ps2_mouse_write(PS2_MOUSE_ENABLE_DATA_REPORTING);
 }
 
 
@@ -205,7 +317,10 @@ void ps2_keyboard_irq(void* context, irq_t irq) {
     static int vk_e0 = 0;
 
 
-    uint8_t vkscan = ps2_read(PS2_IO_PORT_DATA);
+    int vkscan = ps2_read(PS2_IO_PORT_DATA);
+
+    if (vkscan < 0)
+        return;
 
     switch (vkscan) {
 
@@ -398,125 +513,40 @@ void init(const char* args) {
     memset(&__mouse_buttons[0], 0, sizeof(__mouse_buttons));
 
 
-    inb(PS2_IO_PORT_DATA);
+    ps2_flush();
 
     ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_ENABLE);
     ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_ENABLE_AUX);
     ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_READ(0));
 
+    int status = ps2_read(PS2_IO_PORT_DATA);
 
-    uint8_t status = ps2_read(PS2_IO_PORT_DATA);
+    if (status < 0) {
+
+#if DEBUG_LEVEL_WARN
+        kprintf("ps2: WARN! PS/2 controller not responding\n");
+#endif
+
+        return;
+    }
 
 
     ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE(0));
-    ps2_write(PS2_IO_PORT_DATA, status | PS2_CFG_FIRST_INTR | PS2_CFG_SECOND_INTR);
+    ps2_write(PS2_IO_PORT_DATA, (status | PS2_CFG_FIRST_INTR) & ~PS2_CFG_SECOND_INTR);
+
+    __keyboard_present = true;
 
     device_mkdev(&keyboard, 0666);
 
 
-    if ((status & PS2_CFG_SECOND_CLOCK) == 0) {
+    ps2_flush();
 
-        ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
-        ps2_write(PS2_IO_PORT_DATA, PS2_MOUSE_REQUEST_ID);
+    if ((status & PS2_CFG_SECOND_CLOCK) == 0 && ps2_mouse_init()) {
 
-        ps2_ack();
+        ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE(0));
+        ps2_write(PS2_IO_PORT_DATA, status | PS2_CFG_FIRST_INTR | PS2_CFG_SECOND_INTR);
 
-        __mouse_id = ps2_read(PS2_IO_PORT_DATA);
-
-
-        ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
-        ps2_write(PS2_IO_PORT_DATA, PS2_MOUSE_SET_DEFAULTS);
-
-        ps2_ack();
-
-
-        if (__mouse_id == 0) {
-
-            ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
-            ps2_write(PS2_IO_PORT_DATA, PS2_MOUSE_SET_SAMPLE_RATE);
-
-            ps2_ack();
-
-            ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
-            ps2_write(PS2_IO_PORT_DATA, 200);
-
-            ps2_ack();
-
-            ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
-            ps2_write(PS2_IO_PORT_DATA, PS2_MOUSE_SET_SAMPLE_RATE);
-
-            ps2_ack();
-
-            ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
-            ps2_write(PS2_IO_PORT_DATA, 100);
-
-            ps2_ack();
-
-            ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
-            ps2_write(PS2_IO_PORT_DATA, PS2_MOUSE_SET_SAMPLE_RATE);
-
-            ps2_ack();
-
-            ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
-            ps2_write(PS2_IO_PORT_DATA, 80);
-
-            ps2_ack();
-
-            ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
-            ps2_write(PS2_IO_PORT_DATA, PS2_MOUSE_REQUEST_ID);
-
-            ps2_ack();
-
-            __mouse_id = ps2_read(PS2_IO_PORT_DATA);
-        }
-
-
-        if (__mouse_id == 3) {
-
-            ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
-            ps2_write(PS2_IO_PORT_DATA, PS2_MOUSE_SET_SAMPLE_RATE);
-
-            ps2_ack();
-
-            ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
-            ps2_write(PS2_IO_PORT_DATA, 200);
-
-            ps2_ack();
-
-            ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
-            ps2_write(PS2_IO_PORT_DATA, PS2_MOUSE_SET_SAMPLE_RATE);
-
-            ps2_ack();
-
-            ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
-            ps2_write(PS2_IO_PORT_DATA, 200);
-
-            ps2_ack();
-
-            ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
-            ps2_write(PS2_IO_PORT_DATA, PS2_MOUSE_SET_SAMPLE_RATE);
-
-            ps2_ack();
-
-            ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
-            ps2_write(PS2_IO_PORT_DATA, 80);
-
-            ps2_ack();
-
-            ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
-            ps2_write(PS2_IO_PORT_DATA, PS2_MOUSE_REQUEST_ID);
-
-            ps2_ack();
-
-            __mouse_id = ps2_read(PS2_IO_PORT_DATA);
-        }
-
-
-        ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
-        ps2_write(PS2_IO_PORT_DATA, PS2_MOUSE_ENABLE_DATA_REPORTING);
-
-        ps2_ack();
-
+        __mouse_present = true;
 
         device_mkdev(&mouse, 0666);
 
@@ -527,20 +557,27 @@ void init(const char* args) {
 #endif
 
         ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_DISABLE_AUX);
+        ps2_flush();
     }
 
 
 
     arch_intr_map_irq(1, ps2_keyboard_irq, ARCH_INTR_TYPE_DEFAULT);
-    arch_intr_map_irq(12, ps2_mouse_irq, ARCH_INTR_TYPE_DEFAULT);
+
+    if (__mouse_present)
+        arch_intr_map_irq(12, ps2_mouse_irq, ARCH_INTR_TYPE_DEFAULT);
 }
 
 
 void dnit(void) {
 
-    arch_intr_unmap_irq(1, ARCH_INTR_TYPE_DEFAULT);
-    arch_intr_unmap_irq(12, ARCH_INTR_TYPE_DEFAULT);
+    if (__keyboard_present) {
+        arch_intr_unmap_irq(1, ARCH_INTR_TYPE_DEFAULT);
+        device_unlink(&keyboard);
+    }
 
-    device_unlink(&keyboard);
-    device_unlink(&mouse);
+    if (__mouse_present) {
+        arch_intr_unmap_irq(12, ARCH_INTR_TYPE_DEFAULT);
+        device_unlink(&mouse);
+    }
 }
