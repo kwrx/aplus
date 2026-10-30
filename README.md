@@ -90,9 +90,9 @@ Drivers are loadable kernel objects: one directory with a `main.c` per module, e
 
 ## :zap: Getting Started
 
-### Run a release:
-
 Every push to `main` is built by the [release workflow](/.github/workflows/release.yml) and published as the `latest` development release.
+
+### Running on QEMU
 
 1. Download the latest [release](https://github.com/kwrx/aplus/releases/latest): `release-aplus-<commit>-x86_64` holds the disk image and [run.sh](/ci/run.sh)
 2. Requirements: `qemu-system-x86_64` and UEFI firmware (`ovmf` or `edk2-ovmf`)
@@ -115,7 +115,26 @@ Settings are saved to `config.txt`. Edit the file or run `./run.sh --reconfigure
 
 The guest console is written to `console.log`, the QEMU monitor listens on `telnet 127.0.0.1:4444`, and the host port `8080` is forwarded to the guest's `8080`, where pymonitor serves its web dashboard.
 
-### Build from Linux:
+### Running on real hardware
+
+1. Download the latest live image from the [releases page](https://github.com/kwrx/aplus/releases/latest). The archive is named `release-aplus-<commit>-x86_64-live.tar.xz`.
+
+2. Extract it and write the image to a USB drive:
+
+   ```bash
+   tar -xf release-aplus-*-x86_64-live.tar.xz
+   cd release-aplus-*-x86_64-live
+   sudo dd if=aplus.img of=/dev/sdX bs=4M status=progress conv=fsync
+   ```
+
+   > [!WARNING]
+   > Replace `/dev/sdX` with your USB drive's device path, such as `/dev/sdb`. Use the whole disk, not a partition like `/dev/sdb1`. Run `lsblk` to find the right device first. **Everything on the drive will be erased.**
+
+3. Boot your machine from the USB drive.
+4. When the GRUB menu appears, select **Advanced options** and then choose an entry with **built-in graphics**.
+
+
+### Build from Linux
 Clone this repository and change working directory.
 ```console
 $ git clone https://github.com/kwrx/aplus

@@ -54,6 +54,11 @@ echo "Generating full image for ${TARGET}..."
 ./makew PROJECTS="kernel drivers lib apps" install
 qemu-img convert -p -f raw -O qcow2 aplus.img aplus.qcow2
 
+echo "Generating live image for ${TARGET}..."
+./configure --kconfig ${TARGET}
+./makew PROJECTS="kernel drivers lib apps" -j$(nproc)
+./makew PROJECTS="kernel drivers lib apps" install-live
+
 NAME=release-aplus-$(git rev-parse --short HEAD)-${TARGET}
 
 mkdir -p ${NAME}
@@ -61,14 +66,17 @@ mkdir -p ${NAME}-minimal
 
 mv aplus-minmal.qcow2 ${NAME}-minimal/aplus.qcow2
 mv aplus.qcow2 ${NAME}/aplus.qcow2
+mv aplus.img ${NAME}-live/aplus.img
 
 install -m 755 ci/run.sh ${NAME}/run.sh
 install -m 755 ci/run.sh ${NAME}-minimal/run.sh
 
 tar cJf ${NAME}.tar.xz ${NAME}
 tar cJf ${NAME}-minimal.tar.xz ${NAME}-minimal
+tar cJf ${NAME}-live.tar.xz ${NAME}-live
 
 zip -r ${NAME}.zip ${NAME}
 zip -r ${NAME}-minimal.zip ${NAME}-minimal
+zip -r ${NAME}-live.zip ${NAME}-live
 
 rm -rf /tmp/get-pkg
