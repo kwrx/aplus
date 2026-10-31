@@ -6,11 +6,14 @@ import argparse
 import collections
 import errno
 import functools
+import hmac
+import html
 import itertools
 import json
 import logging
 import os
 import re
+import secrets
 import signal
 import socket
 import stat
@@ -820,6 +823,314 @@ def preview_file(path, size):
     }
 
 
+KMSG_PATH = "/dev/kmsg"
+KMSG_RECORD = re.compile(rb"^(\d+),(\d+),(\d+),[^;]*;(.*)$", re.M)
+KMSG_READS = 256
+ANSI_ESCAPE = re.compile(r"\x1b\[[0-9;?]*[ -/]*[@-~]|\x1b[@-_]|\r")
+
+SYSFS_BUS = "/sys/bus"
+ID_DIRS = ("/usr/share/hwdata", "/usr/share/misc", "/usr/share")
+
+PCI_CLASSES = {
+    0x00: "Unclassified device", 0x01: "Mass storage controller", 0x02: "Network controller", 0x03: "Display controller",
+    0x04: "Multimedia controller", 0x05: "Memory controller", 0x06: "Bridge", 0x07: "Communication controller",
+    0x08: "Generic system peripheral", 0x09: "Input device controller", 0x0A: "Docking station", 0x0B: "Processor",
+    0x0C: "Serial bus controller", 0x0D: "Wireless controller", 0x0E: "Intelligent controller", 0x0F: "Satellite controller",
+    0x10: "Encryption controller", 0x11: "Signal processing controller", 0x12: "Processing accelerator", 0x13: "Non-essential instrumentation",
+    0xFF: "Unassigned class",
+}
+
+PCI_SUBCLASSES = {
+    0x0100: "SCSI storage controller", 0x0101: "IDE interface", 0x0105: "ATA controller", 0x0106: "SATA controller", 0x0107: "SAS controller",
+    0x0108: "NVMe controller", 0x0180: "Mass storage controller", 0x0200: "Ethernet controller", 0x0280: "Network controller",
+    0x0300: "VGA compatible controller", 0x0302: "3D controller", 0x0380: "Display controller", 0x0400: "Video controller",
+    0x0401: "Audio controller", 0x0403: "Audio device", 0x0480: "Multimedia controller", 0x0500: "RAM memory",
+    0x0600: "Host bridge", 0x0601: "ISA bridge", 0x0604: "PCI bridge", 0x0680: "Bridge", 0x0700: "Serial controller",
+    0x0780: "Communication controller", 0x0800: "PIC", 0x0805: "SD host controller", 0x0880: "System peripheral",
+    0x0900: "Keyboard controller", 0x0902: "Mouse controller", 0x0C03: "USB controller", 0x0C05: "SMBus", 0x0D80: "Wireless controller",
+}
+
+PCI_USB_INTERFACES = {0x00: "UHCI", 0x10: "OHCI", 0x20: "EHCI", 0x30: "xHCI", 0xFE: "USB device"}
+
+PCI_VENDORS = {
+    "1022": "AMD", "1002": "AMD/ATI", "10de": "NVIDIA", "10ec": "Realtek", "1234": "QEMU", "15ad": "VMware",
+    "1af4": "Red Hat (virtio)", "1b36": "Red Hat (QEMU)", "8086": "Intel", "80ee": "VirtualBox",
+}
+
+PCI_DEVICES = {
+    "1234:1111": "Bochs/QEMU VGA",
+    "1af4:1000": "virtio network device", "1af4:1001": "virtio block device", "1af4:1002": "virtio memory balloon",
+    "1af4:1003": "virtio console", "1af4:1005": "virtio RNG", "1af4:1009": "virtio filesystem",
+    "1af4:1041": "virtio 1.0 network device", "1af4:1042": "virtio 1.0 block device", "1af4:1043": "virtio 1.0 console",
+    "1af4:1044": "virtio 1.0 RNG", "1af4:1045": "virtio 1.0 memory balloon", "1af4:1048": "virtio 1.0 SCSI",
+    "1af4:1050": "virtio 1.0 GPU", "1af4:1052": "virtio 1.0 input",
+    "1b36:0001": "QEMU PCI-PCI bridge", "1b36:0008": "QEMU PCIe host bridge", "1b36:000c": "QEMU PCIe root port",
+    "1b36:000d": "QEMU xHCI host controller", "1b36:0100": "QXL paravirtual graphic card",
+    "8086:100e": "82540EM Gigabit Ethernet", "8086:10d3": "82574L Gigabit Ethernet", "8086:1237": "440FX host bridge",
+    "8086:2415": "82801AA AC'97 audio", "8086:2668": "ICH6 HD audio", "8086:2918": "ICH9 LPC interface", "8086:2922": "ICH9 AHCI controller",
+    "8086:2930": "ICH9 SMBus controller", "8086:293e": "ICH9 HD audio", "8086:29c0": "82G33/G31/P35/P31 DRAM controller",
+    "8086:7000": "82371SB PIIX3 ISA", "8086:7010": "82371SB PIIX3 IDE", "8086:7020": "82371SB PIIX3 USB",
+    "8086:7113": "82371AB/EB/MB PIIX4 ACPI",
+    "80ee:beef": "VirtualBox graphics adapter", "80ee:cafe": "VirtualBox guest service",
+}
+
+USB_CLASSES = {
+    0x01: "Audio", 0x02: "Communications", 0x03: "Human interface device", 0x05: "Physical interface", 0x06: "Imaging",
+    0x07: "Printer", 0x08: "Mass storage", 0x09: "Hub", 0x0A: "CDC data", 0x0B: "Smart card", 0x0D: "Content security",
+    0x0E: "Video", 0x0F: "Personal healthcare", 0x10: "Audio/video", 0x11: "Billboard", 0xDC: "Diagnostic",
+    0xE0: "Wireless controller", 0xEF: "Miscellaneous", 0xFE: "Application specific", 0xFF: "Vendor specific",
+}
+
+USB_HID_PROTOCOLS = {1: "Keyboard", 2: "Mouse"}
+
+USB_VENDORS = {"0627": "QEMU", "1d6b": "Linux Foundation", "46f4": "QEMU", "80ee": "VirtualBox", "046d": "Logitech"}
+
+USB_PRODUCTS = {
+    "0627:0001": "QEMU USB HID device", "1d6b:0001": "1.1 root hub", "1d6b:0002": "2.0 root hub", "1d6b:0003": "3.0 root hub",
+    "46f4:0001": "QEMU USB storage", "80ee:0021": "VirtualBox USB tablet",
+}
+
+
+class KernelLog(threading.Thread):
+    def __init__(self, path=KMSG_PATH, limit=MAX_LOG_TAIL):
+        super().__init__(name="kmsg", daemon=True)
+        self.path = path
+        self.limit = limit
+        self.data = bytearray()
+        self.lock = threading.Lock()
+        self.mtime = time.time()
+        self.error = None
+        self.present = os.path.exists(path)
+        try:
+            self.fd = os.open(path, os.O_RDONLY | os.O_NONBLOCK)
+        except OSError as e:
+            self.fd = None
+            self.error = e.strerror or str(e)
+
+    def run(self):
+        while self.fd is not None:
+            self.drain()
+            time.sleep(1.0)
+
+    def drain(self):
+        chunks = []
+        for _ in range(KMSG_READS):
+            try:
+                chunk = os.read(self.fd, 8192)
+            except (BlockingIOError, InterruptedError):
+                break
+            except OSError as e:
+                if e.errno == errno.EPIPE:
+                    continue
+                self.error = e.strerror or str(e)
+                os.close(self.fd)
+                self.fd = None
+                break
+            if not chunk:
+                break
+            chunks.append(self.record(chunk))
+        if not chunks:
+            return
+        with self.lock:
+            self.data += b"".join(chunks)
+            if len(self.data) > self.limit:
+                cut = len(self.data) - self.limit
+                newline = self.data.find(b"\n", cut)
+                del self.data[:newline + 1 if 0 <= newline < cut + 4096 else cut]
+            self.mtime = time.time()
+
+    def record(self, chunk):
+        m = KMSG_RECORD.match(chunk)
+        if m is None:
+            return chunk
+        usec = int(m.group(3))
+        return b"[%5d.%06d] %s\n" % (usec // 1000000, usec % 1000000, m.group(4))
+
+    def entry(self):
+        if not self.present:
+            return None
+        with self.lock:
+            size = len(self.data)
+        return {"path": self.path, "size": size, "mtime": self.mtime, "kernel": True, "error": self.error}
+
+    def tail(self, size):
+        with self.lock:
+            data = bytes(self.data[-size:])
+            total = len(self.data)
+        text = ANSI_ESCAPE.sub("", data.decode("utf-8", "replace"))
+        if not text and self.error:
+            text = f"cannot read {self.path}: {self.error}\n"
+        return text, total
+
+
+def read_uevent(path):
+    fields = {}
+    for line in (read_text(path) or "").splitlines():
+        key, sep, value = line.partition("=")
+        if sep:
+            fields[key] = value
+    return fields
+
+
+def bus_devices(bus):
+    root = os.path.join(SYSFS_BUS, bus, "devices")
+    try:
+        names = sorted(os.listdir(root))
+    except OSError:
+        return []
+    return [(name, os.path.join(root, name), read_uevent(os.path.join(root, name, "uevent"))) for name in names]
+
+
+@functools.lru_cache(maxsize=None)
+def id_database(name):
+    vendors = {}
+    for directory in ID_DIRS:
+        try:
+            f = open(os.path.join(directory, name), encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        with f:
+            vendor = None
+            for line in f:
+                if line.startswith("C "):
+                    break
+                if not line.strip() or line[0] == "#":
+                    continue
+                if line[0] != "\t":
+                    code, _, text = line.partition(" ")
+                    vendor = vendors.setdefault(code.lower(), (text.strip(), {}))
+                elif line[1] != "\t" and vendor is not None:
+                    code, _, text = line[1:].partition(" ")
+                    vendor[1][code.lower()] = text.strip()
+        break
+    return vendors
+
+
+def id_names(database, vendors, products, vendor, product):
+    entry = id_database(database).get(vendor)
+    vendor_name = entry[0] if entry else vendors.get(vendor)
+    product_name = (entry[1].get(product) if entry else None) or products.get(f"{vendor}:{product}")
+    return vendor_name, product_name
+
+
+def pci_class_name(code):
+    name = PCI_SUBCLASSES.get(code >> 8) or PCI_CLASSES.get(code >> 16) or f"Class {code >> 16:02x}"
+    if code >> 8 == 0x0C03 and code & 0xFF in PCI_USB_INTERFACES:
+        name += f" ({PCI_USB_INTERFACES[code & 0xFF]})"
+    return name
+
+
+def usb_class_name(cls, subclass, protocol):
+    if cls == 0x03 and subclass == 1 and protocol in USB_HID_PROTOCOLS:
+        return f"HID {USB_HID_PROTOCOLS[protocol].lower()}"
+    return USB_CLASSES.get(cls) or f"Class {cls:02x}"
+
+
+def split_numbers(value, base):
+    try:
+        return [int(part, base) for part in value.split("/")]
+    except ValueError:
+        return []
+
+
+def list_pci():
+    devices = []
+    for name, _, ev in bus_devices("pci"):
+        try:
+            code = int(ev.get("PCI_CLASS", "0"), 16)
+        except ValueError:
+            code = 0
+        vendor, _, device = ev.get("PCI_ID", "").lower().partition(":")
+        vendor_name, device_name = id_names("pci.ids", PCI_VENDORS, PCI_DEVICES, vendor, device)
+        devices.append({
+            "slot": ev.get("PCI_SLOT_NAME", name),
+            "class": f"{code:06x}",
+            "class_name": pci_class_name(code),
+            "vendor": vendor,
+            "device": device,
+            "subsystem": ev.get("PCI_SUBSYS_ID", "").lower(),
+            "vendor_name": vendor_name,
+            "device_name": device_name,
+            "driver": ev.get("DRIVER"),
+            "uevent": ev,
+        })
+    return devices
+
+
+def usb_parent(name):
+    parent = name.partition(":")[0]
+    return "usb" + parent[:-2] if parent.endswith("-0") else parent
+
+
+def list_usb():
+    devices, interfaces = {}, []
+    for name, path, ev in bus_devices("usb"):
+        if ev.get("DEVTYPE") == "usb_interface" or ":" in name:
+            interfaces.append((name, ev))
+            continue
+        product = split_numbers(ev.get("PRODUCT", ""), 16)
+        kind = split_numbers(ev.get("TYPE", ""), 10)
+        vendor, product_id, release = (f"{product[0]:04x}", f"{product[1]:04x}", f"{product[2] >> 8:x}.{product[2] & 0xFF:02x}") if len(product) == 3 else ("", "", None)
+        vendor_name, product_name = id_names("usb.ids", USB_VENDORS, USB_PRODUCTS, vendor, product_id)
+        devices[name] = {
+            "name": name,
+            "bus": int(ev.get("BUSNUM", "0") or 0),
+            "address": int(ev.get("DEVNUM", "0") or 0),
+            "vendor": vendor,
+            "product": product_id,
+            "release": release,
+            "class": kind[0] if kind else 0,
+            "vendor_name": (read_text(os.path.join(path, "manufacturer")) or "").strip() or vendor_name,
+            "product_name": (read_text(os.path.join(path, "product")) or "").strip() or product_name,
+            "driver": ev.get("DRIVER"),
+            "interfaces": [],
+            "uevent": ev,
+        }
+    for name, ev in interfaces:
+        kind = split_numbers(ev.get("INTERFACE", ""), 10)
+        cls, subclass, protocol = kind if len(kind) == 3 else (0, 0, 0)
+        entry = {"name": name, "number": name.rpartition(".")[2], "class": cls, "subclass": subclass, "protocol": protocol, "class_name": usb_class_name(cls, subclass, protocol), "driver": ev.get("DRIVER"), "uevent": ev}
+        parent = devices.get(usb_parent(name))
+        if parent is not None:
+            parent["interfaces"].append(entry)
+    for device in devices.values():
+        if device["class"]:
+            kind = split_numbers(device["uevent"].get("TYPE", ""), 10)
+            device["class_name"] = usb_class_name(*(kind + [0, 0])[:3])
+        else:
+            names = list(dict.fromkeys(i["class_name"] for i in device["interfaces"]))
+            device["class_name"] = ", ".join(names) or "Defined per interface"
+    return sorted(devices.values(), key=lambda d: (d["bus"], d["address"], d["name"]))
+
+
+def list_device_nodes():
+    try:
+        entries = list(os.scandir("/dev"))
+    except OSError:
+        return []
+    nodes = []
+    for entry in entries:
+        try:
+            st = entry.stat(follow_symlinks=False)
+        except OSError:
+            continue
+        if stat.S_ISCHR(st.st_mode) or stat.S_ISBLK(st.st_mode):
+            nodes.append({
+                "path": entry.path,
+                "kind": "block" if stat.S_ISBLK(st.st_mode) else "char",
+                "major": os.major(st.st_rdev),
+                "minor": os.minor(st.st_rdev),
+                "mode": stat.filemode(st.st_mode),
+                "owner": user_name(st.st_uid),
+                "group": group_name(st.st_gid),
+            })
+    return sorted(nodes, key=lambda n: (n["kind"] != "block", n["path"]))
+
+
+def read_devices():
+    return {"sysfs": os.path.isdir(SYSFS_BUS), "pci": list_pci(), "usb": list_usb(), "nodes": list_device_nodes()}
+
+
 ## @brief Reads an integer request argument.
 #  @param args Query or body arguments.
 #  @param key Argument name.
@@ -876,7 +1187,8 @@ def route_mounts(handler, args):
 #  @param args Query arguments.
 #  @return The log files.
 def route_logs(handler, args):
-    return {"logs": list_logs()}
+    kernel = handler.server.kmsg.entry()
+    return {"logs": ([kernel] if kernel else []) + list_logs()}
 
 
 ## @brief GET /api/log?path=P&bytes=N.
@@ -884,10 +1196,18 @@ def route_logs(handler, args):
 #  @param args Query arguments.
 #  @return The end of the log.
 def route_log(handler, args):
-    path = resolve_log(args.get("path"))
     size = clamp(int_arg(args, "bytes") if "bytes" in args else 65536, 1024, MAX_LOG_TAIL)
-    text, total = tail_file(path, size)
+    if args.get("path") == KMSG_PATH:
+        path = KMSG_PATH
+        text, total = handler.server.kmsg.tail(size)
+    else:
+        path = resolve_log(args.get("path"))
+        text, total = tail_file(path, size)
     return {"path": path, "size": total, "text": text, "truncated": total > size}
+
+
+def route_devices(handler, args):
+    return read_devices()
 
 
 ## @brief GET /api/files?path=P: lists a directory, or names the kind a path resolves to.
@@ -995,6 +1315,7 @@ GET_ROUTES = {
     "/api/process": route_process,
     "/api/services": route_services,
     "/api/mounts": route_mounts,
+    "/api/devices": route_devices,
     "/api/logs": route_logs,
     "/api/log": route_log,
     "/api/files": route_files,
@@ -1011,6 +1332,745 @@ POST_ROUTES = {
 }
 
 
+BASIC_TABS = (("overview", "Overview"), ("processes", "Processes"), ("services", "Services"), ("logs", "Logs"), ("mounts", "Mounts"), ("devices", "Devices"), ("files", "Files"), ("console", "Console"))
+
+BASIC_REFRESH = {"overview": "1", "processes": "0", "logs": "0"}
+
+BASIC_REFRESH_SECONDS = 5
+
+BASIC_SIZES = {16384: "16 KB", 65536: "64 KB", 262144: "256 KB", 1048576: "1 MB"}
+
+BASIC_STATES = {"R": ("running", "good"), "S": ("sleeping", "neutral"), "D": ("waiting", "serious"), "T": ("stopped", "warning"), "Z": ("zombie", "critical"), "X": ("dead", "critical")}
+
+BASIC_PROC_COLUMNS = (("pid", "PID", True), ("user", "User", False), ("name", "Name", False), ("state", "State", False), ("cpu", "CPU %", True), ("rss", "RSS", True), ("threads", "Threads", True), ("fds", "FDs", True), ("cmdline", "Command", False))
+
+POWER_WORDS = {"reboot": "Reboot", "poweroff": "Power off", "halt": "Halt"}
+
+CONFIRM_TABS = {"power": "overview", "signal": "processes", "service": "services"}
+
+MAX_NOTES = 32
+
+
+def esc(value):
+    return html.escape("" if value is None else str(value))
+
+
+def basic_url(**query):
+    return "/basic?" + urllib.parse.urlencode({k: v for k, v in query.items() if v is not None and v != ""})
+
+
+def fmt_kb(value):
+    if value is None:
+        return "—"
+    if value >= 1048576:
+        return f"{value / 1048576:.1f} GiB"
+    if value >= 1024:
+        return f"{value / 1024:.{0 if value >= 102400 else 1}f} MiB"
+    return f"{value} kB"
+
+
+def fmt_bytes(value):
+    return f"{value} B" if value < 1024 else fmt_kb(round(value / 1024))
+
+
+def fmt_duration(seconds):
+    s = int(seconds)
+    d, h, m, sec = s // 86400, s % 86400 // 3600, s % 3600 // 60, s % 60
+    if d:
+        return f"{d}d {h}h"
+    if h:
+        return f"{h}h {m:02d}m"
+    if m:
+        return f"{m}m {sec:02d}s"
+    return f"{sec}s"
+
+
+def fmt_time(t):
+    return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(t)) if t else "—"
+
+
+def used_share(usage):
+    return usage["used"] / (usage["used"] + usage["avail"]) if usage and usage["used"] + usage["avail"] > 0 else 0.0
+
+
+def basic_size(args):
+    try:
+        size = int(args.get("bytes") or 65536)
+    except ValueError:
+        return 65536
+    return size if size in BASIC_SIZES else 65536
+
+
+def basic_refreshing(args, tab):
+    return tab in BASIC_REFRESH and args.get("refresh", BASIC_REFRESH[tab]) == "1"
+
+
+def basic_class(name):
+    return f' class="{name}"' if name else ""
+
+
+def basic_meter(ratio):
+    ratio = clamp(ratio or 0.0, 0.0, 1.0)
+    level = " critical" if ratio >= 0.9 else " warning" if ratio >= 0.75 else ""
+    return f'<div class="meter{level}"><div style="width:{ratio * 100:.1f}%"></div></div>'
+
+
+def basic_state(tone, text):
+    return f'<span class="dot {tone}"></span>{esc(text)}'
+
+
+def basic_card(title, sub, body, cls="card"):
+    head = f"<h2>{esc(title)}</h2>" if title else ""
+    note = f'<p class="sub">{esc(sub)}</p>' if sub else ""
+    return f'<div class="{cls}">{head}{note}{body}</div>'
+
+
+def basic_empty(text, colspan=None):
+    if colspan:
+        return f'<tr><td colspan="{colspan}" class="empty">{esc(text)}</td></tr>'
+    return f'<div class="empty">{esc(text)}</div>'
+
+
+def basic_facts(rows, mono=False):
+    cells = []
+    for key, value, *flag in rows:
+        cls = ' class="mono"' if (flag[0] if flag else mono) else ""
+        cells.append(f"<tr><th>{esc(key)}</th><td{cls}>{esc(value)}</td></tr>")
+    return '<table class="facts">' + "".join(cells) + "</table>"
+
+
+def basic_link(label, href, cls="btn"):
+    return f'<a class="{cls}" href="{esc(href)}">{esc(label)}</a>'
+
+
+def basic_disabled(label):
+    return f'<span class="btn disabled">{esc(label)}</span>'
+
+
+def basic_hidden(fields):
+    return "".join(f'<input type="hidden" name="{esc(k)}" value="{esc(v)}">' for k, v in fields.items() if v is not None)
+
+
+def basic_form(handler, label, fields, cls="btn"):
+    hidden = basic_hidden(dict(fields, token=handler.server.token))
+    return f'<form method="post" action="/basic" class="inline">{hidden}<input type="submit" class="{cls}" value="{esc(label)}"></form>'
+
+
+def basic_size_form(fields, size, word):
+    options = "".join(f'<option value="{value}"{" selected" if value == size else ""}>{word} {label}</option>' for value, label in BASIC_SIZES.items())
+    return f'<form method="get" action="/basic" class="inline">{basic_hidden(fields)}<select name="bytes">{options}</select> <input type="submit" class="btn" value="Show"></form>'
+
+
+def basic_refresh_link(args, tab):
+    on = basic_refreshing(args, tab)
+    query = {k: v for k, v in args.items() if k != "note"}
+    query.update(tab=tab, refresh="0" if on else "1")
+    return basic_link("Stop auto refresh" if on else "Auto refresh", basic_url(**query))
+
+
+def basic_chart(points, top, span, label):
+    width, height = 600, 150
+    end = points[-1][0] if points else time.time()
+    visible = [(t, v) for t, v in points if end - t <= span]
+    x = lambda t: (1 - (end - t) / span) * width
+    y = lambda v: (1 - min(v, top) / top) * height if top > 0 else height
+    parts = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">', f'<rect x="0" y="0" width="{width}" height="{height}" fill="#fcfcfb"/>']
+    for i in range(5):
+        gy = height * i / 4
+        parts.append(f'<line x1="0" y1="{gy:.1f}" x2="{width}" y2="{gy:.1f}" stroke="{"#c3c2b7" if i == 4 else "#e1e0d9"}" stroke-width="1"/>')
+    if len(visible) > 1:
+        line = " ".join(f"{x(t):.1f},{y(v):.1f}" for t, v in visible)
+        parts.append(f'<polygon points="{x(visible[0][0]):.1f},{height} {line} {x(visible[-1][0]):.1f},{height}" fill="#dce9f9" stroke="none"/>')
+        parts.append(f'<polyline points="{line}" fill="none" stroke="#2a78d6" stroke-width="2"/>')
+    parts.append("</svg>")
+    image = f'<img class="chart" src="data:image/svg+xml,{urllib.parse.quote("".join(parts))}" width="{width}" height="{height}" alt="{esc(label)}">'
+    return f'{image}<div class="axis"><span class="right">now</span>{esc(fmt_duration(span))} ago</div>'
+
+
+def basic_overview(handler, args):
+    o = read_overview(handler.server.sampler, handler.connection.getsockname()[0])
+    history, memory, disk = o["history"], o["memory"], o["disk"]
+    last = history[-1] if history else None
+    count = o["cpu_count"]
+    tiles = [
+        ("CPU", f"{round(last['cpu'])}%" if last else "—", f"{count} CPU{'' if count == 1 else 's'}", None),
+        ("Memory in use", fmt_kb(memory["used"]), f"of {fmt_kb(memory['total'])}, {fmt_kb(memory['slab'])} kernel heap", memory["used"] / memory["total"] if memory["total"] else 0.0),
+        ("Processes", o["processes"], f"last pid {o['last_pid']}" if o["last_pid"] is not None else "", None),
+        ("Uptime", fmt_duration(o["uptime"]), f"since {fmt_time(o['boot_time'])}" if o["boot_time"] else "", None),
+        ("Root disk in use", fmt_bytes(disk["used"]) if disk else "—", f"of {fmt_bytes(disk['size'])}, {fmt_bytes(disk['avail'])} available" if disk else "statfs failed on /", used_share(disk)),
+    ]
+    tile_html = "".join(f'<div class="card tile"><div class="label">{esc(label)}</div><div class="value">{esc(value)}</div><div class="note">{esc(note)}</div>{"" if ratio is None else basic_meter(ratio)}</div>' for label, value, note, ratio in tiles)
+    span = o["interval"] * o["history_len"]
+    cpu_chart = basic_chart([(p["t"], p["cpu"]) for p in history], 100.0, span, "CPU usage")
+    mem_chart = basic_chart([(p["t"], p["mem"] / 1024) for p in history], memory["total"] / 1024, span, "Memory in use")
+    cpus = o["cpus"] or [last["cpu"] if last else 0.0]
+    cpu_rows = "".join(f'<tr><td>CPU {i}</td><td class="wide">{basic_meter(pct / 100)}</td><td class="num">{round(pct)}%</td></tr>' for i, pct in enumerate(cpus))
+    facts = [
+        ("Hostname", o["hostname"]),
+        ("Kernel", o["version"] or f"{o['uname']['sysname']} {o['uname']['release']}"),
+        ("Build", o["uname"]["version"]),
+        ("Machine", o["uname"]["machine"]),
+        ("CPU", f"{o['cpu_model'] or 'unknown'} × {count}"),
+        ("Address", o["address"] or "no network"),
+        ("Command line", o["cmdline"] or "—", True),
+        ("Root filesystem", f"{disk['type']} on {disk['source']}" if disk and disk.get("type") else "unknown"),
+        ("Filesystems", ", ".join(f["name"] for f in o["filesystems"])),
+        ("Dashboard", f"pid {o['dashboard']['pid']} as {o['dashboard']['user']}, Python {o['dashboard']['python']}"),
+    ]
+    power = basic_form(handler, "Sync disks", {"do": "sync", "back": "overview"}) + "".join(basic_link(word, basic_url(tab="confirm", do="power", action=action), "btn danger") for action, word in POWER_WORDS.items())
+    return "".join([
+        f'<div class="toolbar">{basic_refresh_link(args, "overview")}</div>',
+        f'<div class="tiles">{tile_html}</div>',
+        basic_card("CPU usage", f"All CPUs, percent busy, from 0 to 100%, last {fmt_duration(span)}", cpu_chart),
+        basic_card("Memory in use", f"Physical memory, from 0 to {fmt_kb(memory['total'])}, last {fmt_duration(span)}", mem_chart),
+        basic_card("System", "From /proc and uname", basic_facts(facts)),
+        basic_card("Per-CPU usage", "Last sample", f'<table class="cpus">{cpu_rows}</table>'),
+        basic_card("Power", "Init sends SIGTERM to every process, waits up to 8 s, syncs, then reboots, powers off or halts.", f'<div class="buttons">{power}</div>'),
+    ])
+
+
+def basic_process_detail(handler, pid):
+    try:
+        d = read_process_detail(pid)
+    except ApiError as e:
+        return basic_card(f"PID {pid}", None, basic_empty(e.message), "card detail")
+    status = dict(d["status"])
+    name = status.get("Name") or str(pid)
+    if pid <= 1:
+        signals = '<p class="sub">Init takes signals only through the power controls on the overview.</p>'
+    else:
+        signals = '<div class="buttons">' + "".join(basic_link(f"SIG{sig}", basic_url(tab="confirm", do="signal", pid=pid, signal=sig, name=name), "btn small danger" if sig in ("KILL", "TERM") else "btn small") for sig in PROCESS_SIGNALS) + "</div>"
+    files = "".join(f'<tr><td class="num">{esc(f["fd"])}</td><td class="mono">{esc(f["target"])}</td></tr>' for f in d["files"])
+    return "".join([
+        '<div class="card detail">',
+        f"<h3>PID {pid} · {esc(name)}</h3>",
+        f'<div class="argv mono">{esc(" ".join(d["argv"]) if d["argv"] else "(no arguments)")}</div>',
+        signals,
+        "<h4>Status</h4>",
+        basic_facts(d["status"] + d["io"], mono=True),
+        f'<h4>Open files ({len(d["files"])})</h4>',
+        f'<div class="table-wrap"><table>{files}</table></div>' if files else basic_empty("No open files."),
+        "</div>",
+    ])
+
+
+def basic_processes(handler, args):
+    procs = handler.server.processes.scan()
+    q = args.get("q", "").strip()
+    needle = q.lower()
+    columns = {key: numeric for key, _, numeric in BASIC_PROC_COLUMNS}
+    key = args.get("sort") if args.get("sort") in columns else "cpu"
+    numeric = columns[key]
+    direction = args.get("dir") if args.get("dir") in ("asc", "desc") else ("desc" if numeric else "asc")
+    selected = int(args["pid"]) if args.get("pid", "").isdigit() else None
+    rows = sorted((p for p in procs if not needle or any(needle in str(p[k]).lower() for k in ("pid", "name", "cmdline", "user"))), key=lambda p: p["pid"])
+    rows.sort(key=lambda p: (-1 if p[key] is None else p[key]) if numeric else str(p[key]).lower(), reverse=direction == "desc")
+    keep = {"q": q or None, "refresh": args.get("refresh")}
+    head = []
+    for column, label, is_numeric in BASIC_PROC_COLUMNS:
+        flip = ("asc" if direction == "desc" else "desc") if column == key else ("desc" if is_numeric else "asc")
+        arrow = (" ▲" if direction == "asc" else " ▼") if column == key else ""
+        head.append(f'<th{basic_class("num" if is_numeric else None)}><a href="{esc(basic_url(tab="processes", sort=column, dir=flip, pid=selected, **keep))}">{esc(label)}{arrow}</a></th>')
+    body = []
+    for p in rows:
+        word, tone = BASIC_STATES.get(p["state"], ("unknown", "neutral"))
+        href = esc(basic_url(tab="processes", sort=key, dir=direction, pid=p["pid"], **keep))
+        body.append("".join([
+            f'<tr{basic_class("selected" if p["pid"] == selected else None)}>',
+            f'<td class="num"><a href="{href}">{p["pid"]}</a></td>',
+            f"<td>{esc(p['user'])}</td>",
+            f'<td><a href="{href}">{esc(p["name"])}</a></td>',
+            f"<td>{basic_state(tone, p['state'] + ' ' + word)}</td>",
+            f'<td class="num">{p["cpu"]:.1f}</td>',
+            f'<td class="num">{esc(fmt_kb(p["rss"]))}</td>',
+            f'<td class="num">{p["threads"]}</td>',
+            f'<td class="num">{"—" if p["fds"] is None else p["fds"]}</td>',
+            f'<td class="cmd" title="{esc(p["cmdline"])}">{esc(p["cmdline"])}</td>',
+            "</tr>",
+        ]))
+    if not body:
+        body.append(basic_empty("No process matches the filter." if procs else "No processes.", len(BASIC_PROC_COLUMNS)))
+    count = f"{len(rows)} of {len(procs)} processes" if needle else f"{len(procs)} processes"
+    search = f'<form method="get" action="/basic" class="inline">{basic_hidden({"tab": "processes", "sort": key, "dir": direction, "refresh": args.get("refresh")})}<input type="text" name="q" value="{esc(q)}" size="32" placeholder="Filter by name, command, user or pid"> <input type="submit" class="btn" value="Filter"></form>'
+    refresh = basic_link("Refresh", basic_url(tab="processes", sort=key, dir=direction, pid=selected, **keep))
+    table = f'<div class="card table-wrap"><table><thead><tr>{"".join(head)}</tr></thead><tbody>{"".join(body)}</tbody></table></div>'
+    detail = basic_process_detail(handler, selected) if selected is not None else basic_card(None, None, basic_empty("Select a process to inspect it and send signals."))
+    return f'<div class="toolbar">{search} {refresh} {basic_refresh_link(args, "processes")} <span class="sub">{esc(count)}</span></div>{detail}{table}'
+
+
+def basic_services(handler, args):
+    rows = []
+    for s in list_services():
+        if s["running"]:
+            status = basic_state("good", f"running (pid {s['pid']})")
+        else:
+            status = basic_state("warning" if s["stale"] else "neutral", "stopped, stale pid file" if s["stale"] else "stopped")
+        actions = [
+            basic_disabled("Start") if s["running"] else basic_form(handler, "Start", {"do": "service", "name": s["name"], "action": "start", "back": "services"}, "btn small"),
+            basic_link("Stop", basic_url(tab="confirm", do="service", name=s["name"], action="stop"), "btn small") if s["running"] or s["stale"] else basic_disabled("Stop"),
+            basic_link("Restart", basic_url(tab="confirm", do="service", name=s["name"], action="restart"), "btn small"),
+            basic_link("Log", basic_url(tab="logs", path=s["log"]), "btn small") if s["log"] else basic_disabled("Log"),
+        ]
+        tag = "" if s["enabled"] else '<span class="tag">not executable</span>'
+        rows.append(f'<tr><td><span class="mono">{esc(s["name"])}</span>{tag}</td><td>{esc(s["description"])}</td><td>{status}</td><td>{"".join(actions)}</td></tr>')
+    body = "".join(rows) or basic_empty("No scripts in /etc/init.d.", 4)
+    table = f"<table><thead><tr><th>Service</th><th>Description</th><th>Status</th><th>Actions</th></tr></thead><tbody>{body}</tbody></table>"
+    return basic_card("Services", "Scripts in /etc/init.d, tracked by their pid files in /var/run/init.d. Output goes to /var/log/init.d.", table, "card table-wrap")
+
+
+def basic_log_meta(l):
+    if not l.get("kernel"):
+        return f"{fmt_bytes(l['size'])} · {fmt_time(l['mtime'])}"
+    if l["error"] and not l["size"]:
+        return f"{l['path']} · {l['error']}"
+    return f"{l['path']} · {fmt_bytes(l['size'])} kept · {fmt_time(l['mtime'])}"
+
+
+def basic_logs(handler, args):
+    kernel = handler.server.kmsg.entry()
+    logs = ([kernel] if kernel else []) + list_logs()
+    path = args.get("path") or (logs[0]["path"] if logs else None)
+    size = basic_size(args)
+    links = "".join(f'<a class="logitem{" current" if l["path"] == path else ""}" href="{esc(basic_url(tab="logs", path=l["path"], bytes=size, refresh=args.get("refresh")))}"><span class="mono">{esc("Kernel messages" if l.get("kernel") else l["path"].removeprefix(LOG_DIR + "/"))}</span><span class="meta">{esc(basic_log_meta(l))}</span></a>' for l in logs)
+    listing = basic_card("Log files", f"Kernel messages from {KMSG_PATH}, and the files under {LOG_DIR}", links or basic_empty(f"No files under {LOG_DIR}."))
+    if path is None:
+        return listing
+    try:
+        if path == KMSG_PATH:
+            real = KMSG_PATH
+            text, total = handler.server.kmsg.tail(size)
+        else:
+            real = resolve_log(path)
+            text, total = tail_file(real, size)
+        title = f"{real} · {fmt_bytes(total)}{' (showing the end)' if total > size else ''}"
+        view = f'<pre class="out">{esc(text or "(empty)")}</pre>'
+    except (ApiError, OSError) as e:
+        title, view = path, basic_empty(e.message if isinstance(e, ApiError) else str(e))
+    tools = f'<div class="toolbar">{basic_size_form({"tab": "logs", "path": path, "refresh": args.get("refresh")}, size, "Last")} {basic_refresh_link(args, "logs")}</div>'
+    return listing + basic_card(None, None, f'<h3 class="mono">{esc(title)}</h3>{tools}{view}')
+
+
+def basic_mounts(handler, args):
+    mounts, filesystems = list_mounts(), read_filesystems()
+    selected = int(args["mount"]) if args.get("mount", "").isdigit() and int(args["mount"]) < len(mounts) else None
+    rows = []
+    for i, m in enumerate(mounts):
+        u = m["usage"] if m["usage"] and m["usage"]["blocks"] > 0 else None
+        share = used_share(u)
+        note = "covered" if m["covered"] else "statfs failed" if m["error"] else None
+        inodes = f"{round(100 * (m['usage']['inodes'] - m['usage']['inodes_free']) / m['usage']['inodes'])}%" if m["usage"] and m["usage"]["inodes"] else "—"
+        classes = " ".join(c for c in ("covered" if m["covered"] else "", "selected" if i == selected else "") if c)
+        tag = f'<span class="tag">{esc(note)}</span>' if note else ""
+        use = f'{basic_meter(share)}<span class="pct">{round(share * 100)}%</span>' if u else "—"
+        rows.append("".join([
+            f'<tr{basic_class(classes)}>',
+            f'<td class="mono"><a href="{esc(basic_url(tab="mounts", mount=i))}">{esc(m["target"])}</a>{tag}</td>',
+            f'<td class="mono">{esc(m["source"])}</td>',
+            f"<td>{esc(m['type'])}</td>",
+            f'<td class="num">{esc(fmt_bytes(u["size"])) if u else "—"}</td>',
+            f'<td class="num">{esc(fmt_bytes(u["used"])) if u else "—"}</td>',
+            f'<td class="num">{esc(fmt_bytes(u["avail"])) if u else "—"}</td>',
+            f'<td>{use}</td>',
+            f'<td class="num">{inodes}</td>',
+            "</tr>",
+        ]))
+    body = "".join(rows) or basic_empty("No mounts in /proc/mounts.", 8)
+    table = f'<table class="mounts"><thead><tr><th>Mountpoint</th><th>Source</th><th>Type</th><th class="num">Size</th><th class="num">Used</th><th class="num">Available</th><th>Use</th><th class="num">Inodes</th></tr></thead><tbody>{body}</tbody></table>'
+    out = [basic_card("Mounts", f"{len(mounts)} mount{'' if len(mounts) == 1 else 's'} from /proc/mounts, in mount order, with usage from statfs", table, "card table-wrap")]
+    if selected is None:
+        out.append(basic_card(None, None, basic_empty("Select a mount to see its filesystem.")))
+    else:
+        m = mounts[selected]
+        u = m["usage"]
+        facts = [("Source", m["source"]), ("Mountpoint", m["target"]), ("Type", m["type"]), ("Options", ",".join(m["options"])), ("Access", "read only" if m["readonly"] else "read and write")]
+        if u and u["blocks"]:
+            facts += [
+                ("Size", f"{fmt_bytes(u['size'])} in {u['blocks']} blocks"),
+                ("Used", f"{fmt_bytes(u['used'])}, {round(used_share(u) * 100)}%"),
+                ("Available", f"{fmt_bytes(u['avail'])}, plus {fmt_bytes(u['free'] - u['avail'])} reserved" if u["free"] > u["avail"] else fmt_bytes(u["avail"])),
+            ]
+        elif u:
+            facts.append(("Size", "not counted"))
+        if u:
+            facts += [
+                ("Block size", f"{fmt_bytes(u['block_size'])}, fragments of {fmt_bytes(u['fragment_size'])}" if u["fragment_size"] != u["block_size"] else fmt_bytes(u["block_size"])),
+                ("Inodes", f"{u['inodes'] - u['inodes_free']} used of {u['inodes']}, {u['inodes_free']} free" if u["inodes"] else "not counted"),
+                ("Longest name", f"{u['namemax']} bytes"),
+            ]
+        note = "A later mount on the same path hides this one, so statfs reaches that one instead." if m["covered"] else f"statfs failed: {m['error']}" if m["error"] else None
+        browse = basic_disabled("Browse") if m["covered"] else basic_link("Browse", basic_url(tab="files", path=m["target"]), "btn small")
+        out.append("".join([
+            '<div class="card detail">',
+            f'<h3 class="mono">{esc(m["target"])}</h3>',
+            f'<p class="sub">{esc(m["type"])} from {esc(m["source"])}</p>',
+            f'<div class="buttons">{browse}</div>',
+            f'<p class="sub">{esc(note)}</p>' if note else "",
+            "<h4>Filesystem</h4>",
+            basic_facts(facts, mono=True),
+            "</div>",
+        ]))
+    counts = collections.Counter(m["type"] for m in mounts)
+    types = "".join(f'<tr><td class="mono">{esc(f["name"])}</td><td>{"none (nodev)" if f["nodev"] else "required"}</td><td class="num">{counts[f["name"]]}</td></tr>' for f in filesystems) or basic_empty("/proc/filesystems is empty.", 3)
+    out.append(basic_card("Filesystem types", "From /proc/filesystems. A nodev type mounts without a source.", f'<table><thead><tr><th>Type</th><th>Source</th><th class="num">Mounts</th></tr></thead><tbody>{types}</tbody></table>', "card table-wrap"))
+    return "".join(out)
+
+
+def basic_plural(n, word):
+    return f"{n} {word}{'' if n == 1 else 's'}"
+
+
+def basic_named(name, code):
+    return f"{name} ({code})" if name else code or "—"
+
+
+def basic_device_row(key, selected, cells, cls=None):
+    classes = " ".join(c for c in (cls, "selected" if key == selected else None) if c)
+    link = f'<a href="{esc(basic_url(tab="devices", dev=key))}">{esc(cells[0])}</a>'
+    rest = "".join(f'<td{basic_class(c)}>{esc(v)}</td>' for v, c in cells[1:])
+    return f'<tr{basic_class(classes)}><td class="mono">{link}</td>{rest}</tr>'
+
+
+def basic_device_detail(devices, key):
+    for d in devices["pci"]:
+        if f"pci:{d['slot']}" == key:
+            title, sub, path = d["device_name"] or f"Device {d['device']}", f"{d['class_name']} · {d['slot']}", f"/sys/bus/pci/devices/{d['slot']}"
+            facts = [("Slot", d["slot"]), ("Vendor", basic_named(d["vendor_name"], d["vendor"])), ("Device", basic_named(d["device_name"], d["device"])), ("Subsystem", d["subsystem"] or "—"), ("Class", f"{d['class_name']} ({d['class']})")]
+            return title, sub, path, facts, d
+    for d in devices["usb"]:
+        if f"usb:{d['name']}" == key:
+            title, sub, path = d["product_name"] or f"Product {d['product']}", f"{d['class_name']} · port {d['name']}", f"/sys/bus/usb/devices/{d['name']}"
+            facts = [("Port", d["name"]), ("Bus", d["bus"]), ("Address", d["address"]), ("Vendor", basic_named(d["vendor_name"], d["vendor"])), ("Product", basic_named(d["product_name"], d["product"])), ("Release", d["release"] or "—"), ("Class", d["class_name"]), ("Interfaces", len(d["interfaces"]))]
+            return title, sub, path, facts, d
+        for i in d["interfaces"]:
+            if f"usb:{i['name']}" == key:
+                title, sub, path = f"Interface {i['number']}", f"{i['class_name']} · {d['product_name'] or d['name']}", f"/sys/bus/usb/devices/{i['name']}"
+                facts = [("Interface", i["name"]), ("Device", basic_named(d["product_name"], d["name"])), ("Class", f"{i['class_name']} ({i['class']:02x}/{i['subclass']:02x}/{i['protocol']:02x})")]
+                return title, sub, path, facts, i
+    return None
+
+
+def basic_devices(handler, args):
+    devices = read_devices()
+    selected = args.get("dev")
+    out = [] if devices["sysfs"] else [basic_card(None, None, basic_empty("There is no /sys/bus here, so the kernel lists no PCI or USB devices."))]
+    pci = "".join(basic_device_row(f"pci:{d['slot']}", selected, [d["slot"], (d["class_name"], None), (d["vendor_name"] or d["vendor"], None), (d["device_name"] or d["device"], None), (f"{d['vendor']}:{d['device']}" if d["vendor"] else "—", "mono")]) for d in devices["pci"]) or basic_empty("No PCI devices in /sys/bus/pci/devices.", 5)
+    out.append(basic_card("PCI", f"{basic_plural(len(devices['pci']), 'function')} from /sys/bus/pci/devices", f'<table><thead><tr><th>Slot</th><th>Class</th><th>Vendor</th><th>Device</th><th>ID</th></tr></thead><tbody>{pci}</tbody></table>', "card table-wrap"))
+    rows = []
+    for d in devices["usb"]:
+        rows.append(basic_device_row(f"usb:{d['name']}", selected, [d["name"], (d["bus"], "num"), (d["address"], "num"), (d["class_name"], None), (d["vendor_name"] or d["vendor"], None), (d["product_name"] or d["product"], None), (f"{d['vendor']}:{d['product']}" if d["vendor"] else "—", "mono")]))
+        for i in d["interfaces"]:
+            kind = f"{i['class']:02x}/{i['subclass']:02x}/{i['protocol']:02x}" + (f" · {i['driver']}" if i["driver"] else "")
+            rows.append(basic_device_row(f"usb:{i['name']}", selected, [f"interface {i['number']}", ("", None), ("", None), (i["class_name"], None), (kind, "mono"), ("", None), ("", None)], "iface"))
+    interfaces = sum(len(d["interfaces"]) for d in devices["usb"])
+    usb = "".join(rows) or basic_empty("No USB devices in /sys/bus/usb/devices.", 7)
+    out.append(basic_card("USB", f"{basic_plural(len(devices['usb']), 'device')} and {basic_plural(interfaces, 'interface')} from /sys/bus/usb/devices", f'<table class="usb"><thead><tr><th>Port</th><th class="num">Bus</th><th class="num">Address</th><th>Class</th><th>Vendor</th><th>Product</th><th>ID</th></tr></thead><tbody>{usb}</tbody></table>', "card table-wrap"))
+    found = basic_device_detail(devices, selected) if selected else None
+    if found is None:
+        out.append(basic_card(None, None, basic_empty("Select a PCI or USB device to see its details.")))
+    else:
+        title, sub, path, facts, d = found
+        if d["driver"]:
+            facts.append(("Driver", d["driver"]))
+        facts.append(("sysfs", path))
+        uevent = "\n".join(f"{k}={v}" for k, v in d["uevent"].items()) or "(empty)"
+        out.append(f'<div class="card detail"><h3>{esc(title)}</h3><p class="sub">{esc(sub)}</p>{basic_facts(facts, mono=True)}<h4>uevent</h4><pre class="out">{esc(uevent)}</pre></div>')
+    nodes = "".join(f'<tr><td class="mono">{esc(n["path"])}</td><td>{esc(n["kind"])}</td><td class="num">{n["major"]}</td><td class="num">{n["minor"]}</td><td class="mono">{esc(n["mode"])}</td><td>{esc(n["owner"])}:{esc(n["group"])}</td></tr>' for n in devices["nodes"]) or basic_empty("No device nodes in /dev.", 6)
+    out.append(basic_card("Device nodes", f"{basic_plural(len(devices['nodes']), 'character and block device')} in /dev", f'<table><thead><tr><th>Path</th><th>Type</th><th class="num">Major</th><th class="num">Minor</th><th>Mode</th><th>Owner</th></tr></thead><tbody>{nodes}</tbody></table>', "card table-wrap"))
+    return "".join(out)
+
+
+def basic_files(handler, args):
+    size = basic_size(args)
+    errors = []
+    preview = args.get("file")
+    try:
+        path, st = resolve_path(args.get("path") or "/")
+        if not stat.S_ISDIR(st.st_mode):
+            if stat.S_ISREG(st.st_mode):
+                preview = path
+            else:
+                errors.append(f"{path} is a {file_kind(st.st_mode)} file, and the explorer reads only regular files")
+            path = os.path.dirname(path)
+        listing = list_directory(path)
+    except ApiError as e:
+        errors.append(e.message)
+        listing = list_directory("/")
+    path = listing["path"]
+    parts = [p for p in path.split("/") if p]
+    crumbs = [basic_link("/", basic_url(tab="files", path="/"), "crumb")]
+    for i, part in enumerate(parts):
+        if i:
+            crumbs.append('<span class="sep">/</span>')
+        crumbs.append(basic_link(part, basic_url(tab="files", path="/" + "/".join(parts[:i + 1])), "crumb"))
+    rows = []
+    for entry in listing["entries"]:
+        child = os.path.join(path, entry["name"])
+        kind = entry["kind"]
+        if kind in ("dir", "link"):
+            href = basic_url(tab="files", path=child, bytes=size)
+        elif kind == "file":
+            href = basic_url(tab="files", path=path, file=child, bytes=size)
+        else:
+            href = None
+        label = esc(entry["name"] + "/" if kind == "dir" else entry["name"])
+        name = f'<a href="{esc(href)}"{basic_class("dir" if kind == "dir" else None)}>{label}</a>' if href else label
+        if kind == "link":
+            name += f'<span class="target"> → {esc(entry.get("target"))}</span>'
+        elif href is None:
+            name += f'<span class="tag">{esc(kind)}</span>'
+        rows.append("".join([
+            f'<tr{basic_class("selected" if child == preview else None)}>',
+            f'<td class="name">{name}</td>',
+            f'<td class="num">{esc(fmt_bytes(entry["size"])) if kind == "file" and "size" in entry else "—"}</td>',
+            f'<td class="mono">{esc(entry.get("mode") or "—")}</td>',
+            f'<td>{esc(entry["user"] + ":" + entry["group"]) if entry.get("user") else "—"}</td>',
+            f'<td>{esc(fmt_time(entry.get("mtime")))}</td>',
+            "</tr>",
+        ]))
+    body = "".join(rows) or basic_empty("Empty directory.", 5)
+    up = basic_link("Up", basic_url(tab="files", path=listing["parent"])) if listing["parent"] else basic_disabled("Up")
+    form = f'<form method="get" action="/basic" class="toolbar">{up} {basic_hidden({"tab": "files", "bytes": size})}<input type="text" name="path" value="{esc(path)}" size="48"> <input type="submit" class="btn primary" value="Open"> {basic_link("Refresh", basic_url(tab="files", path=path, file=preview, bytes=size))}</form>'
+    notice = "".join(f'<div class="card notice error"><pre class="out">{esc(e)}</pre></div>' for e in errors)
+    table = f'<div class="crumbs">{"".join(crumbs)}</div><table><thead><tr><th>Name</th><th class="num">Size</th><th>Mode</th><th>Owner</th><th>Modified</th></tr></thead><tbody>{body}</tbody></table><p class="sub">{len(listing["entries"])} entries{", listing cut short" if listing["truncated"] else ""}</p>'
+    return form + notice + basic_file_preview(preview, path, size) + basic_card(None, None, table, "card table-wrap")
+
+
+def basic_file_preview(preview, path, size):
+    if not preview:
+        return basic_card(None, None, '<p class="sub">Select a file to preview it. Read only. Only regular files are opened.</p>')
+    try:
+        r = preview_file(preview, size)
+    except ApiError as e:
+        return basic_card(None, None, f'<h3 class="mono">{esc(preview)}</h3><pre class="out">{esc(e.message)}</pre>')
+    what = "binary, hex dump of the start" if r["binary"] else "showing the start" if r["truncated"] else "whole file"
+    meta = f"{fmt_bytes(r['size'] or r['read'])} · {r['mode']} · {r['user']}:{r['group']} · {fmt_time(r['mtime'])} · {what}"
+    download = basic_link("Download", "/api/download?" + urllib.parse.urlencode({"path": r["path"]}))
+    tools = f'<div class="toolbar">{basic_size_form({"tab": "files", "path": path, "file": preview}, size, "First")} {download}</div>'
+    return basic_card(None, None, f'<h3 class="mono">{esc(r["path"])}</h3><p class="sub">{esc(meta)}</p>{tools}<pre class="out">{esc(r["text"] or "(empty)")}</pre>')
+
+
+def basic_console(handler, args):
+    note = handler.server.notes.get(args.get("note")) or {}
+    cwd = note.get("cwd") or "/"
+    timeout = note.get("timeout") or 30
+    fields = basic_hidden({"token": handler.server.token, "do": "exec", "back": "console"})
+    form = "".join([
+        f'<form method="post" action="/basic">{fields}',
+        '<table class="form"><tr><th>Directory</th>',
+        f'<td><input type="text" name="cwd" value="{esc(cwd)}" size="24"></td></tr>',
+        '<tr><th>Command</th><td><input type="text" name="command" size="64"></td></tr>',
+        f'<tr><th>Timeout</th><td><input type="text" name="timeout" value="{esc(timeout)}" size="4"> s</td></tr>',
+        '<tr><th></th><td><input type="submit" class="btn primary" value="Run"></td></tr>',
+        "</table></form>",
+    ])
+    return basic_card("Console", "Each command runs with /bin/sh -c, without a terminal; stdin is empty. The result shows above.", form)
+
+
+def basic_confirm(handler, args):
+    action = args.get("do")
+    if action == "power":
+        what = args.get("action")
+        if what not in POWER_WORDS:
+            raise ApiError(HTTPStatus.BAD_REQUEST, f"unknown power action {what}")
+        question = f"{POWER_WORDS[what]} {socket.gethostname()} now? Every process gets SIGTERM."
+        label, fields, back = POWER_WORDS[what], {"do": "power", "action": what, "back": "overview"}, basic_url(tab="overview")
+    elif action == "signal":
+        pid = int_arg(args, "pid")
+        sig = str(args.get("signal", "TERM")).upper()
+        question = f"Send SIG{sig} to {pid} ({args.get('name') or pid})?"
+        label, fields, back = f"Send SIG{sig}", {"do": "signal", "pid": pid, "signal": sig, "back": "processes"}, basic_url(tab="processes", pid=pid)
+    elif action == "service":
+        name, what = str(args.get("name", "")), str(args.get("action", ""))
+        question = f"{what.capitalize()} {name}?"
+        label, fields, back = what.capitalize(), {"do": "service", "name": name, "action": what, "back": "services"}, basic_url(tab="services")
+    else:
+        raise ApiError(HTTPStatus.BAD_REQUEST, "nothing to confirm")
+    return basic_card("Confirm", None, f'<p class="question">{esc(question)}</p><div class="buttons">{basic_form(handler, label, fields, "btn danger")}{basic_link("Cancel", back)}</div>')
+
+
+BASIC_VIEWS = {
+    "overview": basic_overview,
+    "processes": basic_processes,
+    "services": basic_services,
+    "logs": basic_logs,
+    "mounts": basic_mounts,
+    "devices": basic_devices,
+    "files": basic_files,
+    "console": basic_console,
+    "confirm": basic_confirm,
+}
+
+BASIC_ACTIONS = {
+    "signal": route_signal,
+    "service": route_service,
+    "exec": route_exec,
+    "sync": route_sync,
+    "power": route_power,
+}
+
+
+def basic_action_title(args):
+    action = args.get("do")
+    if action == "exec":
+        return f"{args.get('cwd') or '/'} $ {args.get('command', '')}"
+    if action == "signal":
+        return f"SIG{str(args.get('signal', 'TERM')).upper()} to {args.get('pid')}"
+    if action == "service":
+        return f"{args.get('name')}: {args.get('action')}"
+    if action == "power":
+        return POWER_WORDS.get(args.get("action"), "Power")
+    return "Sync disks"
+
+
+def basic_action(handler, args):
+    note = {"title": basic_action_title(args), "ok": False, "cwd": args.get("cwd"), "timeout": args.get("timeout")}
+    if not hmac.compare_digest(str(args.get("token", "")).encode(), handler.server.token.encode()):
+        return dict(note, text="This form came from an older dashboard. Reload the page and try again.\n")
+    route = BASIC_ACTIONS.get(args.get("do"))
+    if route is None:
+        return dict(note, text=f"no action {args.get('do')}\n")
+    try:
+        r = route(handler, args)
+    except ApiError as e:
+        return dict(note, text=e.message + "\n")
+    if args.get("do") != "exec":
+        text = r["output"] + ("the dashboard will disconnect.\n" if args.get("do") == "power" else "")
+        return dict(note, text=text or "(no output)", ok=True)
+    what = "killed after timeout" if r["timed_out"] else "failed to start" if r["code"] is None else f"killed by signal {-r['code']}" if r["code"] < 0 else f"exit {r['code']}"
+    return dict(note, text=r["output"] + ("\n[output truncated]" if r["truncated"] else ""), ok=r["code"] == 0, meta=f"{what} · {r['elapsed']:.2f} s")
+
+
+def basic_post(handler, args):
+    note = handler.server.add_note(basic_action(handler, args))
+    back = args.get("back") if args.get("back") in dict(BASIC_TABS) else "overview"
+    pid = args.get("pid") if back == "processes" else None
+    return basic_url(tab=back, pid=pid, note=note)
+
+
+def basic_note(note):
+    if not note:
+        return ""
+    meta = f'<div class="meta">{basic_state("good" if note["ok"] else "critical", note["meta"])}</div>' if note.get("meta") else ""
+    text = f'<pre class="out">{esc(note["text"])}</pre>' if note.get("text") else ""
+    return f'<div class="card notice{"" if note["ok"] else " error"}"><div class="line">{esc(note["title"])}</div>{text}{meta}</div>'
+
+
+def render_basic(handler, args):
+    tab = args.get("tab") if args.get("tab") in BASIC_VIEWS else "overview"
+    current = CONFIRM_TABS.get(args.get("do"), "overview") if tab == "confirm" else tab
+    try:
+        body = BASIC_VIEWS[tab](handler, args)
+    except ApiError as e:
+        body = f'<div class="card notice error"><pre class="out">{esc(e.message)}</pre></div>'
+    uname = os.uname()
+    host = socket.gethostname()
+    nav = "".join(f'<a href="{esc(basic_url(tab=name))}"{basic_class("current" if name == current else None)}>{label}</a>' for name, label in BASIC_TABS)
+    refresh = ""
+    if basic_refreshing(args, tab):
+        again = {k: v for k, v in args.items() if k != "note"}
+        refresh = f'<meta http-equiv="refresh" content="{BASIC_REFRESH_SECONDS}; url={esc(basic_url(**again))}">'
+    note = basic_note(handler.server.notes.get(args.get("note")))
+    page = f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{refresh}<title>{esc(host)} · aplus dashboard</title>
+<style>{BASIC_CSS}</style>
+</head>
+<body>
+<div class="top"><a class="full" href="/">Full view</a><span class="brand">aplus</span><span class="host">{esc(host)}</span><span class="release">{esc(uname.sysname)} {esc(uname.release)} · {esc(uname.machine)}</span></div>
+<div class="nav">{nav}</div>
+<div class="main">{note}{body}</div>
+</body>
+</html>
+"""
+    return page.encode("utf-8")
+
+
+BASIC_CSS = """
+body { margin: 0; background: #f9f9f7; color: #0b0b0b; font-family: sans-serif; font-size: 14px; line-height: 1.45; }
+a { color: #2a78d6; }
+h3 { font-size: 15px; margin: 0 0 4px; }
+h4 { font-size: 12px; color: #52514e; margin: 16px 0 6px; }
+.top { background: #fcfcfb; border-bottom: 1px solid #e1e0d9; padding: 12px 16px; }
+.top .brand, .top .host { font-weight: bold; margin-right: 12px; }
+.top .release { color: #52514e; font-size: 13px; }
+.top .full { float: right; font-size: 13px; }
+.nav { background: #fcfcfb; border-bottom: 1px solid #e1e0d9; padding: 0 8px; }
+.nav a { display: inline-block; padding: 9px 10px; color: #52514e; text-decoration: none; border-bottom: 2px solid #fcfcfb; }
+.nav a.current { color: #0b0b0b; font-weight: bold; border-bottom: 2px solid #2a78d6; }
+.main { padding: 16px; max-width: 1400px; margin: 0 auto; }
+.card { background: #fcfcfb; border: 1px solid #e1e0d9; border-radius: 10px; padding: 14px 16px; margin: 0 0 16px 0; }
+.card h2 { font-size: 13px; margin: 0 0 2px; }
+.sub { color: #52514e; font-size: 12px; margin: 0 0 10px; }
+.tiles { margin: 0 0 4px; }
+.tile { display: inline-block; vertical-align: top; width: 200px; margin: 0 12px 12px 0; }
+.tile .label { color: #52514e; font-size: 13px; }
+.tile .value { font-size: 26px; font-weight: bold; }
+.tile .note { color: #52514e; font-size: 12px; }
+.meter { height: 6px; background: #cde2fb; margin-top: 8px; overflow: hidden; }
+.meter div { height: 6px; background: #2a78d6; }
+.meter.warning div { background: #fab219; }
+.meter.critical div { background: #d03b3b; }
+img.chart { display: block; max-width: 100%; height: auto; border: 0; }
+.axis { color: #898781; font-size: 11px; max-width: 600px; }
+.axis .right { float: right; }
+.table-wrap { overflow: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { text-align: left; padding: 5px 8px; border-bottom: 1px solid #e1e0d9; white-space: nowrap; vertical-align: top; }
+th { color: #52514e; font-size: 12px; }
+th a { color: #52514e; text-decoration: none; }
+td.num, th.num { text-align: right; }
+td.cmd { max-width: 420px; overflow: hidden; text-overflow: ellipsis; font-family: monospace; font-size: 12px; color: #52514e; }
+td.wide { width: 100%; }
+td.wide .meter { margin: 6px 0 0; }
+tr.selected td { background: #f0efec; }
+tr.covered td { color: #898781; }
+table.facts th { font-weight: normal; width: 1%; }
+table.facts td { white-space: normal; word-wrap: break-word; }
+table.form th { font-weight: normal; width: 1%; border: 0; }
+table.form td { border: 0; }
+table.usb tr.iface td { color: #52514e; font-size: 12px; }
+table.usb tr.iface td:first-child { padding-left: 26px; }
+table.mounts .meter { display: inline-block; width: 64px; margin: 0 8px 0 0; vertical-align: middle; }
+.mono, pre, code, td.name { font-family: monospace; font-size: 12.5px; }
+td.name a.dir { font-weight: bold; }
+td.name .target { color: #52514e; }
+pre.out { background: #f0efec; padding: 10px; margin: 0; overflow: auto; white-space: pre-wrap; word-wrap: break-word; max-height: 600px; }
+.argv { background: #f0efec; padding: 8px 10px; margin: 8px 0 12px; word-wrap: break-word; }
+.toolbar { margin: 0 0 12px; }
+.buttons { margin: 4px 0; }
+.btn { display: inline-block; background: #fcfcfb; border: 1px solid #c3c2b7; border-radius: 6px; padding: 3px 10px; margin: 0 4px 4px 0; color: #0b0b0b; text-decoration: none; font-size: 13px; cursor: pointer; }
+.btn.small { padding: 1px 8px; font-size: 12px; }
+.btn.primary { background: #2a78d6; border-color: #2a78d6; color: #ffffff; }
+.btn.danger { background: #d03b3b; border-color: #d03b3b; color: #ffffff; }
+.btn.disabled { color: #898781; border-color: #e1e0d9; cursor: default; }
+form.inline { display: inline; margin: 0; }
+input[type=text], select { background: #fcfcfb; border: 1px solid #c3c2b7; padding: 3px 6px; font-size: 13px; }
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 4px; background: #898781; margin-right: 6px; }
+.dot.good { background: #0ca30c; }
+.dot.warning { background: #fab219; }
+.dot.serious { background: #ec835a; }
+.dot.critical { background: #d03b3b; }
+.dot.neutral { width: 6px; height: 6px; background: #fcfcfb; border: 1px solid #898781; }
+.tag { display: inline-block; font-size: 11px; padding: 0 6px; margin-left: 8px; background: #f0efec; color: #52514e; }
+.empty { color: #52514e; padding: 20px 0; text-align: center; }
+.notice { border-left: 3px solid #2a78d6; }
+.notice.error { border-left: 3px solid #d03b3b; }
+.notice .line { font-family: monospace; font-weight: bold; margin: 0 0 6px; }
+.notice .meta { color: #52514e; font-size: 11px; margin-top: 4px; }
+.question { margin: 0 0 12px; }
+.crumbs { font-family: monospace; margin: 0 0 10px; }
+.crumbs a { text-decoration: none; padding: 2px 3px; }
+.crumbs .sep { color: #898781; }
+.logitem { display: block; padding: 5px 8px; text-decoration: none; color: #0b0b0b; }
+.logitem.current { background: #f0efec; border-left: 3px solid #2a78d6; }
+.logitem .mono { display: block; font-size: 12px; }
+.logitem .meta { display: block; color: #52514e; font-size: 11px; }
+"""
+
+
 ## @brief HTTP server holding the dashboard's shared state.
 class DashboardServer(ThreadingHTTPServer):
     daemon_threads = True
@@ -1018,10 +2078,22 @@ class DashboardServer(ThreadingHTTPServer):
     ## @brief Creates the server and binds it.
     #  @param address (host, port) to listen on.
     #  @param sampler The running sampler.
-    def __init__(self, address, sampler):
+    def __init__(self, address, sampler, kmsg):
         super().__init__(address, DashboardHandler)
         self.sampler = sampler
+        self.kmsg = kmsg
         self.processes = ProcessTable()
+        self.token = secrets.token_urlsafe(24)
+        self.notes = collections.OrderedDict()
+        self.notes_lock = threading.Lock()
+
+    def add_note(self, note):
+        key = secrets.token_hex(8)
+        with self.notes_lock:
+            self.notes[key] = note
+            while len(self.notes) > MAX_NOTES:
+                self.notes.popitem(last=False)
+        return key
 
     ## @brief Ignores clients that went away and logs every other request failure.
     #  @param request The client socket.
@@ -1066,6 +2138,12 @@ class DashboardHandler(BaseHTTPRequestHandler):
             if not post and url.path in ("/", "/index.html"):
                 self.send_body(HTTPStatus.OK, PAGE, "text/html; charset=utf-8")
                 return
+            if url.path == "/basic":
+                if post:
+                    self.send_redirect(basic_post(self, self.read_form()))
+                else:
+                    self.send_body(HTTPStatus.OK, render_basic(self, dict(urllib.parse.parse_qsl(url.query))), "text/html; charset=utf-8")
+                return
             args = self.read_json() if post else dict(urllib.parse.parse_qsl(url.query))
             if not post and url.path == "/api/download":
                 self.send_file(args.get("path"))
@@ -1093,19 +2171,32 @@ class DashboardHandler(BaseHTTPRequestHandler):
     #  @return The decoded object.
     def read_json(self):
         try:
+            data = json.loads(self.read_body() or b"{}")
+        except ValueError:
+            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid JSON") from None
+        if not isinstance(data, dict):
+            raise ApiError(HTTPStatus.BAD_REQUEST, "expected a JSON object")
+        return data
+
+    def read_body(self):
+        try:
             length = int(self.headers.get("Content-Length") or 0)
         except ValueError:
             raise ApiError(HTTPStatus.BAD_REQUEST, "invalid Content-Length") from None
         if length < 0 or length > MAX_BODY:
             self.close_connection = True
             raise ApiError(HTTPStatus.REQUEST_ENTITY_TOO_LARGE, "request body too large")
-        try:
-            data = json.loads(self.rfile.read(length) or b"{}")
-        except ValueError:
-            raise ApiError(HTTPStatus.BAD_REQUEST, "invalid JSON") from None
-        if not isinstance(data, dict):
-            raise ApiError(HTTPStatus.BAD_REQUEST, "expected a JSON object")
-        return data
+        return self.rfile.read(length)
+
+    def read_form(self):
+        return dict(urllib.parse.parse_qsl(self.read_body().decode("utf-8", "replace"), keep_blank_values=True))
+
+    def send_redirect(self, location):
+        self.send_response(HTTPStatus.SEE_OTHER)
+        self.send_header("Location", location)
+        self.send_header("Content-Length", "0")
+        self.send_header("Cache-Control", "no-store")
+        self.end_headers()
 
     ## @brief Sends a JSON response.
     #  @param status HTTP status code.
@@ -1164,6 +2255,8 @@ PAGE = r"""<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>aplus dashboard</title>
+<noscript><meta http-equiv="refresh" content="0; url=/basic"></noscript>
+<script>if (!window.fetch || !window.Promise || !document.documentElement.replaceChildren) location.replace("/basic");</script>
 <style>
 :root {
   color-scheme: light;
@@ -1229,6 +2322,7 @@ header .brand { font-weight: 700; letter-spacing: 0.02em; }
 header .host { font-weight: 600; }
 header .release { color: var(--ink-2); font-size: 13px; }
 header .spacer { flex: 1; }
+header a.basic { color: var(--ink-2); font-size: 13px; }
 .conn { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ink-2); }
 .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); flex: none; }
 .dot.good { background: var(--good); }
@@ -1312,6 +2406,10 @@ tbody tr[aria-selected="true"] { background: var(--surface-2); box-shadow: inset
 .usage .pct { text-align: right; font-variant-numeric: tabular-nums; }
 #mounts-table tr.covered td { color: var(--muted); }
 #mounts-table td.mono { max-width: 280px; overflow: hidden; text-overflow: ellipsis; }
+#usb-table tr.iface td { color: var(--ink-2); font-size: 12px; }
+#usb-table tr.iface td:first-child { padding-left: 26px; }
+#nodes-table tbody tr { cursor: default; }
+.device-detail { position: sticky; top: 12px; }
 pre.out { background: var(--surface-2); border-radius: 8px; padding: 12px; margin: 0; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; }
 .logs { grid-template-columns: minmax(220px, 300px) minmax(0, 1fr); align-items: start; }
 .loglist { display: flex; flex-direction: column; gap: 2px; max-height: 70vh; overflow: auto; }
@@ -1350,7 +2448,7 @@ a.btn { text-decoration: none; display: inline-block; color: inherit; }
   header, main { padding-left: 16px; padding-right: 16px; }
   nav { padding: 0 8px; }
   .split, .logs, .files { grid-template-columns: minmax(0, 1fr); }
-  .files .preview { position: static; }
+  .files .preview, .device-detail { position: static; }
   .charts { grid-template-columns: minmax(0, 1fr); }
   .console-form { grid-template-columns: minmax(0, 1fr) 80px; }
   .console-form #cwd { grid-column: 1 / -1; }
@@ -1358,11 +2456,13 @@ a.btn { text-decoration: none; display: inline-block; color: inherit; }
 </style>
 </head>
 <body>
+<noscript><p style="margin:0;padding:10px 24px">JavaScript is off. The <a href="/basic">basic view</a> works without it.</p></noscript>
 <header>
   <span class="brand">aplus</span>
   <span class="host" id="host">&mdash;</span>
   <span class="release" id="release"></span>
   <span class="spacer"></span>
+  <a class="basic" href="/basic">Basic view</a>
   <span class="conn"><span class="dot" id="conn-dot"></span><span id="conn-text">connecting</span></span>
 </header>
 <nav role="tablist">
@@ -1371,6 +2471,7 @@ a.btn { text-decoration: none; display: inline-block; color: inherit; }
   <button role="tab" data-tab="services" aria-selected="false">Services</button>
   <button role="tab" data-tab="logs" aria-selected="false">Logs</button>
   <button role="tab" data-tab="mounts" aria-selected="false">Mounts</button>
+  <button role="tab" data-tab="devices" aria-selected="false">Devices</button>
   <button role="tab" data-tab="files" aria-selected="false">Files</button>
   <button role="tab" data-tab="console" aria-selected="false">Console</button>
 </nav>
@@ -1426,7 +2527,7 @@ a.btn { text-decoration: none; display: inline-block; color: inherit; }
 
   <section id="tab-logs" hidden>
     <div class="grid logs">
-      <div class="card"><h2>Log files</h2><p class="sub">Under /var/log</p><div class="loglist" id="loglist"></div></div>
+      <div class="card"><h2>Log files</h2><p class="sub">Kernel messages from /dev/kmsg, and the files under /var/log</p><div class="loglist" id="loglist"></div></div>
       <div class="card">
         <div class="toolbar">
           <span class="mono grow" id="log-title">No log selected</span>
@@ -1454,6 +2555,27 @@ a.btn { text-decoration: none; display: inline-block; color: inherit; }
         <h2>Filesystem types</h2><p class="sub">From /proc/filesystems. A nodev type mounts without a source.</p>
         <table id="fstypes-table"><thead><tr><th>Type</th><th>Source</th><th class="num">Mounts</th></tr></thead><tbody></tbody></table>
       </div>
+    </div>
+  </section>
+
+  <section id="tab-devices" hidden>
+    <div class="card" id="devices-note" hidden><div class="empty">There is no /sys/bus here, so the kernel lists no PCI or USB devices.</div></div>
+    <div class="grid split" style="margin-top:0">
+      <div class="grid" style="gap:16px">
+        <div class="card table-wrap">
+          <h2>PCI</h2><p class="sub" id="pci-sub">From /sys/bus/pci/devices</p>
+          <table id="pci-table"><thead><tr><th>Slot</th><th>Class</th><th>Vendor</th><th>Device</th><th>ID</th></tr></thead><tbody></tbody></table>
+        </div>
+        <div class="card table-wrap">
+          <h2>USB</h2><p class="sub" id="usb-sub">From /sys/bus/usb/devices</p>
+          <table id="usb-table"><thead><tr><th>Port</th><th class="num">Bus</th><th class="num">Address</th><th>Class</th><th>Vendor</th><th>Product</th><th>ID</th></tr></thead><tbody></tbody></table>
+        </div>
+      </div>
+      <div class="card detail device-detail" id="device-detail"><div class="empty">Select a PCI or USB device to see its details.</div></div>
+    </div>
+    <div class="card table-wrap" style="margin-top:16px">
+      <h2>Device nodes</h2><p class="sub" id="nodes-sub">Character and block devices in /dev</p>
+      <table id="nodes-table"><thead><tr><th>Path</th><th>Type</th><th class="num">Major</th><th class="num">Minor</th><th>Mode</th><th>Owner</th></tr></thead><tbody></tbody></table>
     </div>
   </section>
 
@@ -1527,6 +2649,8 @@ const state = {
   selected: null,
   mounts: null,
   mountKey: null,
+  devices: null,
+  deviceKey: null,
   logs: [],
   logPath: null,
   filesPath: storageGet("pymonitor-files-path") || "/",
@@ -2176,6 +3300,123 @@ function renderMountDetail(m) {
   ].filter(Boolean));
 }
 
+async function loadDevices() {
+  state.devices = await api("/api/devices");
+  renderDevices();
+}
+
+function plural(n, word) { return `${n} ${word}${n === 1 ? "" : "s"}`; }
+
+function hex2(n) { return n.toString(16).padStart(2, "0"); }
+
+function named(name, id) { return name ? `${name} (${id})` : id || "—"; }
+
+function emptyRow(colspan, text) {
+  return el("tr", {style: "cursor:default"}, el("td", {colspan, class: "empty", text}));
+}
+
+function deviceRow(key, cells, cls) {
+  const select = () => { state.deviceKey = key; renderDevices(); };
+  return el("tr", {
+    class: cls,
+    tabindex: "0",
+    "aria-selected": String(key === state.deviceKey),
+    onclick: select,
+    onkeydown: ev => { if (ev.key === "Enter") select(); },
+  }, ...cells);
+}
+
+function renderDevices() {
+  const {sysfs, pci, usb, nodes} = state.devices;
+  $("#devices-note").hidden = sysfs;
+  $("#pci-sub").textContent = `${plural(pci.length, "function")} from /sys/bus/pci/devices`;
+  $("#pci-table tbody").replaceChildren(...(pci.length
+    ? pci.map(d => deviceRow(`pci:${d.slot}`, [
+        el("td", {class: "mono", text: d.slot}),
+        el("td", {text: d.class_name}),
+        el("td", {text: d.vendor_name || d.vendor}),
+        el("td", {text: d.device_name || d.device}),
+        el("td", {class: "mono", text: d.vendor ? `${d.vendor}:${d.device}` : "—"})]))
+    : [emptyRow(5, "No PCI devices in /sys/bus/pci/devices.")]));
+  const interfaces = usb.reduce((n, d) => n + d.interfaces.length, 0);
+  $("#usb-sub").textContent = `${plural(usb.length, "device")} and ${plural(interfaces, "interface")} from /sys/bus/usb/devices`;
+  $("#usb-table tbody").replaceChildren(...(usb.length
+    ? usb.flatMap(d => [
+        deviceRow(`usb:${d.name}`, [
+          el("td", {class: "mono", text: d.name}),
+          el("td", {class: "num", text: d.bus}),
+          el("td", {class: "num", text: d.address}),
+          el("td", {text: d.class_name}),
+          el("td", {text: d.vendor_name || d.vendor}),
+          el("td", {text: d.product_name || d.product}),
+          el("td", {class: "mono", text: d.vendor ? `${d.vendor}:${d.product}` : "—"})]),
+        ...d.interfaces.map(i => deviceRow(`usb:${i.name}`, [
+          el("td", {class: "mono", text: `interface ${i.number}`}),
+          el("td"),
+          el("td"),
+          el("td", {text: i.class_name}),
+          el("td", {colspan: 3, class: "mono", text: `${hex2(i.class)}/${hex2(i.subclass)}/${hex2(i.protocol)}${i.driver ? ` · ${i.driver}` : ""}`})], "iface")),
+      ])
+    : [emptyRow(7, "No USB devices in /sys/bus/usb/devices.")]));
+  $("#nodes-sub").textContent = `${plural(nodes.length, "character and block device")} in /dev`;
+  $("#nodes-table tbody").replaceChildren(...(nodes.length
+    ? nodes.map(n => el("tr", {},
+        el("td", {class: "mono", text: n.path}),
+        el("td", {text: n.kind}),
+        el("td", {class: "num", text: n.major}),
+        el("td", {class: "num", text: n.minor}),
+        el("td", {class: "mono", text: n.mode}),
+        el("td", {text: `${n.owner}:${n.group}`})))
+    : [emptyRow(6, "No device nodes in /dev.")]));
+  renderDeviceDetail();
+}
+
+function findDevice(key) {
+  const {pci, usb} = state.devices;
+  for (const d of pci) if (`pci:${d.slot}` === key) return {kind: "pci", d};
+  for (const d of usb) {
+    if (`usb:${d.name}` === key) return {kind: "usb", d};
+    for (const i of d.interfaces) if (`usb:${i.name}` === key) return {kind: "interface", d: i, parent: d};
+  }
+  return null;
+}
+
+function renderDeviceDetail() {
+  const found = state.deviceKey ? findDevice(state.deviceKey) : null;
+  if (!found) {
+    state.deviceKey = null;
+    $("#device-detail").replaceChildren(el("div", {class: "empty", text: "Select a PCI or USB device to see its details."}));
+    return;
+  }
+  const {kind, d, parent} = found;
+  let title, sub, facts, path;
+  if (kind === "pci") {
+    title = d.device_name || `Device ${d.device}`;
+    sub = `${d.class_name} · ${d.slot}`;
+    path = `/sys/bus/pci/devices/${d.slot}`;
+    facts = [["Slot", d.slot], ["Vendor", named(d.vendor_name, d.vendor)], ["Device", named(d.device_name, d.device)], ["Subsystem", d.subsystem || "—"], ["Class", `${d.class_name} (${d.class})`]];
+  } else if (kind === "usb") {
+    title = d.product_name || `Product ${d.product}`;
+    sub = `${d.class_name} · port ${d.name}`;
+    path = `/sys/bus/usb/devices/${d.name}`;
+    facts = [["Port", d.name], ["Bus", d.bus], ["Address", d.address], ["Vendor", named(d.vendor_name, d.vendor)], ["Product", named(d.product_name, d.product)], ["Release", d.release || "—"], ["Class", d.class_name], ["Interfaces", d.interfaces.length]];
+  } else {
+    title = `Interface ${d.number}`;
+    sub = `${d.class_name} · ${parent.product_name || parent.name}`;
+    path = `/sys/bus/usb/devices/${d.name}`;
+    facts = [["Interface", d.name], ["Device", named(parent.product_name, parent.name)], ["Class", `${d.class_name} (${hex2(d.class)}/${hex2(d.subclass)}/${hex2(d.protocol)})`]];
+  }
+  if (d.driver) facts.push(["Driver", d.driver]);
+  facts.push(["sysfs", path]);
+  const uevent = Object.entries(d.uevent).map(([k, v]) => `${k}=${v}`).join("\n");
+  $("#device-detail").replaceChildren(
+    el("h3", {text: title}),
+    el("p", {class: "sub", text: sub}),
+    el("dl", {class: "facts"}, ...facts.flatMap(([k, v]) => [el("dt", {text: k}), el("dd", {class: "mono", text: v})])),
+    el("h4", {text: "uevent"}),
+    el("pre", {class: "out", text: uevent || "(empty)"}));
+}
+
 /**
  * @brief Opens a directory in the files tab.
  * @param {string} path Absolute directory path.
@@ -2208,7 +3449,13 @@ function renderLogList() {
   list.replaceChildren(...state.logs.map(l => el("button", {
     "aria-current": String(l.path === state.logPath),
     onclick: () => openLog(l.path),
-  }, el("span", {class: "path", text: l.path.replace(/^\/var\/log\//, "")}), el("span", {class: "meta", text: `${fmtBytes(l.size)} · ${new Date(l.mtime * 1000).toLocaleString()}`}))));
+  }, el("span", {class: "path", text: l.kernel ? "Kernel messages" : l.path.replace(/^\/var\/log\//, "")}), el("span", {class: "meta", text: logMeta(l)}))));
+}
+
+function logMeta(l) {
+  if (!l.kernel) return `${fmtBytes(l.size)} · ${new Date(l.mtime * 1000).toLocaleString()}`;
+  if (l.error && !l.size) return `${l.path} · ${l.error}`;
+  return `${l.path} · ${fmtBytes(l.size)} kept · ${new Date(l.mtime * 1000).toLocaleString()}`;
 }
 
 /**
@@ -2419,6 +3666,7 @@ function showTab(name) {
   if (name === "processes") runTask("processes", loadProcesses);
   if (name === "services") runTask("services", loadServices);
   if (name === "mounts") runTask("mounts", loadMounts);
+  if (name === "devices") runTask("devices", loadDevices);
   if (name === "logs") runTask("logs", async () => { await loadLogs(); await loadLog(); });
   if (name === "files" && !state.filesLoaded) openPath(state.filesPath);
   if (name === "console") $("#command").focus();
@@ -2434,6 +3682,7 @@ function tick() {
   if (state.tab === "processes" && $("#proc-auto").checked && n % 3 === 0) runTask("processes", loadProcesses);
   if (state.tab === "services" && n % 5 === 0) runTask("services", loadServices);
   if (state.tab === "mounts" && n % 5 === 0) runTask("mounts", loadMounts);
+  if (state.tab === "devices" && n % 5 === 0) runTask("devices", loadDevices);
   if (state.tab === "logs" && n % 10 === 0) runTask("logs", loadLogs);
   if (state.tab === "logs" && $("#log-follow").checked && n % 2 === 0) runTask("log", loadLog);
 }
@@ -2454,7 +3703,7 @@ $("#command").addEventListener("keydown", walkHistory);
 $("#clear").addEventListener("click", () => $("#console-out").replaceChildren());
 window.addEventListener("resize", () => { if (state.tab === "overview") renderOverview(); });
 renderProcessHeader();
-showTab(["overview", "processes", "services", "logs", "mounts", "files", "console"].includes(storageGet("pymonitor-tab")) ? storageGet("pymonitor-tab") : "overview");
+showTab(["overview", "processes", "services", "logs", "mounts", "devices", "files", "console"].includes(storageGet("pymonitor-tab")) ? storageGet("pymonitor-tab") : "overview");
 loadOverview();
 setInterval(tick, 1000);
 </script>
@@ -2484,8 +3733,10 @@ def main():
 
     sampler = Sampler(clamp(args.interval, 0.2, 60.0))
     sampler.start()
+    kmsg = KernelLog()
+    kmsg.start()
     try:
-        server = DashboardServer((args.bind, args.port), sampler)
+        server = DashboardServer((args.bind, args.port), sampler, kmsg)
     except OSError as e:
         log.error("cannot listen on %s:%d: %s", args.bind, args.port, e)
         return 1
