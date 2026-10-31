@@ -197,7 +197,7 @@ struct virtio_driver {
     struct {
 
         irq_t irq;
-        uint16_t bars;
+        uintptr_t bars[6];
         uint16_t num_queues;
         uint16_t msix_vectors;
 

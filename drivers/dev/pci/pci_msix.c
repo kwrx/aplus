@@ -74,43 +74,18 @@ int pci_find_msix(pcidev_t device, pci_msix_t* mptr) {
         }
 
 
-        uintptr_t pci_bir_address = 0UL;
-        size_t pci_bir_size = 0UL;
+        uintptr_t pci_bir_address = pci_map_bar(device, PCI_BAR(msix.msix_pci.pci_bir), NULL);
 
-        uintptr_t pci_pba_address = 0UL;
-        size_t pci_pba_size = 0UL;
-
-#if defined(__x86_64__) || defined(__aarch64__)
-        if (pci_is_64bit(device, PCI_BAR(msix.msix_pci.pci_bir))) {
-            pci_bir_address = pci_read(device, PCI_BAR(msix.msix_pci.pci_bir), 8) & PCI_BAR_MM_MASK;
-            pci_bir_size    = pci_bar_size(device, PCI_BAR(msix.msix_pci.pci_bir), 8);
-            pci_pba_address = pci_read(device, PCI_BAR(msix.msix_pci.pci_pending_bir), 8) & PCI_BAR_MM_MASK;
-            pci_pba_size    = pci_bar_size(device, PCI_BAR(msix.msix_pci.pci_pending_bir), 8);
-        } else
-#endif
-        {
-            pci_bir_address = pci_read(device, PCI_BAR(msix.msix_pci.pci_bir), 4) & PCI_BAR_MM_MASK;
-            pci_bir_size    = pci_bar_size(device, PCI_BAR(msix.msix_pci.pci_bir), 4);
-            pci_pba_address = pci_read(device, PCI_BAR(msix.msix_pci.pci_pending_bir), 4) & PCI_BAR_MM_MASK;
-            pci_pba_size    = pci_bar_size(device, PCI_BAR(msix.msix_pci.pci_pending_bir), 4);
-        }
-
-        DEBUG_ASSERT(pci_bir_address);
-        DEBUG_ASSERT(pci_bir_size);
-        DEBUG_ASSERT(pci_pba_address);
-        DEBUG_ASSERT(pci_pba_size);
-
-        if (arch_vmm_map(&core->bsp.address_space, pci_bir_address, pci_bir_address, pci_bir_size, ARCH_VMM_MAP_FIXED | ARCH_VMM_MAP_RDWR | ARCH_VMM_MAP_UNCACHED | ARCH_VMM_MAP_NOEXEC) == ARCH_VMM_MAP_FAILED)
+        if (!pci_bir_address)
             return -1;
+
+        uintptr_t pci_pba_address = pci_bir_address;
 
         if (msix.msix_pci.pci_bir != msix.msix_pci.pci_pending_bir) {
 
-            if (arch_vmm_map(&core->bsp.address_space, pci_pba_address, pci_pba_address, pci_pba_size, ARCH_VMM_MAP_FIXED | ARCH_VMM_MAP_RDWR | ARCH_VMM_MAP_UNCACHED | ARCH_VMM_MAP_NOEXEC) == ARCH_VMM_MAP_FAILED) {
-
-                arch_vmm_unmap(&core->bsp.address_space, pci_bir_address, pci_bir_size);
+            if (msix.msix_pci.pci_pending_bir > 5 || !(pci_pba_address = pci_map_bar(device, PCI_BAR(msix.msix_pci.pci_pending_bir), NULL)))
                 return -1;
-            }
-        } 
+        }
 
         pci_bir_address += msix.msix_pci.pci_offset;
         pci_pba_address += msix.msix_pci.pci_pending_offset;

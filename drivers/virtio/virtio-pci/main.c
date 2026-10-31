@@ -97,25 +97,6 @@ static void virtio_pci_interrupt(pcidev_t device, irq_t irq, struct virtio_drive
 }
 
 
-/**
- * @brief Reports the size of a BAR, rounded out to the page the mapping works in.
- *
- * @param driver The driver owning the device.
- * @param bar The BAR to size.
- * @return The size in bytes.
- */
-
-static uintptr_t virtio_pci_bar_size(struct virtio_driver* driver, uint8_t bar) {
-
-    uintptr_t size = pci_bar_size(driver->device, PCI_BAR(bar), 4) & PCI_BAR_MM_MASK;
-
-    if (unlikely(!size))
-        return 0;
-
-    return (size + (PML1_PAGESIZE - 1)) & ~((uintptr_t)PML1_PAGESIZE - 1);
-}
-
-
 static uintptr_t virtio_pci_find_bar(struct virtio_driver* driver, uint8_t bar, uintptr_t offset) {
 
     DEBUG_ASSERT(driver);
@@ -123,45 +104,27 @@ static uintptr_t virtio_pci_find_bar(struct virtio_driver* driver, uint8_t bar, 
     DEBUG_ASSERT(bar <= 5);
 
 
-    uintptr_t mmio = 0UL;
+    if (!driver->internals.bars[bar]) {
 
-#if defined(__x86_64__) || defined(__aarch64__)
-    if (pci_is_64bit(driver->device, PCI_BAR(bar)))
-        mmio = pci_read(driver->device, PCI_BAR(bar), 8) & PCI_BAR_64_MM_MASK;
-    else
-#endif
-        mmio = pci_read(driver->device, PCI_BAR(bar), 4) & PCI_BAR_MM_MASK;
+        uintptr_t size = 0UL;
+        uintptr_t mmio = pci_map_bar(driver->device, PCI_BAR(bar), &size);
 
-    uintptr_t size = virtio_pci_bar_size(driver, bar);
-
-
-    if (unlikely(!mmio || !size)) {
+        if (unlikely(!mmio)) {
 #if DEBUG_LEVEL_ERROR
-        kprintf("virtio-pci: ERROR! device %d bar %d is not usable [address(%p), size(%p)]\n", driver->device, bar, mmio, size);
-#endif
-        return 0;
-    }
-
-
-    if ((driver->internals.bars & (1 << bar)) == 0) {
-
-#if DEBUG_LEVEL_TRACE
-        kprintf("virtio-pci: device %d is mapping bar %d [address(%p), size(%p)]\n", driver->device, bar, mmio, size);
-#endif
-
-        if (arch_vmm_map(&core->bsp.address_space, mmio, mmio, size, ARCH_VMM_MAP_FIXED | ARCH_VMM_MAP_RDWR | ARCH_VMM_MAP_UNCACHED | ARCH_VMM_MAP_NOEXEC) == ARCH_VMM_MAP_FAILED) {
-
-#if DEBUG_LEVEL_ERROR
-            kprintf("virtio-pci: ERROR! failed to map bar %d [address(%p), size(%p)]\n", bar, mmio, size);
+            kprintf("virtio-pci: ERROR! device %d bar %d is not usable\n", driver->device, bar);
 #endif
             return 0;
         }
 
-        driver->internals.bars |= (1 << bar);
+#if DEBUG_LEVEL_TRACE
+        kprintf("virtio-pci: device %d mapped bar %d [address(%p), size(%p)]\n", driver->device, bar, mmio, size);
+#endif
+
+        driver->internals.bars[bar] = mmio;
     }
 
 
-    return mmio + offset;
+    return driver->internals.bars[bar] + offset;
 }
 
 

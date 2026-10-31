@@ -499,11 +499,9 @@ void init(const char* args) {
         pci_enable_bus_mastering(eth->pci);
 
 
-        uintptr_t size = pci_bar_size(eth->pci, PCI_BAR0, 4);
+        eth->vmem = pci_map_bar(eth->pci, PCI_BAR0, NULL);
 
-        PANIC_ASSERT(ARCH_VMM_MAP_FAILED != arch_vmm_map(&core->bsp.address_space, eth->mem, eth->mem, size, ARCH_VMM_MAP_NOEXEC | ARCH_VMM_MAP_FIXED | ARCH_VMM_MAP_RDWR | ARCH_VMM_MAP_UNCACHED | ARCH_VMM_MAP_WRITE_THROUGH));
-
-        eth->vmem = eth->mem;
+        PANIC_ASSERT(eth->vmem);
 
 
         spinlock_init(&eth->lock);

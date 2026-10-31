@@ -201,7 +201,6 @@ static int virtgpu_get_mode(struct virtgpu* gpu, uint32_t* xres, uint32_t* yres)
     DEBUG_ASSERT(gpu);
 
     struct virtio_gpu_resp_display_info display_info = {0};
-
     if (virtgpu_cmd_get_display_info(gpu, &display_info) < 0)
         return -1;
 
@@ -299,10 +298,7 @@ static void virtgpu_reset(device_t* device) {
     }
 
     virtgpu_map_framebuffer(device);
-
-
     virtgpu_reset_framebuffer(device);
-
     virtgpu_update(device);
 
     atomic_store(&((struct virtgpu*)device->userdata)->mode_changed, false);
@@ -350,9 +346,7 @@ static void virtgpu_modeset(device_t* device) {
     device->vid.vs.yres_virtual = yres;
 
     virtgpu_reset_framebuffer(device);
-
     virtgpu_update(device);
-
 
     if (old_resource_id) {
         virtgpu_cmd_resource_detach_backing(gpu, old_resource_id);

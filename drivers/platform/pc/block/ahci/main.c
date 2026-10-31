@@ -1204,17 +1204,15 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
     ahci->deviceid = device;
     ahci->irq      = pci_read(device, PCI_INTERRUPT_LINE, 1);
 
-    ahci->hba = (hba_t volatile*)(pci_read(device, PCI_BAR5, 4) & PCI_BAR_MM_MASK);
+    uintptr_t size = 0UL;
 
+    ahci->hba = (hba_t volatile*)pci_map_bar(device, PCI_BAR5, &size);
 
-    uint32_t size = pci_bar_size(device, PCI_BAR5, 4);
-
-
-    PANIC_ASSERT(ARCH_VMM_MAP_FAILED != arch_vmm_map(&core->bsp.address_space, (uintptr_t)ahci->hba, (uintptr_t)ahci->hba, size, ARCH_VMM_MAP_NOEXEC | ARCH_VMM_MAP_FIXED | ARCH_VMM_MAP_RDWR | ARCH_VMM_MAP_UNCACHED | ARCH_VMM_MAP_WRITE_THROUGH));
+    PANIC_ASSERT(ahci->hba);
 
 
 #if DEBUG_LEVEL_TRACE
-    kprintf("ahci: pci device found: index(%d) vendor(%x) device(%x) irq(%d) hba(%p) size(%d)\n", devices_count - 1, vid, did, ahci->irq, ahci->hba, size);
+    kprintf("ahci: pci device found: index(%d) vendor(%x) device(%x) irq(%d) hba(%p) size(%p)\n", devices_count - 1, vid, did, ahci->irq, ahci->hba, size);
 #endif
 }
 

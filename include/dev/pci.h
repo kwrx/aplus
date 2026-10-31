@@ -269,6 +269,7 @@ void pci_enable_mmio(pcidev_t);
 uintptr_t pci_find_capabilities(pcidev_t);
 uintptr_t pci_bar_size(pcidev_t, int, size_t);
 void pci_memcpy(pcidev_t, void*, uintptr_t, size_t);
+uintptr_t pci_map_bar(pcidev_t device, int field, uintptr_t* size);
 
 /* MSI */
 int pci_find_msi(pcidev_t, pci_msi_t*);

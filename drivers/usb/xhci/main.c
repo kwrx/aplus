@@ -58,34 +58,6 @@ static size_t num_controllers = 0;
 
 
 /**
- * @brief Maps a controller's register BAR uncached into the kernel.
- * @param device The controller's PCI address.
- * @return The mapped address, or 0 if the BAR is unusable.
- */
-static uintptr_t xhci_map_bar(pcidev_t device) {
-
-    uintptr_t mmio;
-
-    if (pci_is_64bit(device, PCI_BAR0))
-        mmio = pci_read(device, PCI_BAR0, 8) & PCI_BAR_64_MM_MASK;
-    else
-        mmio = pci_read(device, PCI_BAR0, 4) & PCI_BAR_MM_MASK;
-
-    uintptr_t size = pci_bar_size(device, PCI_BAR0, 4) & PCI_BAR_MM_MASK;
-
-    if (unlikely(!mmio || !size))
-        return 0;
-
-    size = (size + PML1_PAGESIZE - 1) & ~((uintptr_t)PML1_PAGESIZE - 1);
-
-    if (arch_vmm_map(&core->bsp.address_space, mmio, mmio, size, ARCH_VMM_MAP_FIXED | ARCH_VMM_MAP_RDWR | ARCH_VMM_MAP_UNCACHED | ARCH_VMM_MAP_NOEXEC) == ARCH_VMM_MAP_FAILED)
-        return 0;
-
-    return mmio;
-}
-
-
-/**
  * @brief Brings a controller up on the USB thread.
  * @param arg The controller's struct xhci_pci.
  */
@@ -116,7 +88,7 @@ static void xhci_pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg
     pci_enable_mmio(device);
     pci_enable_bus_mastering(device);
 
-    uintptr_t mmio = xhci_map_bar(device);
+    uintptr_t mmio = pci_map_bar(device, PCI_BAR0, NULL);
 
     if (unlikely(!mmio)) {
         kprintf("xhci: ERROR! %04X:%04X at %d has no usable register BAR\n", vid, did, device);
