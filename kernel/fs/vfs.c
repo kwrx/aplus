@@ -31,6 +31,7 @@
 #include <aplus/debug.h>
 #include <aplus/errno.h>
 #include <aplus/memory.h>
+#include <aplus/sysfs.h>
 #include <aplus/task.h>
 #include <aplus/vfs.h>
 
@@ -68,6 +69,7 @@ static const struct {
     {FSID_VFAT,    0x4D44    },
     {FSID_ISO9660, 0x9660    },
     {FSID_PROCFS,  0x9FA0    },
+    {FSID_SYSFS,   0x62656572},
 };
 
 #ifndef ST_VALID
@@ -93,6 +95,7 @@ void vfs_init(void) {
     rootfs_init();
     fd_init();
     vfs_locks_init();
+    sysfs_init();
 
 #if DEBUG_LEVEL_INFO
     kprintf("vfs: ready!\n");

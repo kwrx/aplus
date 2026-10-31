@@ -342,6 +342,9 @@ void usb_detach_device(hci_t *controller, int devno);
 int usb_attach_device(hci_t *controller, int hubaddress, int port,
 		      usb_speed speed);
 
+void usb_sysfs_add(usbdev_t *dev);
+void usb_sysfs_remove(usbdev_t *dev);
+
 u32 pci_quirk_check(pcidev_t controller);
 u32 usb_quirk_check(u16 vendor, u16 device);
 int usb_interface_check(u16 vendor, u16 device);

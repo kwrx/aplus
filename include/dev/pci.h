@@ -302,6 +302,10 @@ uint16_t pci_dev_unregister(pcidev_t);
 pcidev_t pci_dev_get_device(uint16_t);
 int pci_dev_call_handler(uint16_t index, irq_t irq);
 
+/* Sysfs */
+void pci_sysfs_init(void);
+void pci_sysfs_dnit(void);
+
 __END_DECLS
 
 #endif

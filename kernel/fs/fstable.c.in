@@ -19,4 +19,5 @@ FSENTRY (FSID_TMPFS    ,   "tmpfs"     ,   tmpfs     , true  );
 FSENTRY (FSID_EXT2     ,   "ext2"      ,   ext2      , false );
 FSENTRY (FSID_ISO9660  ,   "iso9660"   ,   iso9660   , false );
 FSENTRY (FSID_PROCFS   ,   "proc"      ,   procfs    , true  );
+FSENTRY (FSID_SYSFS    ,   "sys"       ,   sysfs     , true  );
 

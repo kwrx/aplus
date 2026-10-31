@@ -624,6 +624,7 @@ usb_detach_device(hci_t *controller, int devno)
 	/* check if device exists, as we may have
 	   been called yet by the USB class driver */
 	if (controller->devices[devno]) {
+		usb_sysfs_remove(controller->devices[devno]);
 		controller->devices[devno]->destroy(controller->devices[devno]);
 
 		if (controller->destroy_device)
@@ -654,7 +655,10 @@ usb_attach_device(hci_t *controller, int hubaddress, int port, usb_speed speed)
 	// determine responsible driver - current done in set_address
 	newdev_t->init(newdev_t);
 	/* init() may have called usb_detach_device() yet, so check */
-	return controller->devices[newdev] ? newdev : -1;
+	if (!controller->devices[newdev])
+		return -1;
+	usb_sysfs_add(controller->devices[newdev]);
+	return newdev;
 }
 
 static void

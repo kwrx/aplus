@@ -45,6 +45,7 @@ MODULE_LICENSE("GPL");
 void init(const char* args) {
 
     pci_intx_fixup_irqs();
+    pci_sysfs_init();
 
 #if DEBUG_LEVEL_TRACE
 
@@ -97,4 +98,5 @@ void init(const char* args) {
 
 
 void dnit(void) {
+    pci_sysfs_dnit();
 }
