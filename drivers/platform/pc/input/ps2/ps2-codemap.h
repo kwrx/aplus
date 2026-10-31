@@ -176,6 +176,7 @@ static uint16_t ps2_codemap[] = {
     [0x134] = 0xd0, /* xtkbd:308 -> linux:208 (KEY_FASTFORWARD) -> linux:208 (KEY_FASTFORWARD) */
     [0x135] = 0x62, /* xtkbd:309 -> linux:98 (KEY_KPSLASH) -> linux:98 (KEY_KPSLASH) */
     [0x136] = 0xd1, /* xtkbd:310 -> linux:209 (KEY_BASSBOOST) -> linux:209 (KEY_BASSBOOST) */
+    [0x137] = 0x63, /* xtkbd:311 -> linux:99 (KEY_SYSRQ) -> linux:99 (KEY_SYSRQ) */
     [0x138] = 0x64, /* xtkbd:312 -> linux:100 (KEY_RIGHTALT) -> linux:100 (KEY_RIGHTALT) */
     [0x139] = 0xd2, /* xtkbd:313 -> linux:210 (KEY_PRINT) -> linux:210 (KEY_PRINT) */
     [0x13a] = 0xd3, /* xtkbd:314 -> linux:211 (KEY_HP) -> linux:211 (KEY_HP) */
