@@ -38,13 +38,6 @@
 #include <arch/x86/vmm.h>
 
 
-/**
- * @brief Closes the SMAP window opened by arch_vmm_lock().
- *
- * @param space Address space owning the range.
- * @param virtaddr Base of the range.
- * @param size Length of the range in bytes.
- */
 __nonnull(1) void arch_vmm_unlock(vmm_address_space_t* space, uintptr_t virtaddr, size_t size) {
 
     DEBUG_ASSERT(space->pm);

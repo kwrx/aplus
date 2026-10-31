@@ -467,12 +467,6 @@ void* fpu_new_signal_state(void) {
 }
 
 
-/**
- * @brief Clears what would make restoring an FPU state copied in from userspace fault: reserved MXCSR bits, and XSAVE
- *        header fields naming components that are not enabled or not in the standard format.
- *
- * @param fpu_area The state, in the format fpu_save() writes.
- */
 void fpu_sanitize(void* fpu_area) {
 
     fpu_validate_area(fpu_area);

@@ -38,15 +38,6 @@
 #include <arch/x86/vmm.h>
 
 
-/**
- * @brief Makes a user range safe for the kernel to dereference, and opens the SMAP window.
- *
- * Must be paired with arch_vmm_unlock() on the same CPU, and the pair is not re-entrant.
- *
- * @param space Address space owning the range.
- * @param virtaddr Base of the range.
- * @param size Length of the range in bytes.
- */
 __nonnull(1) void arch_vmm_lock(vmm_address_space_t* space, uintptr_t virtaddr, size_t size) {
 
     DEBUG_ASSERT(space->pm);

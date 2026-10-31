@@ -42,19 +42,6 @@
 #define TABLE(e) ((x86_page_t*)arch_vmm_p2v((uintptr_t)(e) & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP))
 
 
-/**
- * @brief Walks a page table hierarchy down to the entry mapping an address.
- *
- * The returned pointer aliases the live page tables, so the caller must hold the address space lock.
- *
- * @param pm Physical address of the root table.
- * @param virtaddr Address to translate.
- * @param pagesize In/out. The page size to reach, or X86_MMU_WALK_ANY; receives the size actually mapped.
- * @param table_flags Flags applied to intermediate tables created by this walk.
- * @param walk_flags @see X86_VMM_WALK_*
- * @param effective Optional. Receives the permissions the hardware would apply across the intermediate levels.
- * @return A pointer to the leaf entry, or NULL if the walk could not complete.
- */
 x86_page_t* x86_vmm_walk(uintptr_t pm, uintptr_t virtaddr, uintptr_t* pagesize, uint64_t table_flags, int walk_flags, uint64_t* effective) {
 
     DEBUG_ASSERT(pm);

@@ -47,11 +47,6 @@ extern uint8_t bootstrap_tss;
 
 
 
-/**
- * @brief Brings one CPU's per-core state up, and switches on what the hardware offers.
- *
- * @param index The core to initialise, which is also its id.
- */
 __percpu void arch_cpu_init(cpuid_t index) {
 
     __builtin_cpu_init();
@@ -470,11 +465,6 @@ __percpu void arch_cpu_init(cpuid_t index) {
 }
 
 
-/**
- * @brief Reports the id of the CPU this is running on.
- *
- * @return The processor id, as RDTSCP reports it.
- */
 __percpu cpuid_t arch_cpu_get_current_id(void) {
 
     uint64_t id;
@@ -494,11 +484,6 @@ __percpu cpuid_t arch_cpu_get_current_id(void) {
 }
 
 
-/**
- * @brief Starts one application processor with the INIT, SIPI, SIPI sequence and waits for it to come up.
- *
- * @param index The core to start, which is also its id.
- */
 void arch_cpu_startup(cpuid_t index) {
 
     DEBUG_ASSERT(index != SMP_CPU_BOOTSTRAP_ID);

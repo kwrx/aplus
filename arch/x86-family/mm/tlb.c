@@ -42,12 +42,6 @@
 
 
 
-/**
- * @brief Invalidates one page of an address space on this CPU, if the space is loaded here or the page is the kernel's.
- *
- * @param space The address space.
- * @param virtaddr The page.
- */
 __nonnull(1) void arch_vmm_flush(vmm_address_space_t* space, uintptr_t virtaddr) {
 
     if (space->pm == x86_get_cr3() || virtaddr >= X86_MMU_USERSPACE_END) {
@@ -56,13 +50,6 @@ __nonnull(1) void arch_vmm_flush(vmm_address_space_t* space, uintptr_t virtaddr)
 }
 
 
-/**
- * @brief Invalidates a range of an address space on this CPU, falling back to a full flush for long ranges.
- *
- * @param space The address space.
- * @param virtaddr The start of the range.
- * @param length Its length in bytes.
- */
 __nonnull(1) void arch_vmm_flush_range(vmm_address_space_t* space, uintptr_t virtaddr, size_t length) {
 
     if (unlikely(length == 0))
@@ -81,11 +68,6 @@ __nonnull(1) void arch_vmm_flush_range(vmm_address_space_t* space, uintptr_t vir
 }
 
 
-/**
- * @brief Flushes every translation of an address space on this CPU, if the space is loaded here.
- *
- * @param space The address space.
- */
 __nonnull(1) void arch_vmm_flush_all(vmm_address_space_t* space) {
 
     if (space->pm == x86_get_cr3())
@@ -93,11 +75,6 @@ __nonnull(1) void arch_vmm_flush_all(vmm_address_space_t* space) {
 }
 
 
-/**
- * @brief Loads an address space on this CPU and records the generation of it the TLB is now current with.
- *
- * @param space The address space.
- */
 __nonnull(1) void x86_vmm_tlb_load(vmm_address_space_t* space) {
 
     const long irq = arch_intr_disable();
@@ -119,11 +96,6 @@ __nonnull(1) void x86_vmm_tlb_load(vmm_address_space_t* space) {
 }
 
 
-/**
- * @brief Makes this CPU run an address space with a TLB holding nothing it has removed since.
- *
- * @param space The address space.
- */
 __nonnull(1) void x86_vmm_tlb_sync(vmm_address_space_t* space) {
 
     cpu_t* cpu = current_cpu;
@@ -135,25 +107,11 @@ __nonnull(1) void x86_vmm_tlb_sync(vmm_address_space_t* space) {
 }
 
 
-/**
- * @brief Records that translations of an address space were removed or narrowed.
- *
- * @param space The address space.
- * @return The generation a CPU must reach to hold none of them.
- */
 __nonnull(1) uint64_t x86_vmm_tlb_bump(vmm_address_space_t* space) {
     return atomic_fetch_add(&space->tlb.gen, 1) + 1;
 }
 
 
-/**
- * @brief Tells whether every CPU running an address space has flushed it since a generation.
- *
- * @param space The address space.
- * @param gen The generation.
- * @param skip_self Whether to leave this CPU out, because it already invalidated what the generation covers.
- * @return true if no CPU can still hold a translation the generation removed.
- */
 static bool __tlb_passed(vmm_address_space_t* space, uint64_t gen, bool skip_self) {
 
     cpu_foreach(cpu) {
@@ -175,13 +133,6 @@ static bool __tlb_passed(vmm_address_space_t* space, uint64_t gen, bool skip_sel
 }
 
 
-/**
- * @brief Encodes a frame and its size as one entry of a deferred batch.
- *
- * @param frame The physical address.
- * @param pagesize Its size.
- * @return The entry.
- */
 static inline uintptr_t __tlb_frame_entry(uintptr_t frame, uintptr_t pagesize) {
 
 #if defined(__x86_64__)
@@ -196,11 +147,6 @@ static inline uintptr_t __tlb_frame_entry(uintptr_t frame, uintptr_t pagesize) {
 }
 
 
-/**
- * @brief Releases what a list of batches holds, and the batches themselves.
- *
- * @param batch The first batch, or NULL.
- */
 static void __tlb_free_batches(vmm_tlb_batch_t* batch) {
 
     while (batch) {
@@ -238,13 +184,6 @@ static void __tlb_free_batches(vmm_tlb_batch_t* batch) {
 }
 
 
-/**
- * @brief Starts a new batch at the head of a list.
- *
- * @param batches The list.
- * @param kind VMM_TLB_BATCH_FRAMES or VMM_TLB_BATCH_SHM.
- * @return The batch, or NULL when out of memory.
- */
 static vmm_tlb_batch_t* __tlb_new_batch(vmm_tlb_batch_t** batches, uint32_t kind) {
 
     vmm_tlb_batch_t* b = (vmm_tlb_batch_t*)kmalloc(sizeof(vmm_tlb_batch_t), GFP_KERNEL);
@@ -261,15 +200,6 @@ static vmm_tlb_batch_t* __tlb_new_batch(vmm_tlb_batch_t** batches, uint32_t kind
 }
 
 
-/**
- * @brief Adds a frame an unmap took out to the batches it will free.
- *
- * Out of memory, the frame is kept rather than freed while another CPU may still write to it.
- *
- * @param batches The list being built.
- * @param frame The physical address.
- * @param pagesize Its size.
- */
 void x86_vmm_tlb_collect(vmm_tlb_batch_t** batches, uintptr_t frame, uintptr_t pagesize) {
 
     vmm_tlb_batch_t* b = *batches;
@@ -284,13 +214,6 @@ void x86_vmm_tlb_collect(vmm_tlb_batch_t** batches, uintptr_t frame, uintptr_t p
 }
 
 
-/**
- * @brief Queues batches on an address space until every CPU running it has flushed past their generation.
- *
- * @param space The address space.
- * @param batches The batches.
- * @param gen Their generation.
- */
 static void __tlb_defer(vmm_address_space_t* space, vmm_tlb_batch_t* batches, uint64_t gen) {
 
     vmm_tlb_batch_t* tail = batches;
@@ -312,13 +235,6 @@ static void __tlb_defer(vmm_address_space_t* space, vmm_tlb_batch_t* batches, ui
 }
 
 
-/**
- * @brief Frees what an unmap took out of an address space, at once when no other CPU can reach it, otherwise later.
- *
- * @param space The address space.
- * @param batches What the unmap collected, or NULL.
- * @param gen The generation the unmap published.
- */
 void x86_vmm_tlb_retire(vmm_address_space_t* space, vmm_tlb_batch_t* batches, uint64_t gen) {
 
     if (batches) {
@@ -333,12 +249,6 @@ void x86_vmm_tlb_retire(vmm_address_space_t* space, vmm_tlb_batch_t* batches, ui
 }
 
 
-/**
- * @brief Drops a shared memory attachment of an address space once no CPU can still reach its frames through it.
- *
- * @param space The address space the segment was detached from.
- * @param id The segment.
- */
 void arch_vmm_release_shm(vmm_address_space_t* space, int id) {
 
     const uint64_t gen = atomic_load(&space->tlb.gen);
@@ -360,11 +270,6 @@ void arch_vmm_release_shm(vmm_address_space_t* space, int id) {
 }
 
 
-/**
- * @brief Frees what an address space deferred, as far as every CPU has flushed past it.
- *
- * @param space The address space.
- */
 void arch_vmm_reclaim(vmm_address_space_t* space) {
 
     if (likely(!__atomic_load_n(&space->tlb.deferred, __ATOMIC_RELAXED)))
@@ -398,11 +303,6 @@ void arch_vmm_reclaim(vmm_address_space_t* space) {
 }
 
 
-/**
- * @brief Frees everything an address space deferred, once no CPU can be running it any more.
- *
- * @param space The address space being torn down.
- */
 void x86_vmm_tlb_drain(vmm_address_space_t* space) {
 
     vmm_tlb_batch_t* all = NULL;

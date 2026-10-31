@@ -38,13 +38,6 @@
 #include <arch/x86/vmm.h>
 
 
-/**
- * @brief Tells whether a fault hit an entry that already allows the access, as a stale TLB entry or a racing CPU leaves behind.
- *
- * @param e The entry.
- * @param err The access, as X86_PF_* bits.
- * @return true if retrying the access will succeed.
- */
 static inline bool __vmm_stale_fault(x86_page_t e, uint64_t err) {
 
     if (!(e & X86_MMU_PG_P))
@@ -68,15 +61,6 @@ static inline bool __vmm_stale_fault(x86_page_t e, uint64_t err) {
 }
 
 
-/**
- * @brief Materialises a copy-on-write or demand-paged entry, with the address space lock held.
- *
- * @param pm Physical address of the root table to walk.
- * @param virtaddr The faulting address.
- * @param err The access being attempted, as X86_PF_* bits.
- * @param reason Optional. Set to a human-readable cause when the entry cannot be resolved.
- * @return 0 if the entry now maps a private frame, -1 if the access must not be satisfied.
- */
 int x86_vmm_resolve(uintptr_t pm, uintptr_t virtaddr, uint64_t err, const char** reason) {
 
 #define FAIL(r)              \

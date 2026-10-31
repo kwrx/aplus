@@ -55,11 +55,6 @@ struct pty;
 
 
 
-/**
- * @brief Loads an address space on this CPU, or reloads the current task's when given NULL.
- *
- * @param address_space The address space, or NULL.
- */
 void arch_task_switch_address_space(vmm_address_space_t* address_space) {
     x86_vmm_tlb_load(address_space ? address_space : current_task->address_space);
 }
@@ -67,10 +62,6 @@ void arch_task_switch_address_space(vmm_address_space_t* address_space) {
 
 #if defined(__x86_64__)
 
-/**
- * @brief The frame a signal handler starts on: the return address into sa_restorer, then the interrupted context and
- *        the signal's details, laid out as on Linux.
- */
 struct sigframe {
 
     uintptr_t restorer;
@@ -83,30 +74,13 @@ struct sigframe {
 #endif
 
 
-/**
- * @brief The flags a context restored by rt_sigreturn(2) may carry; the rest are the kernel's to set.
- */
 #define SIGFRAME_USER_FLAGS 0x40CD5UL
 
-/**
- * @brief The bytes below a user stack pointer that code may still be using, which a signal frame must skip.
- */
 #define SIGFRAME_RED_ZONE 128
 
-/**
- * @brief The alignment of the FPU state in a signal frame, which XSAVE requires.
- */
 #define SIGFRAME_FPU_ALIGNMENT 64
 
 
-/**
- * @brief Asks whether every page of a range of userspace allows an access.
- *
- * @param start The first byte.
- * @param size How many bytes.
- * @param mode R_OK or W_OK.
- * @return true if the whole range lies in userspace and allows the access.
- */
 static bool __sigframe_range_ok(uintptr_t start, size_t size, int mode) {
 
     if (unlikely(size == 0 || start + size < start || start + size > X86_MMU_USERSPACE_END))
@@ -122,12 +96,6 @@ static bool __sigframe_range_ok(uintptr_t start, size_t size, int mode) {
 }
 
 
-/**
- * @brief Asks whether a user stack pointer lies on the current task's alternate signal stack.
- *
- * @param sp The stack pointer.
- * @return true if it does.
- */
 static bool __sigframe_on_altstack(uintptr_t sp) {
 
     const stack_t* alt = &current_task->userspace.altstack;
@@ -136,12 +104,6 @@ static bool __sigframe_on_altstack(uintptr_t sp) {
 }
 
 
-/**
- * @brief Copies the context the current task resumes into a signal frame, rewinding a restartable syscall to run again.
- *
- * @param uc The context to fill in.
- * @param restart Whether the syscall syscall_interrupt() gave up is to be re-executed when the handler returns.
- */
 static void __sigframe_save_context(ucontext_t* uc, bool restart) {
 
     interrupt_frame_t* frame = FRAME(current_cpu);
@@ -205,16 +167,6 @@ static void __sigframe_save_context(ucontext_t* uc, bool restart) {
 }
 
 
-/**
- * @brief Sets the current task up to run a signal handler on a frame pushed onto its stack, or onto its alternate
- *        stack under SA_ONSTACK.
- *
- * The frame carries the interrupted context, the signal mask to restore, the siginfo and the FPU state, so each
- * thread and each nested signal has its own and rt_sigreturn(2) restores whatever the handler left there.
- *
- * @param siginfo The signal being delivered.
- * @return 0, or -1 if the frame does not fit in writable user memory.
- */
 int arch_task_prepare_to_signal(siginfo_t* siginfo) {
 
     DEBUG_ASSERT(current_task);
@@ -313,15 +265,6 @@ int arch_task_prepare_to_signal(siginfo_t* siginfo) {
 }
 
 
-/**
- * @brief Resumes the context saved in the frame of the signal handler that is returning, with its mask and FPU state.
- *
- * The frame sits just above the user stack pointer, whose return address into sa_restorer the handler has popped.
- * Whatever the handler changed in the frame takes effect, except for the segments and the privileged flags.
- *
- * @param retval Receives the restored rax, which rt_sigreturn(2) hands back so that it survives.
- * @return 0, or -1 if the frame cannot be read or does not describe a user context.
- */
 int arch_task_return_from_signal(long* retval) {
 
     DEBUG_ASSERT(current_task);
@@ -464,11 +407,6 @@ void arch_task_switch(task_t* prev, task_t* next) {
 
 
 
-/**
- * @brief Reports the ticks since boot, in the USER_HZ units /proc reports times in.
- *
- * @return The tick count.
- */
 static inline uint64_t arch_task_boot_ticks(void) {
     return arch_timer_generic_getms() / (1000 / TASK_USER_HZ);
 }
@@ -685,15 +623,6 @@ pid_t arch_task_spawn_init() {
 }
 
 
-/**
- * @brief Creates the idle task of the current cpu and installs it as its sched_idle.
- *
- * A cpu that is not running a task yet adopts the context it is already executing on, the way the boot
- * task does; one that is already running a task gets an idle task with a frame and a stack of its own.
- * The task is never placed on a run queue, so nothing that walks one can see or touch it.
- *
- * @return The idle task of the current cpu.
- */
 task_t* arch_task_spawn_idle(void) {
 
     DEBUG_ASSERT(!current_cpu->sched_idle);
@@ -915,12 +844,6 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry)(void*), size_t sta
 
 
 
-/**
- * @brief Finds the frame a task resumes from: the cpu's own for the task running on it, its saved copy otherwise.
- *
- * @param task The task.
- * @return The frame.
- */
 static interrupt_frame_t* __task_live_frame(task_t* task) {
 
     if (task == current_task && current_cpu->frame)
@@ -1041,13 +964,6 @@ long arch_task_context_get(task_t* task, int options) {
 }
 
 
-/**
- * @brief Asks whether a task would resume inside the kernel, parked in the middle of a syscall.
- *
- * @param task The task.
- * @param live Whether its registers are the ones on the cpu right now rather than its saved copy.
- * @return true if the task is parked inside the kernel.
- */
 bool arch_task_parked_in_kernel(const task_t* task, bool live) {
 
     DEBUG_ASSERT(task);
@@ -1071,15 +987,6 @@ bool arch_task_parked_in_kernel(const task_t* task, bool live) {
 }
 
 
-/**
- * @brief Asks whether the current cpu is executing on a task's kernel stack.
- *
- * Only the kernel stack is checked: the stack a kernel thread runs on sits inside its task, and kernel threads
- * never exit.
- *
- * @param task The task.
- * @return true if the stack pointer lies within the task's kernel stack.
- */
 bool arch_task_stack_in_use(const task_t* task) {
 
     DEBUG_ASSERT(task);
@@ -1091,12 +998,6 @@ bool arch_task_stack_in_use(const task_t* task) {
 }
 
 
-/**
- * @brief Frees a task and everything it still owns: its stacks and frame, queued signals, futex registrations, and
- *        the argv of a kernel thread.
- *
- * @param task The task, which no cpu is running or executing on the stack of any more.
- */
 void arch_task_destroy(task_t* task) {
 
     DEBUG_ASSERT(task);

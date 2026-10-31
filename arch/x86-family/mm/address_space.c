@@ -43,12 +43,6 @@
 
 
 
-/**
- * @brief Reports the page size mapped by a leaf entry at a given paging level.
- *
- * @param level The paging level.
- * @return The page size in bytes.
- */
 static uintptr_t __mm_pagesize_for_level(int level) {
 
     switch (level) {
@@ -68,15 +62,6 @@ static uintptr_t __mm_pagesize_for_level(int level) {
 }
 
 
-/**
- * @brief Tells whether a top-level slot describes memory owned by the kernel alone.
- *
- * Such a slot is shared by reference between every address space instead of being copied.
- *
- * @param level The paging level.
- * @param i The slot within that level.
- * @return true if the slot is the kernel's.
- */
 static inline bool __mm_is_kernel_slot(int level, size_t i) {
 
 #if defined(__x86_64__)
@@ -146,15 +131,6 @@ static x86_page_t __mm_copy_data(x86_page_t* __s, size_t* size, bool on_demand, 
 }
 
 
-/**
- * @brief Gives the destination table its own entry for a leaf the source holds.
- *
- * @param __s The source entry.
- * @param __d The destination entry.
- * @param size Accumulates the memory the copy accounts for.
- * @param level The paging level of the entry.
- * @param flags The ARCH_VMM_CLONE_* flags the clone was asked for.
- */
 static void __mm_copy_page(x86_page_t* __s, x86_page_t* __d, size_t* size, int level, int flags) {
 
     DEBUG_ASSERT(__s);
@@ -244,12 +220,6 @@ static void __mm_free_data(x86_page_t* __s, int level) {
 }
 
 
-/**
- * @brief Releases a leaf's frame, if this address space is the one that owns it.
- *
- * @param __s The entry to release.
- * @param level The paging level of the entry.
- */
 static void __mm_free_page(x86_page_t* __s, int level) {
 
     DEBUG_ASSERT(__s);
@@ -323,13 +293,6 @@ static void __mm_free_table(uintptr_t __s, int level) {
 #endif
 
 
-/**
- * @brief Builds an address space, either empty or cloned from a parent.
- *
- * @param parent The address space to clone, or the kernel space for an empty one.
- * @param flags The ARCH_VMM_CLONE_* flags the clone was asked for.
- * @return The new address space.
- */
 __returns_nonnull vmm_address_space_t* arch_vmm_create_address_space(vmm_address_space_t* parent, int flags) {
 
     DEBUG_ASSERT(parent);
@@ -398,11 +361,6 @@ __returns_nonnull vmm_address_space_t* arch_vmm_create_address_space(vmm_address
 }
 
 
-/**
- * @brief Drops a reference to an address space, tearing it down when it was the last.
- *
- * @param space The address space to release.
- */
 void arch_vmm_free_address_space(vmm_address_space_t* space) {
 
     DEBUG_ASSERT(space);

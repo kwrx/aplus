@@ -38,20 +38,10 @@
 
 
 
-/**
- * @brief Reads no clock, before timer_init() has chosen one.
- *
- * @return Always 0.
- */
 static uint64_t timer_null_getticks(void) {
     return 0;
 }
 
-/**
- * @brief Reports a placeholder frequency, before timer_init() has chosen a clock.
- *
- * @return Always 1, so that scaling yields 0 rather than dividing by zero.
- */
 static uint64_t timer_null_getres(void) {
     return 1;
 }
@@ -66,14 +56,6 @@ static uint64_t (*__h_percpu_getticks)(void)  = timer_null_getticks;
 static uint64_t (*__h_percpu_getres)(void)    = timer_null_getres;
 
 
-/**
- * @brief Converts a tick count into another unit without overflowing the intermediate product.
- *
- * @param ticks Ticks counted at frequency.
- * @param scale Units per second of the result (1000000000 for ns, 1000000 for us, 1000 for ms).
- * @param frequency Ticks per second.
- * @return ticks * scale / frequency.
- */
 static uint64_t timer_scale(uint64_t ticks, uint64_t scale, uint64_t frequency) {
 
     DEBUG_ASSERT(scale);
@@ -153,9 +135,6 @@ uint64_t arch_timer_realtime_getns(void) {
 
 
 
-/**
- * @brief Chooses the per-CPU and generic clocks, makes sure the TSC frequency is known, and starts the generic clock at zero.
- */
 void timer_init(void) {
 
     if (rtc_init() < 0)

@@ -230,11 +230,6 @@ void arch_debug_init(void) {
 }
 
 
-/**
- * @brief Reads the oldest unread character of the debug output, skipping what was overwritten.
- *
- * @return The character, or -1 when everything has been read.
- */
 int arch_debug_getc(void) {
 
     for (;;) {
@@ -348,9 +343,6 @@ void arch_debug_putc(char ch) {
 }
 
 
-/**
- * @brief Map the boot framebuffer write-combining and redraw the text console through it.
- */
 void arch_debug_map(void) {
 
 #if defined(CONFIG_X86_ENABLE_DEBUG_VGA)
@@ -390,12 +382,6 @@ void arch_debug_map(void) {
  * @brief Stacktrace.
  *
  * Print stacktrace on Serial Port.
- */
-/**
- * @brief Walks the frame pointer chain into @p frames.
- *
- * @param frames Receives the return addresses, zero-terminated.
- * @param count How many @p frames can hold.
  */
 void arch_debug_stacktrace(uintptr_t* frames, size_t count) {
 

@@ -38,15 +38,6 @@
 #include <arch/x86/vmm.h>
 
 
-/**
- * @brief Translates a virtual address in an address space to a physical one.
- *
- * Only a mapped PAGE or SHARED entry names a frame; anything not yet materialised reports failure.
- *
- * @param space The address space to translate in.
- * @param virtaddr The virtual address to translate.
- * @return The physical address, or ARCH_VMM_MAP_FAILED when @p virtaddr is not mapped.
- */
 __nonnull(1) uintptr_t arch_vmm_getphysaddr(vmm_address_space_t* space, uintptr_t virtaddr) {
 
 
