@@ -62,6 +62,7 @@ typedef enum {
     WM_ACTION_SHOW_DESKTOP,
     WM_ACTION_ACTIVATE,
     WM_ACTION_SESSION,
+    WM_ACTION_SCREENSHOT,
 
 } wm_action_t;
 
@@ -106,6 +107,8 @@ static const struct {
     {WM_MOD_SUPER,                KEY_7,       WM_ACTION_ACTIVATE,            NULL,                6},
     {WM_MOD_SUPER,                KEY_8,       WM_ACTION_ACTIVATE,            NULL,                7},
     {WM_MOD_SUPER,                KEY_9,       WM_ACTION_ACTIVATE,            NULL,                8},
+    {WM_MOD_SUPER,                KEY_P,       WM_ACTION_SCREENSHOT,          NULL,                0},
+    {0,                           KEY_SYSRQ,   WM_ACTION_SCREENSHOT,          NULL,                0},
 };
 
 
@@ -530,6 +533,11 @@ bool wm_keys_handle(uint16_t vkey, uint8_t down) {
             case WM_ACTION_SESSION:
                 wm_taskbar_session_toggle();
                 break;
+
+            case WM_ACTION_SCREENSHOT:
+                wm_screenshot_take(&wm.display, NULL, 0);
+                break;
+
         }
 
         return true;

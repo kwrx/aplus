@@ -822,6 +822,8 @@ void wm_display_clear(wm_display_t* display);
 void wm_display_cursor_move(wm_display_t* display, int x, int y);
 int wm_display_cursor_image(wm_display_t* display, const uint32_t* image, int width, int height, int hot_x, int hot_y);
 
+int wm_screenshot_take(wm_display_t* display, char* path, size_t size);
+
 /**
  * @brief Implemented in cursor.c.
  */

@@ -59,7 +59,8 @@ static void show_usage(int status) {
            "   get SECTION.KEY             show the value a theme key has right now\n"
            "   set SECTION.KEY VALUE       override a theme key for every theme, and keep it\n"
            "   unset SECTION.KEY           give a key back to the theme\n"
-           "   set wm.variant dark|light   pick the variant of every theme\n\n"
+           "   set wm.variant dark|light   pick the variant of every theme\n"
+           "   screenshot                  take a screenshot\n\n"
            "Options:\n"
            "   -s, --socket                control socket (default: " UI_CONTROL_SOCKET ")\n"
            "       --help                  show this help\n");
@@ -345,6 +346,10 @@ int main(int argc, char** argv) {
 
     if (strcmp(command, "unset") == 0 && extra == 1) {
         return wmctl_set_option(path, argv[optind + 1], NULL);
+    }
+
+    if (strcmp(command, "screenshot") == 0) {
+        return wmctl_simple(path, UI_CTL_SCREENSHOT);
     }
 
     show_usage(1);

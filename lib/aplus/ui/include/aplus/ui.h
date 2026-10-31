@@ -39,6 +39,8 @@ extern "C" {
  */
 #define UI_DEFAULT_SOCKET "/tmp/aplus-wm.sock"
 
+#define UI_PATH_PICTURES "Pictures"
+
 #define UI_PROTOCOL_VERSION 7
 #define UI_TITLE_MAX        64
 

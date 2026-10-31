@@ -50,6 +50,10 @@ extern "C" {
  */
 #define UI_SETTINGS_PATH "/etc/ui/settings.conf"
 
+#define UI_SCREENSHOT_DIR      UI_PATH_PICTURES
+#define UI_SCREENSHOT_FALLBACK "/tmp"
+#define UI_SCREENSHOT_PREFIX   "screenshot-"
+
 
 /**
  * @brief The requests a control peer may send, framed like window messages; each gets one UI_CTL_REPLY.
@@ -60,6 +64,7 @@ extern "C" {
 #define UI_CTL_RELOAD      0x1003
 #define UI_CTL_SET_OPTIONS 0x1004
 #define UI_CTL_GET_OPTION  0x1005
+#define UI_CTL_SCREENSHOT  0x1006
 
 #define UI_CTL_REPLY 0x9001
 

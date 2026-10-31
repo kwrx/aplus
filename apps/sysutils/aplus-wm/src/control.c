@@ -154,11 +154,15 @@ int wm_control_handle(wm_client_t* client, uint16_t type, const uint8_t* payload
             break;
 
         case UI_CTL_RELOAD:
-
             if (wm_theme_reload(reply.text, sizeof(reply.text)) < 0) {
                 reply.status = errno ? errno : EIO;
             }
+            break;
 
+        case UI_CTL_SCREENSHOT:
+            if (wm_screenshot_take(&wm.display, reply.text, sizeof(reply.text)) < 0) {
+                reply.status = errno ? errno : EIO;
+            }
             break;
 
         default:
