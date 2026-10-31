@@ -66,7 +66,7 @@
     #define KERNEL_HEAP_AREA  0xFFFF800000000000
     #define KERNEL_HEAP_SIZE  0x0000020000000000 //? 2TiB
 
-    /* High area: MMIO devices mappings, 1:1 mapping of physical memory */
+    /* High area: MMIO devices mappings */
     #define KERNEL_MMIO_AREA  0xFFFF820000000000
     #define KERNEL_MMIO_SIZE  0x0000002000000000 //? 128GiB
 
