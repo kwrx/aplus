@@ -22,7 +22,7 @@
 | Tasking       | yes    | no      | no      |
 | Timer         | yes    | yes     | no      |
 | Fork          | yes    | no      | no      |
-| Random        | no[^3] | no[^3]  | no      |
+| Random        | yes[^3]| yes[^3] | no      |
 | ACPI          | yes    | yes     | no      |
 | Multiprocessing| yes   | no      | no      |
 | Syscalls      | yes[^4]| no      | no      |
@@ -34,7 +34,7 @@
 | APIC TIMER    | yes    | yes     |         |
 | TSC           | yes    | yes     |         |
 | SYSCALL/SYSRET| yes    | no      |         |
-| RDRAND        | no     | no      |         |
+| RDRAND        | yes    | yes     |         |
 
 [^1]: Multiboot 2.0 Specification<br>
 [^2]: On-demand paging provided<br>

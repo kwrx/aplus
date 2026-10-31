@@ -261,8 +261,6 @@ int arch_debug_getc(void) {
  * @brief Write to Debugger.
  *
  * Wait and write a character on Serial Port.
- *
- * TODO: CONFIG_DEBUG_PRINT_TIMESTAMP is meant to stamp each line and does nothing yet.
  */
 void arch_debug_putc(char ch) {
 
@@ -289,10 +287,6 @@ void arch_debug_putc(char ch) {
             com_wait();
             outb(com_address, '\n');
             com_wait();
-
-
-#if defined(CONFIG_DEBUG_PRINT_TIMESTAMP)
-#endif
 
         } else {
 

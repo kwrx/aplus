@@ -10,7 +10,6 @@
 |**FIXME**|`include/aplus/hal.h`|check page alignment and use 64-bit, 32-bit, 16-bit and 8-bit copies|[#](/include/aplus/hal.h#L282)|
 |**FIXME**|`include/aplus/hal.h`|check page alignment and use 64-bit, 32-bit, 16-bit and 8-bit copies|[#](/include/aplus/hal.h#L309)|
 |**FIXME**|`kernel/syscalls/202_futex.c`|return a valid error|[#](/kernel/syscalls/202_futex.c#L183)|
-|**TODO**|`arch/x86-family/debug.c`|CONFIG_DEBUG_PRINT_TIMESTAMP is meant to stamp each line and does nothing yet.|[#](/arch/x86-family/debug.c#L169)|
 |**TODO**|`arch/x86-family/intr.c`|Handle NMI Interrupts|[#](/arch/x86-family/intr.c#L218)|
 |**TODO**|`arch/x86-family/mm/pagefault.c`|implement X86_MMU_PG_AP_TP_MMAP|[#](/arch/x86-family/mm/pagefault.c#L73)|
 |**TODO**|`arch/x86-family/mm/tlb.c`|cross-CPU shootdown, as above.|[#](/arch/x86-family/mm/tlb.c#L94)|
