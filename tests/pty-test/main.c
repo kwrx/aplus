@@ -242,6 +242,124 @@ static void test_eof(int master, int slave) {
 }
 
 
+static void drain(int fd) {
+
+    char buf[64];
+
+    while (readable(fd, 0) == 1 && read(fd, buf, sizeof(buf)) > 0)
+        ;
+}
+
+
+static void test_werase(int master, int slave) {
+
+    struct termios saved;
+
+    if (tcgetattr(slave, &saved) < 0) {
+        CHECK(0, "werase-setup", "tcgetattr() failed: %s", strerror(errno));
+        return;
+    }
+
+    struct termios ios = saved;
+
+    ios.c_lflag |= ICANON;
+    ios.c_lflag &= ~(ECHO | ECHOE | ECHONL);
+    ios.c_cc[VWERASE] = 0x17;
+
+    if (tcsetattr(slave, TCSANOW, &ios) < 0) {
+        CHECK(0, "werase-setup", "tcsetattr() failed: %s", strerror(errno));
+        return;
+    }
+
+
+    char buf[32];
+    ssize_t got;
+
+    if (write(master, "foo bar  \x17" "baz\n", 14) == 14) {
+        got = read_ready(slave, buf, sizeof(buf));
+        CHECK(got == 8 && memcmp(buf, "foo baz\n", 8) == 0, "werase-word", "read() returned %zd '%.*s'", got, (int)(got > 0 ? got : 0), buf);
+    }
+
+    if (write(master, "a b\x17\x17\x17x\n", 8) == 8) {
+        got = read_ready(slave, buf, sizeof(buf));
+        CHECK(got == 2 && memcmp(buf, "x\n", 2) == 0, "werase-line-start", "read() returned %zd '%.*s'", got, (int)(got > 0 ? got : 0), buf);
+    }
+
+    drain(master);
+
+    ios.c_lflag |= ECHO | ECHOE;
+    ios.c_oflag &= ~OPOST;
+
+    if (tcsetattr(slave, TCSANOW, &ios) == 0 && write(master, "ab cd\x17", 6) == 6) {
+
+        memset(buf, 0, sizeof(buf));
+        got = readable(master, 100) == 1 ? read(master, buf, sizeof(buf)) : -2;
+
+        CHECK(got == 11 && memcmp(buf, "ab cd\b \b\b \b", 11) == 0, "werase-echo", "master read %zd bytes", got);
+
+        if (write(master, "\n", 1) == 1) {
+            got = read_ready(slave, buf, sizeof(buf));
+            CHECK(got == 4 && memcmp(buf, "ab \n", 4) == 0, "werase-echo-line", "read() returned %zd '%.*s'", got, (int)(got > 0 ? got : 0), buf);
+        }
+    }
+
+    tcsetattr(slave, TCSANOW, &saved);
+    drain(master);
+    drain(slave);
+}
+
+
+static void test_flush(int master, int slave) {
+
+    struct termios saved;
+
+    if (tcgetattr(slave, &saved) < 0) {
+        CHECK(0, "flush-setup", "tcgetattr() failed: %s", strerror(errno));
+        return;
+    }
+
+
+    char buf[32];
+    ssize_t got;
+
+    if (write(master, "xyz", 3) == 3) {
+        CHECK(tcflush(slave, TCIFLUSH) == 0, "flush-input", "tcflush() failed: %s", strerror(errno));
+        CHECK(readable(slave, 0) == 0, "flush-input-empty", "%s", "the slave is still readable after TCIFLUSH");
+    }
+
+    if (write(slave, "out", 3) == 3) {
+        CHECK(tcflush(slave, TCOFLUSH) == 0, "flush-output", "tcflush() failed: %s", strerror(errno));
+        CHECK(readable(master, 0) == 0, "flush-output-empty", "%s", "the master is still readable after TCOFLUSH");
+    }
+
+    if (write(master, "in", 2) == 2 && write(slave, "out", 3) == 3) {
+        CHECK(tcflush(slave, TCIOFLUSH) == 0, "flush-both", "tcflush() failed: %s", strerror(errno));
+        CHECK(readable(slave, 0) == 0 && readable(master, 0) == 0, "flush-both-empty", "%s", "a queue survived TCIOFLUSH");
+    }
+
+    errno = 0;
+    CHECK(tcflush(slave, 42) < 0 && errno == EINVAL, "flush-invalid", "errno=%d", errno);
+
+
+    struct termios ios = saved;
+
+    ios.c_lflag |= ICANON;
+    ios.c_lflag &= ~(ECHO | ECHONL);
+
+    if (tcsetattr(slave, TCSANOW, &ios) == 0 && write(master, "partial", 7) == 7) {
+
+        tcflush(slave, TCIFLUSH);
+
+        if (write(master, "x\n", 2) == 2) {
+            got = read_ready(slave, buf, sizeof(buf));
+            CHECK(got == 2 && memcmp(buf, "x\n", 2) == 0, "flush-partial-line", "read() returned %zd '%.*s'", got, (int)(got > 0 ? got : 0), buf);
+        }
+    }
+
+    tcsetattr(slave, TCSANOW, &saved);
+}
+
+
 int main(int argc, char** argv) {
 
     (void)argc;
@@ -312,6 +430,8 @@ int main(int argc, char** argv) {
         test_readiness(master[0], slave[0]);
         test_wakeup(master[0], slave[0]);
         test_eof(master[0], slave[0]);
+        test_werase(master[0], slave[0]);
+        test_flush(master[0], slave[0]);
     }
 
 

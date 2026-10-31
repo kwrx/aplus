@@ -380,9 +380,20 @@ static ssize_t pty_process_input(pty_t* pty, const char* buf, size_t size) {
 #if DEBUG_LEVEL_TRACE
                 kprintf("pty_input_process(): VWERASE\n");
 #endif
-                // TODO: VWERASE: erase the word to the left of the cursor
+                while (pty->input.size > 0 && (pty->input.buffer[pty->input.size - 1] == ' ' || pty->input.buffer[pty->input.size - 1] == '\t')) {
+                    pty_input_backspace(pty, pty->ios.c_lflag & ECHOE);
+                }
 
-                continue;
+                while (pty->input.size > 0 && pty->input.buffer[pty->input.size - 1] != ' ' && pty->input.buffer[pty->input.size - 1] != '\t') {
+                    pty_input_backspace(pty, pty->ios.c_lflag & ECHOE);
+                }
+
+                if (!(pty->ios.c_lflag & ECHOE) && pty->ios.c_lflag & ECHO) {
+
+                    char cb[2] = {'^', ch + 0x40};
+
+                    pty_process_output(pty, cb, 2);
+                }
 
             }
 
@@ -622,7 +633,26 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
 
         case TCFLSH: {
 
-            // TODO: TCFLSH: flush input/output buffer
+            const long queue = (long)arg;
+
+            if (unlikely(queue != TCIFLUSH && queue != TCOFLUSH && queue != TCIOFLUSH))
+                return errno = EINVAL, -1;
+
+
+            if (queue != TCOFLUSH) {
+
+                scoped_lock(&pty->input.lock) {
+                    ringbuffer_reset(&pty->r1);
+
+                    pty->input.size  = 0;
+                    pty->eof.pending = false;
+                }
+            }
+
+            if (queue != TCIFLUSH) {
+                ringbuffer_reset(&pty->r2);
+            }
+
             return 0;
         }
 
