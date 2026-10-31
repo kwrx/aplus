@@ -82,10 +82,9 @@ void vfs_init(void) {
 
 
 #if DEBUG_LEVEL_INFO
-
-    for (i = 0; fs_table[i].id; i++)
+    for (i = 0; fs_table[i].id; i++) {
         kprintf("vfs: found filesystem '%s'\n", fs_table[i].name);
-
+    }
 #endif
 
 
