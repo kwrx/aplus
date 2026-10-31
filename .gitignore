@@ -53,3 +53,7 @@ CLAUDE.md
 
 # Build toolchain
 /sdk/
+
+/.mcp.json
+/.codegraph
+/.claude
