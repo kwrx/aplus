@@ -36,7 +36,7 @@ $(TARGET): BUILDALL
 
 .NOTPARALLEL:
 
-install: $(TARGET) INSTALLALL
+install: $(TARGET) .WAIT INSTALLALL
 	$(QUIET)echo "    GEN     $(SYSROOT)/usr/lib/modules/exports"
 	$(QUIET)./scripts/gen-exports $(SYSROOT) $(PLATFORM) > $(SYSROOT)/usr/lib/modules/exports
 	$(QUIET)echo "    GEN     $(SYSROOT)/boot/grub.cfg"
@@ -44,7 +44,7 @@ install: $(TARGET) INSTALLALL
 	$(QUIET)echo "    GEN     $(TARGET)"
 	$(QUIET)./scripts/gen-image $(SYSROOT) $(TARGET)
 
-install-live: $(TARGET) INSTALLALL
+install-live: $(TARGET) .WAIT INSTALLALL
 	$(QUIET)echo "    GEN     $(SYSROOT)/usr/lib/modules/exports"
 	$(QUIET)./scripts/gen-exports $(SYSROOT) $(PLATFORM) > $(SYSROOT)/usr/lib/modules/exports
 	$(QUIET)echo "    GEN     $(SYSROOT)/boot/grub.cfg"
@@ -55,7 +55,7 @@ install-live: $(TARGET) INSTALLALL
 	$(QUIET)./scripts/gen-image --live $(SYSROOT) $(TARGET)
 
 
-dist: $(TARGET) INSTALLALL
+dist: $(TARGET) .WAIT INSTALLALL
 	$(QUIET)mkdir -p                         aplus-$(PLATFORM)
 	$(QUIET)mkdir -p                         aplus-$(PLATFORM)/utils
 	$(QUIET)cp -r $(SYSROOT)                 aplus-$(PLATFORM)

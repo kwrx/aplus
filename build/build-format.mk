@@ -1,5 +1,4 @@
 .PHONY: format
-.NOTPARALLEL: format
 
 DIRS := $(PROJECTS) lib libk arch include
 
