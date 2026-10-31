@@ -42,17 +42,11 @@
 #include "procfs.h"
 
 
-/**
- * @brief The one buffer every generated /proc file is written into, and the lock that guards it.
- */
 static char procfs_scratch_buffer[8192];
 
 spinlock_t procfs_scratch_lock = {0};
 
 
-/**
- * @brief Prepares the scratch buffer's lock.
- */
 void procfs_scratch_init(void) {
     spinlock_init(&procfs_scratch_lock);
 }
@@ -145,14 +139,6 @@ char procfs_task_state(long status) {
 }
 
 
-/**
- * @brief Copies out everything /proc reports about a task, with the run queue held.
- *
- * @param t The task to read.
- * @param cpu The cpu the task sits on.
- * @param threads The number of threads in its group.
- * @param o Receives the snapshot.
- */
 static void __snapshot(task_t* t, cpuid_t cpu, size_t threads, procfs_task_t* o) {
 
     memset(o, 0, sizeof(procfs_task_t));
@@ -283,13 +269,6 @@ bool procfs_pid_exists(pid_t pid) {
 }
 
 
-/**
- * @brief Snapshots the live thread-group leaders into a caller-provided array.
- *
- * @param ids Receives the pids.
- * @param max The number of pids the array holds.
- * @return The number of pids written.
- */
 size_t procfs_task_list(pid_t* ids, size_t max) {
 
     DEBUG_ASSERT(ids);
@@ -317,15 +296,6 @@ size_t procfs_task_list(pid_t* ids, size_t max) {
 }
 
 
-/**
- * @brief Writes the absolute path an inode sits at, walking up its parent chain.
- *
- * @param inode The inode to name.
- * @param root The root the path is written relative to, as the owning task sees it.
- * @param buf Receives the path, NUL terminated.
- * @param size The size of the buffer.
- * @return The length of the path, or -1 with errno set.
- */
 static ssize_t __inode_path(inode_t* inode, inode_t* root, char* buf, size_t size) {
 
     DEBUG_ASSERT(inode);
@@ -378,21 +348,10 @@ static ssize_t __inode_path(inode_t* inode, inode_t* root, char* buf, size_t siz
 }
 
 
-/**
- * @brief A reference to a task's descriptor table or filesystem context, typed as task_t holds them.
- */
 typedef __typeof__(((task_t*)0)->fd) procfs_fd_t;
 typedef __typeof__(((task_t*)0)->fs) procfs_fs_t;
 
 
-/**
- * @brief Takes references to a task's descriptor table and filesystem context, under the lock of its cpu only.
- *
- * @param pid The tid of the task.
- * @param fdt Receives the descriptor table, or NULL for a task that has none left.
- * @param fst Receives the filesystem context in the same way, or NULL if the caller does not want it.
- * @return true if the task exists.
- */
 static bool __task_files_get(pid_t pid, procfs_fd_t* fdt, procfs_fs_t* fst) {
 
     DEBUG_ASSERT(fdt);
@@ -427,12 +386,6 @@ static bool __task_files_get(pid_t pid, procfs_fd_t* fdt, procfs_fs_t* fst) {
 }
 
 
-/**
- * @brief Drops the references __task_files_get() took, closing the descriptors and releasing the inodes on the last one.
- *
- * @param fdt The descriptor table, or NULL.
- * @param fst The filesystem context, or NULL.
- */
 static void __task_files_put(procfs_fd_t fdt, procfs_fs_t fst) {
 
     if (fdt)
@@ -470,14 +423,6 @@ bool procfs_task_fd_exists(pid_t pid, int fd) {
 }
 
 
-/**
- * @brief Snapshots the descriptors a task currently holds open.
- *
- * @param pid The tid of the task to inspect.
- * @param out Receives the descriptor numbers.
- * @param max The number of descriptors the array holds.
- * @return The number of descriptors written.
- */
 size_t procfs_task_fd_list(pid_t pid, int* out, size_t max) {
 
     DEBUG_ASSERT(out);
@@ -548,9 +493,6 @@ ssize_t procfs_task_fd_path(pid_t pid, int fd, char* buf, size_t size) {
 }
 
 
-/**
- * @brief The mount flags /proc/mounts spells out after rw or ro, in the order Linux prints them.
- */
 static const struct {
 
     int flag;
@@ -570,9 +512,6 @@ static const struct {
 };
 
 
-/**
- * @brief Where a mount table listing is written, and the root its paths are relative to.
- */
 typedef struct procfs_mounts {
 
     procfs_buf_t* b;
@@ -581,12 +520,6 @@ typedef struct procfs_mounts {
 } procfs_mounts_t;
 
 
-/**
- * @brief Appends a string with the characters /proc/mounts uses as separators written as octal escapes.
- *
- * @param b The buffer to append to.
- * @param s The string.
- */
 static void __bputs_mangled(procfs_buf_t* b, const char* s) {
 
     for (; *s; s++) {
@@ -599,13 +532,6 @@ static void __bputs_mangled(procfs_buf_t* b, const char* s) {
 }
 
 
-/**
- * @brief Tells whether an inode can be reached by walking down from a root.
- *
- * @param inode The inode.
- * @param root The root, or NULL for the top of the tree.
- * @return true if the inode is the root or lies beneath it.
- */
 static bool __inode_under(inode_t* inode, inode_t* root) {
 
     if (!root)
@@ -621,12 +547,6 @@ static bool __inode_under(inode_t* inode, inode_t* root) {
 }
 
 
-/**
- * @brief Writes the /proc/mounts line of one mount, or nothing when its mountpoint lies outside the root.
- *
- * @param m The mount.
- * @param arg The procfs_mounts_t listing it.
- */
 static void __task_mounts_line(const mount_t* m, void* arg) {
 
     procfs_mounts_t* ctx = arg;
@@ -656,13 +576,6 @@ static void __task_mounts_line(const mount_t* m, void* arg) {
 }
 
 
-/**
- * @brief Writes the mount table as a task sees it from its root, one /proc/mounts line per mount.
- *
- * @param pid The task.
- * @param b The buffer to write into.
- * @return 0 on success, or -1 with errno set.
- */
 int procfs_task_mounts(pid_t pid, procfs_buf_t* b) {
 
     DEBUG_ASSERT(b);

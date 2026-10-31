@@ -36,9 +36,6 @@
 #define TMPFS_NODES_MAX (8192)
 
 
-/**
- * @brief A mounted tmpfs: every inode it holds, its statistics and the inode numbers it hands out, under one lock.
- */
 typedef struct {
     list(inode_t*, children);
 
@@ -46,9 +43,6 @@ typedef struct {
     spinlock_t lock;
 } tmpfs_t;
 
-/**
- * @brief The data of a tmpfs file, shared by every name linked to it and freed with the last inode that refers to it.
- */
 typedef struct {
 
     struct stat st;

@@ -179,13 +179,6 @@ int ext2_utils_free_inode(ext2_t* ext2, ino_t ino) {
 }
 
 
-/**
- * @brief Adjusts the directory count of the block group an inode belongs to.
- * @param ext2 The filesystem.
- * @param ino The inode of a directory being created or removed.
- * @param delta +1 for a new directory, -1 for a removed one.
- * @return 0 on success, -1 with errno set.
- */
 int ext2_utils_count_dir(ext2_t* ext2, ino_t ino, int delta) {
     DEBUG_ASSERT(ext2);
 
@@ -311,13 +304,6 @@ static int ext2_inode_get_block(ext2_t* ext2, struct ext2_inode* inode, uint32_t
 }
 
 
-/**
- * @brief Returns a block of block pointers through the cache slot of its level of indirection.
- * @param ext2 The filesystem, locked.
- * @param depth The level of indirection.
- * @param block The block of pointers.
- * @return The pointers, or NULL with errno set.
- */
 static uint32_t* ext2_inode_pointer_block(ext2_t* ext2, uint32_t depth, uint32_t block) {
     ext2_mapcache_t* cache = &ext2->mapcache[depth];
 
@@ -337,14 +323,6 @@ static uint32_t* ext2_inode_pointer_block(ext2_t* ext2, uint32_t depth, uint32_t
 }
 
 
-/**
- * @brief Finds the physical block behind a logical block without allocating.
- * @param ext2 The filesystem, locked.
- * @param inode The inode.
- * @param logical The logical block.
- * @param physical Receives the physical block, or 0 for a hole.
- * @return 0 on success, -1 with errno set.
- */
 static int ext2_inode_lookup(ext2_t* ext2, struct ext2_inode* inode, uint32_t logical, uint32_t* physical) {
     uint32_t indexes[EXT2_IND_LEVELS] = {0};
     uint32_t levels;
@@ -372,15 +350,6 @@ static int ext2_inode_lookup(ext2_t* ext2, struct ext2_inode* inode, uint32_t lo
 }
 
 
-/**
- * @brief Maps logical blocks onto a run of physically consecutive blocks, or onto a run of holes.
- * @param ext2 The filesystem, locked.
- * @param inode The inode.
- * @param logical The first logical block.
- * @param count The most blocks the run may cover.
- * @param physical Receives the first physical block of the run, or 0 for holes.
- * @return The number of blocks in the run, or -1 with errno set.
- */
 long ext2_utils_map_blocks(ext2_t* ext2, struct ext2_inode* inode, uint32_t logical, size_t count, uint32_t* physical) {
     DEBUG_ASSERT(ext2);
     DEBUG_ASSERT(inode);
@@ -409,13 +378,6 @@ long ext2_utils_map_blocks(ext2_t* ext2, struct ext2_inode* inode, uint32_t logi
 }
 
 
-/**
- * @brief Writes back a cached block of pointers and keeps it cached.
- * @param ext2 The filesystem, locked.
- * @param depth The level of indirection whose cache slot holds the block.
- * @param block The block of pointers.
- * @return 0 on success, -1 with errno set.
- */
 static int ext2_inode_pointer_store(ext2_t* ext2, uint32_t depth, uint32_t block) {
     ext2_mapcache_t* cache = &ext2->mapcache[depth];
 
@@ -429,13 +391,6 @@ static int ext2_inode_pointer_store(ext2_t* ext2, uint32_t depth, uint32_t block
 }
 
 
-/**
- * @brief Allocates a zeroed block of pointers and caches it in the slot of its level of indirection.
- * @param ext2 The filesystem, locked.
- * @param depth The level of indirection.
- * @param block Receives the new block.
- * @return 0 on success, -1 with errno set.
- */
 static int ext2_inode_pointer_alloc(ext2_t* ext2, uint32_t depth, uint32_t* block) {
     ext2_mapcache_t* cache = &ext2->mapcache[depth];
 
@@ -452,16 +407,6 @@ static int ext2_inode_pointer_alloc(ext2_t* ext2, uint32_t depth, uint32_t* bloc
 }
 
 
-/**
- * @brief Returns the last-level block of pointers for a logical block, allocating missing blocks of pointers on the way.
- * @param ext2 The filesystem, locked.
- * @param inode The inode.
- * @param slot The slot in i_block the path starts from.
- * @param indexes The index at each level of indirection.
- * @param levels The number of levels of indirection.
- * @param leaf Receives the last-level block.
- * @return Its pointers, or NULL with errno set.
- */
 static uint32_t* ext2_inode_pointer_path(ext2_t* ext2, struct ext2_inode* inode, uint32_t slot, const uint32_t* indexes, uint32_t levels, uint32_t* leaf) {
     uint32_t current = inode->i_block[slot];
 
@@ -502,15 +447,6 @@ static uint32_t* ext2_inode_pointer_path(ext2_t* ext2, struct ext2_inode* inode,
 }
 
 
-/**
- * @brief Points consecutive logical blocks at consecutive physical blocks, one write per block of pointers.
- * @param ext2 The filesystem, locked.
- * @param inode The inode.
- * @param logical The first logical block.
- * @param first The first physical block.
- * @param count The number of blocks.
- * @return The number of blocks mapped, or -1 with errno set if none was.
- */
 static long ext2_inode_map_run(ext2_t* ext2, struct ext2_inode* inode, uint32_t logical, uint32_t first, long count) {
     uint32_t per_block = ext2->blocksize / sizeof(uint32_t);
     long done          = 0;
@@ -556,16 +492,6 @@ static long ext2_inode_map_run(ext2_t* ext2, struct ext2_inode* inode, uint32_t 
 }
 
 
-/**
- * @brief Maps logical blocks onto a run of physical blocks, allocating a contiguous run over holes without zeroing it.
- * @param ext2 The filesystem, locked; allocations stay pending until ext2_utils_alloc_commit.
- * @param inode The inode.
- * @param logical The first logical block.
- * @param count The most blocks the run may cover.
- * @param physical Receives the first physical block of the run.
- * @param fresh Receives true when the run was allocated by this call and holds garbage.
- * @return The number of blocks in the run, or -1 with errno set.
- */
 long ext2_utils_map_alloc_blocks(ext2_t* ext2, struct ext2_inode* inode, uint32_t logical, size_t count, uint32_t* physical, bool* fresh) {
     DEBUG_ASSERT(ext2);
     DEBUG_ASSERT(inode);
@@ -607,14 +533,6 @@ long ext2_utils_map_alloc_blocks(ext2_t* ext2, struct ext2_inode* inode, uint32_
 }
 
 
-/**
- * @brief Zeroes a byte range inside the block that holds its start, if that block is allocated.
- * @param ext2 The filesystem, locked.
- * @param inode The inode.
- * @param start The first byte; nothing happens when it is block-aligned.
- * @param end The byte after the range, clipped to the end of the block.
- * @return 0 on success, -1 with errno set.
- */
 int ext2_utils_zero_range(ext2_t* ext2, struct ext2_inode* inode, uint64_t start, uint64_t end) {
     DEBUG_ASSERT(ext2);
     DEBUG_ASSERT(inode);
@@ -654,16 +572,6 @@ static bool ext2_inode_pointer_block_empty(ext2_t* ext2, uint32_t block) {
 }
 
 
-/**
- * @brief Frees what a block of pointers maps from a logical offset onward, and the block itself once it maps nothing.
- * @param ext2 The filesystem, locked; frees stay pending until ext2_utils_alloc_commit.
- * @param inode The inode.
- * @param depth The level of indirection of the block.
- * @param levels The levels of indirection below and including the block.
- * @param block The block of pointers.
- * @param from The first logical block to free, relative to the start of the block's range.
- * @return 1 if the block was freed, 0 if it still maps blocks, -1 with errno set.
- */
 static int ext2_inode_free_tree(ext2_t* ext2, struct ext2_inode* inode, uint32_t depth, uint32_t levels, uint32_t block, uint64_t from) {
     uint32_t per_block = ext2->blocksize / sizeof(uint32_t);
     uint64_t span      = 1;
@@ -718,13 +626,6 @@ static int ext2_inode_free_tree(ext2_t* ext2, struct ext2_inode* inode, uint32_t
 }
 
 
-/**
- * @brief Frees every block of an inode from a logical block onward, committing the bitmaps, descriptors and superblock once.
- * @param ext2 The filesystem, locked.
- * @param inode The inode.
- * @param from The first logical block to free.
- * @return 0 on success, -1 with errno set.
- */
 int ext2_utils_free_inode_range(ext2_t* ext2, struct ext2_inode* inode, uint32_t from) {
     DEBUG_ASSERT(ext2);
     DEBUG_ASSERT(inode);

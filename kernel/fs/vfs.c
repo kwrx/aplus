@@ -38,9 +38,6 @@
 #include <aplus/utils/ptr.h>
 
 
-/**
- * @brief The bit of inode->refcount set once the inode's directory entry is gone; the rest counts holders.
- */
 #define INODE_REF_UNLINKED 0x80000000U
 
 
@@ -48,16 +45,10 @@ fstable_t __fs_table[VFS_MAX_FILESYSTEMS] = {0};
 fstable_t* fs_table = &__fs_table[0];
 
 
-/**
- * @brief Every filesystem mounted so far, in mount order, and the lock that guards the list.
- */
 static list(mount_t*, vfs_mounts);
 static spinlock_t vfs_mounts_lock = {0};
 
 
-/**
- * @brief The Linux magic number statfs() reports for each filesystem.
- */
 static const struct {
 
     id_t fsid;
@@ -103,15 +94,6 @@ void vfs_init(void) {
 }
 
 
-/**
- * @brief Records a successful mount in the mount table.
- *
- * @param dir The mountpoint, now the root of the mounted filesystem.
- * @param dev The source inode, or NULL.
- * @param source The source as the caller named it, or NULL.
- * @param fs The filesystem that was mounted.
- * @param flags The MS_* mount flags.
- */
 static void __mount_record(inode_t* dir, inode_t* dev, const char* source, const fstable_t* fs, int flags) {
 
     mount_t* m = kcalloc(1, sizeof(mount_t), GFP_KERNEL);
@@ -206,12 +188,6 @@ int vfs_mount(inode_t* dev, inode_t* dir, const char* source, const char* fs, in
 }
 
 
-/**
- * @brief Calls a function on every mount in the mount table, in mount order, with the table locked.
- *
- * @param fn The function to call, which must not mount anything.
- * @param arg Passed through to fn.
- */
 void vfs_mounts_foreach(void (*fn)(const mount_t*, void*), void* arg) {
 
     DEBUG_ASSERT(fn);
@@ -225,13 +201,6 @@ void vfs_mounts_foreach(void (*fn)(const mount_t*, void*), void* arg) {
 }
 
 
-/**
- * @brief Reports the statistics of the filesystem an inode belongs to, in the layout statfs() returns.
- *
- * @param inode Any inode of the filesystem.
- * @param st Receives the statistics.
- * @return 0 on success, or -1 with errno set.
- */
 int vfs_statfs(inode_t* inode, struct statfs* st) {
 
     DEBUG_ASSERT(inode);
@@ -306,11 +275,6 @@ int vfs_close(inode_t* inode) {
 }
 
 
-/**
- * @brief Frees an inode nothing references any more, with what its filesystem keeps for it, and unpins its directory.
- *
- * @param inode The inode to free.
- */
 static void __vfs_inode_release(inode_t* inode) {
 
     DEBUG_ASSERT(inode);
@@ -334,12 +298,6 @@ static void __vfs_inode_release(inode_t* inode) {
 }
 
 
-/**
- * @brief Takes a reference to an inode the caller can already reach.
- *
- * @param inode The inode.
- * @return The inode.
- */
 inode_t* vfs_inode_get(inode_t* inode) {
 
     DEBUG_ASSERT(inode);
@@ -350,11 +308,6 @@ inode_t* vfs_inode_get(inode_t* inode) {
 }
 
 
-/**
- * @brief Drops a reference taken with vfs_inode_get(), freeing an unlinked or anonymous inode on the last one.
- *
- * @param inode The inode.
- */
 void vfs_inode_put(inode_t* inode) {
 
     DEBUG_ASSERT(inode);
@@ -371,11 +324,6 @@ void vfs_inode_put(inode_t* inode) {
 }
 
 
-/**
- * @brief Marks an inode's directory entry gone, freeing it now if nothing holds it and pinning its directory otherwise.
- *
- * @param inode The inode whose entry was removed.
- */
 void vfs_inode_unlink(inode_t* inode) {
 
     DEBUG_ASSERT(inode);
@@ -398,12 +346,6 @@ void vfs_inode_unlink(inode_t* inode) {
 }
 
 
-/**
- * @brief Tells whether an inode's directory entry is gone.
- *
- * @param inode The inode.
- * @return true once the inode has been unlinked.
- */
 bool vfs_inode_unlinked(inode_t* inode) {
 
     DEBUG_ASSERT(inode);
@@ -412,11 +354,6 @@ bool vfs_inode_unlinked(inode_t* inode) {
 }
 
 
-/**
- * @brief Frees an anonymous inode that never got a holder, dropping the reference it holds on its change counter.
- *
- * @param inode The inode to free.
- */
 void vfs_anonymous_free(inode_t* inode) {
 
     DEBUG_ASSERT(inode);
@@ -427,12 +364,6 @@ void vfs_anonymous_free(inode_t* inode) {
 }
 
 
-/**
- * @brief Moves the caller's working directory, and its root too if asked, onto an inode.
- *
- * @param inode The directory.
- * @param root Whether the root moves as well.
- */
 void fs_chdir(inode_t* inode, bool root) {
 
     DEBUG_ASSERT(inode);
@@ -463,11 +394,6 @@ void fs_chdir(inode_t* inode, bool root) {
 }
 
 
-/**
- * @brief Records the executable the caller now runs.
- *
- * @param inode The executable.
- */
 void fs_set_exe(inode_t* inode) {
 
     DEBUG_ASSERT(inode);
@@ -486,11 +412,6 @@ void fs_set_exe(inode_t* inode) {
 }
 
 
-/**
- * @brief Takes a reference to every inode a filesystem context that has just been copied points at.
- *
- * @param fs The copy.
- */
 void fs_ref_all(struct fs* fs) {
 
     DEBUG_ASSERT(fs);
@@ -506,11 +427,6 @@ void fs_ref_all(struct fs* fs) {
 }
 
 
-/**
- * @brief Drops the references a filesystem context that nothing uses any more holds.
- *
- * @param fs The context.
- */
 void fs_put_all(struct fs* fs) {
 
     DEBUG_ASSERT(fs);
@@ -698,15 +614,6 @@ ssize_t vfs_read(inode_t* inode, void* buf, off_t off, size_t size) {
 }
 
 
-/**
- * @brief Writes to an inode whose lock the caller holds, and signals its readers.
- *
- * @param inode The inode, locked.
- * @param buf The data.
- * @param off The offset.
- * @param size The number of bytes to write.
- * @return What the filesystem's write returned.
- */
 static ssize_t vfs_write_locked(inode_t* inode, const void* buf, off_t off, size_t size) {
 
     ssize_t e = inode->ops.write(inode, buf, off, size);
@@ -737,16 +644,6 @@ ssize_t vfs_write(inode_t* inode, const void* buf, off_t off, size_t size) {
 }
 
 
-/**
- * @brief Writes a vector in one hold of the inode's lock, so no other write lands between its buffers.
- *
- * @param inode The inode.
- * @param iov The buffers, none of them empty.
- * @param count How many buffers there are.
- * @param off Where to write, ignored for a regular file when @p append is set; receives the offset written at.
- * @param append Whether a regular file is written at its end, read under the same lock.
- * @return The number of bytes written, what the filesystem's write returned when it wrote none, or -ENOSYS.
- */
 ssize_t vfs_writev(inode_t* inode, const struct iovec* iov, size_t count, off_t* off, bool append) {
 
     DEBUG_ASSERT(inode);
@@ -790,15 +687,6 @@ ssize_t vfs_writev(inode_t* inode, const struct iovec* iov, size_t count, off_t*
 }
 
 
-/**
- * @brief Writes at the end of a regular file, reading its size under the same lock as the write; anything else is written at @p off.
- *
- * @param inode The inode.
- * @param buf The data.
- * @param off The offset for an inode that is not a regular file; receives the offset written at.
- * @param size The number of bytes to write.
- * @return What the filesystem's write returned, or -ENOSYS.
- */
 ssize_t vfs_write_append(inode_t* inode, const void* buf, off_t* off, size_t size) {
 
     DEBUG_ASSERT(buf);
@@ -827,14 +715,6 @@ ssize_t vfs_readlink(inode_t* inode, char* buf, size_t size) {
 }
 
 
-/**
- * @brief Creates an entry in a directory, or finds the one already there under that name.
- *
- * @param inode The directory.
- * @param name The name of the entry.
- * @param mode The type and permissions of a new entry.
- * @return The inode, referenced, or NULL with errno set.
- */
 inode_t* vfs_creat(inode_t* inode, const char* name, mode_t mode) {
 
     DEBUG_ASSERT(inode);
@@ -877,13 +757,6 @@ inode_t* vfs_creat(inode_t* inode, const char* name, mode_t mode) {
 }
 
 
-/**
- * @brief Looks a name up in a directory.
- *
- * @param inode The directory.
- * @param name The name to look for, which may be "." or "..".
- * @return The inode, referenced, or NULL with errno set.
- */
 inode_t* vfs_finddir(inode_t* inode, const char* name) {
 
     DEBUG_ASSERT(inode);
@@ -945,15 +818,6 @@ ssize_t vfs_readdir(inode_t* inode, struct dirent* ent, off_t off, size_t size) 
 }
 
 
-/**
- * @brief Moves a directory entry to a new name, in the same directory or another one of the same filesystem.
- *
- * @param inode The directory holding the entry.
- * @param name The current name of the entry.
- * @param into The directory the entry moves to.
- * @param newname The new name, which must not exist yet.
- * @return 0 on success, or -1 with errno set.
- */
 int vfs_rename(inode_t* inode, const char* name, inode_t* into, const char* newname) {
 
     DEBUG_ASSERT(inode);
@@ -1089,14 +953,6 @@ int vfs_unlink(inode_t* inode, const char* name) {
 }
 
 
-/**
- * @brief Adds a new name in a directory for an existing inode.
- *
- * @param inode The directory.
- * @param target The inode the new name refers to.
- * @param name The new name.
- * @return 0 on success, or -1 with errno set.
- */
 int vfs_link(inode_t* inode, inode_t* target, const char* name) {
 
     DEBUG_ASSERT(inode);

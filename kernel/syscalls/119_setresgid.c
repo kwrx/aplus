@@ -35,13 +35,6 @@
 #include <unistd.h>
 
 
-/**
- * @brief Tells whether an unprivileged task may take a group ID: -1 keeps the old one, anything else must be an ID it already holds.
- *
- * @param t The task.
- * @param id The requested ID.
- * @return true if the change is allowed.
- */
 static inline bool __setresgid_allowed(const task_t* t, gid_t id) {
     return id == (gid_t)-1 || id == t->gid || id == t->egid || id == t->sgid;
 }

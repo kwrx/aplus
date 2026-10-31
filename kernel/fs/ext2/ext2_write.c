@@ -19,15 +19,6 @@
 #include "ext2.h"
 
 
-/**
- * @brief Writes data into a run of newly allocated blocks, zeroing the parts of its first and last blocks the data leaves uncovered.
- * @param ext2 The filesystem, locked.
- * @param physical The first block of the run.
- * @param inblock The byte offset of the data in the first block.
- * @param data The data.
- * @param size The number of bytes.
- * @return 0 on success, -1 with errno set.
- */
 static int ext2_write_fresh(ext2_t* ext2, uint32_t physical, uint32_t inblock, const uint8_t* data, size_t size) {
     uint8_t edge[EXT2_MAX_BLOCK_SIZE];
 

@@ -36,14 +36,6 @@
 
 
 
-/**
- * @brief Extends a tmpfs file to @p len bytes, the new ones reading as zeros.
- *
- * @param inode The inode, whose lock the caller holds.
- * @param i The file's tmpfs data.
- * @param len The new size, larger than the current one.
- * @return 0, or -1 with errno ENOSPC or ENOMEM.
- */
 static int tmpfs_truncate_grow(inode_t* inode, tmpfs_inode_t* i, off_t len) {
 
     tmpfs_t* tmpfs = (tmpfs_t*)inode->sb->fsinfo;

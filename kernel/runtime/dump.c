@@ -51,12 +51,6 @@ static void print_path(const char* prefix, inode_t* inode) {
     kprintf("\n");
 }
 
-/**
- * @brief Tells whether a pointer is worth following from the panic printer.
- *
- * @param p The pointer to test.
- * @return true if the address falls inside the kernel heap area.
- */
 static bool plausible(const void* p) {
 
     return (uintptr_t)p >= arch_vmm_p2v(0, ARCH_VMM_AREA_HEAP);

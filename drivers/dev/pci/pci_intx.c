@@ -59,11 +59,6 @@ static void pci_intx_interrupt_handler(void* frame, irq_t irq) {
 }
 
 
-/**
- * @brief Finds the chipset's PCI interrupt router, the ISA/LPC bridge on bus 0.
- *
- * @return The router's device, or a device with no vendor when none was recognised.
- */
 static pcidev_t pci_intx_find_router(void) {
 
     for (uint8_t slot = 0; slot < 32; slot++) {
@@ -81,11 +76,6 @@ static pcidev_t pci_intx_find_router(void) {
 }
 
 
-/**
- * @brief Corrects every device's PCI_INTERRUPT_LINE to the interrupt it actually asserts on.
- *
- * What decides where an INTx pin lands is the chipset's interrupt router, not what firmware left behind.
- */
 void pci_intx_fixup_irqs(void) {
 
     pcidev_t router = pci_intx_find_router();

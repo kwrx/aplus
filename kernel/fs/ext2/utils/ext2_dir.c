@@ -183,14 +183,6 @@ int ext2_utils_remove_dir_entry(ext2_t* ext2, struct ext2_inode* dir, const char
 }
 
 
-/**
- * @brief Writes the first block of a new directory, holding its "." and ".." entries, and records it in the inode.
- * @param ext2 The filesystem.
- * @param node The new directory, updated in memory and on disk.
- * @param ino Its inode number.
- * @param parent The inode number of its parent.
- * @return 0 on success, -1 with errno set.
- */
 int ext2_utils_init_dir(ext2_t* ext2, struct ext2_inode* node, ino_t ino, ino_t parent) {
     DEBUG_ASSERT(ext2);
     DEBUG_ASSERT(node);
@@ -219,13 +211,6 @@ int ext2_utils_init_dir(ext2_t* ext2, struct ext2_inode* node, ino_t ino, ino_t 
 }
 
 
-/**
- * @brief Points the ".." entry of a directory at a new parent.
- * @param ext2 The filesystem.
- * @param node The directory.
- * @param parent The inode number of its new parent.
- * @return 0 on success, -1 with errno set.
- */
 int ext2_utils_set_dir_parent(ext2_t* ext2, struct ext2_inode* node, ino_t parent) {
     DEBUG_ASSERT(ext2);
     DEBUG_ASSERT(node);
@@ -251,12 +236,6 @@ int ext2_utils_set_dir_parent(ext2_t* ext2, struct ext2_inode* node, ino_t paren
 }
 
 
-/**
- * @brief Tells whether a directory holds nothing but its "." and ".." entries.
- * @param ext2 The filesystem.
- * @param node The directory.
- * @return 1 when it is empty, 0 when it is not, -1 with errno set on error.
- */
 int ext2_utils_dir_empty(ext2_t* ext2, struct ext2_inode* node) {
     DEBUG_ASSERT(ext2);
     DEBUG_ASSERT(node);

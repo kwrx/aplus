@@ -21,12 +21,6 @@
 #include "ext2.h"
 
 
-/**
- * @brief Undoes a half-created symbolic link: frees its data block, if any, clears the inode and releases it.
- * @param ext2 The filesystem.
- * @param node The new inode.
- * @param ino Its inode number.
- */
 static void ext2_symlink_rollback(ext2_t* ext2, struct ext2_inode* node, ino_t ino) {
     int e = errno;
 
@@ -42,13 +36,6 @@ static void ext2_symlink_rollback(ext2_t* ext2, struct ext2_inode* node, ino_t i
 }
 
 
-/**
- * @brief Creates a symbolic link in a directory, its target kept in the inode when it fits and in one data block otherwise.
- * @param parent The directory.
- * @param name The name of the link.
- * @param target The path the link points to.
- * @return 0 on success, -1 with errno set.
- */
 int ext2_symlink(inode_t* parent, const char* name, const char* target) {
     DEBUG_ASSERT(parent);
     DEBUG_ASSERT(parent->sb);

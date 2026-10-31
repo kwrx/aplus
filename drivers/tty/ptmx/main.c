@@ -45,12 +45,6 @@ MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
-/**
- * @brief Hangs the pty up when the last descriptor on its master closes, and lets the master inode be freed.
- *
- * @param inode The master inode.
- * @return 0.
- */
 static int ptmx_close(inode_t* inode) {
 
     DEBUG_ASSERT(inode);
@@ -64,11 +58,6 @@ static int ptmx_close(inode_t* inode) {
 }
 
 
-/**
- * @brief Drops the reference a master inode holds on its pty as the inode is freed.
- *
- * @param inode The master inode.
- */
 static void ptmx_release(inode_t* inode) {
 
     DEBUG_ASSERT(inode);
@@ -78,13 +67,6 @@ static void ptmx_release(inode_t* inode) {
 }
 
 
-/**
- * @brief Opens /dev/ptmx: creates a pty and returns the master inode private to this open.
- *
- * @param inode The /dev/ptmx inode.
- * @param flags The open() flags.
- * @return The master inode, or NULL with errno set.
- */
 static inode_t* ptmx_open(inode_t* inode, int flags) {
 
     DEBUG_ASSERT(inode);

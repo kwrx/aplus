@@ -32,13 +32,6 @@
 #include <dev/pci.h>
 
 
-/**
- * @brief Writes the Linux-style sysfs name of a PCI function ("0000:bb:ss.f").
- *
- * @param device The PCI function.
- * @param buf The output buffer.
- * @param size Its size.
- */
 static void pci_sysfs_name(pcidev_t device, char* buf, size_t size) {
     snprintf(buf, size, "0000:%02x:%02x.%x", pci_extract_bus(device), pci_extract_slot(device), pci_extract_func(device));
 }
@@ -89,16 +82,10 @@ static void pci_sysfs_remove(pcidev_t device, uint16_t vendor_id, uint16_t devic
 }
 
 
-/**
- * @brief Publishes every PCI function under /sys/bus/pci/devices.
- */
 void pci_sysfs_init(void) {
     pci_scan(pci_sysfs_add, PCI_TYPE_ALL, NULL);
 }
 
-/**
- * @brief Withdraws what pci_sysfs_init() published.
- */
 void pci_sysfs_dnit(void) {
     pci_scan(pci_sysfs_remove, PCI_TYPE_ALL, NULL);
 }

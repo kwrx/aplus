@@ -35,18 +35,6 @@
 #include <stdint.h>
 
 
-/**
- * Allows a process to stop sharing certain resources with other processes in its thread group.
- *
- * @param flags an int that specifies which resources to stop sharing.
- * The following flags are valid:
- * <ul>
- * <li>CLONE_FILES - stop sharing file descriptors</li>
- * <li>CLONE_FS - stop sharing filesystem information</li>
- * <li>CLONE_SIGHAND - stop sharing signal handlers</li>
- * </ul>
- *
- */
 void do_unshare(int flags) {
 
     if (flags & CLONE_FILES) {
@@ -96,12 +84,6 @@ void do_unshare(int flags) {
 
 
 
-/**
- * @brief Parks on the word a vforked child bumps when it is done with the shared address space.
- *
- * @param seq The futex value the caller last observed.
- */
-
 static inline void __vfork_park(uint32_t seq) {
 
     futex_wait(current_task, &current_task->vfork.futex, seq, NULL);
@@ -112,16 +94,6 @@ static inline void __vfork_park(uint32_t seq) {
 }
 
 
-/**
- * Creates a new task (a copy of the current task) with certain properties inherited or
- * shared from the parent task based on the flags passed in the `kclone_args` struct.
- *
- * @param args  a pointer to a `kclone_args` struct containing the flags and
- *              arguments for the fork system call.
- * @param size  the size of the `kclone_args` struct.
- * @return      the new task's process ID (`pid_t`), or -1 if an error occurred.
- *              In case of error, `errno` is set to indicate the error.
- */
 pid_t do_fork(struct kclone_args* args, size_t size) {
 
     DEBUG_ASSERT(args);
@@ -297,9 +269,6 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
 }
 
 
-/**
- * @brief Releases the task parked in do_fork() waiting on this one, if any.
- */
 void do_vfork_release(void) {
 
     pid_t tid = current_task->vfork.waiter;

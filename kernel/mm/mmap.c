@@ -31,14 +31,6 @@
 
 
 
-/**
- * @brief Finds the lowest range of the mmap window clear of every mapping and shared memory attachment; call with the space locked.
- *
- * @param space The address space.
- * @param len The length of the range, a multiple of @p align.
- * @param align The alignment the range starts on, a power of two.
- * @return The start of the range, or 0 when the window has no room for it.
- */
 uintptr_t vmm_mmap_find(vmm_address_space_t* space, size_t len, uintptr_t align) {
 
     DEBUG_ASSERT(space);
@@ -79,11 +71,6 @@ uintptr_t vmm_mmap_find(vmm_address_space_t* space, size_t len, uintptr_t align)
 }
 
 
-/**
- * @brief Moves the top of the mmap window down to the end of its highest mapping or attachment; call with the space locked.
- *
- * @param space The address space.
- */
 void vmm_mmap_update_top(vmm_address_space_t* space) {
 
     DEBUG_ASSERT(space);

@@ -70,24 +70,12 @@
 
 
 
-/**
- * @brief Most program headers an image may have.
- */
 #define EXECVE_PHNUM_MAX 128
 
-/**
- * @brief Least room the arguments and environment always get, whatever the stack limit.
- */
 #define EXECVE_ARG_MIN (128UL * 1024UL)
 
-/**
- * @brief Most bytes of a #! line execve() reads, as Linux does.
- */
 #define EXECVE_SCRIPT_LINE 256
 
-/**
- * @brief Most #! scripts execve() follows before the image must be a program.
- */
 #define EXECVE_SCRIPT_DEPTH 4
 
 
@@ -98,9 +86,6 @@
     }
 
 
-/**
- * @brief Where execve() put the stacks of the program it is starting.
- */
 struct execve_layout {
 
     uintptr_t stack;
@@ -108,11 +93,6 @@ struct execve_layout {
 };
 
 
-/**
- * @brief Frees a kernel buffer when the variable holding it goes out of scope.
- *
- * @param p The variable.
- */
 static inline void __execve_kfree(void* p) {
 
     void** q = (void**)p;
@@ -122,13 +102,6 @@ static inline void __execve_kfree(void* p) {
 }
 
 
-/**
- * @brief Grows the break of the address space being built.
- *
- * @param incr Bytes to add.
- * @param base Receives the old break, where the new memory starts.
- * @return 0 on success, or -ENOMEM.
- */
 static long __execve_sbrk(uintptr_t incr, uintptr_t* base) {
 
     uintptr_t brk = (uintptr_t)sys_brk(0);
@@ -142,15 +115,6 @@ static long __execve_sbrk(uintptr_t incr, uintptr_t* base) {
 }
 
 
-/**
- * @brief Copies a user array of strings into a kernel buffer, or only measures it when @p buf is NULL.
- *
- * @param vec The NULL-terminated user array.
- * @param buf Where the strings go, one after the other, or NULL.
- * @param room The bytes the strings and a pointer to each may take.
- * @param count Receives how many strings there are.
- * @return The bytes the strings take, or -EFAULT or -E2BIG.
- */
 static long __execve_copy_strings(const char* const* vec, char* buf, size_t room, size_t* count) {
 
     const uintptr_t pagesize = arch_vmm_getpagesize();
@@ -206,14 +170,6 @@ static long __execve_copy_strings(const char* const* vec, char* buf, size_t room
 }
 
 
-/**
- * @brief Checks that an image is a static executable whose segments fit below the mmap window.
- *
- * @param phdrs The program headers.
- * @param phnum How many.
- * @param limit The first address a segment may not reach.
- * @return 0, or -ENOEXEC.
- */
 static long __execve_check(const Elf_Phdr* phdrs, size_t phnum, uintptr_t limit) {
 
     size_t loads = 0;
@@ -248,16 +204,6 @@ static long __execve_check(const Elf_Phdr* phdrs, size_t phnum, uintptr_t limit)
 }
 
 
-/**
- * @brief Maps and reads the loadable segments of an image into the address space being built.
- *
- * @param inode The image.
- * @param head Its ELF header.
- * @param phdrs Its program headers, already checked.
- * @param space The address space being built, loaded on this CPU.
- * @param phdr_addr Receives where the program headers end up, or is left alone.
- * @return 0 on success, or a negative errno.
- */
 static long __execve_load(inode_t* inode, const Elf_Ehdr* head, const Elf_Phdr* phdrs, vmm_address_space_t* space, uintptr_t* phdr_addr) {
 
     const uintptr_t pagesize = arch_vmm_getpagesize();
@@ -318,18 +264,6 @@ static long __execve_load(inode_t* inode, const Elf_Ehdr* head, const Elf_Phdr* 
 }
 
 
-/**
- * @brief Lays out the strings, AT_RANDOM bytes, pointer vectors and user stack of the program being started.
- *
- * @param strings The arguments then the environment, one string after the other.
- * @param size Their total size.
- * @param argc How many are arguments.
- * @param envc How many are environment entries.
- * @param head The ELF header.
- * @param phdr_addr Where the program headers are mapped.
- * @param layout Receives where the stacks went.
- * @return 0 on success, or -ENOMEM.
- */
 static long __execve_stack(const char* strings, size_t size, size_t argc, size_t envc, const Elf_Ehdr* head, uintptr_t phdr_addr, struct execve_layout* layout) {
 
     const uint64_t entropy[2] = {arch_random(), arch_random()};
@@ -396,11 +330,6 @@ static long __execve_stack(const char* strings, size_t size, size_t argc, size_t
 }
 
 
-/**
- * @brief Puts the caller back on its old address space and frees the one execve() was building.
- *
- * @param old The address space the caller ran on before.
- */
 static void __execve_rollback(vmm_address_space_t* old) {
 
     vmm_address_space_t* built = current_task->address_space;
@@ -414,13 +343,6 @@ static void __execve_rollback(vmm_address_space_t* old) {
 }
 
 
-/**
- * @brief Checks that a path names an executable regular file and takes a reference to it.
- *
- * @param path The path, in kernel memory.
- * @param inode Receives the file, referenced.
- * @return 0, or a negative errno.
- */
 static long __execve_open(const char* path, inode_t** inode) {
 
     struct stat st = {0};
@@ -471,19 +393,6 @@ static long __execve_open(const char* path, inode_t** inode) {
 }
 
 
-/**
- * @brief Turns the exec of a #! script into that of its interpreter: the interpreter, its optional argument, the script path, then the script's arguments after the first.
- *
- * @param inode The script.
- * @param path The script path, replaced by the interpreter path.
- * @param strings The arguments then the environment, replaced by the new ones.
- * @param argsz The bytes the arguments take, updated.
- * @param argc How many arguments, updated.
- * @param envsz The bytes the environment takes.
- * @param envc How many environment entries.
- * @param limit The bytes the strings and a pointer to each may take.
- * @return 0, or -ENOEXEC for a malformed #! line, -E2BIG, -ENOMEM or the error of the read.
- */
 static long __execve_script(inode_t* inode, char* path, char** strings, long* argsz, size_t* argc, long envsz, size_t envc, size_t limit) {
 
     char line[EXECVE_SCRIPT_LINE + 1] = {0};
@@ -578,12 +487,6 @@ static long __execve_script(inode_t* inode, char* path, char** strings, long* ar
 }
 
 
-/**
- * @brief Records the program name and command line /proc shows, from the new arguments.
- *
- * @param strings The arguments, one string after the other.
- * @param argc How many.
- */
 static void __execve_name(const char* strings, size_t argc) {
 
     const char* base = argc ? strings : "";

@@ -36,13 +36,6 @@
 #include <aplus/utils/ringbuffer.h>
 
 
-/**
- * @brief A pipe is one buffer shared by two independently closeable endpoints, each with its own inode.
- *
- * The buffer outlives whichever end closes first and is torn down once both are gone.
- */
-
-
 #define PIPEFS_FSID      0xDEADCAFE
 #define PIPEFS_FIRST_INO 0xFFFFFFFFF000000
 
@@ -411,14 +404,6 @@ int pipefs_create_pair(inode_t** rd, inode_t** wr, size_t bufsize) {
 }
 
 
-/**
- * @brief Hands out a fresh endpoint on a named FIFO, creating the channel behind it on the first open.
- *
- * @param node The FIFO directory entry.
- * @param flags The open flags, whose access mode selects the endpoint direction.
- * @return The endpoint inode, or NULL with errno set.
- */
-
 inode_t* fifofs_open(inode_t* node, int flags) {
 
     DEBUG_ASSERT(node);
@@ -475,15 +460,6 @@ inode_t* fifofs_open(inode_t* node, int flags) {
     return end;
 }
 
-
-/**
- * @brief Turns a freshly created directory entry into a FIFO node, installing only its open handler.
- *
- * @param inode The directory entry to convert.
- * @param bufsize Unused.
- * @param flags Unused.
- * @return The inode passed in.
- */
 
 inode_t* vfs_mkfifo(inode_t* inode, size_t bufsize, int flags) {
 

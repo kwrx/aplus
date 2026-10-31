@@ -35,13 +35,6 @@
 #include "ext2.h"
 
 
-/**
- * @brief Adds a new name in a directory for an existing regular file or symbolic link.
- * @param parent The directory.
- * @param target The inode the new name refers to.
- * @param name The new name.
- * @return 0 on success, -1 with errno set.
- */
 int ext2_link(inode_t* parent, inode_t* target, const char* name) {
     DEBUG_ASSERT(parent);
     DEBUG_ASSERT(parent->sb);

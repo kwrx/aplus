@@ -48,13 +48,6 @@
 #include <aplus/network.h>
 
 
-/**
- * @brief Readiness is asked for, never remembered: every attempt rescans from scratch.
- *
- * Waiting is two passes -- every descriptor registers an interest first, then the task suspends once.
- */
-
-
 #define POLL_FDSET_BITS     (8 * sizeof(unsigned long))
 #define POLL_FDSET_WORDS(n) (((n) + POLL_FDSET_BITS - 1) / POLL_FDSET_BITS)
 #define POLL_FDSET_MAX      POLL_FDSET_WORDS(POLL_FD_MAX)
@@ -63,14 +56,6 @@
 #define POLL_FDSET_SET(fd, set)   ((set)[(fd) / POLL_FDSET_BITS] |= (1UL << ((fd) % POLL_FDSET_BITS)))
 
 
-/**
- * @brief Asks a single descriptor whether it is ready.
- *
- * @param fd Descriptor to interrogate; must not be negative.
- * @param events Mask of the events the caller cares about.
- * @param revents Receives what is actually ready, or POLLNVAL if @p fd is not open.
- * @return 0, or a negative error number.
- */
 int poll_scan(int fd, short events, short* revents) {
 
     DEBUG_ASSERT(current_task);
@@ -98,12 +83,6 @@ int poll_scan(int fd, short events, short* revents) {
 }
 
 
-/**
- * @brief Finds the futex word that moves whenever an inode's readiness may have changed.
- *
- * @param inode The inode.
- * @return The word, or NULL if nothing ever wakes a waiter on @p inode.
- */
 volatile uint32_t* poll_event_word(inode_t* inode) {
 
     DEBUG_ASSERT(inode);
@@ -121,17 +100,6 @@ volatile uint32_t* poll_event_word(inode_t* inode) {
 }
 
 
-/**
- * @brief Registers the current task to be woken when a descriptor moves.
- *
- * Registers only: the caller suspends once after arming everything it watches.
- *
- * @param fd Descriptor to watch; must not be negative.
- * @param events Mask of the events the caller cares about.
- * @param timeout Time left to sleep, or NULL to wait indefinitely.
- * @param armed Set to true if the descriptor could actually be watched.
- * @return 0, or a negative error number.
- */
 int poll_arm(int fd, short events, struct timespec* timeout, bool* armed) {
 
     DEBUG_ASSERT(current_task);
@@ -168,14 +136,6 @@ int poll_arm(int fd, short events, struct timespec* timeout, bool* armed) {
 }
 
 
-/**
- * @brief Parks the current task after an attempt found a file not ready, until the file moves or time runs out.
- *
- * @param word The word from poll_event_word(), snapshotted before the attempt, or NULL.
- * @param seq The value @p word held before the attempt.
- * @param timeout_ns How long the whole wait may last, or POLL_TIMEOUT_FOREVER.
- * @return -EINTR with the syscall marked for restart, or -EAGAIN once the timeout has run out.
- */
 long poll_wait_event(volatile uint32_t* word, uint32_t seq, uint64_t timeout_ns) {
 
     DEBUG_ASSERT(current_task);
@@ -205,13 +165,6 @@ long poll_wait_event(volatile uint32_t* word, uint32_t seq, uint64_t timeout_ns)
 }
 
 
-/**
- * @brief Works out how much of a timeout is left, from a deadline stamped once and reused by every restart.
- *
- * @param timeout_ns Relative timeout in nanoseconds, or POLL_TIMEOUT_FOREVER.
- * @param remaining Receives the time left when POLL_DEADLINE_REMAINING is returned.
- * @return Whether the deadline has expired, has time left, or never expires.
- */
 poll_deadline_t poll_deadline(uint64_t timeout_ns, struct timespec* remaining) {
 
     DEBUG_ASSERT(current_task);
@@ -246,13 +199,6 @@ poll_deadline_t poll_deadline(uint64_t timeout_ns, struct timespec* remaining) {
 }
 
 
-/**
- * @brief Suspends the current task until something it armed moves, or time runs out.
- *
- * @param armed Whether anything was armed at all.
- * @param timeout Time left to sleep, or NULL to wait indefinitely.
- * @return -EINTR, with the syscall marked for restart.
- */
 long poll_suspend(bool armed, struct timespec* timeout) {
 
     DEBUG_ASSERT(current_task);
@@ -274,12 +220,6 @@ long poll_suspend(bool armed, struct timespec* timeout) {
 }
 
 
-/**
- * @brief Drops the per-attempt state a wait leaves behind and hands back its result.
- *
- * @param retval The result to hand back.
- * @return The result passed in.
- */
 long poll_finish(long retval) {
 
     DEBUG_ASSERT(current_task);
@@ -302,13 +242,6 @@ long poll_finish(long retval) {
 }
 
 
-/**
- * @brief Blocks the signals a wait was asked to ignore, remembering what to put back.
- *
- * @param sigmask Mask to install, or NULL to leave the current one alone.
- * @param sigsetsize Size of @p sigmask, as the caller understands it.
- * @return 0, or a negative error number.
- */
 int poll_sigmask_install(const sigset_t* sigmask, size_t sigsetsize) {
 
     DEBUG_ASSERT(current_task);
@@ -346,19 +279,9 @@ int poll_sigmask_install(const sigset_t* sigmask, size_t sigsetsize) {
 }
 
 
-/**
- * @brief The largest timeout that is neither mistakable for "never" nor wraps in nanoseconds.
- */
 #define POLL_TIMEOUT_SEC_MAX ((time_t)(((uint64_t)-2) / 1000000000ULL))
 
 
-/**
- * @brief Reads a ppoll()/pselect6() timeout in from user memory.
- *
- * @param tsp Caller's timeout, or NULL to wait indefinitely.
- * @param timeout_ns Receives the timeout in nanoseconds, or POLL_TIMEOUT_FOREVER.
- * @return 0, or a negative error number.
- */
 int poll_timeout_timespec(const struct timespec* tsp, uint64_t* timeout_ns) {
 
     DEBUG_ASSERT(timeout_ns);
@@ -387,13 +310,6 @@ int poll_timeout_timespec(const struct timespec* tsp, uint64_t* timeout_ns) {
 }
 
 
-/**
- * @brief Reads a select() timeout in from user memory.
- *
- * @param tvp Caller's timeout, or NULL to wait indefinitely.
- * @param timeout_ns Receives the timeout in nanoseconds, or POLL_TIMEOUT_FOREVER.
- * @return 0, or a negative error number.
- */
 int poll_timeout_timeval(const struct timeval* tvp, uint64_t* timeout_ns) {
 
     DEBUG_ASSERT(timeout_ns);
@@ -422,13 +338,6 @@ int poll_timeout_timeval(const struct timeval* tvp, uint64_t* timeout_ns) {
 }
 
 
-/**
- * @brief Asks every descriptor in a pollfd array whether it is ready, writing the answers back.
- *
- * @param ufds Caller's descriptor array, in user memory.
- * @param nfds Number of entries in @p ufds.
- * @return The number of ready descriptors, zero if none are, or a negative error number.
- */
 static long __poll_scan_pollfd(struct pollfd* ufds, unsigned int nfds) {
 
     size_t ready = 0;
@@ -462,16 +371,6 @@ static long __poll_scan_pollfd(struct pollfd* ufds, unsigned int nfds) {
 }
 
 
-/**
- * @brief The body behind poll() and ppoll().
- *
- * The descriptors are asked once more after the interest has been registered, then the task suspends.
- *
- * @param ufds Caller's descriptor array, in user memory.
- * @param nfds Number of entries in @p ufds.
- * @param timeout_ns Relative timeout in nanoseconds, or POLL_TIMEOUT_FOREVER.
- * @return Number of ready descriptors, 0 on timeout, or a negative error number.
- */
 long poll_wait_pollfd(struct pollfd* ufds, unsigned int nfds, uint64_t timeout_ns) {
 
     DEBUG_ASSERT(current_task);
@@ -543,14 +442,6 @@ long poll_wait_pollfd(struct pollfd* ufds, unsigned int nfds, uint64_t timeout_n
 }
 
 
-/**
- * @brief Copies the meaningful words of one of select()'s sets in from user memory.
- *
- * @param uset Caller's set, or NULL, which reads back as all-zero.
- * @param words Number of words covering the descriptors the caller asked about.
- * @param kset Receives the copy.
- * @return 0, or a negative error number.
- */
 static int poll_fdset_get(const fd_set* uset, size_t words, unsigned long* kset) {
 
     memset(kset, 0, words * sizeof(unsigned long));
@@ -570,14 +461,6 @@ static int poll_fdset_get(const fd_set* uset, size_t words, unsigned long* kset)
 }
 
 
-/**
- * @brief Copies one of select()'s answers back out to user memory.
- *
- * @param uset Caller's set, or NULL to discard the answer.
- * @param words Number of words to write back.
- * @param kset The answer to copy out.
- * @return 0, or a negative error number.
- */
 static int poll_fdset_put(fd_set* uset, size_t words, const unsigned long* kset) {
 
     if (uset == NULL)
@@ -595,18 +478,6 @@ static int poll_fdset_put(fd_set* uset, size_t words, const unsigned long* kset)
 }
 
 
-/**
- * @brief Asks every descriptor in select()'s three sets whether it is ready.
- *
- * @param n One past the highest descriptor to look at.
- * @param in Descriptors the caller asked about for reading.
- * @param out Descriptors the caller asked about for writing.
- * @param ex Descriptors the caller asked about for exceptional conditions.
- * @param rin Receives the descriptors ready for reading.
- * @param rout Receives the descriptors ready for writing.
- * @param rex Receives the descriptors with an exceptional condition.
- * @return The number of ready bits, counting a descriptor once per set it is ready in, or a negative error number.
- */
 static long __poll_scan_fdset(int n, const unsigned long* in, const unsigned long* out, const unsigned long* ex, unsigned long* rin, unsigned long* rout, unsigned long* rex) {
 
     size_t ready = 0;
@@ -652,18 +523,6 @@ static long __poll_scan_fdset(int n, const unsigned long* in, const unsigned lon
 }
 
 
-/**
- * @brief The body behind select() and pselect6().
- *
- * The caller's sets are left untouched unless the call is really returning, since a restart re-reads them.
- *
- * @param n One past the highest descriptor to look at.
- * @param inp Descriptors to watch for reading, or NULL.
- * @param outp Descriptors to watch for writing, or NULL.
- * @param exp Descriptors to watch for exceptional conditions, or NULL.
- * @param timeout_ns Relative timeout in nanoseconds, or POLL_TIMEOUT_FOREVER.
- * @return Number of ready descriptors, 0 on timeout, or a negative error number.
- */
 long poll_wait_fdset(int n, fd_set* inp, fd_set* outp, fd_set* exp, uint64_t timeout_ns) {
 
     DEBUG_ASSERT(current_task);

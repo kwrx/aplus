@@ -52,10 +52,6 @@ MODULE_LICENSE("GPL");
 #define VIRTQ_PAGE_ALIGN(x) (((x) + (PML1_PAGESIZE - 1)) & ~((uintptr_t)PML1_PAGESIZE - 1))
 
 
-/**
- * @brief A queue is five regions of one physical allocation, each starting on a page of its own.
- */
-
 enum {
     VIRTQ_REGION_DESC = 0,
     VIRTQ_REGION_AVAIL,
@@ -234,14 +230,6 @@ void virtq_dnit(struct virtio_driver* driver, uint16_t queue) {
 }
 
 
-/**
- * @brief Puts a descriptor and everything chained behind it back in the pool, bounded by the queue size.
- *
- * @param driver The driver owning the queue.
- * @param queue The queue the chain belongs to.
- * @param head The first descriptor of the chain.
- */
-
 static void virtq_release_locked(struct virtio_driver* driver, uint16_t queue, uint16_t head) {
 
     uint16_t d = head;
@@ -282,14 +270,6 @@ static uint16_t virtq_alloc_locked(struct virtio_driver* driver, uint16_t queue,
 }
 
 
-/**
- * @brief Publishes one descriptor chain on the available ring, with the queue lock held.
- *
- * @param driver The driver owning the queue.
- * @param queue The queue to publish on.
- * @param head The first descriptor of the chain.
- */
-
 static void virtq_publish_locked(struct virtio_driver* driver, uint16_t queue, uint16_t head) {
 
     uint16_t idx = le16_to_cpu(virtq(driver, queue)->available->q_idx);
@@ -301,15 +281,6 @@ static void virtq_publish_locked(struct virtio_driver* driver, uint16_t queue, u
     virtq(driver, queue)->available->q_idx = cpu_to_le16(idx + 1);
 }
 
-
-/**
- * @brief Takes a descriptor out of the pool.
- *
- * @param driver The driver owning the queue.
- * @param queue The queue to draw from.
- * @param state The state to mark the descriptor with.
- * @return The descriptor, or VIRTQ_DESC_NONE when the queue has none left.
- */
 
 uint16_t virtq_alloc_descriptor(struct virtio_driver* driver, uint16_t queue, uint8_t state) {
 
@@ -352,15 +323,6 @@ void virtq_free_descriptor(struct virtio_driver* driver, uint16_t queue, uint16_
 }
 
 
-/**
- * @brief Hands a receive buffer to the device, leaving the notification to the caller.
- *
- * @param driver The driver owning the queue.
- * @param queue The queue to post on.
- * @param desc The descriptor to post.
- * @param length The size of the window the device may write.
- */
-
 void virtq_provide(struct virtio_driver* driver, uint16_t queue, uint16_t desc, size_t length) {
 
     DEBUG_ASSERT(driver);
@@ -393,16 +355,6 @@ void virtq_notify(struct virtio_driver* driver, uint16_t queue) {
     mmio_w16(&virtq(driver, queue)->notify->n_idx, cpu_to_le16(queue));
 }
 
-
-/**
- * @brief Consumes the next entry of the used ring, exactly once.
- *
- * @param driver The driver owning the queue.
- * @param queue The queue to drain.
- * @param desc Receives the descriptor of a posted buffer, or VIRTQ_DESC_NONE.
- * @param length Receives how much the device wrote.
- * @return 1 when an entry was consumed, 0 when the ring is drained.
- */
 
 int virtq_reap(struct virtio_driver* driver, uint16_t queue, uint16_t* desc, uint32_t* length) {
 
@@ -482,16 +434,6 @@ int virtq_reap(struct virtio_driver* driver, uint16_t queue, uint16_t* desc, uin
 }
 
 
-/**
- * @brief Waits for the device to finish with a descriptor chain, polling the used ring until a deadline.
- *
- * @param driver The driver owning the queue.
- * @param queue The queue the chain was sent on.
- * @param head The first descriptor of the chain.
- * @param length Receives how much the device wrote.
- * @return 0 on success, or a negative errno.
- */
-
 static int virtq_wait(struct virtio_driver* driver, uint16_t queue, uint16_t head, size_t* length) {
 
     DEBUG_ASSERT(driver);
@@ -548,15 +490,6 @@ static int virtq_wait(struct virtio_driver* driver, uint16_t queue, uint16_t hea
     }
 }
 
-
-/**
- * @brief Takes a descriptor from the pool, waiting for the device when there are none left.
- *
- * @param driver The driver owning the queue.
- * @param queue The queue to draw from.
- * @param state The state to mark the descriptor with.
- * @return The descriptor, or VIRTQ_DESC_NONE if none came free before the deadline.
- */
 
 static uint16_t virtq_alloc_descriptor_wait(struct virtio_driver* driver, uint16_t queue, uint8_t state) {
 
@@ -723,16 +656,6 @@ ssize_t virtq_recv(struct virtio_driver* driver, uint16_t queue, void* output, s
 }
 
 
-/**
- * @brief Sends without waiting, marking the descriptor fire and forget for the reaper to reclaim.
- *
- * @param driver The driver owning the queue.
- * @param queue The queue to send on.
- * @param message The bytes to send.
- * @param size The number of bytes to send.
- * @return The number of bytes sent, or a negative errno.
- */
-
 ssize_t virtq_send(struct virtio_driver* driver, uint16_t queue, const void* message, size_t size) {
 
     DEBUG_ASSERT(driver);
@@ -776,13 +699,6 @@ ssize_t virtq_send(struct virtio_driver* driver, uint16_t queue, const void* mes
     return size;
 }
 
-
-/**
- * @brief Tells a waiter to look again, called from the interrupt for every queue the raised vector serves.
- *
- * @param driver The driver owning the queue.
- * @param queue The queue the interrupt names.
- */
 
 void virtq_flush(struct virtio_driver* driver, uint16_t queue) {
 

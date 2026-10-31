@@ -58,18 +58,6 @@ static inode_t** __next_entry(list(inode_t*, children), inode_t* parent, inode_t
 }
 
 
-/**
- * @brief Fills directory entries from a position, with the tmpfs lock held and the two dot entries already looked up.
- *
- * @param tmpfs The mounted tmpfs.
- * @param inode The directory.
- * @param e Receives the entries.
- * @param pos The first entry to fill.
- * @param count How many entries to fill at most.
- * @param self The attributes of the directory itself.
- * @param parent The attributes of its parent.
- * @return How many entries were filled.
- */
 static ssize_t __tmpfs_readdir_locked(tmpfs_t* tmpfs, inode_t* inode, struct dirent* e, off_t pos, size_t count, const struct stat* self, const struct stat* parent) {
 
     inode_t** entry = NULL;
@@ -144,15 +132,6 @@ static ssize_t __tmpfs_readdir_locked(tmpfs_t* tmpfs, inode_t* inode, struct dir
 }
 
 
-/**
- * @brief Reads entries of a tmpfs directory.
- *
- * @param inode The directory.
- * @param e Receives the entries.
- * @param pos The first entry to read.
- * @param count How many entries to read at most.
- * @return How many entries were read.
- */
 ssize_t tmpfs_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) {
 
     DEBUG_ASSERT(inode);

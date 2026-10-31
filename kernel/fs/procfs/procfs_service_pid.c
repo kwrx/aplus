@@ -42,9 +42,6 @@
 #include "procfs.h"
 
 
-/**
- * @brief One entry of a /proc/<pid> directory, driving both its readdir() and its finddir().
- */
 typedef struct procfs_pid_entry {
 
     const char* name;
@@ -68,9 +65,6 @@ static const procfs_pid_entry_t procfs_pid_table[] = {
 #define PROCFS_PID_ENTRIES (sizeof(procfs_pid_table) / sizeof(procfs_pid_table[0]))
 
 
-/**
- * @brief The state hanging off a /proc/<pid> directory inode, holding the child inodes made on first lookup.
- */
 typedef struct procfs_pid_dir {
 
     pid_t pid;
@@ -186,14 +180,6 @@ static ssize_t procfs_service_pid_readdir(inode_t* inode, struct dirent* e, off_
 }
 
 
-/**
- * @brief Builds the /proc/<pid> directory inode for a pid the caller has already confirmed exists.
- *
- * @param c The pid inode cache.
- * @param parent The /proc root inode.
- * @param key The pid, as a cache key.
- * @return The new directory inode.
- */
 static inode_t* procfs_service_pid_cache_fetch(cache_t* c, inode_t* parent, cache_key_t key) {
 
     DEBUG_ASSERT(c);

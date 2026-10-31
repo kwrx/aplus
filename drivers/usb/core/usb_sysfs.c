@@ -39,12 +39,6 @@
 extern hci_t* usb_hcs;
 
 
-/**
- * @brief Numbers a controller from 1 in registration order, as Linux numbers its USB buses.
- *
- * @param controller The controller.
- * @return Its bus number.
- */
 static int usb_sysfs_busnum(hci_t* controller) {
 
     int n = 1;
@@ -55,14 +49,6 @@ static int usb_sysfs_busnum(hci_t* controller) {
     return n;
 }
 
-/**
- * @brief Writes a device's Linux-style sysfs name, "<bus>-<port>[.<port>...]".
- *
- * @param dev The device, which must not be a root hub.
- * @param buf The output buffer.
- * @param size Its size.
- * @return 0 on success, -1 if the hub chain is broken or too deep.
- */
 static int usb_sysfs_name(usbdev_t* dev, char* buf, size_t size) {
 
     int ports[USB_SYSFS_DEPTH_MAX];
@@ -88,13 +74,6 @@ static int usb_sysfs_name(usbdev_t* dev, char* buf, size_t size) {
 }
 
 
-/**
- * @brief Calls fn on every interface of a device's default settings.
- *
- * @param dev The device.
- * @param fn The callback.
- * @param name The device's sysfs name, handed through to fn.
- */
 static void usb_sysfs_foreach_interface(usbdev_t* dev, void (*fn)(usbdev_t*, const interface_descriptor_t*, const char*), const char* name) {
 
     configuration_descriptor_t* cd = dev->configuration;
@@ -152,11 +131,6 @@ static void usb_sysfs_interface_remove(usbdev_t* dev, const interface_descriptor
 }
 
 
-/**
- * @brief Publishes an attached device and its interfaces under /sys/bus/usb/devices.
- *
- * @param dev The device.
- */
 void usb_sysfs_add(usbdev_t* dev) {
 
     DEBUG_ASSERT(dev);
@@ -185,11 +159,6 @@ void usb_sysfs_add(usbdev_t* dev) {
     usb_sysfs_foreach_interface(dev, usb_sysfs_interface_add, name);
 }
 
-/**
- * @brief Withdraws what usb_sysfs_add() published; called while the device and its hub chain still exist.
- *
- * @param dev The device.
- */
 void usb_sysfs_remove(usbdev_t* dev) {
 
     DEBUG_ASSERT(dev);

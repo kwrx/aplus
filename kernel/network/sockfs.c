@@ -23,12 +23,6 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * @brief lwIP sockets as ordinary file descriptors: an anonymous inode carrying the lwIP index.
- *
- * dup(), fork() inheritance, close-on-exec, poll() and last-close teardown then need no socket-specific code.
- */
-
 #include <fcntl.h>
 #include <poll.h>
 #include <stdint.h>
@@ -52,9 +46,6 @@
 #include <aplus/network.h>
 
 
-/**
- * @brief Distinct from the local-socket filesystem in kernel/ipc/unix.c, which the superblock tells apart.
- */
 #define SOCKFS_FSID      0xDEADB0CF
 #define SOCKFS_FIRST_INO 0xFFFFFFFFF000000
 
@@ -72,16 +63,10 @@ static struct superblock sockfs_superblock = {
 static _Atomic ino64_t __sockfs_next_ino = SOCKFS_FIRST_INO + 1;
 
 
-/**
- * @brief The lwIP index lives in inode->userdata, biased by one so that index 0 stays distinct from NULL.
- */
 #define SOCKFS_ENCODE(s) ((void*)(uintptr_t)((s) + 1))
 #define SOCKFS_DECODE(p) ((int)(uintptr_t)(p) - 1)
 
 
-/**
- * @brief The send()/recv() flags as Linux numbers them, which differ from lwIP's.
- */
 #define LINUX_MSG_OOB      0x0001
 #define LINUX_MSG_PEEK     0x0002
 #define LINUX_MSG_DONTWAIT 0x0040
@@ -89,12 +74,6 @@ static _Atomic ino64_t __sockfs_next_ino = SOCKFS_FIRST_INO + 1;
 #define LINUX_MSG_MORE     0x8000
 
 
-/**
- * @brief Reports the lwIP socket an inode stands for.
- *
- * @param inode The inode to ask about.
- * @return The lwIP socket, or -1 if the inode does not stand for one.
- */
 int socket_from_inode(inode_t* inode) {
 
     if (unlikely(!inode))
@@ -107,12 +86,6 @@ int socket_from_inode(inode_t* inode) {
 }
 
 
-/**
- * @brief Reports the lwIP socket a descriptor refers to.
- *
- * @param fd The descriptor to ask about.
- * @return The lwIP socket, or -1 if the descriptor is not one.
- */
 int socket_from_fd(int fd) {
 
     if (unlikely(fd < 0 || fd >= CONFIG_OPEN_MAX))
@@ -156,18 +129,9 @@ static ssize_t sockfs_read(inode_t* inode, void* buf, off_t offset, size_t size)
 }
 
 
-/**
- * @brief The largest piece of a stream write copied into the kernel at once, which keeps the copy within eight pages.
- */
 #define SOCKFS_CHUNK_MAX ((8 * PML1_PAGESIZE) - 64)
 
 
-/**
- * @brief Tells whether an lwIP socket is a byte stream, whose writes may be split into pieces.
- *
- * @param socket The lwIP socket.
- * @return true for SOCK_STREAM.
- */
 static bool __socket_is_stream(int socket) {
 
     int type      = 0;
@@ -177,20 +141,6 @@ static bool __socket_is_stream(int socket) {
 }
 
 
-/**
- * @brief Sends caller data on an lwIP socket through a kernel copy of it, without waiting.
- *
- * A stream is copied a piece at a time; a datagram is copied whole, since splitting it would change what the peer
- * receives.
- *
- * @param socket The lwIP socket.
- * @param buf The data, in memory the caller has made accessible with uio_lock().
- * @param size How many bytes to send.
- * @param flags MSG_* flags.
- * @param to The destination, already in kernel memory, or NULL.
- * @param tolen The length of @p to.
- * @return The number of bytes sent, or -1 with errno set.
- */
 ssize_t socket_send(int socket, const void* buf, size_t size, int flags, const struct sockaddr* to, socklen_t tolen) {
 
     DEBUG_ASSERT(buf);
@@ -263,9 +213,6 @@ static ssize_t sockfs_write(inode_t* inode, const void* buf, off_t offset, size_
 }
 
 
-/**
- * @brief The Linux interface ioctls, which lwIP has no notion of.
- */
 #define SOCKFS_SIOCGIFCONF    0x8912
 #define SOCKFS_SIOCGIFFLAGS   0x8913
 #define SOCKFS_SIOCGIFADDR    0x8915
@@ -286,9 +233,6 @@ static ssize_t sockfs_write(inode_t* inode, const void* buf, off_t offset, size_
 #define SOCKFS_ARPHRD_LOOP   772
 
 
-/**
- * @brief struct ifreq as Linux lays it out, which is what the C library hands over.
- */
 struct sockfs_ifreq {
 
     char name[SOCKFS_IFNAMSIZ];
@@ -322,9 +266,6 @@ struct sockfs_ifreq {
 };
 
 
-/**
- * @brief struct ifconf as Linux lays it out.
- */
 struct sockfs_ifconf {
 
     int len;
@@ -336,36 +277,16 @@ struct sockfs_ifconf {
 };
 
 
-/**
- * @brief Reports whether a whole user buffer can be accessed.
- *
- * @param p The buffer.
- * @param size Its length.
- * @param mode R_OK, W_OK or both.
- * @return true when both ends are mapped with that access.
- */
 static bool sockfs_user(const void* p, size_t size, int mode) {
     return p && size && uio_check(p, mode) && uio_check((const uint8_t*)p + size - 1, mode);
 }
 
 
-/**
- * @brief Writes an interface's name the way lwIP looks it up: two letters and a number.
- *
- * @param netif The interface.
- * @param out Receives the name, SOCKFS_IFNAMSIZ long.
- */
 static void sockfs_ifname(const struct netif* netif, char* out) {
     snprintf(out, SOCKFS_IFNAMSIZ, "%c%c%u", netif->name[0], netif->name[1], (unsigned)netif->num);
 }
 
 
-/**
- * @brief Lists the interfaces and their IPv4 addresses, for a SIOCGIFCONF.
- *
- * @param arg The caller's struct ifconf.
- * @return 0, or a negative errno.
- */
 static int sockfs_ioctl_ifconf(void* arg) {
 
     struct sockfs_ifconf conf;
@@ -424,13 +345,6 @@ static int sockfs_ioctl_ifconf(void* arg) {
 }
 
 
-/**
- * @brief Answers the per-interface requests: flags, addresses, MTU, hardware address and index.
- *
- * @param req One of the SOCKFS_SIOCGIF* that take a struct ifreq.
- * @param arg The caller's struct ifreq, naming the interface.
- * @return 0, or a negative errno: ENODEV for an interface that does not exist.
- */
 static int sockfs_ioctl_ifreq(long req, void* arg) {
 
     struct sockfs_ifreq r;
@@ -540,13 +454,6 @@ static int sockfs_ioctl(inode_t* inode, long req, void* arg) {
 }
 
 
-/**
- * @brief Reports what an lwIP socket is ready for, without sleeping.
- *
- * @param inode The socket inode.
- * @param events Mask of the events the caller cares about.
- * @return What is actually ready.
- */
 static int sockfs_poll(inode_t* inode, int events) {
 
     DEBUG_ASSERT(inode);
@@ -567,12 +474,6 @@ static int sockfs_poll(inode_t* inode, int events) {
 }
 
 
-/**
- * @brief Finds the futex word an lwIP socket bumps whenever its readiness may have changed.
- *
- * @param inode The inode to ask about.
- * @return The word, or NULL if @p inode is not an lwIP socket.
- */
 volatile uint32_t* socket_event_word(inode_t* inode) {
 
     int socket = socket_from_inode(inode);
@@ -584,16 +485,6 @@ volatile uint32_t* socket_event_word(inode_t* inode) {
 }
 
 
-/**
- * @brief Registers the caller to be woken when an lwIP socket moves.
- *
- * Registers only; the caller rescans after arming everything it watches, then suspends once.
- *
- * @param inode The socket inode.
- * @param events Mask of the events the caller cares about.
- * @param timeout Time left to sleep, or NULL to wait indefinitely.
- * @return 1 if @p inode is a socket and was armed, 0 if it is not a socket.
- */
 int socket_poll_arm(inode_t* inode, int events, struct timespec* timeout) {
 
     __unused_param(events);
@@ -610,13 +501,6 @@ int socket_poll_arm(inode_t* inode, int events, struct timespec* timeout) {
 }
 
 
-/**
- * @brief Reports how long a wait on a socket may last, from SO_RCVTIMEO or SO_SNDTIMEO.
- *
- * @param inode The socket inode.
- * @param send Whether the wait is for room to send rather than for data to receive.
- * @return The timeout in nanoseconds, or POLL_TIMEOUT_FOREVER if none is set or @p inode is not an lwIP socket.
- */
 uint64_t socket_timeout(inode_t* inode, bool send) {
 
     int socket = socket_from_inode(inode);
@@ -638,12 +522,6 @@ uint64_t socket_timeout(inode_t* inode, bool send) {
 }
 
 
-/**
- * @brief Converts send()/recv() flags from Linux numbering to lwIP's, dropping the ones the kernel handles itself.
- *
- * @param flags The caller's flags.
- * @return The flags for lwIP.
- */
 static int __socket_msg_flags(int flags) {
 
     int r = MSG_DONTWAIT;
@@ -661,18 +539,6 @@ static int __socket_msg_flags(int flags) {
 }
 
 
-/**
- * @brief Receives on a socket for a syscall, waiting for data unless the caller must not block.
- *
- * @param inode The socket inode.
- * @param buf The buffer, in memory the caller has made accessible with uio_lock().
- * @param size The size of @p buf.
- * @param flags MSG_* flags, as Linux numbers them.
- * @param from Receives the sender's address, in kernel memory, or NULL.
- * @param fromlen In/out, the size of @p from.
- * @param nonblock Whether the descriptor is non-blocking.
- * @return The number of bytes received, -EINTR with the syscall marked for restart, or a negative errno.
- */
 long socket_recv(inode_t* inode, void* buf, size_t size, int flags, struct sockaddr* from, socklen_t* fromlen, bool nonblock) {
 
     DEBUG_ASSERT(buf);
@@ -734,18 +600,6 @@ long socket_recv(inode_t* inode, void* buf, size_t size, int flags, struct socka
 }
 
 
-/**
- * @brief Sends on a socket for a syscall, waiting for room until everything is sent unless the caller must not block.
- *
- * @param inode The socket inode.
- * @param buf The data, in memory the caller has made accessible with uio_lock().
- * @param size How many bytes to send.
- * @param flags MSG_* flags, as Linux numbers them.
- * @param to The destination, in kernel memory, or NULL.
- * @param tolen The length of @p to.
- * @param nonblock Whether the descriptor is non-blocking.
- * @return The number of bytes sent, -EINTR with the syscall marked for restart, or a negative errno.
- */
 long socket_sendto(inode_t* inode, const void* buf, size_t size, int flags, const struct sockaddr* to, socklen_t tolen, bool nonblock) {
 
     DEBUG_ASSERT(buf);
@@ -798,15 +652,6 @@ long socket_sendto(inode_t* inode, const void* buf, size_t size, int flags, cons
 }
 
 
-/**
- * @brief Accepts a connection for a syscall, waiting for one unless the caller must not block.
- *
- * @param inode The listening socket's inode.
- * @param peer Receives the peer's address, in kernel memory, or NULL.
- * @param peerlen In/out, the size of @p peer.
- * @param nonblock Whether the descriptor is non-blocking.
- * @return The new lwIP socket, -EINTR with the syscall marked for restart, or a negative errno.
- */
 long socket_accept(inode_t* inode, struct sockaddr* peer, socklen_t* peerlen, bool nonblock) {
 
     int socket = socket_from_inode(inode);
@@ -834,15 +679,6 @@ long socket_accept(inode_t* inode, struct sockaddr* peer, socklen_t* peerlen, bo
 }
 
 
-/**
- * @brief Connects a socket for a syscall, waiting for the handshake unless the caller must not block.
- *
- * @param inode The socket inode.
- * @param addr The address to connect to, in kernel memory.
- * @param len The length of @p addr.
- * @param nonblock Whether the descriptor is non-blocking.
- * @return 0, -EINTR with the syscall marked for restart, or a negative errno.
- */
 long socket_connect(inode_t* inode, const struct sockaddr* addr, socklen_t len, bool nonblock) {
 
     int socket = socket_from_inode(inode);
@@ -900,11 +736,6 @@ long socket_connect(inode_t* inode, const struct sockaddr* addr, socklen_t len, 
 }
 
 
-/**
- * @brief Turns off a lingering close on a socket, so that closing it never waits for the peer.
- *
- * @param socket The lwIP socket.
- */
 void socket_unlinger(int socket) {
 
     struct linger lg = {0};
@@ -994,13 +825,6 @@ static inode_t* __sockfs_inode(int socket) {
 }
 
 
-/**
- * @brief Installs an lwIP socket into the caller's descriptor table, taking ownership of it.
- *
- * @param socket Index returned by lwip_socket() or lwip_accept().
- * @param flags O_NONBLOCK and O_CLOEXEC as requested by socket()/accept4().
- * @return The new descriptor, or a negative error number.
- */
 int socket_install(int socket, int flags) {
 
     DEBUG_ASSERT(socket >= 0);

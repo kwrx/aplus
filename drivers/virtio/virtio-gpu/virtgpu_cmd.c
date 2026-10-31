@@ -226,18 +226,6 @@ int virtgpu_cmd_resource_flush(struct virtgpu* gpu, uint64_t resource, uint32_t 
 }
 
 
-/**
- * @brief Flushes a resource to the screen, tagged with a fence the device must retire before it answers.
- *
- * @param gpu The device to command.
- * @param resource The resource to flush.
- * @param x The left edge of the damaged rectangle.
- * @param y The top edge of the damaged rectangle.
- * @param width The width of the damaged rectangle.
- * @param height The height of the damaged rectangle.
- * @return 0 on success, or a negative errno.
- */
-
 int virtgpu_cmd_resource_flush_fenced(struct virtgpu* gpu, uint64_t resource, uint32_t x, uint32_t y, uint32_t width, uint32_t height) {
     DEBUG_ASSERT(gpu);
     DEBUG_ASSERT(gpu->driver);
@@ -268,19 +256,6 @@ int virtgpu_cmd_resource_flush_fenced(struct virtgpu* gpu, uint64_t resource, ui
     return 0;
 }
 
-
-/**
- * @brief Points the cursor plane at a resource, places it, and says which pixel sits under the pointer.
- *
- * @param gpu The device to command.
- * @param scanout_id The scanout the cursor belongs to.
- * @param resource The cursor resource, or 0 to hide the plane.
- * @param x The cursor's position on the scanout.
- * @param y The cursor's position on the scanout.
- * @param hot_x The hotspot within the cursor image.
- * @param hot_y The hotspot within the cursor image.
- * @return 0 on success, or a negative errno.
- */
 
 int virtgpu_cmd_update_cursor(struct virtgpu* gpu, uint32_t scanout_id, uint64_t resource, uint32_t x, uint32_t y, uint32_t hot_x, uint32_t hot_y) {
     DEBUG_ASSERT(gpu);

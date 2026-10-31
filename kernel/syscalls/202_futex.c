@@ -40,17 +40,6 @@
 
 
 
-/**
- * @brief Waits on a futex word with the restart protocol, until a wakeup, the timeout or a signal ends the wait.
- *
- * The first attempt checks the word and parks; any later attempt was woken, and reports a timeout if the deadline
- * has passed and a wakeup otherwise.
- *
- * @param kaddr The word, as the kernel reaches it.
- * @param val The value the caller expects the word to hold.
- * @param utime The relative timeout in userspace, or NULL to wait for a wakeup alone.
- * @return 0 once woken, -EAGAIN, -EINVAL or -ETIMEDOUT, or -EINTR with the syscall parked for restart.
- */
 static long __sys_futex_wait(uint32_t* kaddr, uint32_t val, const struct timespec* utime) {
 
     uint64_t timeout_ns = POLL_TIMEOUT_FOREVER;

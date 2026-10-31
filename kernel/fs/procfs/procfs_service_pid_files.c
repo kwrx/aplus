@@ -47,15 +47,6 @@ static int __snapshot_of(void* arg, procfs_task_t* t) {
 }
 
 
-/**
- * @brief Generates /proc/<pid>/stat, the 52 space-separated fields ps parses.
- *
- * @param inode The /proc/<pid>/stat inode.
- * @param buf Receives the generated contents.
- * @param size Receives the length of the contents.
- * @param arg Unused.
- * @return 0 on success, or -1 with errno set.
- */
 int procfs_pid_fetch_stat(inode_t* inode, char** buf, size_t* size, void* arg) {
 
     DEBUG_ASSERT(inode);
@@ -177,15 +168,6 @@ int procfs_pid_fetch_statm(inode_t* inode, char** buf, size_t* size, void* arg) 
 }
 
 
-/**
- * @brief Generates /proc/<pid>/cmdline, argv NUL-separated and empty for a kernel thread.
- *
- * @param inode The /proc/<pid>/cmdline inode.
- * @param buf Receives the generated contents.
- * @param size Receives the length of the contents.
- * @param arg Unused.
- * @return 0 on success, or -1 with errno set.
- */
 int procfs_pid_fetch_cmdline(inode_t* inode, char** buf, size_t* size, void* arg) {
 
     DEBUG_ASSERT(inode);
@@ -237,15 +219,6 @@ int procfs_pid_fetch_io(inode_t* inode, char** buf, size_t* size, void* arg) {
 }
 
 
-/**
- * @brief Generates /proc/<pid>/mounts, the mount table as the task sees it from its root.
- *
- * @param inode The /proc/<pid>/mounts inode.
- * @param buf Receives the generated contents.
- * @param size Receives the length of the contents.
- * @param arg The pid.
- * @return 0 on success, or -1 with errno set.
- */
 int procfs_pid_fetch_mounts(inode_t* inode, char** buf, size_t* size, void* arg) {
 
     DEBUG_ASSERT(inode);

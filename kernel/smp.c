@@ -49,11 +49,6 @@ __returns_nonnull cpu_t* smp_get_current_cpu(void) {
     kpanicf("smp_get_current_cpu(): PANIC! wrong cpu id(%ld)\n", id);
 }
 
-/**
- * @brief Finds the errno of the task running on this cpu, or the cpu's own before any task runs on it.
- *
- * @return Where the caller's errno lives.
- */
 __returns_nonnull int* smp_get_current_errno(void) {
 
     cpu_t* cpu = smp_get_current_cpu();

@@ -19,12 +19,6 @@
 #include "ext2.h"
 
 
-/**
- * @brief Removes a regular file or an empty directory from a directory.
- * @param parent The directory.
- * @param name The name of the entry.
- * @return 0 on success, -1 with errno set.
- */
 int ext2_unlink(inode_t* parent, const char* name) {
     DEBUG_ASSERT(parent);
     DEBUG_ASSERT(parent->sb);

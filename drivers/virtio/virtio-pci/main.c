@@ -128,13 +128,6 @@ static uintptr_t virtio_pci_find_bar(struct virtio_driver* driver, uint8_t bar, 
 }
 
 
-/**
- * @brief Reads the device status, with a plain read rather than an atomic one.
- *
- * @param driver The driver owning the device.
- * @return The status byte.
- */
-
 static uint8_t virtio_pci_get_status(struct virtio_driver* driver) {
 
     DEBUG_ASSERT(driver->internals.common_config);
@@ -152,12 +145,6 @@ static void virtio_pci_set_status(struct virtio_driver* driver, uint8_t status) 
     atomic_thread_fence(memory_order_seq_cst);
 }
 
-
-/**
- * @brief Says that the driver has given up, adding FAILED to the status rather than replacing it.
- *
- * @param driver The driver owning the device.
- */
 
 static void virtio_pci_set_failed(struct virtio_driver* driver) {
 
@@ -204,13 +191,6 @@ static int virtio_pci_reset(struct virtio_driver* driver) {
     return 0;
 }
 
-
-/**
- * @brief Agrees on a feature set, starting from what both sides can do rather than what the device offers.
- *
- * @param driver The driver owning the device.
- * @return 0 on success, or a negative errno.
- */
 
 static int virtio_pci_negotiate(struct virtio_driver* driver) {
 
@@ -359,14 +339,6 @@ static int virtio_pci_init_interrupts(struct virtio_driver* driver) {
     return 0;
 }
 
-
-/**
- * @brief Brings the device up as far as its queues, stopping short of DRIVER_OK.
- *
- * @param driver The driver owning the device.
- * @param at Where the common configuration capability was found.
- * @return 0 on success, or a negative errno.
- */
 
 static int virtio_pci_init_common_cfg(struct virtio_driver* driver, struct virtio_pci_location* at) {
 
@@ -527,12 +499,6 @@ static int virtio_pci_init_notify_cfg(struct virtio_driver* driver, struct virti
     return 0;
 }
 
-
-/**
- * @brief Puts back what bringing the device up took, disabling the queues before their memory goes.
- *
- * @param driver The driver owning the device.
- */
 
 void virtio_pci_dnit(struct virtio_driver* driver) {
 

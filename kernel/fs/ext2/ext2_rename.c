@@ -20,14 +20,6 @@
 #include "ext2.h"
 
 
-/**
- * @brief Moves an entry to a new name, in the same directory or another one of the same filesystem.
- * @param parent The directory holding the entry.
- * @param name The current name of the entry.
- * @param into The directory the entry moves to.
- * @param newname The new name, which must not exist yet.
- * @return 0 on success, -1 with errno set.
- */
 int ext2_rename(inode_t* parent, const char* name, inode_t* into, const char* newname) {
     DEBUG_ASSERT(parent);
     DEBUG_ASSERT(parent->sb);

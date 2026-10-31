@@ -55,9 +55,6 @@
  */
 
 
-/**
- * @brief Declared here rather than in syscall.h, which carries no socket prototypes.
- */
 extern long sys_accept4(int fd, struct sockaddr* sockaddr, int* socklen, int flags);
 
 

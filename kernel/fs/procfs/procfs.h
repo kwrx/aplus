@@ -42,9 +42,6 @@ typedef struct procfs_service {
 } procfs_service_t;
 
 
-/**
- * @brief A bounded writer that every generated /proc file is built through.
- */
 typedef struct procfs_buf {
 
     char* data;
@@ -62,9 +59,6 @@ void procfs_bprintf(procfs_buf_t* b, const char* fmt, ...);
 void procfs_bputs(procfs_buf_t* b, const char* s, size_t len);
 
 
-/**
- * @brief Everything a /proc file needs about a task, copied out while the run queue is locked.
- */
 typedef struct procfs_task {
 
     pid_t tid;
@@ -122,18 +116,12 @@ typedef struct procfs_task {
 } procfs_task_t;
 
 
-/**
- * @brief The inode number scheme shared by every procfs producer.
- */
 #define PROCFS_INO_ROOT             ((ino_t)1)
 #define PROCFS_INO_STATIC(slot)     ((ino_t)(2 + (slot)))
 #define PROCFS_INO_PID(pid)         ((((ino_t)(pid)) << 8) | 0xFF)
 #define PROCFS_INO_PID_FILE(pid, s) ((((ino_t)(pid)) << 8) | ((ino_t)(s)))
 #define PROCFS_INO_PID_FD(pid, fd)  ((((ino_t)(pid)) << 24) | (((ino_t)(fd)) << 8) | 0xFE)
 
-/**
- * @brief The slot /proc/<pid>/fd takes in the per-pid inode numbering.
- */
 #define PROCFS_PID_SLOT_FD 6
 
 
@@ -188,9 +176,6 @@ void procfs_service_pid_init(inode_t* parent);
 inode_t* procfs_service_pid_fd_inode(inode_t* parent, pid_t pid);
 void procfs_service_pid_fd_free(inode_t* inode);
 
-/**
- * @brief Per-pid file fetches, shared with the /proc/<pid> directory table.
- */
 int procfs_pid_fetch_stat(inode_t*, char**, size_t*, void*);
 int procfs_pid_fetch_status(inode_t*, char**, size_t*, void*);
 int procfs_pid_fetch_statm(inode_t*, char**, size_t*, void*);

@@ -57,10 +57,6 @@ static ssize_t virtconsole_write(device_t*, const void*, size_t);
 static ssize_t virtconsole_read(device_t*, void*, size_t);
 
 
-/**
- * @brief How much of the receive queue to stock, capped by what the queue has.
- */
-
 #define VIRTCONSOLE_BUFFERS 8
 
 
@@ -118,13 +114,6 @@ static int setup_config(struct virtio_driver* driver, uintptr_t device_config) {
     return 0;
 }
 
-
-/**
- * @brief Stocks the receive queue, which the device drops input into and cannot read from while empty.
- *
- * @param vc The port to stock.
- * @return The number of buffers handed to the device.
- */
 
 static size_t virtconsole_fill(struct virtconsole* vc) {
 
@@ -251,15 +240,6 @@ static ssize_t virtconsole_write(device_t* device, const void* buf, size_t size)
     return (ssize_t)size;
 }
 
-
-/**
- * @brief Drains what the device has put in the receive queue, holding a partly read buffer for the next call.
- *
- * @param device The port to read from.
- * @param buf The buffer to fill.
- * @param size The number of bytes asked for.
- * @return The number of bytes read, or a negative errno.
- */
 
 static ssize_t virtconsole_read(device_t* device, void* buf, size_t size) {
     DEBUG_ASSERT(device);

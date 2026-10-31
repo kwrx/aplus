@@ -440,18 +440,12 @@ struct ext2_dir_entry_2 {
 
 
 
-/**
- * @brief A block of block pointers kept in memory between reads, one per level of indirection.
- */
 typedef struct {
     uint32_t block;
     uint32_t* pointers;
 } ext2_mapcache_t;
 
 
-/**
- * @brief The block bitmap and descriptor of one group, held in memory between an allocation and its commit.
- */
 typedef struct {
     uint32_t group;
     bool loaded;
@@ -503,11 +497,6 @@ static inline void ext2_inode_set_size(ext2_t* ext2, struct ext2_inode* inode, u
     }
 }
 
-/**
- * @brief Tells whether a symbolic link keeps its target in the inode's block pointers rather than in a data block.
- * @param inode The inode.
- * @return true for a fast symbolic link.
- */
 static inline bool ext2_inode_is_fast_symlink(struct ext2_inode* inode) {
     return S_ISLNK(inode->i_mode) && inode->i_size < sizeof(inode->i_block);
 }

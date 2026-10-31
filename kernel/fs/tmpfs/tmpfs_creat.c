@@ -35,14 +35,6 @@
 
 
 
-/**
- * @brief Creates an inode in a tmpfs directory.
- *
- * @param inode The directory.
- * @param name The name of the new entry.
- * @param mode The type and permissions of the new entry.
- * @return The new inode, or NULL with errno set.
- */
 inode_t* tmpfs_creat(inode_t* inode, const char* name, mode_t mode) {
 
     DEBUG_ASSERT(inode);

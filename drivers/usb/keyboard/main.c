@@ -50,7 +50,6 @@ MODULE_LICENSE("GPL");
 #define KBD_REPEAT_PERIOD_MS 33
 
 
-/** @brief HID keyboard page usages (HID Usage Tables 1.4, section 10) mapped onto key codes. */
 static const uint16_t kbd_usage_keys[256] = {
     [0x04] = KEY_A,          [0x05] = KEY_B,          [0x06] = KEY_C,          [0x07] = KEY_D,          [0x08] = KEY_E,          [0x09] = KEY_F,         [0x0a] = KEY_G,
     [0x0b] = KEY_H,          [0x0c] = KEY_I,          [0x0d] = KEY_J,          [0x0e] = KEY_K,          [0x0f] = KEY_L,          [0x10] = KEY_M,         [0x11] = KEY_N,
@@ -72,13 +71,11 @@ static const uint16_t kbd_usage_keys[256] = {
     [0x89] = KEY_YEN,        [0x8a] = KEY_HENKAN,     [0x8b] = KEY_MUHENKAN,   [0x8c] = KEY_KPJPCOMMA,  [0x90] = KEY_HANGEUL,    [0x91] = KEY_HANJA,
 };
 
-/** @brief Boot report modifier bits, from bit 0 upwards, mapped onto key codes. */
 static const uint16_t kbd_modifier_keys[8] = {
     KEY_LEFTCTRL, KEY_LEFTSHIFT, KEY_LEFTALT, KEY_LEFTMETA, KEY_RIGHTCTRL, KEY_RIGHTSHIFT, KEY_RIGHTALT, KEY_RIGHTMETA,
 };
 
 
-/** @brief The state of one USB keyboard: its last report and the key being repeated. */
 struct usbkbd {
     uint8_t previous[USB_HID_REPORT_MAX];
     uint16_t repeat_key;
@@ -101,11 +98,6 @@ static struct usb_hid_sink sink = {
 
 
 
-/**
- * @brief Publishes a key transition.
- * @param vkey The key code.
- * @param down Whether the key went down.
- */
 static void usbkbd_key(uint16_t vkey, bool down) {
 
     event_t ev = {};
@@ -118,12 +110,6 @@ static void usbkbd_key(uint16_t vkey, bool down) {
 }
 
 
-/**
- * @brief Tells whether a usage is among the keys held in a boot report.
- * @param report The report.
- * @param usage The usage to look for.
- * @return true if the key is held in the report.
- */
 static bool usbkbd_has(const uint8_t* report, uint8_t usage) {
 
     for (size_t i = KBD_REPORT_KEYS; i < USB_HID_REPORT_MAX; i++) {
@@ -135,11 +121,6 @@ static bool usbkbd_has(const uint8_t* report, uint8_t usage) {
 }
 
 
-/**
- * @brief Turns the difference between the last report and a new one into key events.
- * @param ctx The keyboard.
- * @param report The new report.
- */
 static void usbkbd_report(void* ctx, const uint8_t* report) {
 
     struct usbkbd* kbd = ctx;
@@ -184,10 +165,6 @@ static void usbkbd_report(void* ctx, const uint8_t* report) {
 }
 
 
-/**
- * @brief Repeats the last key pressed while it stays held, as a PS/2 keyboard does by itself.
- * @param ctx The keyboard.
- */
 static void usbkbd_tick(void* ctx) {
 
     struct usbkbd* kbd = ctx;
@@ -206,20 +183,11 @@ static void usbkbd_tick(void* ctx) {
 }
 
 
-/**
- * @brief Starts handling a keyboard.
- * @param dev The device.
- * @return The keyboard's state, or NULL when out of memory.
- */
 static void* usbkbd_attach(usbdev_t* dev) {
     return kcalloc(1, sizeof(struct usbkbd), GFP_KERNEL);
 }
 
 
-/**
- * @brief Releases every key still held and frees the keyboard's state.
- * @param ctx The keyboard.
- */
 static void usbkbd_detach(void* ctx) {
 
     static const uint8_t released[USB_HID_REPORT_MAX] = {0};

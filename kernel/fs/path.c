@@ -38,9 +38,6 @@
 
 
 
-/**
- * @brief How many symbolic links one lookup may follow, and how deeply resolving a link's target may nest.
- */
 #define PATH_MAXSYMLINKS 40
 #define PATH_MAXNESTED   8
 
@@ -48,24 +45,11 @@
 static inode_t* __path_lookup(inode_t* cwd, const char* path, int flags, mode_t mode, int* links, int depth, bool* created);
 
 
-/**
- * @brief Tells whether a lookup failed for a reason of its own rather than a missing name, which is reported as ENOENT.
- *
- * @return true if errno already holds the reason.
- */
 static inline bool __path_failed_on_its_own(void) {
     return errno == ELOOP || errno == ENAMETOOLONG || errno == ENOMEM;
 }
 
 
-/**
- * @brief Follows a link, and each link it lands on, until it reaches an inode that is not a link.
- *
- * @param inode The inode to start from, whose reference the call takes over.
- * @param links The links the whole lookup may still follow, shared by every nesting level.
- * @param depth How deeply this resolution is nested inside the resolution of another link.
- * @return The inode the links lead to, referenced, or NULL with errno set.
- */
 static inode_t* __path_follow_links(inode_t* inode, int* links, int depth) {
 
     DEBUG_ASSERT(inode);
@@ -129,11 +113,6 @@ static inode_t* __path_follow_links(inode_t* inode, int* links, int depth) {
 }
 
 
-/**
- * @brief Looks one path component up in a directory, following it if it is a link and @p follow is set.
- *
- * @return The inode, referenced, or NULL with errno set.
- */
 static inode_t* path_find(inode_t* inode, const char* path, size_t size, bool follow, int* links, int depth) {
 
     DEBUG_ASSERT(inode);
@@ -162,12 +141,6 @@ static inode_t* path_find(inode_t* inode, const char* path, size_t size, bool fo
 }
 
 
-/**
- * @brief Follows a link the caller holds to the inode it ends at.
- *
- * @param inode The link, whose reference stays with the caller.
- * @return The inode the link leads to, referenced, or NULL with errno set.
- */
 inode_t* path_follows(inode_t* inode) {
 
     DEBUG_ASSERT(inode);
@@ -180,11 +153,6 @@ inode_t* path_follows(inode_t* inode) {
 }
 
 
-/**
- * @brief Resolves a path from a directory, creating the last component when asked to; an empty path names nothing, as on Linux.
- *
- * @return The inode, referenced, or NULL with errno set; @p created, when given, is set if the last component was created.
- */
 static inode_t* __path_lookup(inode_t* cwd, const char* path, int flags, mode_t mode, int* links, int depth, bool* created) {
 
     DEBUG_ASSERT(cwd);
@@ -285,15 +253,6 @@ static inode_t* __path_lookup(inode_t* cwd, const char* path, int flags, mode_t 
 }
 
 
-/**
- * @brief Resolves a path from a directory the caller holds, creating the last component when asked to.
- *
- * @param cwd The directory relative paths start from.
- * @param path The path.
- * @param flags O_CREAT, O_EXCL and O_NOFOLLOW as for open().
- * @param mode The type and permissions of a created entry.
- * @return The inode, referenced, or NULL with errno set.
- */
 inode_t* path_lookup(inode_t* cwd, const char* path, int flags, mode_t mode) {
 
     int links = PATH_MAXSYMLINKS;
@@ -304,16 +263,6 @@ inode_t* path_lookup(inode_t* cwd, const char* path, int flags, mode_t mode) {
 }
 
 
-/**
- * @brief Resolves a path like path_lookup(), also telling whether the last component was created by this call.
- *
- * @param cwd The directory relative paths start from.
- * @param path The path.
- * @param flags O_CREAT, O_EXCL and O_NOFOLLOW as for open().
- * @param mode The type and permissions of a created entry.
- * @param created Set to true if the entry did not exist and was created, false otherwise.
- * @return The inode, referenced, or NULL with errno set.
- */
 inode_t* path_lookup_created(inode_t* cwd, const char* path, int flags, mode_t mode, bool* created) {
 
     DEBUG_ASSERT(created);

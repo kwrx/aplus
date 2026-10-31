@@ -37,13 +37,6 @@
 #include <aplus/vfs.h>
 
 
-/**
- * @brief Changes an inode's permission bits under chmod(2)'s rules for the current task.
- *
- * @param inode The inode.
- * @param mode The new permission bits; anything outside 07777 is ignored.
- * @return 0, or a negative errno.
- */
 long attr_chmod(inode_t* inode, mode_t mode) {
 
     DEBUG_ASSERT(inode);
@@ -75,14 +68,6 @@ long attr_chmod(inode_t* inode, mode_t mode) {
 }
 
 
-/**
- * @brief Changes an inode's owner and group under chown(2)'s rules for the current task.
- *
- * @param inode The inode.
- * @param uid The new owner, or -1 to keep it.
- * @param gid The new group, or -1 to keep it.
- * @return 0, or a negative errno.
- */
 long attr_chown(inode_t* inode, uid_t uid, gid_t gid) {
 
     DEBUG_ASSERT(inode);

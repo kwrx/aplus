@@ -45,7 +45,6 @@ MODULE_LICENSE("GPL");
 #define MOUSE_BUTTONS 5
 
 
-/** @brief The state of one USB mouse: the buttons it last reported held. */
 struct usbmouse {
     uint8_t buttons;
 };
@@ -66,11 +65,6 @@ static struct usb_hid_sink sink = {
 
 
 
-/**
- * @brief Publishes the button transitions between the held set and a new one.
- * @param mouse The mouse.
- * @param buttons The buttons now held, bit 0 being the left one.
- */
 static void usbmouse_buttons(struct usbmouse* mouse, uint8_t buttons) {
 
     const uint8_t changed = (buttons ^ mouse->buttons) & ((1 << MOUSE_BUTTONS) - 1);
@@ -93,11 +87,6 @@ static void usbmouse_buttons(struct usbmouse* mouse, uint8_t buttons) {
 }
 
 
-/**
- * @brief Turns a boot mouse report into button and motion events, with Y pointing up as PS/2 does.
- * @param ctx The mouse.
- * @param report The report.
- */
 static void usbmouse_report(void* ctx, const uint8_t* report) {
 
     usbmouse_buttons(ctx, report[0]);
@@ -120,20 +109,11 @@ static void usbmouse_report(void* ctx, const uint8_t* report) {
 }
 
 
-/**
- * @brief Starts handling a mouse.
- * @param dev The device.
- * @return The mouse's state, or NULL when out of memory.
- */
 static void* usbmouse_attach(usbdev_t* dev) {
     return kcalloc(1, sizeof(struct usbmouse), GFP_KERNEL);
 }
 
 
-/**
- * @brief Releases every button still held and frees the mouse's state.
- * @param ctx The mouse.
- */
 static void usbmouse_detach(void* ctx) {
 
     usbmouse_buttons(ctx, 0);

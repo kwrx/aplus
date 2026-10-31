@@ -56,7 +56,6 @@ MODULE_LICENSE("GPL");
 #define HID_MAX_INTERFACES       4
 
 
-/** @brief One boot-protocol interface and the handler turning its reports into events. */
 typedef struct {
     void* queue;
     endpoint_t* ep;
@@ -66,7 +65,6 @@ typedef struct {
     void* ctx;
 } usbhid_intf_t;
 
-/** @brief The boot-protocol interfaces claimed on one device. */
 typedef struct {
     usbhid_intf_t intf[HID_MAX_INTERFACES];
     size_t count;
@@ -79,11 +77,6 @@ static const struct usb_hid_handler* _Atomic handlers[HID_MAX_HANDLERS];
 
 
 
-/**
- * @brief Finds the handler registered for a boot protocol.
- * @param protocol The protocol.
- * @return The handler, or NULL if there is none yet.
- */
 static const struct usb_hid_handler* usb_hid_handler(int protocol) {
 
     for (size_t i = 0; i < HID_MAX_HANDLERS; i++) {
@@ -185,11 +178,6 @@ void usb_hid_sink_write(struct usb_hid_sink* sink, event_t* ev) {
 
 
 
-/**
- * @brief Drains an interface's interrupt queue into its handler, attaching one if it just appeared.
- * @param dev The device.
- * @param hid The interface.
- */
 static void usb_hid_poll_intf(usbdev_t* dev, usbhid_intf_t* hid) {
 
     const u8* buf;
@@ -219,10 +207,6 @@ static void usb_hid_poll_intf(usbdev_t* dev, usbhid_intf_t* hid) {
 }
 
 
-/**
- * @brief Polls every interface claimed on a device.
- * @param dev The device.
- */
 static void usb_hid_poll(usbdev_t* dev) {
 
     usbhid_t* hid = HID_INST(dev);
@@ -232,10 +216,6 @@ static void usb_hid_poll(usbdev_t* dev) {
 }
 
 
-/**
- * @brief Detaches the handlers and tears the interrupt queues down.
- * @param dev The device going away.
- */
 static void usb_hid_destroy(usbdev_t* dev) {
 
     usbhid_t* hid = HID_INST(dev);
@@ -257,13 +237,6 @@ static void usb_hid_destroy(usbdev_t* dev) {
 }
 
 
-/**
- * @brief Sends a class request with no data stage to an interface.
- * @param dev The device.
- * @param intf The interface number.
- * @param request The HID class request.
- * @param value The request's wValue.
- */
 static void usb_hid_class_request(usbdev_t* dev, int intf, int request, int value) {
 
     dev_req_t dr;
@@ -278,12 +251,6 @@ static void usb_hid_class_request(usbdev_t* dev, int intf, int request, int valu
 }
 
 
-/**
- * @brief Finds the interrupt IN endpoint of an interface.
- * @param dev The device.
- * @param intf The interface number.
- * @return The endpoint, or NULL if the interface has none.
- */
 static endpoint_t* usb_hid_endpoint(usbdev_t* dev, int intf) {
 
     for (int i = 1; i < dev->num_endp; i++) {
@@ -295,13 +262,6 @@ static endpoint_t* usb_hid_endpoint(usbdev_t* dev, int intf) {
 }
 
 
-/**
- * @brief Switches a boot-protocol interface to boot reports and starts its interrupt queue.
- * @param dev The device.
- * @param intf The interface descriptor.
- * @param hid Where to set the interface up.
- * @return true if the interface is now polled.
- */
 static bool usb_hid_claim(usbdev_t* dev, const interface_descriptor_t* intf, usbhid_intf_t* hid) {
 
     if (intf->bInterfaceClass != USB_CLASS_HID || intf->bInterfaceSubClass != HID_SUBCLASS_BOOT)
@@ -334,10 +294,6 @@ static bool usb_hid_claim(usbdev_t* dev, const interface_descriptor_t* intf, usb
 }
 
 
-/**
- * @brief Claims every boot-protocol keyboard and mouse interface of a device.
- * @param dev The device the core enumerated as HID.
- */
 static void usb_hid_init(usbdev_t* dev) {
 
     dev->data    = NULL;

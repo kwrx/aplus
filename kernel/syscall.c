@@ -91,13 +91,6 @@ void syscall_init(void) {
 extern long sys_clock_gettime(clockid_t, struct timespec*);
 
 
-/**
- * @brief Raises SIGPIPE on a task whose write found nobody left to read it, unless the send asked not to.
- *
- * @param idx The syscall that failed with EPIPE.
- * @param p2 Its third argument, the flags of sendmsg().
- * @param p3 Its fourth argument, the flags of sendto().
- */
 static void __syscall_epipe(unsigned long idx, long p2, long p3) {
 
     switch (idx) {
@@ -223,13 +216,6 @@ long syscall_restart(void) {
 }
 
 
-/**
- * @brief Asks whether a syscall may be restarted after a signal handler with SA_RESTART, which as on Linux the waits
- *        for signals, time and descriptor readiness never are.
- *
- * @param idx The syscall number.
- * @return false for poll, select, pause, the sleeps, rt_sigsuspend, pselect6 and ppoll.
- */
 static bool __syscall_restartable(long idx) {
 
     switch (idx) {
@@ -250,14 +236,6 @@ static bool __syscall_restartable(long idx) {
 }
 
 
-/**
- * @brief Gives up the syscall the current task is parked in, because a signal handler is about to run instead.
- *
- * The syscall is named in syscall.interrupted for the handler's frame to rewind under SA_RESTART, unless it never
- * restarts, and whatever it carried across attempts is dropped. A transfer that already moved some bytes returns
- * that count instead, and an interrupted sleep reports the time it had left. A task that was not parked in a
- * syscall has nothing to restart.
- */
 void syscall_interrupt(void) {
 
     DEBUG_ASSERT(current_task);

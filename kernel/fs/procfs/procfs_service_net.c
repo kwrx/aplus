@@ -38,23 +38,14 @@
 #include "procfs.h"
 
 
-/**
- * @brief The inode slots of /proc/net and the files in it.
- */
 #define PROCFS_NET_SLOT_DIR   11
 #define PROCFS_NET_SLOT_ROUTE 12
 
-/**
- * @brief How many interfaces /proc/net/route reports, and the Linux route flags it uses.
- */
 #define PROCFS_NET_IFACES_MAX  8
 #define PROCFS_NET_RTF_UP      0x0001
 #define PROCFS_NET_RTF_GATEWAY 0x0002
 
 
-/**
- * @brief One interface's routes, copied out under the lwIP core lock.
- */
 typedef struct {
 
     char name[16];
@@ -70,15 +61,6 @@ typedef struct {
 } procfs_net_iface_t;
 
 
-/**
- * @brief Generates /proc/net/route as Linux spells it: one subnet route per interface, and the default route.
- *
- * @param inode The /proc/net/route inode.
- * @param buf Receives the generated contents.
- * @param size Receives the length of the contents.
- * @param arg Unused.
- * @return 0 on success.
- */
 static int procfs_service_net_route_fetch(inode_t* inode, char** buf, size_t* size, void* arg) {
 
     (void)arg;
@@ -141,12 +123,6 @@ static int procfs_service_net_route_fetch(inode_t* inode, char** buf, size_t* si
 }
 
 
-/**
- * @brief Reports /proc/net/route, created the first time it is looked up.
- *
- * @param parent The /proc/net inode.
- * @return The inode.
- */
 static inode_t* procfs_service_net_route_inode(inode_t* parent) {
 
     static inode_t* inode = NULL;
@@ -160,13 +136,6 @@ static inode_t* procfs_service_net_route_inode(inode_t* parent) {
 }
 
 
-/**
- * @brief Looks a name up in /proc/net.
- *
- * @param inode The /proc/net inode.
- * @param name The name.
- * @return The file, or NULL with errno set to ENOENT.
- */
 static inode_t* procfs_service_net_finddir(inode_t* inode, const char* name) {
 
     DEBUG_ASSERT(inode);
@@ -179,15 +148,6 @@ static inode_t* procfs_service_net_finddir(inode_t* inode, const char* name) {
 }
 
 
-/**
- * @brief Lists /proc/net.
- *
- * @param inode The /proc/net inode.
- * @param e The array of dirents to fill in.
- * @param pos The ordinal of the first entry to report.
- * @param count The number of entries the caller's buffer holds.
- * @return The number of entries written, 0 past the end, or -1 with errno set.
- */
 static ssize_t procfs_service_net_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) {
 
     DEBUG_ASSERT(inode);
@@ -224,12 +184,6 @@ static ssize_t procfs_service_net_readdir(inode_t* inode, struct dirent* e, off_
 }
 
 
-/**
- * @brief Reports /proc/net, created the first time it is looked up.
- *
- * @param parent The /proc root.
- * @return The inode.
- */
 inode_t* procfs_service_net_inode(inode_t* parent) {
 
     static inode_t* inode = NULL;

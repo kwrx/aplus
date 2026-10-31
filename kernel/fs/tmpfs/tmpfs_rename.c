@@ -37,15 +37,6 @@
 
 
 
-/**
- * @brief Moves an entry of a tmpfs directory to a new name, possibly in another directory of the same tmpfs.
- *
- * @param inode The directory holding the entry.
- * @param name The current name of the entry.
- * @param into The directory the entry moves to.
- * @param newname The new name.
- * @return 0 on success, -1 with errno set.
- */
 int tmpfs_rename(inode_t* inode, const char* name, inode_t* into, const char* newname) {
 
     DEBUG_ASSERT(inode);

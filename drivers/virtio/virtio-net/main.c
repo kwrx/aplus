@@ -50,31 +50,16 @@ MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
-/**
- * @brief How many cards this driver claims.
- */
 #define VIRTIO_NET_MAX_DEVICES 4
 
-/**
- * @brief How many receive buffers are handed to the device, capped by what the queue has.
- */
 #define VIRTIO_NET_BUFFERS 64
 
-/**
- * @brief An ethernet header and an MTU of frame, which is the most a transmit can carry.
- */
 #define VIRTIO_NET_FRAME_MAX 1514
 
-/**
- * @brief Room for a frame and the header in front of it, rounded up.
- */
 #define VIRTIO_NET_WINDOW_SIZE 2048
 
 #define VIRTIO_NET_HDR_SIZE (sizeof(struct virtio_net_hdr))
 
-/**
- * @brief The transitional network device, which answers to an identifier of its own.
- */
 #define VIRTIO_NET_PCI_DEVICE_LEGACY 0x1000
 
 
@@ -112,15 +97,6 @@ static size_t num_devices = 0;
 static uint32_t negotiated_features = 0;
 
 
-/**
- * @brief Accepts the address and the link state, and nothing this driver cannot honour.
- *
- * @param driver The driver owning the device.
- * @param features The features to accept, already cut down to what the device offers.
- * @param index The feature word being negotiated.
- * @return 0 on success, or a negative errno.
- */
-
 static int negotiate_features(struct virtio_driver* driver, uint32_t* features, size_t index) {
 
     DEBUG_ASSERT(features);
@@ -140,13 +116,6 @@ static int setup_config(struct virtio_driver* driver, uintptr_t device_config) {
     return 0;
 }
 
-
-/**
- * @brief Stocks the receive queue, which the device drops frames on the floor while empty.
- *
- * @param vn The card to stock.
- * @return The number of buffers handed to the device.
- */
 
 static size_t virtnet_fill(struct virtnet* vn) {
 
@@ -206,14 +175,6 @@ static int virtnet_startoutput(void* internals) {
 }
 
 
-/**
- * @brief Appends one segment of the frame behind the header, dropping whatever will not fit.
- *
- * @param internals The card to transmit on.
- * @param buf The segment.
- * @param len The length of the segment.
- */
-
 static void virtnet_output(void* internals, void* buf, uint16_t len) {
 
     DEBUG_ASSERT(internals);
@@ -232,13 +193,6 @@ static void virtnet_output(void* internals, void* buf, uint16_t len) {
     vn->tx.length += len;
 }
 
-
-/**
- * @brief Hands the assembled frame to the device, with a header asking for no offloading.
- *
- * @param internals The card to transmit on.
- * @param len The length lwIP counted, which the assembled frame is trusted over.
- */
 
 static void virtnet_endoutput(void* internals, uint16_t len) {
 
@@ -275,14 +229,6 @@ static int virtnet_startinput(void* internals) {
     return vn->rx.length;
 }
 
-
-/**
- * @brief Copies the next piece of the frame the device wrote, skipping the header in front of it.
- *
- * @param internals The card to receive from.
- * @param buf The segment to fill.
- * @param len The length of the segment.
- */
 
 static void virtnet_input(void* internals, void* buf, uint16_t len) {
 
@@ -327,12 +273,6 @@ static void virtnet_input_nomem(void* internals, uint16_t len) {
 #endif
 }
 
-
-/**
- * @brief Hands every frame the device has finished writing to lwIP and puts the buffers straight back.
- *
- * @param vn The card to drain.
- */
 
 static void virtnet_receive(struct virtnet* vn) {
 
@@ -391,13 +331,6 @@ static int interrupt_handler(pcidev_t device, irq_t vector, uint8_t type, struct
     return 0;
 }
 
-
-/**
- * @brief Reads the address the device was given, making one up when it will not say.
- *
- * @param vn The card to address.
- * @param cfg The device configuration window, which a device need not have.
- */
 
 static void virtnet_read_address(struct virtnet* vn, struct virtio_net_config volatile* cfg) {
 

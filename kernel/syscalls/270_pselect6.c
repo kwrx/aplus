@@ -40,9 +40,6 @@
 #include <aplus/task.h>
 
 
-/**
- * @brief The mask and its size, travelling together behind one pointer because a syscall carries only six arguments.
- */
 struct pselect6_sigmask {
 
     const sigset_t* ss;

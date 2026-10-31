@@ -62,15 +62,9 @@ static inline void do_futex(void) {
     }
 }
 
-/**
- * @brief Bumped whenever a task exits, stops or continues, and watched by wait4() as a futex word.
- */
 volatile uint32_t sched_child_event = 0;
 
 
-/**
- * @brief Wakes the current task if its sleep deadline has come due.
- */
 static inline void do_sleep(void) {
 
     if (unlikely(current_task->sleep.timeout.tv_sec || current_task->sleep.timeout.tv_nsec)) {
@@ -103,13 +97,6 @@ static inline void do_sleep(void) {
 }
 
 
-/**
- * @brief Asks whether a signal queue holds a signal of the given number.
- *
- * @param queue The queue to search.
- * @param sig The signal to look for.
- * @return true if it is queued.
- */
 static bool __sigqueue_holds(queue_t* queue, int sig) {
 
     bool found = false;
@@ -124,15 +111,6 @@ static bool __sigqueue_holds(queue_t* queue, int sig) {
 }
 
 
-/**
- * @brief Tells a parent that one of its children exited, stopped or continued, with SIGCHLD and a child event.
- *
- * @param ppid The parent's pid, or 0 if there is nobody to tell.
- * @param pid The child.
- * @param uid The child's user.
- * @param code CLD_EXITED, CLD_KILLED, CLD_DUMPED, CLD_STOPPED or CLD_CONTINUED.
- * @param status The exit status, or the signal that stopped, continued or killed the child.
- */
 static void __sched_child_changed(pid_t ppid, pid_t pid, uid_t uid, int code, int status) {
 
     if (ppid > 0) {
@@ -154,11 +132,6 @@ static void __sched_child_changed(pid_t ppid, pid_t pid, uid_t uid, int code, in
 }
 
 
-/**
- * @brief Stops the current task for a stop signal, unless a SIGCONT is already queued behind it.
- *
- * @param signo The stop signal.
- */
 static void do_stop(int signo) {
 
     bool stopped = false;
@@ -183,11 +156,6 @@ static void do_stop(int signo) {
 }
 
 
-/**
- * @brief Carries out a signal's default disposition: terminate or dump core, which end the whole process, or stop.
- *
- * @param siginfo The signal being delivered.
- */
 static void handle_default_signal(const siginfo_t* siginfo) {
 
     switch (siginfo->si_signo) {
@@ -293,13 +261,6 @@ static void handle_signal(siginfo_t* siginfo) {
 }
 
 
-/**
- * @brief Delivers one pending signal to the current task.
- *
- * A fatal signal exits here and never returns; a stopped task returns once SIGCONT makes it READY. Nothing is
- * delivered to a parent parked in vfork(), since its child is still running on its stack, to a task already in the
- * middle of exiting, nor to a task parked inside the kernel.
- */
 static inline void do_signals(void) {
 
     DEBUG_ASSERT(current_task);
@@ -337,12 +298,6 @@ static inline void do_signals(void) {
 }
 
 
-/**
- * @brief Destroys the dead tasks of the current cpu that it is no longer running on.
- *
- * A dead task is kept while it is still the current one, or while the cpu is still executing on its
- * kernel stack, as the tail of the interrupt that switched away from it does.
- */
 static void __sched_destroy_dead(void) {
 
     if (likely(current_cpu->sched_dead == NULL))
@@ -381,21 +336,6 @@ static void __sched_destroy_dead(void) {
 }
 
 
-/**
- * @brief Picks the next task to run on the current cpu, falling back on its idle task.
- *
- * At most one lap of the run queue is walked, so the scan always terminates. The caller holds
- * sched_lock and taking it disabled interrupts, so a scan that waited here for something to become
- * runnable would be waiting for a tick that can no longer arrive.
- *
- * Sleeping tasks are tested for a wakeup as they are passed, which is the only thing that ever
- * wakes them: each candidate is published in current_task because do_futex() and do_sleep() read
- * it, and sys_clock_gettime() reads the cpu-time clocks off it too.
- *
- * The idle task is not on the queue and its next is NULL, so a lap that starts on it starts at the
- * head, which is itself NULL on a cpu with nothing enqueued. So does a lap that starts on a dead task,
- * whose next links the dead list instead.
- */
 static void __sched_next(void) {
 
     task_t* prev = current_task;
@@ -425,22 +365,6 @@ static void __sched_next(void) {
 }
 
 
-/**
- * @brief Schedules the next task to run
- *
- * This function first destroys the dead tasks this cpu has finished with, then updates the clocks of the current task.
- * It also keeps track of the number of voluntary and involuntary context switches.
- * If resched is set to true, it marks the current task as TASK_STATUS_READY and selects the next task to run by calling __sched_next().
- * The selected task is then marked as TASK_STATUS_RUNNING and a task switch is performed using the arch_task_switch() function.
- * Finally, the function calls do_signals() to handle any pending signals.
- *
- * UPDATE_CLOCK carries the remainder into the seconds. Assigning the delta over the accumulated
- * value and then subtracting a whole second throws away the nanoseconds already banked and
- * leaves tv_nsec negative for any delta below a second -- i.e. always.
- *
- * @param resched Specifies whether the current task is being voluntarily or involuntarily rescheduled
- *
- */
 void schedule(int resched) {
 
     DEBUG_ASSERT(current_cpu);
@@ -508,13 +432,6 @@ void schedule(int resched) {
 }
 
 
-/**
- * @brief Unlinks a task from one CPU's run queue, with that CPU's sched_lock held.
- *
- * @param cpu The CPU whose queue to search.
- * @param task The task to remove.
- * @return true if the task was on this queue and has been removed.
- */
 static bool __sched_unlink(cpu_t* cpu, task_t* task) {
 
     DEBUG_ASSERT(cpu);
@@ -548,13 +465,6 @@ static bool __sched_unlink(cpu_t* cpu, task_t* task) {
 }
 
 
-/**
- * @brief Enqueues a task to a CPU with the least number of tasks
- *
- * This function schedules the task to a CPU with the least number of tasks.
- *
- * @param task The task to be enqueued
- */
 void sched_enqueue(task_t* task) {
 
     cpu_t* cpu = NULL;
@@ -590,15 +500,6 @@ void sched_enqueue(task_t* task) {
 #endif
 }
 
-/**
- * @brief Unlinks a zombie from a cpu's run queue and queues it to be destroyed by that cpu.
- *
- * The task is destroyed by the cpu it ran on, and only once that cpu is off its kernel stack.
- * @see __sched_destroy_dead().
- *
- * @param cpu The cpu the task is queued on, whose sched_lock the caller holds.
- * @param task The task to reap.
- */
 void sched_bury(cpu_t* cpu, task_t* task) {
 
     DEBUG_ASSERT(cpu);
@@ -618,25 +519,11 @@ void sched_bury(cpu_t* cpu, task_t* task) {
 }
 
 
-/**
- * @brief Asks whether a signal's default action is to be ignored.
- *
- * @param sig The signal.
- * @return true for SIGCHLD, SIGCONT, SIGURG and SIGWINCH.
- */
 static inline bool __sig_default_ignored(int sig) {
     return sig == SIGCHLD || sig == SIGCONT || sig == SIGURG || sig == SIGWINCH;
 }
 
 
-/**
- * @brief Asks whether a signal sent to a process goes to every one of its threads rather than to one.
- *
- * @param sig The signal.
- * @param handler Its disposition.
- * @return true for SIGKILL, SIGSTOP, and the stop signals left to their default action, which each thread carries out
- *         for itself.
- */
 static inline bool __sig_every_thread(int sig, void (*handler)(int)) {
 
     if (sig == SIGKILL || sig == SIGSTOP)
@@ -646,9 +533,6 @@ static inline bool __sig_every_thread(int sig, void (*handler)(int)) {
 }
 
 
-/**
- * @brief A process that a signal sent to the whole process matched, and the thread picked to take it.
- */
 struct sigpick {
 
     pid_t pid;
@@ -657,18 +541,6 @@ struct sigpick {
 };
 
 
-/**
- * @brief Considers a thread for taking a signal sent to its process, keeping the best candidate per process.
- *
- * A thread that does not block the signal beats the leader, which beats any other thread.
- *
- * @param picks The candidates so far, grown as needed.
- * @param count How many there are.
- * @param capacity How many fit.
- * @param task The thread.
- * @param blocked Whether it blocks the signal.
- * @return 0, or ENOMEM.
- */
 static int __sigpick_consider(struct sigpick** picks, size_t* count, size_t* capacity, const task_t* task, bool blocked) {
 
     int rank = !blocked ? 3 : task->tid == task->pid ? 2 : 1;
@@ -710,17 +582,6 @@ static int __sigpick_consider(struct sigpick** picks, size_t* count, size_t* cap
 }
 
 
-/**
- * @brief Queues a signal on one thread, as pending if the thread blocks it, unless the thread would only discard it.
- *
- * The caller holds the sched_lock of the thread's cpu, and has already found that the signal may reach the thread.
- *
- * @param task The thread.
- * @param sig The signal.
- * @param info Its payload.
- * @param flags SCHED_SIGQUEUE_KERNEL and SCHED_SIGQUEUE_BROADCAST.
- * @return 0, or EAGAIN or ENOMEM.
- */
 static int __sigqueue_on(task_t* task, int sig, const siginfo_t* info, int flags) {
 
     bool unstoppable = (sig == SIGKILL || sig == SIGSTOP);
@@ -769,15 +630,6 @@ static int __sigqueue_on(task_t* task, int sig, const siginfo_t* info, int flags
 }
 
 
-/**
- * @brief Queues a signal on the thread picked for its process, or on another live thread of it if that one is gone.
- *
- * @param pick The process and the thread picked.
- * @param sig The signal.
- * @param info Its payload.
- * @param flags SCHED_SIGQUEUE_KERNEL and SCHED_SIGQUEUE_BROADCAST.
- * @return 0, or EAGAIN or ENOMEM.
- */
 static int __sigqueue_on_pick(const struct sigpick* pick, int sig, const siginfo_t* info, int flags) {
 
     pid_t want = pick->tid;
@@ -811,26 +663,6 @@ static int __sigqueue_on_pick(const struct sigpick* pick, int sig, const siginfo
 }
 
 
-/**
- * @brief Queues a signal on the tasks matching a process group, a process or a thread.
- *
- * A signal sent to a thread is queued on that thread. One sent to a process, or to every process of a group or of the
- * system, is queued on a single thread of each: one that does not block it if there is any, the leader otherwise.
- * SIGKILL and default stops are the exception, queued on every thread.
- *
- * Zombies are not matched. Kernel threads, and init for any signal it has not asked to handle, are matched but left
- * alone. SIGCONT and SIGKILL resume every stopped thread they match before anything is queued, a signal that would only
- * be ignored on arrival is dropped rather than queued, and a standard signal already pending on a thread that blocks
- * it is not queued twice.
- *
- * @param pgrp The process group to match, or -1 not to narrow by it.
- * @param pid The process to match, or -1 not to narrow by it.
- * @param tid The thread to match, or -1 not to narrow by it.
- * @param sig The signal to queue.
- * @param info The signal's payload.
- * @param flags SCHED_SIGQUEUE_KERNEL and SCHED_SIGQUEUE_BROADCAST.
- * @return 0 on success, or -1 with errno set.
- */
 int sched_sigqueue(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* info, int flags) {
 
     DEBUG_ASSERT(sig >= 0);
@@ -964,27 +796,11 @@ int sched_sigqueue(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* info, i
 }
 
 
-/**
- * @brief Queues a signal on behalf of the current task, which must be allowed to signal each target.
- *
- * @param pgrp The process group to match, or -1 not to narrow by it.
- * @param pid The process to match, or -1 not to narrow by it.
- * @param tid The thread to match, or -1 not to narrow by it.
- * @param sig The signal to queue.
- * @param info The signal's payload.
- * @return 0 on success, or -1 with errno set.
- */
 int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* info) {
     return sched_sigqueue(pgrp, pid, tid, sig, info, 0);
 }
 
 
-/**
- * @brief Queues a signal the current task brought on itself, to be delivered before its syscall returns.
- *
- * @param sig The signal.
- * @param info The signal's payload.
- */
 void sched_raise(int sig, siginfo_t* info) {
 
     DEBUG_ASSERT(current_task);
@@ -994,14 +810,6 @@ void sched_raise(int sig, siginfo_t* info) {
 }
 
 
-/**
- * @brief Replaces the current thread's blocked-signal mask, and makes deliverable the pending signals it unblocks.
- *
- * The run-queue lock is held throughout, as it is while a signal is queued, so a signal cannot be parked as blocked
- * just after the move that would have released it.
- *
- * @param set The new mask. SIGKILL and SIGSTOP are never blocked.
- */
 void sched_sigmask(const sigset_t* set) {
 
     DEBUG_ASSERT(current_task);
@@ -1027,22 +835,11 @@ void sched_sigmask(const sigset_t* set) {
 }
 
 
-/**
- * @brief Delivers a pending signal to the current task now, rather than at its next reschedule.
- */
 void sched_signals(void) {
     do_signals();
 }
 
 
-/**
- * @brief Turns the current task into a zombie, and settles what that means for its group, its parent and its children.
- *
- * The thread that finds every other thread of its group already dead is the last one out. It makes the group's
- * leader reportable to wait4(), or reaps it at once when the parent ignores SIGCHLD, hands the group's children to
- * init, and tells the parent. More than one thread can conclude it is the last, which is harmless, but because each
- * publishes its own death before looking, at least one always does.
- */
 void sched_exit(void) {
 
     task_t* self = current_task;
@@ -1135,13 +932,6 @@ void sched_exit(void) {
 }
 
 
-/**
- * @brief Kills every other thread of the current process, each reporting the given status rather than SIGKILL.
- *
- * SIGKILL is queued directly, past the limits and dispositions that could otherwise drop it.
- *
- * @param value The wait status the process exits with.
- */
 void sched_group_exit(int value) {
 
     cpu_foreach(cpu) {
@@ -1192,13 +982,6 @@ void sched_group_exit(int value) {
 }
 
 
-/**
- * @brief Ends every thread of the current process, the way a fatal signal's default action does.
- *
- * A thread already told to exit by a group exit in progress only exits, reporting the status it was given.
- *
- * @param status The wait status the process reports: the signal, with 0x80 added when it dumps core.
- */
 void sched_die(int status) {
 
     if (!current_task->exit_group_pending)
@@ -1208,16 +991,6 @@ void sched_die(int status) {
 }
 
 
-/**
- * @brief Queues a signal raised by a hardware fault on the current task, forcing its default action.
- *
- * The signal is unblocked and its disposition reset when it would otherwise be ignored or deferred,
- * and a signal of the same number already queued is not queued twice.
- *
- * @param sig The signal the fault maps to.
- * @param info The signal's payload.
- * @return 0 on success, or -1 with errno set.
- */
 int sched_fault_sigqueueinfo(int sig, siginfo_t* info) {
 
     DEBUG_ASSERT(current_task);
@@ -1263,36 +1036,16 @@ int sched_fault_sigqueueinfo(int sig, siginfo_t* info) {
 }
 
 
-/**
- * @brief Generates the next unique process ID
- *
- * This function generates and returns the next unique process ID, by incrementing a static variable.
- *
- * @return The next unique process ID
- */
-/**
- * @brief The last process id handed out, allocated from atomically because two CPUs draw on it at once.
- */
 static atomic_int __sched_lastpid = 0;
 
 pid_t sched_nextpid(void) {
     return (pid_t)(atomic_fetch_add(&__sched_lastpid, 1) + 1);
 }
 
-/**
- * @brief Returns the most recently allocated process ID, without allocating one.
- *
- * @return The last process ID handed out by sched_nextpid().
- */
 pid_t sched_lastpid(void) {
     return (pid_t)atomic_load(&__sched_lastpid);
 }
 
-/**
- * @brief Returns the total number of processes across all CPUs
- * 
- * @return The total number of processes across all CPUs
- */
 size_t sched_nprocs(void) {
 
     size_t count = 0;

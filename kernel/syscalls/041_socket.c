@@ -38,9 +38,6 @@
 #include <aplus/network.h>
 
 
-/**
- * @brief The flags socket() takes in its type argument, numbered as the open flags they stand for.
- */
 #define LINUX_SOCK_NONBLOCK 00004000
 #define LINUX_SOCK_CLOEXEC  02000000
 

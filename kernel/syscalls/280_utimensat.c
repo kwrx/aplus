@@ -38,12 +38,6 @@
 #include <unistd.h>
 
 
-/**
- * @brief Resolves a directory descriptor, or AT_FDCWD, to the inode relative paths start from.
- *
- * @param dfd The descriptor.
- * @return The inode, referenced, or NULL with errno set.
- */
 static inode_t* utimensat_base(int dfd) {
 
     inode_t* base = NULL;
@@ -70,14 +64,6 @@ static inode_t* utimensat_base(int dfd) {
 }
 
 
-/**
- * @brief Resolves the file whose timestamps utimensat() changes.
- *
- * @param dfd The descriptor relative paths start from, or AT_FDCWD.
- * @param path The path; an empty one names @p dfd itself under AT_EMPTY_PATH.
- * @param flags AT_SYMLINK_NOFOLLOW and AT_EMPTY_PATH.
- * @return The inode, referenced, or NULL with errno set.
- */
 static inode_t* utimensat_lookup(int dfd, const char* path, int flags) {
 
     if (path[0] == '\0')
@@ -92,23 +78,11 @@ static inode_t* utimensat_lookup(int dfd, const char* path, int flags) {
 }
 
 
-/**
- * @brief Reports whether utimensat() accepts a timestamp's nanoseconds.
- *
- * @param nsec The nanoseconds.
- * @return true for UTIME_NOW, UTIME_OMIT and values in [0, 1e9).
- */
 static bool utimensat_nsec_valid(long nsec) {
     return nsec == UTIME_NOW || nsec == UTIME_OMIT || (nsec >= 0 && nsec < 1000000000L);
 }
 
 
-/**
- * @brief Reports whether the current task may write a file.
- *
- * @param st The file's attributes.
- * @return true for whoever the file's mode lets write it.
- */
 static bool utimensat_writable(const struct stat* st) {
 
     if (st->st_uid == current_task->fsuid)
@@ -121,13 +95,6 @@ static bool utimensat_writable(const struct stat* st) {
 }
 
 
-/**
- * @brief Sets a file's access and modification times under utimensat(2)'s rules for the current task.
- *
- * @param inode The file.
- * @param times The access and modification times, each possibly UTIME_NOW or UTIME_OMIT.
- * @return 0, or a negative errno.
- */
 static long utimensat_apply(inode_t* inode, const struct timespec times[2]) {
 
     struct stat st = {0};

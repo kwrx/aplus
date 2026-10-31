@@ -33,9 +33,6 @@
 
 
 
-/**
- * @brief A record lock: a byte range of an inode held for reading or writing by one owner.
- */
 typedef struct vfs_lock {
 
     inode_t* inode;
@@ -57,39 +54,18 @@ volatile uint32_t vfs_lock_event = 0;
 
 
 
-/**
- * @brief Prepares the table of record locks.
- */
 void vfs_locks_init(void) {
 
     spinlock_init(&vfs_locks_lock);
 }
 
 
-/**
- * @brief Tells whether a lock covers any byte of a range.
- *
- * @param lock The lock.
- * @param start The first byte of the range.
- * @param end The last byte of the range.
- * @return true when they overlap.
- */
 static inline bool __vfs_lock_overlaps(const vfs_lock_t* lock, off_t start, off_t end) {
 
     return lock->start <= end && start <= lock->end;
 }
 
 
-/**
- * @brief Finds a lock of another owner that a request on a range would conflict with, with the table locked.
- *
- * @param inode The inode.
- * @param owner The owner making the request.
- * @param type F_RDLCK or F_WRLCK.
- * @param start The first byte of the range.
- * @param end The last byte of the range.
- * @return The first conflicting lock, or NULL.
- */
 static vfs_lock_t* __vfs_lock_conflict(inode_t* inode, uintptr_t owner, short type, off_t start, off_t end) {
 
     for (vfs_lock_t* lock = vfs_locks; lock; lock = lock->next) {
@@ -108,20 +84,6 @@ static vfs_lock_t* __vfs_lock_conflict(inode_t* inode, uintptr_t owner, short ty
 }
 
 
-/**
- * @brief Replaces what an owner holds on a range with a new lock, or with nothing for F_UNLCK, with the table locked.
- *
- * Locks of the same type that overlap or touch the range are merged into it; others are trimmed or split around it.
- *
- * @param inode The inode.
- * @param owner The owner.
- * @param pid The process reported as holding the new lock.
- * @param type F_RDLCK, F_WRLCK or F_UNLCK.
- * @param start The first byte of the range.
- * @param end The last byte of the range.
- * @param spare Two preallocated locks, consumed and set to NULL as they are used.
- * @param garbage Receives the locks to free once the table is unlocked.
- */
 static void __vfs_lock_apply(inode_t* inode, uintptr_t owner, pid_t pid, short type, off_t start, off_t end, vfs_lock_t** spare, vfs_lock_t** garbage) {
 
     bool merged = true;
@@ -218,11 +180,6 @@ static void __vfs_lock_apply(inode_t* inode, uintptr_t owner, pid_t pid, short t
 }
 
 
-/**
- * @brief Frees a chain of locks linked through their next field.
- *
- * @param lock The first lock, or NULL.
- */
 static void __vfs_lock_free(vfs_lock_t* lock) {
 
     while (lock) {
@@ -235,16 +192,6 @@ static void __vfs_lock_free(vfs_lock_t* lock) {
 }
 
 
-/**
- * @brief Finds a lock of another owner that would block a request, as F_GETLK does.
- *
- * @param inode The inode.
- * @param owner The owner making the request.
- * @param type F_RDLCK or F_WRLCK, replaced by the type of the blocking lock, or F_UNLCK when nothing blocks.
- * @param start The first byte of the range, replaced by that of the blocking lock.
- * @param end The last byte of the range, replaced by that of the blocking lock.
- * @param pid Receives the process holding the blocking lock.
- */
 void vfs_lock_test(inode_t* inode, uintptr_t owner, short* type, off_t* start, off_t* end, pid_t* pid) {
 
     DEBUG_ASSERT(inode);
@@ -273,17 +220,6 @@ void vfs_lock_test(inode_t* inode, uintptr_t owner, short* type, off_t* start, o
 }
 
 
-/**
- * @brief Locks or unlocks a byte range of an inode for an owner, as F_SETLK does.
- *
- * @param inode The inode.
- * @param owner The owner: a descriptor table for POSIX locks, an open file for OFD locks.
- * @param pid The process reported as holding the lock.
- * @param type F_RDLCK, F_WRLCK or F_UNLCK.
- * @param start The first byte of the range.
- * @param end The last byte of the range, VFS_LOCK_EOF for everything after @p start.
- * @return 0 on success, or -1 with errno EAGAIN when another owner holds a conflicting lock, or ENOMEM.
- */
 int vfs_lock_set(inode_t* inode, uintptr_t owner, pid_t pid, short type, off_t start, off_t end) {
 
     DEBUG_ASSERT(inode);
@@ -332,12 +268,6 @@ int vfs_lock_set(inode_t* inode, uintptr_t owner, pid_t pid, short type, off_t s
 }
 
 
-/**
- * @brief Drops every lock an owner holds on an inode, as closing a descriptor does.
- *
- * @param inode The inode.
- * @param owner The owner.
- */
 void vfs_lock_release(inode_t* inode, uintptr_t owner) {
 
     DEBUG_ASSERT(inode);

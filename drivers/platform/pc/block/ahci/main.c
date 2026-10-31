@@ -427,9 +427,6 @@ typedef volatile struct hba {
 } __packed hba_t;
 
 
-/**
- * @brief One AHCI port, shared by a disk's device and its partitions.
- */
 struct ahci_port {
     struct ahci* ahci;
     long index;

@@ -54,11 +54,6 @@ static pty_t* queue          = NULL;
 static spinlock_t queue_lock = SPINLOCK_INIT;
 
 
-/**
- * @brief Finds the lowest index no live pty uses; the caller holds queue_lock.
- *
- * @return The index.
- */
 static uint64_t __pty_free_index(void) {
 
     uint64_t index = 0;
@@ -163,11 +158,6 @@ __attribute__((used)) static void pty_input_append(pty_t* pty, char ch, bool ech
 }
 
 
-/**
- * @brief Queues an end-of-file behind the input the slave has not read yet, unless one is already pending.
- *
- * @param pty The pty.
- */
 static void pty_input_eof(pty_t* pty) {
 
     DEBUG_ASSERT(pty);
@@ -181,14 +171,6 @@ static void pty_input_eof(pty_t* pty) {
 }
 
 
-/**
- * @brief Reads canonical input up to the pending end-of-file, which reads as 0 once reached.
- *
- * @param pty The pty.
- * @param buf The buffer.
- * @param size The size of the buffer.
- * @return The number of bytes read, 0 at the end-of-file, or -EAGAIN when there is nothing to read.
- */
 static ssize_t pty_input_read(pty_t* pty, void* buf, size_t size) {
 
     DEBUG_ASSERT(pty);
@@ -215,12 +197,6 @@ static ssize_t pty_input_read(pty_t* pty, void* buf, size_t size) {
 }
 
 
-/**
- * @brief Reports how much of a write actually made it into the ring buffer.
- *
- * @param done The number of bytes copied.
- * @return The count copied, or -EAGAIN when a write made no progress at all.
- */
 static inline ssize_t __pty_short_write(size_t done) {
 
     if (done == 0)
@@ -946,13 +922,6 @@ ssize_t pty_slave_write(inode_t* inode, const void* buf, off_t offset, size_t si
 }
 
 
-/**
- * @brief Reports what the master side of a pty is ready for: output the terminal can read, room for its input.
- *
- * @param inode The master inode.
- * @param events The events the caller waits for.
- * @return The subset of @p events that is ready.
- */
 int pty_master_poll(inode_t* inode, int events) {
 
     DEBUG_ASSERT(inode);
@@ -972,13 +941,6 @@ int pty_master_poll(inode_t* inode, int events) {
 }
 
 
-/**
- * @brief Reports what the slave side of a pty is ready for: input the line discipline has released, room for output.
- *
- * @param inode The slave inode.
- * @param events The events the caller waits for.
- * @return The subset of @p events that is ready.
- */
 int pty_slave_poll(inode_t* inode, int events) {
 
     DEBUG_ASSERT(inode);
@@ -1086,12 +1048,6 @@ pty_t* pty_create(inode_t* ptmx, int flags) {
 }
 
 
-/**
- * @brief Takes another reference to a pty.
- *
- * @param pty The pty.
- * @return The pty.
- */
 pty_t* pty_get(pty_t* pty) {
 
     DEBUG_ASSERT(pty);
@@ -1102,11 +1058,6 @@ pty_t* pty_get(pty_t* pty) {
 }
 
 
-/**
- * @brief Drops a reference to a pty, freeing it with its buffers on the last one.
- *
- * @param pty The pty.
- */
 void pty_put(pty_t* pty) {
 
     DEBUG_ASSERT(pty);
@@ -1124,11 +1075,6 @@ void pty_put(pty_t* pty) {
 }
 
 
-/**
- * @brief Hangs a pty up once its master is closed: hides its slave, detaches it from every session and signals the foreground group.
- *
- * @param pty The pty.
- */
 void pty_hangup(pty_t* pty) {
 
     DEBUG_ASSERT(pty);

@@ -31,11 +31,6 @@ static inline void ext2_bitmap_clear(uint8_t* bitmap, uint32_t bit) {
     bitmap[bit >> 3] &= ~(1U << (bit & 7));
 }
 
-/**
- * @brief Drops a block from the pointer-block cache of the read path.
- * @param ext2 The filesystem.
- * @param block The block being written or freed.
- */
 static void ext2_mapcache_forget(ext2_t* ext2, uint32_t block) {
     for (size_t i = 0; i < EXT2_IND_LEVELS; i++) {
         if (ext2->mapcache[i].block == block)
@@ -60,15 +55,6 @@ int ext2_utils_read_block(ext2_t* ext2, uint32_t block, uint32_t offset, void* d
 }
 
 
-/**
- * @brief Reads from a run of physically consecutive blocks in a single device request.
- * @param ext2 The filesystem.
- * @param block The first block of the run.
- * @param offset The byte offset into the first block.
- * @param data The destination.
- * @param size The number of bytes, which may span several blocks.
- * @return 0 on success, -1 with errno set.
- */
 int ext2_utils_read_blocks(ext2_t* ext2, uint32_t block, uint32_t offset, void* data, size_t size) {
     DEBUG_ASSERT(ext2);
     DEBUG_ASSERT(data);
@@ -86,15 +72,6 @@ int ext2_utils_read_blocks(ext2_t* ext2, uint32_t block, uint32_t offset, void* 
 }
 
 
-/**
- * @brief Writes to a run of physically consecutive blocks in a single device request.
- * @param ext2 The filesystem.
- * @param block The first block of the run.
- * @param offset The byte offset into the first block.
- * @param data The source.
- * @param size The number of bytes, which may span several blocks.
- * @return 0 on success, -1 with errno set.
- */
 int ext2_utils_write_blocks(ext2_t* ext2, uint32_t block, uint32_t offset, const void* data, size_t size) {
     DEBUG_ASSERT(ext2);
     DEBUG_ASSERT(data);
@@ -185,11 +162,6 @@ int ext2_utils_write_super(ext2_t* ext2) {
 }
 
 
-/**
- * @brief Writes the in-memory bitmap and descriptor of the loaded group back to disk.
- * @param ext2 The filesystem, locked.
- * @return 0 on success, -1 with errno set.
- */
 static int ext2_balloc_flush(ext2_t* ext2) {
     ext2_balloc_t* balloc = &ext2->balloc;
 
@@ -207,13 +179,6 @@ static int ext2_balloc_flush(ext2_t* ext2) {
 }
 
 
-/**
- * @brief Loads the block bitmap and descriptor of a group, flushing the group loaded before it.
- * @param ext2 The filesystem, locked.
- * @param group The group.
- * @param desc Its descriptor if already read, or NULL.
- * @return 0 on success, -1 with errno set.
- */
 static int ext2_balloc_load(ext2_t* ext2, uint32_t group, const struct ext2_group_desc* desc) {
     ext2_balloc_t* balloc = &ext2->balloc;
 
@@ -242,11 +207,6 @@ static int ext2_balloc_load(ext2_t* ext2, uint32_t group, const struct ext2_grou
 }
 
 
-/**
- * @brief Writes back the bitmap, descriptor and superblock changed by allocations since the last commit.
- * @param ext2 The filesystem, locked.
- * @return 0 on success, -1 with errno set.
- */
 int ext2_utils_alloc_commit(ext2_t* ext2) {
     DEBUG_ASSERT(ext2);
 
@@ -265,14 +225,6 @@ int ext2_utils_alloc_commit(ext2_t* ext2) {
 }
 
 
-/**
- * @brief Allocates a run of consecutive free blocks, searching forward from a goal; nothing reaches the disk until ext2_utils_alloc_commit.
- * @param ext2 The filesystem, locked.
- * @param goal The block to search from, or 0 for the last allocation.
- * @param count The most blocks the run may cover.
- * @param first Receives the first block of the run.
- * @return The number of blocks allocated, or -1 with errno set.
- */
 long ext2_utils_alloc_blocks(ext2_t* ext2, uint32_t goal, size_t count, uint32_t* first) {
     DEBUG_ASSERT(ext2);
     DEBUG_ASSERT(first);
@@ -373,12 +325,6 @@ int ext2_utils_alloc_block(ext2_t* ext2, uint32_t* block) {
 }
 
 
-/**
- * @brief Frees a block; nothing reaches the disk until ext2_utils_alloc_commit.
- * @param ext2 The filesystem, locked.
- * @param block The block.
- * @return 0 on success, -1 with errno set.
- */
 int ext2_utils_release_block(ext2_t* ext2, uint32_t block) {
     DEBUG_ASSERT(ext2);
 

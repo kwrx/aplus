@@ -107,14 +107,6 @@ ssize_t sysfs_bus_list_devices(inode_t* inode, sysfs_bus_t* bus, struct dirent* 
 }
 
 
-/**
- * @brief Publishes a device as /sys/devices/<root>/<name>, linked from /sys/bus/<bus>/devices/<name>.
- *
- * @param bus The bus name ("pci" or "usb").
- * @param name The device name.
- * @param uevent The KEY=VALUE lines of its uevent file.
- * @return 0 on success, -1 with errno set otherwise.
- */
 int sysfs_device_bus_add(const char* bus, const char* name, const char* uevent) {
 
     DEBUG_ASSERT(bus);
@@ -165,13 +157,6 @@ int sysfs_device_bus_add(const char* bus, const char* name, const char* uevent) 
     return 0;
 }
 
-/**
- * @brief Withdraws a device published with sysfs_device_bus_add(); open handles keep working until closed.
- *
- * @param bus The bus name.
- * @param name The device name.
- * @return 0 on success, -1 with errno set otherwise.
- */
 int sysfs_device_bus_remove(const char* bus, const char* name) {
 
     DEBUG_ASSERT(bus);

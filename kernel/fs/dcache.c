@@ -36,20 +36,10 @@
 
 
 
-/**
- * @brief Prepares the directory entry cache of an inode.
- *
- * @param inode The inode whose cache is initialised.
- */
 void vfs_dcache_init(inode_t* inode) {
     hashmap_init(&inode->dcache, hashmap_hash_string, strcmp);
 }
 
-/**
- * @brief Frees the directory entry cache of an inode, if it ever held an entry.
- *
- * @param inode The inode whose cache is freed.
- */
 void vfs_dcache_free(inode_t* inode) {
 
     if (inode->dcache.map_base.table)
@@ -57,13 +47,6 @@ void vfs_dcache_free(inode_t* inode) {
 }
 
 
-/**
- * @brief Caches an inode under its own name in a parent directory.
- *
- * @param parent The directory the entry is cached in.
- * @param inode The inode to cache.
- * @return The inode now cached under that name, which is an earlier one if a lookup raced this call.
- */
 inode_t* vfs_dcache_add(inode_t* parent, inode_t* inode) {
 
     DEBUG_ASSERT(parent);
@@ -91,13 +74,6 @@ inode_t* vfs_dcache_add(inode_t* parent, inode_t* inode) {
 }
 
 
-/**
- * @brief Drops a cached entry from a directory and leaves the inode behind it linked.
- *
- * @param parent The directory holding the entry.
- * @param name The name of the entry to drop.
- * @return The inode that was cached under that name, or NULL.
- */
 inode_t* vfs_dcache_detach(inode_t* parent, const char* name) {
 
     DEBUG_ASSERT(parent);
@@ -120,12 +96,6 @@ inode_t* vfs_dcache_detach(inode_t* parent, const char* name) {
 }
 
 
-/**
- * @brief Drops a cached entry from a directory and unlinks the inode behind it.
- *
- * @param parent The directory holding the entry.
- * @param name The name of the entry to drop.
- */
 void vfs_dcache_remove(inode_t* parent, const char* name) {
 
     inode_t* inode = vfs_dcache_detach(parent, name);
@@ -135,13 +105,6 @@ void vfs_dcache_remove(inode_t* parent, const char* name) {
 }
 
 
-/**
- * @brief Looks a name up in a directory's entry cache, taking a reference to what it finds.
- *
- * @param parent The directory to search.
- * @param name The name to look for.
- * @return The cached inode, referenced, or NULL if the name is not cached.
- */
 inode_t* vfs_dcache_find(inode_t* parent, const char* name) {
 
     DEBUG_ASSERT(parent);

@@ -35,13 +35,6 @@
 
 
 
-/**
- * @brief Stamps a futex with the absolute deadline a relative timeout comes due at.
- *
- * @param futex The futex to stamp.
- * @param utime The relative timeout, or NULL for no deadline.
- */
-
 static inline void __futex_set_deadline(futex_t* futex, const struct timespec* utime) {
 
     DEBUG_ASSERT(futex);
@@ -109,11 +102,6 @@ void futex_wait(task_t* task, volatile uint32_t* kaddr, uint32_t value, const st
 }
 
 
-/**
- * @brief Drops every futex registration a task holds and frees them.
- *
- * @param task The task whose registrations are dropped.
- */
 void futex_release_all(task_t* task) {
 
     DEBUG_ASSERT(task);
@@ -129,13 +117,6 @@ void futex_release_all(task_t* task) {
 }
 
 
-/**
- * @brief Releases up to @p max tasks parked on a futex word.
- *
- * @param kaddr Futex word the tasks are parked on.
- * @param max Most tasks to release.
- * @return How many were released.
- */
 size_t futex_wakeup(uint32_t* kaddr, size_t max) {
 
     DEBUG_ASSERT(kaddr);
@@ -184,14 +165,6 @@ size_t futex_wakeup(uint32_t* kaddr, size_t max) {
 }
 
 
-/**
- * @brief Moves up to @p max tasks from one futex word to another without waking them, as waiters for its current value.
- *
- * @param kaddr Futex word the tasks are parked on.
- * @param kaddr2 Futex word to park them on instead.
- * @param max Most tasks to move.
- * @return How many were moved.
- */
 size_t futex_requeue(uint32_t* kaddr, uint32_t* kaddr2, size_t max) {
 
     DEBUG_ASSERT(kaddr);

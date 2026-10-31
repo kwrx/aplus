@@ -49,19 +49,16 @@ MODULE_LICENSE("GPL");
 #define USB_CORE_STACK_SIZE      0x10000
 
 
-/** @brief A controller waiting to be, or already, brought up on the USB thread. */
 struct usb_core_controller {
     usb_controller_start_t start;
     void* arg;
 };
 
-/** @brief A class driver: who claims the devices of a class. */
 struct usb_core_class {
     int class;
     void (*_Atomic init)(usbdev_t* dev);
 };
 
-/** @brief A page run handed out by usb_dma_memalign(), remembered so usb_dma_free() knows its size. */
 struct usb_core_dma_block {
     uintptr_t virt;
     size_t pages;
@@ -215,9 +212,6 @@ void usb_unregister_class(int class) {
 }
 
 
-/**
- * @brief Hands devices nobody claimed to a class driver registered after they were enumerated.
- */
 static void usb_core_rebind(void) {
 
     for (hci_t* hc = usb_hcs; hc; hc = hc->next) {
@@ -242,19 +236,11 @@ static void usb_core_rebind(void) {
 }
 
 
-/**
- * @brief Sleeps the calling kernel thread.
- * @param ms Milliseconds to sleep.
- */
 static void usb_core_sleep(uint32_t ms) {
     arch_syscall3(SYSCALL_NR_KTHREAD_WAIT, &usb_thread_idle, 0, ms);
 }
 
 
-/**
- * @brief Owns the whole USB stack: brings controllers up, binds late drivers and polls every device.
- * @param arg Unused.
- */
 static void usb_core_thread(void* arg) {
 
     size_t started      = 0;

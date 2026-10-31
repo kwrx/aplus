@@ -36,12 +36,6 @@
 
 
 
-/**
- * @brief Writes the inode of a file back to the disk, then flushes the disk.
- * @param inode The file.
- * @param datasync Whether only the data must be flushed, passed on to the disk.
- * @return 0 on success, -1 with errno set.
- */
 int ext2_fsync(inode_t* inode, int datasync) {
 
     DEBUG_ASSERT(inode);

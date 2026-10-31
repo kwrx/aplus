@@ -169,13 +169,6 @@ static bool __keyboard_present  = false;
 
 
 
-/**
- * @brief Waits until a controller status bit reaches a value.
- *
- * @param mask The status bit.
- * @param status The value it must reach.
- * @return true if it did before the timeout.
- */
 static inline bool ps2_wait(uint8_t mask, uint8_t status) {
 
     for (int timeout = PS2_TIMEOUT; timeout > 0; timeout--) {
@@ -189,13 +182,6 @@ static inline bool ps2_wait(uint8_t mask, uint8_t status) {
     return false;
 }
 
-/**
- * @brief Writes a byte to the controller once its input buffer is empty.
- *
- * @param port The command or data port.
- * @param data The byte.
- * @return true if the byte was written.
- */
 static inline bool ps2_write(uint16_t port, uint8_t data) {
 
     if (!ps2_wait(PS2_STATUS_INPUT, 0))
@@ -205,12 +191,6 @@ static inline bool ps2_write(uint16_t port, uint8_t data) {
     return true;
 }
 
-/**
- * @brief Reads a byte from the controller once its output buffer is full.
- *
- * @param port The data port.
- * @return The byte, or -1 on timeout.
- */
 static inline int ps2_read(uint16_t port) {
 
     if (!ps2_wait(PS2_STATUS_OUTPUT, 1))
@@ -219,21 +199,12 @@ static inline int ps2_read(uint16_t port) {
     return inb(port);
 }
 
-/**
- * @brief Discards whatever the controller still holds in its output buffer.
- */
 static void ps2_flush(void) {
 
     for (int i = 0; i < PS2_FLUSH_MAX && (inb(PS2_IO_PORT_STATUS) & PS2_STATUS_OUTPUT); i++)
         inb(PS2_IO_PORT_DATA);
 }
 
-/**
- * @brief Sends a byte to the auxiliary device and waits for its acknowledge, resending when asked to.
- *
- * @param data The byte.
- * @return true if the device acknowledged it.
- */
 static bool ps2_mouse_write(uint8_t data) {
 
     for (int retry = 0; retry < PS2_RETRY_MAX; retry++) {
@@ -253,11 +224,6 @@ static bool ps2_mouse_write(uint8_t data) {
     return false;
 }
 
-/**
- * @brief Asks the auxiliary device for its id.
- *
- * @return The id, or -1 if the device did not answer.
- */
 static int ps2_mouse_identify(void) {
 
     if (!ps2_mouse_write(PS2_MOUSE_REQUEST_ID))
@@ -266,14 +232,6 @@ static int ps2_mouse_identify(void) {
     return ps2_read(PS2_IO_PORT_DATA);
 }
 
-/**
- * @brief Sends the sample-rate sequence that unlocks a wheel or five-button mode.
- *
- * @param a The first rate.
- * @param b The second rate.
- * @param c The third rate.
- * @return true if the device acknowledged every byte.
- */
 static bool ps2_mouse_knock(uint8_t a, uint8_t b, uint8_t c) {
 
     const uint8_t rates[] = {a, b, c};
@@ -287,11 +245,6 @@ static bool ps2_mouse_knock(uint8_t a, uint8_t b, uint8_t c) {
     return true;
 }
 
-/**
- * @brief Probes the auxiliary port for a mouse, enables its wheel and buttons, and starts its reports.
- *
- * @return true if a mouse answered every step.
- */
 static bool ps2_mouse_init(void) {
 
     int id = ps2_mouse_identify();

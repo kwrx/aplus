@@ -38,15 +38,6 @@
 #include "procfs.h"
 
 
-/**
- * @brief Generates /proc/cmdline, the kernel boot command line.
- *
- * @param inode The /proc/cmdline inode.
- * @param buf Receives the generated contents.
- * @param size Receives the length of the contents.
- * @param arg Unused.
- * @return 0 on success.
- */
 static int procfs_service_cmdline_fetch(inode_t* inode, char** buf, size_t* size, void* arg) {
 
     (void)arg;

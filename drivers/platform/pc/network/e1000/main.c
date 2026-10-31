@@ -204,13 +204,6 @@ static uint32_t pci_count = 0;
 
 
 
-/**
- * @brief Writes a card register through the memory-mapped window at BAR0.
- *
- * @param dev The card to write to.
- * @param address The register offset.
- * @param value The value to write.
- */
 static inline void wrcmd(struct e1000* dev, uint16_t address, uint32_t value) {
 
     DEBUG_ASSERT(dev);

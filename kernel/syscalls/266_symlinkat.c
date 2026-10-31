@@ -38,12 +38,6 @@
 #include <unistd.h>
 
 
-/**
- * @brief Resolves a directory descriptor, or AT_FDCWD, to the inode relative paths start from.
- *
- * @param dfd The descriptor.
- * @return The inode, referenced, or NULL with errno set.
- */
 static inode_t* symlinkat_base(int dfd) {
 
     inode_t* base = NULL;
@@ -70,14 +64,6 @@ static inode_t* symlinkat_base(int dfd) {
 }
 
 
-/**
- * @brief Resolves the directory a new symbolic link goes in, splitting its name off the path in place.
- *
- * @param dfd The descriptor relative paths start from, or AT_FDCWD.
- * @param path The path of the new link, cut at its last slash.
- * @param name Receives the name of the new link.
- * @return The directory, referenced, or NULL with errno set.
- */
 static inode_t* symlinkat_dir(int dfd, char* path, const char** name) {
 
     size_t len = strlen(path);

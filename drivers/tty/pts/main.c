@@ -74,13 +74,6 @@ static int pts_getattr(inode_t* inode, struct stat* st) {
     return 0;
 }
 
-/**
- * @brief Keeps the permission bits and owner chmod() and chown() give a slave; the rest of its attributes are fixed.
- *
- * @param inode The slave.
- * @param st The new attributes.
- * @return 0.
- */
 static int pts_setattr(inode_t* inode, struct stat* st) {
 
     DEBUG_ASSERT(inode);
@@ -96,11 +89,6 @@ static int pts_setattr(inode_t* inode, struct stat* st) {
     return 0;
 }
 
-/**
- * @brief Drops the reference a slave inode holds on its pty as the inode is freed after a hangup.
- *
- * @param inode The slave.
- */
 static void pts_release(inode_t* inode) {
 
     DEBUG_ASSERT(inode);

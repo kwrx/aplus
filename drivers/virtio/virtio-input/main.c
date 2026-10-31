@@ -52,16 +52,8 @@ MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
-/**
- * @brief How many absolute pointing devices this driver claims; relative and key devices are left alone.
- */
-
-
 #define VIRTIO_INPUT_MAX_DEVICES 4
 
-/**
- * @brief As much of the event queue as it will give, capped by what the queue actually has.
- */
 #define VIRTIO_INPUT_BUFFERS 64
 
 #define VIRTIO_INPUT_EVENT_SIZE (sizeof(struct virtio_input_event))
@@ -98,15 +90,6 @@ static device_t chardevs[VIRTIO_INPUT_MAX_DEVICES]         = {0};
 static size_t num_devices = 0;
 
 
-/**
- * @brief Selects an entry of the device configuration window.
- *
- * @param cfg The configuration window.
- * @param select The entry to select.
- * @param subsel The subentry to select.
- * @return How many bytes of the entry the device filled in, zero when it has nothing to say about it.
- */
-
 static uint8_t virtinput_cfg_select(struct virtio_input_config volatile* cfg, uint8_t select, uint8_t subsel) {
 
     DEBUG_ASSERT(cfg);
@@ -130,13 +113,6 @@ static bool virtinput_cfg_has_bit(struct virtio_input_config volatile* cfg, uint
     return !!(mmio_r8(&cfg->u.bitmap[bit / 8]) & (1 << (bit % 8)));
 }
 
-
-/**
- * @brief Stocks the event queue, which the device needs whole before it reports anything.
- *
- * @param vi The device to stock.
- * @return 0 on success, or a negative errno.
- */
 
 static int virtinput_fill(struct virtinput* vi) {
 
@@ -171,12 +147,6 @@ static void virtinput_write(struct virtinput* vi, event_t* ev) {
 }
 
 
-/**
- * @brief Publishes the position the report in progress has assembled, if it moved the pointer.
- *
- * @param vi The device whose report has closed.
- */
-
 static void virtinput_flush_pointer(struct virtinput* vi) {
 
     DEBUG_ASSERT(vi);
@@ -197,13 +167,6 @@ static void virtinput_flush_pointer(struct virtinput* vi) {
     virtinput_write(vi, &ev);
 }
 
-
-/**
- * @brief Translates one device event into the kernel's own and publishes it.
- *
- * @param vi The device the event came from.
- * @param in The event to translate.
- */
 
 static void virtinput_publish(struct virtinput* vi, const struct virtio_input_event* in) {
 
@@ -297,12 +260,6 @@ static void virtinput_publish(struct virtinput* vi, const struct virtio_input_ev
 }
 
 
-/**
- * @brief Drains everything the device has finished writing and puts the buffers straight back.
- *
- * @param vi The device to drain.
- */
-
 static void virtinput_drain(struct virtinput* vi) {
 
     DEBUG_ASSERT(vi);
@@ -365,15 +322,6 @@ static int setup_config(struct virtio_driver* driver, uintptr_t device_config) {
     return 0;
 }
 
-
-/**
- * @brief Reads the range of one absolute axis, refusing an axis the device gives no range.
- *
- * @param vi The device to read from.
- * @param cfg The configuration window.
- * @param axis The axis to read.
- * @return 0 on success, or a negative errno.
- */
 
 static int virtinput_abs_range(struct virtinput* vi, struct virtio_input_config volatile* cfg, uint8_t axis) {
 

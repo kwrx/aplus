@@ -72,14 +72,6 @@ device_t device = {
 
 
 
-/**
- * @brief Drains the unread part of the kernel log, which every reader shares one cursor into.
- *
- * @param device The kmsg device.
- * @param buf Where to copy the log.
- * @param size How many bytes fit in @p buf.
- * @return How many bytes were copied, 0 once the log has been read up to its end.
- */
 static ssize_t kmsg_read(device_t* device, void* buf, size_t size) {
 
     static spinlock_t read_lock = SPINLOCK_INIT;

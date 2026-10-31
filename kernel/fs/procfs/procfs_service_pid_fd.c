@@ -40,17 +40,11 @@
 #include "procfs.h"
 
 
-/**
- * @brief Packs the pid and the descriptor a /proc/<pid>/fd/<n> symlink stands for into its service argument.
- */
 #define PROCFS_PID_FD_ARG(pid, fd) ((void*)((((uintptr_t)(uint32_t)(pid)) << 32) | ((uintptr_t)(uint32_t)(fd))))
 #define PROCFS_PID_FD_ARG_PID(arg) ((pid_t)(((uintptr_t)(arg)) >> 32))
 #define PROCFS_PID_FD_ARG_FD(arg)  ((int)(((uintptr_t)(arg)) & 0xFFFFFFFFUL))
 
 
-/**
- * @brief The state hanging off a /proc/<pid>/fd directory inode, holding the symlinks made on first lookup.
- */
 typedef struct procfs_pid_fd_dir {
 
     pid_t pid;
@@ -59,12 +53,6 @@ typedef struct procfs_pid_fd_dir {
 } procfs_pid_fd_dir_t;
 
 
-/**
- * @brief Parses a whole entry name as a descriptor number.
- *
- * @param name The name to parse.
- * @return The descriptor, or -1 if the name is not a descriptor this task could hold.
- */
 static int __as_fd(const char* name) {
 
     if (unlikely(*name == '\0'))
@@ -88,15 +76,6 @@ static int __as_fd(const char* name) {
 }
 
 
-/**
- * @brief Generates the target of a /proc/<pid>/fd/<n> symlink, the path its descriptor is open on.
- *
- * @param inode The symlink inode.
- * @param buf Receives the link target.
- * @param size Receives the length of the target.
- * @param arg The packed pid and descriptor.
- * @return 0 on success, -1 if the descriptor is no longer open.
- */
 static int procfs_pid_fd_fetch_link(inode_t* inode, char** buf, size_t* size, void* arg) {
 
     DEBUG_ASSERT(inode);
@@ -262,11 +241,6 @@ inode_t* procfs_service_pid_fd_inode(inode_t* parent, pid_t pid) {
 }
 
 
-/**
- * @brief Releases a /proc/<pid>/fd directory and every symlink it handed out.
- *
- * @param inode The directory inode, or NULL if the directory was never looked up.
- */
 void procfs_service_pid_fd_free(inode_t* inode) {
 
     if (inode == NULL)

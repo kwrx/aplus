@@ -41,12 +41,6 @@
 #include "procfs.h"
 
 
-/**
- * @brief Parses a whole directory name as a pid.
- *
- * @param name The name to parse.
- * @return The pid, or 0 if the name is not entirely digits.
- */
 static pid_t __as_pid(const char* name) {
 
     if (unlikely(*name == '\0'))

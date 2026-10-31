@@ -38,13 +38,6 @@
 
 
 
-/**
- * @brief Tells whether a tmpfs directory still has an entry in it, with the tmpfs lock held.
- *
- * @param tmpfs The mounted tmpfs.
- * @param dir The directory.
- * @return true if some inode has @p dir as its parent.
- */
 static bool __tmpfs_has_children(tmpfs_t* tmpfs, inode_t* dir) {
 
     list_each(tmpfs->children, i) {
@@ -57,13 +50,6 @@ static bool __tmpfs_has_children(tmpfs_t* tmpfs, inode_t* dir) {
 }
 
 
-/**
- * @brief Removes an entry from a tmpfs directory; its data stays until the inode is released.
- *
- * @param inode The directory.
- * @param name The name of the entry.
- * @return 0 on success, or -1 with errno set.
- */
 int tmpfs_unlink(inode_t* inode, const char* name) {
 
     DEBUG_ASSERT(inode);
@@ -127,11 +113,6 @@ int tmpfs_unlink(inode_t* inode, const char* name) {
 }
 
 
-/**
- * @brief Frees the data of an unlinked tmpfs inode once no other name or holder refers to it, returning its space.
- *
- * @param inode The inode.
- */
 void tmpfs_release(inode_t* inode) {
 
     DEBUG_ASSERT(inode);

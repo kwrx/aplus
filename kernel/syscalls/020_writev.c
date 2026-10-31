@@ -42,20 +42,9 @@
 #include <aplus/network.h>
 
 
-/**
- * @brief How many buffers writev_whole() copies on the stack before it allocates.
- */
 #define WRITEV_FASTIOV 8
 
 
-/**
- * @brief Writes a user's whole vector to an open file as one write, so under O_APPEND it lands contiguously at the end.
- *
- * @param file The file.
- * @param vec The user's vector.
- * @param vlen How many buffers it has.
- * @return The number of bytes written, or a negative errno.
- */
 static ssize_t writev_whole(struct file* file, const struct iovec* vec, unsigned long vlen) {
 
     struct iovec fast[WRITEV_FASTIOV];

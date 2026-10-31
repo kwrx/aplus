@@ -38,13 +38,6 @@
 
 
 
-/**
- * @brief Tells whether the current task may open an existing file with the access mode open(2) asks for.
- *
- * @param st The file's attributes.
- * @param flags The open() flags.
- * @return true for root, for O_PATH, and when the owner, group or other bits that apply grant the access.
- */
 static bool __openat_permitted(const struct stat* st, int flags) {
 
     if (current_task->fsuid == 0 || (flags & O_PATH))
@@ -71,16 +64,6 @@ static bool __openat_permitted(const struct stat* st, int flags) {
 }
 
 
-/**
- * @brief Opens, and possibly creates, a file for open(), openat() and creat(), or for a syscall that opens a path to reach its inode.
- *
- * @param dfd The directory a relative path starts from, or AT_FDCWD.
- * @param filename The path, in user memory.
- * @param flags The open() flags.
- * @param mode The permissions of a created file.
- * @param check_access Whether to apply open(2)'s permission check, which a file this call created always passes.
- * @return The new descriptor, or a negative errno.
- */
 long do_openat(int dfd, const char* filename, int flags, mode_t mode, bool check_access) {
     if (unlikely(!filename))
         return -EINVAL;

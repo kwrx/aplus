@@ -100,12 +100,6 @@ device_t device = {
 };
 
 
-/**
- * @brief Publishes the framebuffer at KERNEL_VIDEO_AREA, leaving fb_base holding its physical address.
- *
- * @param device The adapter whose framebuffer is mapped.
- */
-
 static void virtgpu_map_framebuffer(device_t* device) {
 
     DEBUG_ASSERT(device->vid.fb_base);
@@ -131,12 +125,6 @@ static void virtgpu_free_framebuffer(device_t* device) {
     device->vid.fb_size = 0;
 }
 
-
-/**
- * @brief Takes the scanout resource back from the device, before its framebuffer is handed back to the allocator.
- *
- * @param gpu The adapter to release.
- */
 
 static void virtgpu_release_scanout(struct virtgpu* gpu) {
 
@@ -186,15 +174,6 @@ static void virtgpu_dnit(device_t* device) {
 }
 
 
-
-/**
- * @brief Asks the device what mode its primary scanout is in.
- *
- * @param gpu The adapter to ask.
- * @param xres Receives the width in pixels.
- * @param yres Receives the height in pixels.
- * @return 0 on success, or a negative errno.
- */
 
 static int virtgpu_get_mode(struct virtgpu* gpu, uint32_t* xres, uint32_t* yres) {
 
@@ -305,12 +284,6 @@ static void virtgpu_reset(device_t* device) {
 }
 
 
-/**
- * @brief Moves the scanout to the display's current mode, keeping the framebuffer memory where it is. Called with the gpu lock held.
- *
- * @param device The adapter whose display changed.
- */
-
 static void virtgpu_modeset(device_t* device) {
 
     DEBUG_ASSERT(device);
@@ -396,16 +369,6 @@ static void virtgpu_update(device_t* device) {
 }
 
 
-/**
- * @brief Copies a rectangle of the framebuffer into the scanout resource and publishes it.
- *
- * @param device The adapter to flush.
- * @param x The left edge of the damaged rectangle.
- * @param y The top edge of the damaged rectangle.
- * @param width The width of the damaged rectangle.
- * @param height The height of the damaged rectangle.
- */
-
 static void virtgpu_flush(device_t* device, uint32_t x, uint32_t y, uint32_t width, uint32_t height) {
 
     DEBUG_ASSERT(device);
@@ -440,13 +403,6 @@ static void virtgpu_flush(device_t* device, uint32_t x, uint32_t y, uint32_t wid
 }
 
 
-/**
- * @brief Waits for the completion fence of the frame, transferring the whole screen for a caller that pushed nothing.
- *
- * @param device The adapter to wait on.
- * @return 0 on success, or -1 with errno ESTALE once after the display mode changed.
- */
-
 static int virtgpu_wait_vsync(device_t* device) {
 
     DEBUG_ASSERT(device);
@@ -466,13 +422,6 @@ static int virtgpu_wait_vsync(device_t* device) {
 }
 
 
-
-/**
- * @brief Creates the 64x64 cursor resource on first use, leaving a smaller image transparent around its origin.
- *
- * @param gpu The adapter to create it on.
- * @return 0 on success, or a negative errno.
- */
 
 static int virtgpu_cursor_create(struct virtgpu* gpu) {
 
@@ -565,15 +514,6 @@ static int virtgpu_cursor_set(device_t* device, const struct fb_hwcursor* cursor
 }
 
 
-/**
- * @brief Moves the cursor plane, with one short command on a queue of its own.
- *
- * @param device The adapter to command.
- * @param x The pointer's position on the scanout.
- * @param y The pointer's position on the scanout.
- * @return 0 on success, or a negative errno.
- */
-
 static int virtgpu_cursor_move(device_t* device, int32_t x, int32_t y) {
 
     DEBUG_ASSERT(device);
@@ -594,15 +534,6 @@ static int virtgpu_cursor_move(device_t* device, int32_t x, int32_t y) {
 }
 
 
-
-/**
- * @brief Asks the device for the features this driver implements, and nothing else.
- *
- * @param driver The driver negotiating.
- * @param features In/out. The word the device offers, replaced by what is wanted from it.
- * @param index Which 32-bit word of the feature set this is.
- * @return 0 on success, or a negative errno.
- */
 
 static int setup_features(struct virtio_driver* driver, uint32_t* features, size_t index) {
 

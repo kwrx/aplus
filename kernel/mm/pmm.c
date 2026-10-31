@@ -72,9 +72,6 @@ static uint64_t pml1_first_preallocated_bitmaps[PML1_MAX_ENTRIES * PML1_PREALLOC
  */
 static uintptr_t pmm_max_memory = 0;
 
-/**
- * @brief Number of pages the memory map reports as usable RAM.
- */
 static size_t pmm_usable_pages = 0;
 
 
@@ -230,16 +227,6 @@ static bool pmm_release_range_locked(uintptr_t start, uintptr_t end, bool strict
 }
 
 
-/**
- * @brief Finds a free page in a region, reading the bitmap a word at a time.
- *
- * The region's hint says where the last search left off, so a region that is filling up is
- * not re-read from its start for every page taken out of it.
- *
- * @param pml2_index The region to look in.
- * @param capacity How many pages the region manages.
- * @return The index of a free page within the region, or SIZE_MAX when it has none.
- */
 static inline size_t pmm_region_find_free_locked(size_t pml2_index, size_t capacity) {
 
     const uint64_t* pml1_bitmap = (const uint64_t*)pml2_bitmap[pml2_index];
@@ -262,11 +249,6 @@ static inline size_t pmm_region_find_free_locked(size_t pml2_index, size_t capac
 }
 
 
-/**
- * @brief Takes a single page, which is what nearly every caller asks for.
- *
- * @return The physical address of the page, or PMM_INVALID_ADDRESS when there is none free.
- */
 static uintptr_t pmm_scan_block_locked(void) {
 
     for (size_t i = 0; i < PML2_MAX_ENTRIES; i++) {
@@ -295,16 +277,6 @@ static uintptr_t pmm_scan_block_locked(void) {
 }
 
 
-/**
- * @brief Takes a run of pages, skipping over whole words of the bitmap that are already full.
- *
- * A run may span regions, so the candidate is carried across the outer loop rather than
- * restarted at every boundary.
- *
- * @param blkno Number of pages the run must be long.
- * @param align Alignment the run has to start on.
- * @return The physical address of the first page, or PMM_INVALID_ADDRESS.
- */
 static uintptr_t pmm_scan_run_locked(size_t blkno, uintptr_t align) {
 
     uintptr_t candidate = PMM_INVALID_ADDRESS;
@@ -362,13 +334,6 @@ static uintptr_t pmm_scan_run_locked(size_t blkno, uintptr_t align) {
 }
 
 
-/**
- * @brief Finds a run of free pages and marks it used.
- *
- * @param blkno Number of pages to take.
- * @param align Alignment the run has to start on.
- * @return The physical address of the first page, or PMM_INVALID_ADDRESS.
- */
 static uintptr_t pmm_alloc_blocks_locked(size_t blkno, uintptr_t align) {
 
     if (!blkno || blkno > SIZE_MAX / PML1_PAGESIZE || !align || (align & (PML1_PAGESIZE - 1)) || (align & (align - 1)))
@@ -429,11 +394,6 @@ static void pmm_apply_memory_map(bool available, uintptr_t limit) {
 }
 
 
-/**
- * @brief Counts the free pages across every managed region.
- *
- * @return The number of free pages.
- */
 static size_t pmm_free_pages_locked(void) {
 
     size_t free = 0;

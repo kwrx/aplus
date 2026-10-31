@@ -45,7 +45,6 @@ MODULE_LICENSE("GPL");
 #define XHCI_PROG_IF         0x30
 
 
-/** @brief An xHCI controller found on PCI, with its register BAR mapped. */
 struct xhci_pci {
     pcidev_t device;
     uintptr_t mmio;
@@ -57,10 +56,6 @@ static size_t num_controllers = 0;
 
 
 
-/**
- * @brief Brings a controller up on the USB thread.
- * @param arg The controller's struct xhci_pci.
- */
 static void xhci_start(void* arg) {
 
     struct xhci_pci* xp = arg;
@@ -70,13 +65,6 @@ static void xhci_start(void* arg) {
 }
 
 
-/**
- * @brief Claims every xHCI controller pci_scan() reports.
- * @param device The PCI address.
- * @param vid The vendor id.
- * @param did The device id.
- * @param arg Unused.
- */
 static void xhci_pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
     if (num_controllers >= XHCI_MAX_CONTROLLERS)

@@ -43,21 +43,9 @@
 #include <aplus/network.h>
 
 
-/**
- * @brief The file status flags F_SETFL may change; the access mode and the creation flags stay as opened.
- */
 #define FCNTL_SETFL_MASK (O_APPEND | O_ASYNC | O_DIRECT | O_NOATIME | O_NONBLOCK)
 
 
-/**
- * @brief Turns the range of a struct flock into the first and last byte it covers.
- *
- * @param file The open file, for SEEK_CUR and SEEK_END.
- * @param fl The lock request.
- * @param start Receives the first byte.
- * @param end Receives the last byte, VFS_LOCK_EOF when it extends to the end of the file and beyond.
- * @return 0, or -EINVAL or -EOVERFLOW.
- */
 static long __fcntl_lock_range(struct file* file, const struct flock* fl, off_t* start, off_t* end) {
 
     off_t base = 0;
@@ -122,14 +110,6 @@ static long __fcntl_lock_range(struct file* file, const struct flock* fl, off_t*
 }
 
 
-/**
- * @brief Tests, takes or drops a record lock on the file behind a descriptor: F_GETLK, F_SETLK, F_SETLKW and their OFD variants.
- *
- * @param fd The descriptor.
- * @param cmd The command.
- * @param user The struct flock, in user memory.
- * @return 0, or a negative errno; -EINTR with the syscall marked for restart while F_SETLKW waits.
- */
 static long __fcntl_lock(unsigned int fd, unsigned int cmd, struct flock* user) {
 
     const bool ofd  = cmd == F_OFD_GETLK || cmd == F_OFD_SETLK || cmd == F_OFD_SETLKW;

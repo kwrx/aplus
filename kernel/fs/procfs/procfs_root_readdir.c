@@ -40,9 +40,6 @@
 #include "procfs.h"
 
 
-/**
- * @brief The contents of /proc other than the per-pid directories, driving both finddir() and readdir().
- */
 const procfs_root_entry_t procfs_root_table[] = {
     {"self",        S_IFLNK | 0777, 1,  DT_LNK},
     {"meminfo",     S_IFREG | 0444, 2,  DT_REG},
@@ -60,15 +57,6 @@ const procfs_root_entry_t procfs_root_table[] = {
 const size_t procfs_root_entries = sizeof(procfs_root_table) / sizeof(procfs_root_table[0]);
 
 
-/**
- * @brief Lists /proc, the fixed entries first and the pids after them.
- *
- * @param inode The /proc root inode.
- * @param e The array of dirents to fill in.
- * @param pos The ordinal of the first entry to report.
- * @param count The number of entries the caller's buffer holds.
- * @return The number of entries written, 0 past the end of the listing, or -1 with errno set.
- */
 ssize_t procfs_root_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) {
 
     DEBUG_ASSERT(inode);

@@ -75,9 +75,6 @@ typedef struct {
 
 static shm_segment_t shm_segments[SHM_SEGMENT_MAX];
 
-/**
- * @brief Bumped every time a slot is handed out, and folded into the id so that an id outlives its segment.
- */
 static uint32_t shm_slot_sequence[SHM_SEGMENT_MAX];
 
 static size_t shm_total;
@@ -100,13 +97,6 @@ static shm_segment_t* shm_lookup_locked(int id) {
 }
 
 
-/**
- * @brief The System V access check, matching the segment's mode bits for the caller's class.
- *
- * @param seg The segment to test.
- * @param want The access wanted, in owner terms (S_IRUSR, S_IWUSR).
- * @return true if the caller may have that access.
- */
 static bool shm_permitted(const shm_segment_t* seg, mode_t want) {
 
     DEBUG_ASSERT(current_task);
@@ -129,22 +119,11 @@ static bool shm_permitted(const shm_segment_t* seg, mode_t want) {
 }
 
 
-/**
- * @brief Folds shmget(2)'s three permission classes onto the owner bits shm_permitted() matches.
- *
- * @param flags The flags passed to shmget(2).
- * @return The requested access, in owner terms.
- */
 static inline mode_t shm_requested_mode(int flags) {
     return (mode_t)(((((unsigned)flags >> 6) | ((unsigned)flags >> 3) | (unsigned)flags) & 07u) << 6);
 }
 
 
-/**
- * @brief Releases a frame array, tolerating the NULL that a call releasing nothing hands over.
- *
- * @param frames The frame array, or NULL.
- */
 static inline void shm_free_frames(uintptr_t* frames) {
 
     if (frames)
@@ -152,12 +131,6 @@ static inline void shm_free_frames(uintptr_t* frames) {
 }
 
 
-/**
- * @brief Hands a segment's frames back and frees its slot, with the table lock held.
- *
- * @param seg The segment to destroy.
- * @return The frame array, for the caller to free outside the lock.
- */
 static uintptr_t* shm_destroy_locked(shm_segment_t* seg) {
 
     DEBUG_ASSERT(seg->attaches == 0);
@@ -180,12 +153,6 @@ static uintptr_t* shm_destroy_locked(shm_segment_t* seg) {
 }
 
 
-/**
- * @brief Drops one attachment to a segment, with the table lock held.
- *
- * @param id The segment id.
- * @return The frame array when that was the last attachment to a removed segment, otherwise NULL.
- */
 static uintptr_t* shm_put_locked(int id) {
 
     shm_segment_t* seg = shm_lookup_locked(id);
@@ -205,14 +172,6 @@ static uintptr_t* shm_put_locked(int id) {
 }
 
 
-/**
- * @brief Looks a segment up by key, or creates one: the shmget(2) entry point.
- *
- * @param key The key to look up, or IPC_PRIVATE.
- * @param size The smallest acceptable size, in bytes.
- * @param flags IPC_CREAT, IPC_EXCL and the nine permission bits.
- * @return The segment id, or a negative errno.
- */
 long shm_get(key_t key, size_t size, int flags) {
 
     DEBUG_ASSERT(current_task);
@@ -372,14 +331,6 @@ long shm_get(key_t key, size_t size, int flags) {
 }
 
 
-/**
- * @brief Maps a segment into the calling address space: the shmat(2) entry point.
- *
- * @param id The segment id.
- * @param addr Must be zero; the kernel picks the address.
- * @param flags SHM_RDONLY; SHM_RND and SHM_REMAP are refused.
- * @return The address the segment was mapped at, or a negative errno.
- */
 long shm_attach(int id, uintptr_t addr, int flags) {
 
     DEBUG_ASSERT(current_task);
@@ -523,12 +474,6 @@ long shm_attach(int id, uintptr_t addr, int flags) {
 }
 
 
-/**
- * @brief Unmaps an attachment: the shmdt(2) entry point.
- *
- * @param addr The address the segment was mapped at.
- * @return 0 on success, or a negative errno.
- */
 long shm_detach(uintptr_t addr) {
 
     DEBUG_ASSERT(current_task);
@@ -582,11 +527,6 @@ long shm_detach(uintptr_t addr) {
 }
 
 
-/**
- * @brief Drops one attachment to a segment, freeing a removed segment when it was the last.
- *
- * @param id The segment id.
- */
 void shm_release(int id) {
 
     uintptr_t* stale = NULL;
@@ -599,14 +539,6 @@ void shm_release(int id) {
 }
 
 
-/**
- * @brief Queries or changes a segment: the shmctl(2) entry point, for IPC_STAT, IPC_SET and IPC_RMID.
- *
- * @param id The segment id.
- * @param cmd IPC_STAT, IPC_SET or IPC_RMID.
- * @param buf The segment description read or written, for IPC_STAT and IPC_SET.
- * @return 0 on success, or a negative errno.
- */
 long shm_control(int id, int cmd, struct shmid_ds* buf) {
 
     DEBUG_ASSERT(current_task);
@@ -734,12 +666,6 @@ long shm_control(int id, int cmd, struct shmid_ds* buf) {
 }
 
 
-/**
- * @brief Carries the attachments of one address space over to a copy of it.
- *
- * @param parent The address space being cloned.
- * @param dest The address space receiving the attachments.
- */
 void shm_address_space_clone(vmm_address_space_t* parent, vmm_address_space_t* dest) {
 
     scoped_lock(&shm_lock) {

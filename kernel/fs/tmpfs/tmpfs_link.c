@@ -40,14 +40,6 @@
 
 
 
-/**
- * @brief Adds a new name in a tmpfs directory for an existing regular file or symbolic link.
- *
- * @param inode The directory.
- * @param target The inode the new name refers to.
- * @param name The new name.
- * @return 0 on success, or -1 with errno set.
- */
 int tmpfs_link(inode_t* inode, inode_t* target, const char* name) {
 
     DEBUG_ASSERT(inode);

@@ -40,15 +40,6 @@
 #include "procfs.h"
 
 
-/**
- * @brief Generates /proc/stat, the system-wide counters derived from the per-cpu uptimes.
- *
- * @param inode The /proc/stat inode.
- * @param buf Receives the generated contents.
- * @param size Receives the length of the contents.
- * @param arg Unused.
- * @return 0 on success.
- */
 static int procfs_service_stat_fetch(inode_t* inode, char** buf, size_t* size, void* arg) {
 
     (void)arg;
@@ -152,15 +143,6 @@ inode_t* procfs_service_cpuinfo_inode(inode_t* parent) {
 }
 
 
-/**
- * @brief Generates /proc/loadavg, which this kernel reports as zero.
- *
- * @param inode The /proc/loadavg inode.
- * @param buf Receives the generated contents.
- * @param size Receives the length of the contents.
- * @param arg Unused.
- * @return 0 on success.
- */
 static int procfs_service_loadavg_fetch(inode_t* inode, char** buf, size_t* size, void* arg) {
 
     (void)arg;
@@ -195,15 +177,6 @@ inode_t* procfs_service_loadavg_inode(inode_t* parent) {
 }
 
 
-/**
- * @brief Generates /proc/self, a symlink to the calling task's own directory.
- *
- * @param inode The /proc/self inode.
- * @param buf Receives the link target.
- * @param size Receives the length of the target.
- * @param arg Unused.
- * @return 0 on success.
- */
 static int procfs_service_self_fetch(inode_t* inode, char** buf, size_t* size, void* arg) {
 
     (void)arg;
@@ -236,15 +209,6 @@ inode_t* procfs_service_self_inode(inode_t* parent) {
 }
 
 
-/**
- * @brief Generates /proc/mounts, a symlink to the calling task's own mount table.
- *
- * @param inode The /proc/mounts inode.
- * @param buf Receives the link target.
- * @param size Receives the length of the target.
- * @param arg Unused.
- * @return 0 on success.
- */
 static int procfs_service_mounts_fetch(inode_t* inode, char** buf, size_t* size, void* arg) {
 
     (void)arg;
@@ -264,12 +228,6 @@ static int procfs_service_mounts_fetch(inode_t* inode, char** buf, size_t* size,
     return 0;
 }
 
-/**
- * @brief Returns the /proc/mounts inode, creating it on first use.
- *
- * @param parent The /proc root inode.
- * @return The /proc/mounts inode.
- */
 inode_t* procfs_service_mounts_inode(inode_t* parent) {
 
     static inode_t* inode = NULL;

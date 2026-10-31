@@ -149,15 +149,6 @@ static ssize_t virtrandom_write(device_t* device, const void* buf, size_t size) 
     return -ENOSPC;
 }
 
-/**
- * @brief Reads entropy from the device, cut to what the receive window holds.
- *
- * @param device The device to read from.
- * @param buf The buffer to fill.
- * @param size The number of bytes asked for.
- * @return The number of bytes read, or a negative errno.
- */
-
 static ssize_t virtrandom_read(device_t* device, void* buf, size_t size) {
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->userdata);

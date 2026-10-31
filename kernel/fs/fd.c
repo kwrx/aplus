@@ -37,9 +37,6 @@
 #include <aplus/vfs.h>
 
 
-/**
- * @brief The open() flags an open file keeps: its access mode and its status flags.
- */
 #define FILE_STATUS_FLAGS (O_ACCMODE | O_APPEND | O_ASYNC | O_DIRECT | O_DSYNC | O_NOATIME | O_NONBLOCK | O_SYNC)
 
 
@@ -59,14 +56,6 @@ void fd_init(void) {
 }
 
 
-/**
- * @brief Allocates an open file for an inode, taking a reference to the inode.
- *
- * @param inode The inode.
- * @param position The initial position.
- * @param flags The open() flags, of which the access mode and status flags are kept.
- * @return The file, holding one reference, or NULL with errno ENFILE.
- */
 struct file* fd_append(inode_t* inode, off_t position, int flags) {
 
     DEBUG_ASSERT(filetable);
@@ -105,12 +94,6 @@ struct file* fd_append(inode_t* inode, off_t position, int flags) {
 }
 
 
-/**
- * @brief Drops a reference to an open file, releasing its slot, closing it and dropping its inode on the last one.
- *
- * @param fd The file.
- * @param close Whether the last reference also closes the inode.
- */
 void fd_remove(struct file* fd, bool close) {
 
     DEBUG_ASSERT(fd);
@@ -154,11 +137,6 @@ void fd_remove(struct file* fd, bool close) {
 }
 
 
-/**
- * @brief Takes another reference to an open file the caller already holds one to.
- *
- * @param file The file.
- */
 void fd_ref(struct file* file) {
 
     DEBUG_ASSERT(file);
@@ -169,13 +147,6 @@ void fd_ref(struct file* file) {
 }
 
 
-/**
- * @brief Takes a reference to the open file behind one of the caller's descriptors, leaving the table unlocked.
- *
- * @param fd The descriptor.
- * @param flags Receives the file's access mode and status flags, or NULL.
- * @return The file, or NULL if @p fd is not open.
- */
 struct file* fd_get(unsigned int fd, int* flags) {
 
     DEBUG_ASSERT(current_task);
@@ -199,23 +170,12 @@ struct file* fd_get(unsigned int fd, int* flags) {
 }
 
 
-/**
- * @brief Drops a reference taken with fd_get().
- *
- * @param file The file.
- */
 void fd_put(struct file* file) {
 
     fd_remove(file, true);
 }
 
 
-/**
- * @brief Reads the access mode and status flags of an open file.
- *
- * @param file The file.
- * @return The flags.
- */
 int fd_flags(struct file* file) {
 
     DEBUG_ASSERT(file);
@@ -231,13 +191,6 @@ int fd_flags(struct file* file) {
 }
 
 
-/**
- * @brief Changes some of the status flags of an open file, for every descriptor that refers to it.
- *
- * @param file The file.
- * @param mask The flags to change.
- * @param flags Their new values.
- */
 void fd_set_flags(struct file* file, int mask, int flags) {
 
     DEBUG_ASSERT(file);
@@ -248,11 +201,6 @@ void fd_set_flags(struct file* file, int mask, int flags) {
 }
 
 
-/**
- * @brief Gives the first descriptor number the caller may not open, from its RLIMIT_NOFILE and the table size.
- *
- * @return The limit, at most CONFIG_OPEN_MAX.
- */
 unsigned int fd_limit(void) {
 
     DEBUG_ASSERT(current_task);
@@ -263,14 +211,6 @@ unsigned int fd_limit(void) {
 }
 
 
-/**
- * @brief Duplicates one of the caller's descriptors into the lowest free slot at or above a minimum.
- *
- * @param fd The descriptor to duplicate.
- * @param min The lowest slot the copy may take.
- * @param cloexec Whether the copy is closed on exec.
- * @return The new descriptor, or -EBADF, -EINVAL or -EMFILE.
- */
 long fd_dup(unsigned int fd, unsigned int min, bool cloexec) {
 
     DEBUG_ASSERT(current_task);
@@ -313,14 +253,6 @@ long fd_dup(unsigned int fd, unsigned int min, bool cloexec) {
 }
 
 
-/**
- * @brief Duplicates one of the caller's descriptors into a given slot, closing whatever the slot held.
- *
- * @param fd The descriptor to duplicate.
- * @param newfd The slot to put the copy in, which must differ from @p fd.
- * @param cloexec Whether the copy is closed on exec.
- * @return @p newfd, or -EBADF.
- */
 long fd_dup_to(unsigned int fd, unsigned int newfd, bool cloexec) {
 
     DEBUG_ASSERT(current_task);
@@ -364,13 +296,6 @@ long fd_dup_to(unsigned int fd, unsigned int newfd, bool cloexec) {
 }
 
 
-/**
- * @brief Flushes the file behind one of the caller's descriptors to its storage.
- *
- * @param fd The descriptor.
- * @param datasync Whether only the data, and the metadata needed to read it, must be flushed.
- * @return 0, or -EBADF, -EINVAL for a file that cannot be flushed, or the error of the filesystem.
- */
 long fd_sync(unsigned int fd, int datasync) {
 
     int flags         = 0;
@@ -407,11 +332,6 @@ long fd_sync(unsigned int fd, int datasync) {
 }
 
 
-/**
- * @brief Closes every descriptor of a table that nothing references any more.
- *
- * @param fds The table.
- */
 void fd_close_all(struct fd* fds) {
 
     DEBUG_ASSERT(fds);
@@ -432,11 +352,6 @@ void fd_close_all(struct fd* fds) {
 }
 
 
-/**
- * @brief Takes a reference to every open file in a table that has just been copied.
- *
- * @param fds The copy.
- */
 void fd_ref_all(struct fd* fds) {
 
     DEBUG_ASSERT(fds);
@@ -449,14 +364,6 @@ void fd_ref_all(struct fd* fds) {
 }
 
 
-/**
- * @brief Makes one attempt at reading from an open file at its position, advancing it, without waiting.
- *
- * @param file The file.
- * @param buf The buffer, in memory the caller has made accessible with uio_lock().
- * @param size The number of bytes to read.
- * @return The number of bytes read, or a negative errno, -EAGAIN when nothing is ready yet.
- */
 ssize_t fd_read(struct file* file, void* buf, size_t size) {
 
     DEBUG_ASSERT(file);
@@ -474,14 +381,6 @@ ssize_t fd_read(struct file* file, void* buf, size_t size) {
 }
 
 
-/**
- * @brief Makes one attempt at writing to an open file at its position, or at the end of a regular file under O_APPEND, advancing it, without waiting.
- *
- * @param file The file.
- * @param buf The data, in memory the caller has made accessible with uio_lock().
- * @param size The number of bytes to write.
- * @return The number of bytes written, or a negative errno, -EAGAIN when there is no room yet.
- */
 ssize_t fd_write(struct file* file, const void* buf, size_t size) {
 
     DEBUG_ASSERT(file);
@@ -507,14 +406,6 @@ ssize_t fd_write(struct file* file, const void* buf, size_t size) {
 }
 
 
-/**
- * @brief Writes a vector to an open file as one write, at its position or at the end of a regular file under O_APPEND, advancing it.
- *
- * @param file The file.
- * @param iov The buffers, none of them empty, in memory the caller has made accessible with uio_lock().
- * @param count How many buffers there are.
- * @return The number of bytes written, or a negative errno if none were.
- */
 ssize_t fd_writev(struct file* file, const struct iovec* iov, size_t count) {
 
     DEBUG_ASSERT(file);

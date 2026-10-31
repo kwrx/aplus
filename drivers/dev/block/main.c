@@ -76,13 +76,6 @@ int block_getattr(device_t* device, struct stat* st) {
 }
 
 
-/**
- * @brief Copies the part of a write that falls on the cached sector into the cache, so it stays valid.
- * @param device The block device.
- * @param buf The data being written.
- * @param offset The absolute byte offset of the write on the disk.
- * @param size The number of bytes.
- */
 static void block_cache_refresh(device_t* device, const void* buf, off_t offset, size_t size) {
 
     if (!device->blk.cache.c_cached)

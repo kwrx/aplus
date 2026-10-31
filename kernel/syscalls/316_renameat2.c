@@ -43,12 +43,6 @@
 #endif
 
 
-/**
- * @brief Resolves a directory descriptor, or AT_FDCWD, to the inode relative paths start from.
- *
- * @param dfd The descriptor.
- * @return The inode, referenced, or NULL with errno set.
- */
 static inode_t* renameat2_base(int dfd) {
 
     inode_t* base = NULL;
@@ -75,13 +69,6 @@ static inode_t* renameat2_base(int dfd) {
 }
 
 
-/**
- * @brief Splits a path in place into the directory holding its last entry and that entry's name.
- *
- * @param path The path, with trailing slashes dropped and cut at its last slash.
- * @param dir Receives the directory: the start of path, "/" or ".".
- * @return The entry's name, or NULL with errno set when the path names no entry.
- */
 static char* renameat2_split(char* path, const char** dir) {
 
     size_t len = strlen(path);
@@ -122,13 +109,6 @@ static char* renameat2_split(char* path, const char** dir) {
 }
 
 
-/**
- * @brief Resolves the directory a renamed entry is in, relative to a descriptor.
- *
- * @param dfd The descriptor, or AT_FDCWD.
- * @param path The directory's path.
- * @return The directory, referenced, or NULL with errno set.
- */
 static inode_t* renameat2_dir(int dfd, const char* path) {
 
     inode_t* base __scoped(vfs_inode_cleanup) = renameat2_base(dfd);
@@ -156,12 +136,6 @@ static inode_t* renameat2_dir(int dfd, const char* path) {
 }
 
 
-/**
- * @brief Reports whether the caller may add and remove entries in a directory.
- *
- * @param dir The directory.
- * @return true for root, and for whoever the directory's mode lets write it.
- */
 static bool renameat2_writable(inode_t* dir) {
 
     if (current_task->fsuid == 0)
@@ -182,13 +156,6 @@ static bool renameat2_writable(inode_t* dir) {
 }
 
 
-/**
- * @brief Reports whether a directory is an inode or lies anywhere below it.
- *
- * @param dir The directory.
- * @param inode The inode it may descend from.
- * @return true when walking up from dir reaches inode.
- */
 static bool renameat2_beneath(inode_t* dir, inode_t* inode) {
 
     for (inode_t* p = dir; p; p = p->parent) {

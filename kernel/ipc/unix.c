@@ -38,13 +38,6 @@
 #include <aplus/vfs.h>
 
 
-/**
- * @brief Local sockets are ordinary VFS descriptors backed by an inode, not a numbering space of their own.
- *
- * dup(), fork() inheritance, close-on-exec, poll() and the last-close teardown all work unchanged.
- */
-
-
 #define SOCKFS_FSID      0xDEADB0CE
 #define SOCKFS_FIRST_INO 0xFFFFFFFFE000000
 
@@ -75,13 +68,6 @@ static void __unix_wake(struct unix_sock* sock) {
     });
 }
 
-
-/**
- * @brief Tells whether a socket's peer is gone, so that nothing more will ever arrive.
- *
- * @param sock The endpoint to test.
- * @return true if the peer has been released or closed.
- */
 
 static inline bool __unix_peer_gone(struct unix_sock* sock) {
 
@@ -129,11 +115,6 @@ static void __unix_put(struct unix_sock* sock) {
 }
 
 
-/**
- * @brief Records the calling task as the one holding this end, which SO_PEERCRED reports to the other end.
- *
- * @param sock The endpoint.
- */
 static void __unix_cred_set(struct unix_sock* sock) {
 
     sock->cred.pid = (int32_t)current_task->pid;
@@ -415,14 +396,6 @@ static inode_t* __sockfs_inode(struct unix_sock* sock) {
 }
 
 
-/**
- * @brief Installs an endpoint into the caller's descriptor table.
- *
- * @param sock The endpoint to install.
- * @param flags O_NONBLOCK and O_CLOEXEC as requested by the caller.
- * @return The new descriptor, or a negative errno with everything it allocated released again.
- */
-
 static long __unix_install(struct unix_sock* sock, int flags) {
 
     inode_t* inode = __sockfs_inode(sock);
@@ -498,13 +471,6 @@ void unix_sock_put(struct unix_sock* sock) {
 }
 
 
-/**
- * @brief Copies the name the socket is bound to, or an empty string when it is not bound.
- *
- * @param sock The socket, or NULL.
- * @param out Receives the name.
- * @param size The size of @p out.
- */
 static void __unix_bound_name(struct unix_sock* sock, char* out, size_t size) {
 
     out[0] = '\0';
@@ -521,16 +487,6 @@ static void __unix_bound_name(struct unix_sock* sock, char* out, size_t size) {
     }
 }
 
-
-/**
- * @brief Copies a sockaddr_un in from userspace and hands back the path it names.
- *
- * @param addr The caller's address, in user memory.
- * @param len The length of the caller's address.
- * @param out Receives the path.
- * @param outsz The size of @p out.
- * @return 0 on success, or a negative errno.
- */
 
 static long __unix_addr(const void* addr, uint32_t len, char* out, size_t outsz) {
 
@@ -601,12 +557,6 @@ static long __unix_addr_out(const char* path, void* addr, uint32_t* len) {
 }
 
 
-/**
- * @brief Splits the flags off a socket type into the O_NONBLOCK and O_CLOEXEC they ask for.
- *
- * @param type The type, which loses its flags.
- * @return The descriptor flags.
- */
 static int __unix_type_flags(int* type) {
 
     int flags = 0;
