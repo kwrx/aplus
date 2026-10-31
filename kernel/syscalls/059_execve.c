@@ -345,49 +345,50 @@ static void __execve_rollback(vmm_address_space_t* old) {
 
 static long __execve_open(const char* path, inode_t** inode) {
 
-    struct stat st = {0};
-    long fd;
+    inode_t* cwd __scoped(vfs_inode_cleanup) = NULL;
 
-    scoped_uio_kernel() {
+    shared_ptr_access(current_task->fs, fs, {
+        if (unlikely(!fs->cwd))
+            return -ENOENT;
 
-        long e = sys_newstat(path, &st);
-
-        if (unlikely(e < 0))
-            return e;
-
-        if (unlikely(!S_ISREG(st.st_mode)))
-            return -ENOEXEC;
-
-        if (unlikely(st.st_size == 0))
-            return -ENOEXEC;
-
-        if (unlikely(sys_access(path, X_OK) < 0))
-            return -EACCES;
-
-        if ((fd = do_openat(AT_FDCWD, path, O_RDONLY, 0, false)) < 0)
-            return fd;
-    }
-
-
-    inode_t* file = NULL;
-
-    shared_ptr_access(current_task->fd, fds, {
-        if (fds->descriptors[fd].ref && fds->descriptors[fd].ref->inode)
-            file = vfs_inode_get(fds->descriptors[fd].ref->inode);
+        cwd = vfs_inode_get(fs->cwd);
     });
 
-    if ((fd = sys_close(fd)) < 0) {
 
-        if (file)
-            vfs_inode_put(file);
-
-        return fd;
-    }
+    inode_t* file __scoped(vfs_inode_cleanup) = path_lookup(cwd, path, 0, 0);
 
     if (unlikely(!file))
-        return -EBADF;
+        return -errno;
+
+
+    struct stat st = {0};
+
+    if (vfs_getattr(file, &st) < 0)
+        return -errno;
+
+    if (unlikely(!S_ISREG(st.st_mode)))
+        return -ENOEXEC;
+
+    if (unlikely(st.st_size == 0))
+        return -ENOEXEC;
+
+
+    mode_t exec = S_IXOTH;
+
+    if (st.st_uid == current_task->uid)
+        exec = S_IXUSR;
+    else if (st.st_gid == current_task->gid)
+        exec = S_IXGRP;
+
+    if (unlikely(!(st.st_mode & exec)))
+        return -EACCES;
+
+
+    if (*inode)
+        vfs_inode_put(*inode);
 
     *inode = file;
+    file   = NULL;
 
     return 0;
 }

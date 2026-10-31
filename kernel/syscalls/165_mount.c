@@ -87,30 +87,29 @@ SYSCALL(
 
 
 
-        inode_t* s = NULL;
-        inode_t* d = NULL;
+        inode_t* cwd __scoped(vfs_inode_cleanup) = NULL;
 
-        int fd;
-        int e;
+        shared_ptr_access(current_task->fs, fs, {
+            if (unlikely(!fs->cwd))
+                return -ENOENT;
 
-        scoped_uio_kernel() {
-            fd = do_openat(AT_FDCWD, __safe_dirname, O_RDONLY | O_DIRECTORY, 0, false);
-        }
-
-        if (fd < 0)
-            return fd;
-
-
-        shared_ptr_access(current_task->fd, fds, {
-            DEBUG_ASSERT(fds->descriptors[fd].ref);
-            DEBUG_ASSERT(fds->descriptors[fd].ref->inode);
-
-            d = fds->descriptors[fd].ref->inode;
+            cwd = vfs_inode_get(fs->cwd);
         });
 
 
-        if ((e = sys_close(fd)) < 0)
-            return e;
+        inode_t* d __scoped(vfs_inode_cleanup) = path_lookup(cwd, __safe_dirname, 0, 0);
+
+        if (unlikely(!d))
+            return -errno;
+
+
+        struct stat st = {0};
+
+        if (vfs_getattr(d, &st) < 0)
+            return -errno;
+
+        if (unlikely(!S_ISDIR(st.st_mode)))
+            return -ENOTDIR;
 
 
 
@@ -126,24 +125,11 @@ SYSCALL(
             return -EINVAL;
 
 
-        if (needs_dev) {
+        inode_t* s __scoped(vfs_inode_cleanup) = NULL;
 
-            if ((fd = do_openat(AT_FDCWD, dev_name, O_RDONLY, 0, false)) < 0)
-                return fd;
+        if (needs_dev && (s = path_lookup(cwd, __safe_devname, 0, 0)) == NULL)
+            return -errno;
 
-            shared_ptr_access(current_task->fd, fds, {
-                DEBUG_ASSERT(fds->descriptors[fd].ref);
-                DEBUG_ASSERT(fds->descriptors[fd].ref->inode);
-
-                s = fds->descriptors[fd].ref->inode;
-            });
-
-            if ((e = sys_close(fd)) < 0)
-                return e;
-        }
-
-
-        DEBUG_ASSERT(d);
 
         if (vfs_mount(s, d, dev_name ? __safe_devname : NULL, __safe_type, flags, (const char*)data) < 0)
             return -errno;
