@@ -61,7 +61,7 @@ SYSCALL(169, reboot, long sys_reboot(int magic1, int magic2, unsigned int cmd, v
     if (unlikely(magic1 != MAGIC_REBOOT_1 || magic2 != MAGIC_REBOOT_2))
         return -EINVAL;
 
-    if (unlikely(current_task->euid != 0))
+    if (unlikely(current_task->tid != 1 || current_task->euid != 0))
         return -EPERM;
 
     switch (cmd) {
