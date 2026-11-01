@@ -114,8 +114,8 @@ void smp_dnit(void) {
         if ((core->cpu.cores[i].flags & SMP_CPU_FLAGS_ENABLED) == 0)
             continue;
 
-        bool ok;
-        if ((ok = arch_cpu_shutdown(i, false, 1000)) == false) {
+        bool ok = true;
+        if (!arch_cpu_shutdown(i, false, 1000)) {
             ok = arch_cpu_shutdown(i, true, 100);
         }
 
