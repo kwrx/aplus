@@ -157,7 +157,7 @@ void usb_hid_sink_close(struct usb_hid_sink* sink) {
         return;
 
     if (sink->owned)
-        device_unlink(&sink->device);
+        device_shutdown(&sink->device);
     else
         vfs_inode_put(sink->inode);
 

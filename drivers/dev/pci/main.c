@@ -98,5 +98,4 @@ void init(const char* args) {
 
 
 void dnit(void) {
-    pci_sysfs_dnit();
 }

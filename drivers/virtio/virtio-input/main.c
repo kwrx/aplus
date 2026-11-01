@@ -486,7 +486,4 @@ void init(const char* args) {
 }
 
 void dnit(void) {
-
-    for (size_t i = 0; i < num_devices; i++)
-        device_unlink(devices[i]->device);
 }

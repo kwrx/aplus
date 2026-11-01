@@ -171,7 +171,7 @@ typedef struct device {
 __BEGIN_DECLS
 
 void device_mkdev(device_t*, mode_t);
-void device_unlink(device_t*);
+void device_shutdown(device_t*);
 void device_reset(device_t*);
 void device_error(device_t*, const char*);
 

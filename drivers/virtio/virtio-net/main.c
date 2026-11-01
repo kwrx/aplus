@@ -38,6 +38,7 @@
 
 #include <dev/interface.h>
 #include <dev/network.h>
+#include <lwip/netifapi.h>
 #include <dev/pci.h>
 
 #include <dev/virtio/virtio-net.h>
@@ -502,6 +503,7 @@ void init(const char* args) {
 
 void dnit(void) {
 
-    for (size_t i = 0; i < num_devices; i++)
-        device_unlink(&devices[i]->device);
+    for (size_t i = 0; i < num_devices; i++) {
+        netifapi_netif_remove(&devices[i]->device.net.interface);
+    }
 }

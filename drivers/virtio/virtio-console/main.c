@@ -324,9 +324,4 @@ void init(const char* args) {
 }
 
 void dnit(void) {
-
-    if (device.userdata == NULL)
-        return;
-
-    device_unlink(&device);
 }

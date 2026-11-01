@@ -28,6 +28,7 @@
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
 #include <aplus/task.h>
+#include <aplus/module.h>
 #include <aplus/hal.h>
 #include <aplus/smp.h>
 #include <fcntl.h>
@@ -77,6 +78,7 @@ SYSCALL(169, reboot, long sys_reboot(int magic1, int magic2, unsigned int cmd, v
     kprintf("reboot: requested shutdown with cmd(%d)\n", cmd);
 #endif
 
+    module_dnit();
     smp_dnit();
 
     switch (cmd) {

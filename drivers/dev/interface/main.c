@@ -376,10 +376,13 @@ void device_mkdev(device_t* device, mode_t mode) {
 }
 
 
-void device_unlink(device_t* device) {
+void device_shutdown(device_t* device) {
 
     DEBUG_ASSERT(device);
 
+
+    if (device->status == DEVICE_STATUS_UNLOADED)
+        return;
 
     device->status = DEVICE_STATUS_UNLOADING;
 
@@ -387,43 +390,7 @@ void device_unlink(device_t* device) {
         device->dnit(device);
     }
 
-
-    switch (device->type) {
-
-        case DEVICE_TYPE_CHAR:
-
-            char_dnit(device);
-            break;
-
-        case DEVICE_TYPE_BLOCK:
-
-            block_dnit(device);
-            break;
-
-        case DEVICE_TYPE_VIDEO:
-
-            video_dnit(device);
-            break;
-
-        case DEVICE_TYPE_NETWORK:
-
-            break;
-
-        default:
-            kpanicf("device::unlink: failed, unknown device %s type %d\n", device->name, device->type);
-    }
-
     device->status = DEVICE_STATUS_UNLOADED;
-
-
-
-    char buf[CONFIG_MAXNAMLEN] = {0};
-    strlcat(buf, "/dev/", CONFIG_MAXNAMLEN);
-    strlcat(buf, device->name, CONFIG_MAXNAMLEN);
-
-    if (sys_unlink(buf) < 0) {
-        kpanicf("device::unlink: failed to remove device inode\n");
-    }
 
     list_remove(devices, device);
 }
@@ -480,7 +447,7 @@ void init(const char* args) {
 
 void dnit(void) {
 
-    list_each(devices, d) {
-        device_unlink(d);
+    list_each_r(devices, d) {
+        device_shutdown(d);
     }
 }

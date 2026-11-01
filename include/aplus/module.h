@@ -82,6 +82,7 @@ typedef struct {
 __BEGIN_DECLS
 
 void module_init(void);
+void module_dnit(void);
 
 __END_DECLS
 

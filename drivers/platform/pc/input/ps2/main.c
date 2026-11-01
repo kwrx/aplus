@@ -526,11 +526,9 @@ void dnit(void) {
 
     if (__keyboard_present) {
         arch_intr_unmap_irq(1, ARCH_INTR_TYPE_DEFAULT);
-        device_unlink(&keyboard);
     }
 
     if (__mouse_present) {
         arch_intr_unmap_irq(12, ARCH_INTR_TYPE_DEFAULT);
-        device_unlink(&mouse);
     }
 }

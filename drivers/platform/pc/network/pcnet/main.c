@@ -37,6 +37,7 @@
 
 #include <dev/interface.h>
 #include <dev/network.h>
+#include <lwip/netifapi.h>
 #include <dev/pci.h>
 
 #include <arch/x86/cpu.h>
@@ -532,4 +533,8 @@ void init(const char* args) {
 }
 
 void dnit(void) {
+
+    for (size_t i = 0; i < PCNET_MAX_DEVICES && devices[i]; i++) {
+        netifapi_netif_remove(&devices[i]->device.net.interface);
+    }
 }

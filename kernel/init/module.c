@@ -36,6 +36,7 @@
 
 
 list(module_t*, m_queue);
+list(module_t*, r_queue);
 list(symbol_t*, m_symtab);
 
 
@@ -422,6 +423,8 @@ void module_run(module_t* m) {
 
     m->init(m->args);
     m->status = MODULE_STATUS_LOADED;
+
+    list_push(r_queue, m);
 }
 
 
@@ -429,6 +432,7 @@ void module_run(module_t* m) {
 void module_init(void) {
 
     memset(&m_queue, 0, sizeof(m_queue));
+    memset(&r_queue, 0, sizeof(r_queue));
     memset(&m_symtab, 0, sizeof(m_symtab));
 
 
@@ -570,9 +574,15 @@ void module_init(void) {
 
 void module_dnit(void) {
 
-    list_each(m_queue, mod) {
-        if (mod->status == MODULE_STATUS_LOADED) {
-            mod->dnit();
+    list_each_r(r_queue, m) {
+        if (m->status == MODULE_STATUS_LOADED) {
+#if DEBUG_LEVEL_INFO
+    kprintf("module: unloading %s [dnit(%p) args(%p)]\n", m->name, m->dnit, m->args);
+#endif
+            m->dnit();
+            m->status = MODULE_STATUS_READY;
         }
+
+        list_remove(r_queue, m);
     }
 }

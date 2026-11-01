@@ -169,6 +169,4 @@ void init(const char* args) {
 }
 
 void dnit(void) {
-
-    sys_unlink("/dev/ptmx");
 }

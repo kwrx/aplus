@@ -430,6 +430,7 @@ typedef volatile struct hba {
 struct ahci_port {
     struct ahci* ahci;
     long index;
+    device_t* device;
 };
 
 struct ahci {
@@ -1403,7 +1404,7 @@ void init(const char* args) {
             d->blk.read  = sata_read;
             d->blk.write = sata_write;
 
-            ahci->ports[i] = (struct ahci_port){ahci, i};
+            ahci->ports[i] = (struct ahci_port){ahci, i, d};
             d->userdata    = &ahci->ports[i];
 
             device_mkdev(d, 0660);
@@ -1442,7 +1443,7 @@ void init(const char* args) {
             d->blk.read  = satapi_read;
             d->blk.write = NULL;
 
-            ahci->ports[i] = (struct ahci_port){ahci, i};
+            ahci->ports[i] = (struct ahci_port){ahci, i, d};
             d->userdata    = &ahci->ports[i];
 
             device_mkdev(d, 0660);
@@ -1460,6 +1461,12 @@ void dnit(void) {
 
         if (!ahci->deviceid)
             continue;
+
+
+        for (size_t i = 0; i < 32; i++) {
+            if (ahci->ports[i].device)
+                device_shutdown(ahci->ports[i].device);
+        }
 
 
         ahci->hba->ghc &= ~AHCI_HBA_GHC_IE;

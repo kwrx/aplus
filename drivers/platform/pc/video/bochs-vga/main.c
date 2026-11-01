@@ -281,5 +281,4 @@ void init(const char* args) {
 
 
 void dnit(void) {
-    device_unlink(&device);
 }
