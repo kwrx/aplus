@@ -277,7 +277,6 @@ typedef struct task {
     gid_t sgid;
     gid_t fsgid;
 
-    /** @brief The supplementary group IDs set by setgroups(). */
     size_t ngroups;
     gid_t groups[TASK_NGROUPS_MAX];
 

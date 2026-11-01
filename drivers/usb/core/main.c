@@ -284,7 +284,7 @@ int usb_add_controller(usb_controller_start_t start, void* arg) {
     atomic_store(&num_controllers, n + 1);
 
     if (!atomic_exchange(&usb_thread_running, true))
-        arch_task_spawn_kthread("usb", usb_core_thread, USB_CORE_STACK_SIZE, NULL);
+        arch_task_spawn_kthread("usbd", usb_core_thread, USB_CORE_STACK_SIZE, NULL);
 
     return 0;
 }
