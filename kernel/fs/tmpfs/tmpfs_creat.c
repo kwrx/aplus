@@ -44,7 +44,7 @@ inode_t* tmpfs_creat(inode_t* inode, const char* name, mode_t mode) {
 
 
     tmpfs_t* tmpfs = (tmpfs_t*)inode->sb->fsinfo;
-    inode_t* d     = (inode_t*)kcalloc(1, sizeof(inode_t), GFP_KERNEL);
+    inode_t* d     = (inode_t*)kcalloc(1, sizeof(tmpfs_entry_t), GFP_KERNEL);
 
     if (unlikely(!d))
         return errno = ENOMEM, NULL;
@@ -130,6 +130,8 @@ inode_t* tmpfs_creat(inode_t* inode, const char* name, mode_t mode) {
         i->st.st_mode = mode & ~umask;
 
         d->ino = i->st.st_ino;
+
+        ((tmpfs_entry_t*)d)->seq = ++tmpfs->next_seq;
 
         list_push(tmpfs->children, d);
     }

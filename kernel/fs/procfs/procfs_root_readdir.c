@@ -72,7 +72,8 @@ ssize_t procfs_root_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t 
         return errno = EINVAL, -1;
 
 
-    size_t i = 0;
+    size_t i          = 0;
+    const off_t start = pos;
 
 #define __emit(_ino, _type, _name)                          \
     do {                                                    \
@@ -81,7 +82,7 @@ ssize_t procfs_root_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t 
             break;                                          \
                                                             \
         e[i].d_ino  = (_ino);                               \
-        e[i].d_off  = (off_t)(i);                           \
+        e[i].d_off  = start + i + 1;                        \
         e[i].d_type = (_type);                              \
                                                             \
         strncpy(e[i].d_name, (_name), sizeof(e[i].d_name)); \
@@ -123,7 +124,7 @@ ssize_t procfs_root_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t 
             continue;
 
         e[i].d_ino  = PROCFS_INO_PID(ids[j]);
-        e[i].d_off  = (off_t)(i);
+        e[i].d_off  = start + i + 1;
         e[i].d_type = DT_DIR;
 
         snprintf(e[i].d_name, sizeof(e[i].d_name), "%d", ids[j]);

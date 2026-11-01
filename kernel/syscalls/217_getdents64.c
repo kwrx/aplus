@@ -111,7 +111,7 @@ SYSCALL(
                 }
 
 
-                file->position++;
+                file->position = ent.d_off;
 
 
                 uio_w64(&d->d_ino, ent.d_ino);

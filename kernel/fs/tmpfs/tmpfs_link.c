@@ -58,7 +58,7 @@ int tmpfs_link(inode_t* inode, inode_t* target, const char* name) {
 
 
     tmpfs_t* tmpfs = (tmpfs_t*)inode->sb->fsinfo;
-    inode_t* d     = (inode_t*)kcalloc(1, sizeof(inode_t), GFP_KERNEL);
+    inode_t* d     = (inode_t*)kcalloc(1, sizeof(tmpfs_entry_t), GFP_KERNEL);
 
     if (unlikely(!d))
         return errno = ENOMEM, -1;
@@ -111,6 +111,8 @@ int tmpfs_link(inode_t* inode, inode_t* target, const char* name) {
         ti->st.st_nlink++;
         ti->st.st_ctime = arch_timer_gettime();
         ti->inodes++;
+
+        ((tmpfs_entry_t*)d)->seq = ++tmpfs->next_seq;
 
         list_push(tmpfs->children, d);
     }

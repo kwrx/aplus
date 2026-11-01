@@ -77,7 +77,8 @@ ssize_t iso9660_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t coun
     size_t limit    = le32_to_cpu(record->data_length.lsb) + position;
 
 
-    size_t index = 0;
+    size_t index      = 0;
+    const off_t start = pos;
 
 
     do {
@@ -100,7 +101,7 @@ ssize_t iso9660_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t coun
 
 
             e[index].d_ino    = child->st.st_ino;
-            e[index].d_off    = index;
+            e[index].d_off    = start + index + 1;
             e[index].d_reclen = sizeof(struct dirent);
             e[index].d_type   = MODE_2_DIRENT_TYPE(child->st.st_mode);
 

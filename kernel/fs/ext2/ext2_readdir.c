@@ -31,13 +31,14 @@ ssize_t ext2_readdir(inode_t* inode, struct dirent* entries, off_t pos, size_t c
 
     ext2_t* ext2            = inode->sb->fsinfo;
     struct ext2_inode* node = cache_get(&inode->sb->cache, inode->ino);
-    size_t seen             = 0;
     size_t emitted          = 0;
 
     scoped_lock(&ext2->lock) {
-        for (uint32_t block = 0; (uint64_t)block * ext2->blocksize < node->i_size && emitted < count; block++) {
+        for (uint32_t block = pos / ext2->blocksize; (uint64_t)block * ext2->blocksize < node->i_size && emitted < count; block++) {
             if (ext2_utils_read_inode_data(ext2, node, block, 0, ext2->iocache, ext2->blocksize) < 0)
                 return emitted ? (ssize_t)emitted : -1;
+
+            uint64_t base = (uint64_t)block * ext2->blocksize;
 
             for (uint32_t offset = 0; offset < ext2->blocksize && emitted < count;) {
                 struct ext2_dir_entry_2* entry = (struct ext2_dir_entry_2*)((uint8_t*)ext2->iocache + offset);
@@ -45,22 +46,20 @@ ssize_t ext2_readdir(inode_t* inode, struct dirent* entries, off_t pos, size_t c
                 if (unlikely(entry->rec_len < 8 || entry->rec_len > ext2->blocksize - offset || entry->name_len > entry->rec_len - 8))
                     return errno = EIO, emitted ? (ssize_t)emitted : -1;
 
-                if (entry->inode != 0) {
-                    if (seen++ >= (size_t)pos) {
-                        struct dirent* out = &entries[emitted++];
+                if (entry->inode != 0 && base + offset >= (uint64_t)pos) {
+                    struct dirent* out = &entries[emitted++];
 
-                        memset(out, 0, sizeof(*out));
-                        out->d_ino    = entry->inode;
-                        out->d_off    = pos + emitted;
-                        out->d_reclen = sizeof(*out);
-                        out->d_type   = MODE_2_DIRENT_TYPE(ext2_utils_file_type(entry->file_type));
+                    memset(out, 0, sizeof(*out));
+                    out->d_ino    = entry->inode;
+                    out->d_off    = base + offset + entry->rec_len;
+                    out->d_reclen = sizeof(*out);
+                    out->d_type   = MODE_2_DIRENT_TYPE(ext2_utils_file_type(entry->file_type));
 
-                        size_t name_len = entry->name_len;
-                        if (name_len >= sizeof(out->d_name))
-                            name_len = sizeof(out->d_name) - 1;
+                    size_t name_len = entry->name_len;
+                    if (name_len >= sizeof(out->d_name))
+                        name_len = sizeof(out->d_name) - 1;
 
-                        memcpy(out->d_name, entry->name, name_len);
-                    }
+                    memcpy(out->d_name, entry->name, name_len);
                 }
 
                 offset += entry->rec_len;

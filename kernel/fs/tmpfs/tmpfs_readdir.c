@@ -60,72 +60,52 @@ static inode_t** __next_entry(list(inode_t*, children), inode_t* parent, inode_t
 
 static ssize_t __tmpfs_readdir_locked(tmpfs_t* tmpfs, inode_t* inode, struct dirent* e, off_t pos, size_t count, const struct stat* self, const struct stat* parent) {
 
-    inode_t** entry = NULL;
+    size_t i = 0;
 
 
-    if (pos > 1) {
+    if (pos == 0 && i < count) {
 
-        for (off_t i = 1; i < pos; i++) {
+        e[i].d_ino    = inode->ino;
+        e[i].d_off    = 1;
+        e[i].d_reclen = sizeof(struct dirent);
+        e[i].d_type   = MODE_2_DIRENT_TYPE(self->st_mode);
 
-            entry = __next_entry(tmpfs->children, inode, entry);
+        strncpy(e[i].d_name, ".", sizeof(e[i].d_name));
 
-            if (entry == NULL)
-                return 0;
-        }
+        i++;
+    }
+
+    if (pos <= 1 && i < count) {
+
+        e[i].d_ino    = inode->parent->ino;
+        e[i].d_off    = 2;
+        e[i].d_reclen = sizeof(struct dirent);
+        e[i].d_type   = MODE_2_DIRENT_TYPE(parent->st_mode);
+
+        strncpy(e[i].d_name, "..", sizeof(e[i].d_name));
+
+        i++;
     }
 
 
-    off_t i = 0;
+    for (inode_t** entry = __next_entry(tmpfs->children, inode, NULL); entry && i < count; entry = __next_entry(tmpfs->children, inode, entry)) {
 
-    for (off_t j = pos; j < pos + (off_t)count; j++, i++) {
+        uint64_t seq = ((tmpfs_entry_t*)*entry)->seq;
 
-        switch (j) {
-
-            case 0: {
-
-                e[i].d_ino    = inode->ino;
-                e[i].d_off    = i;
-                e[i].d_reclen = sizeof(struct dirent);
-                e[i].d_type   = MODE_2_DIRENT_TYPE(self->st_mode);
-
-                strncpy(e[i].d_name, ".", sizeof(e[i].d_name));
-
-                break;
-            }
-
-            case 1: {
-
-                e[i].d_ino    = inode->parent->ino;
-                e[i].d_off    = i;
-                e[i].d_reclen = sizeof(struct dirent);
-                e[i].d_type   = MODE_2_DIRENT_TYPE(parent->st_mode);
-
-                strncpy(e[i].d_name, "..", sizeof(e[i].d_name));
-
-                break;
-            }
-
-            default: {
-
-                if (unlikely(!entry))
-                    return i;
+        if ((off_t)seq + 2 <= pos)
+            continue;
 
 
-                tmpfs_inode_t* c = cache_get(&inode->sb->cache, (*entry)->ino);
+        tmpfs_inode_t* c = cache_get(&inode->sb->cache, (*entry)->ino);
 
-                e[i].d_ino    = c->st.st_ino;
-                e[i].d_off    = i;
-                e[i].d_reclen = sizeof(struct dirent);
-                e[i].d_type   = MODE_2_DIRENT_TYPE(c->st.st_mode);
+        e[i].d_ino    = c->st.st_ino;
+        e[i].d_off    = (off_t)seq + 2;
+        e[i].d_reclen = sizeof(struct dirent);
+        e[i].d_type   = MODE_2_DIRENT_TYPE(c->st.st_mode);
 
-                strncpy(e[i].d_name, (*entry)->name, sizeof(e[i].d_name));
+        strncpy(e[i].d_name, (*entry)->name, sizeof(e[i].d_name));
 
-
-                entry = __next_entry(tmpfs->children, inode, entry);
-
-                break;
-            }
-        }
+        i++;
     }
 
     return i;

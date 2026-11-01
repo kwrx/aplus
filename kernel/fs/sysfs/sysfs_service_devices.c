@@ -89,13 +89,13 @@ static ssize_t sysfs_device_readdir(inode_t* inode, struct dirent* e, off_t pos,
 
         switch (j) {
             case 0:
-                sysfs_dirent(&e[i], inode->ino, DT_DIR, ".", (off_t)i);
+                sysfs_dirent(&e[i], inode->ino, DT_DIR, ".", (off_t)(j + 1));
                 break;
             case 1:
-                sysfs_dirent(&e[i], inode->parent->ino, DT_DIR, "..", (off_t)i);
+                sysfs_dirent(&e[i], inode->parent->ino, DT_DIR, "..", (off_t)(j + 1));
                 break;
             default:
-                sysfs_dirent(&e[i], SYSFS_INO_DEVICE_FILE(inode->ino >> 8, SYSFS_DEVICE_SLOT_UEVENT), DT_REG, "uevent", (off_t)i);
+                sysfs_dirent(&e[i], SYSFS_INO_DEVICE_FILE(inode->ino >> 8, SYSFS_DEVICE_SLOT_UEVENT), DT_REG, "uevent", (off_t)(j + 1));
                 break;
         }
     }
@@ -188,11 +188,11 @@ static ssize_t sysfs_service_devices_readdir(inode_t* inode, struct dirent* e, o
     for (size_t j = (size_t)pos; j < sysfs_buses_count + 2 && i < count; j++, i++) {
 
         if (j == 0)
-            sysfs_dirent(&e[i], SYSFS_INO_STATIC(SYSFS_DEVICES_SLOT_DIR), DT_DIR, ".", (off_t)i);
+            sysfs_dirent(&e[i], SYSFS_INO_STATIC(SYSFS_DEVICES_SLOT_DIR), DT_DIR, ".", (off_t)(j + 1));
         else if (j == 1)
-            sysfs_dirent(&e[i], SYSFS_INO_ROOT, DT_DIR, "..", (off_t)i);
+            sysfs_dirent(&e[i], SYSFS_INO_ROOT, DT_DIR, "..", (off_t)(j + 1));
         else
-            sysfs_dirent(&e[i], SYSFS_INO_STATIC(SYSFS_BUS_SLOT_ROOT(j - 2)), DT_DIR, sysfs_buses[j - 2].root, (off_t)i);
+            sysfs_dirent(&e[i], SYSFS_INO_STATIC(SYSFS_BUS_SLOT_ROOT(j - 2)), DT_DIR, sysfs_buses[j - 2].root, (off_t)(j + 1));
     }
 
     return (ssize_t)i;

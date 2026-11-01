@@ -172,7 +172,7 @@ static ssize_t procfs_service_net_readdir(inode_t* inode, struct dirent* e, off_
     for (size_t j = (size_t)pos; j < sizeof(entries) / sizeof(entries[0]) && i < count; j++, i++) {
 
         e[i].d_ino    = entries[j].ino;
-        e[i].d_off    = (off_t)i;
+        e[i].d_off    = (off_t)(j + 1);
         e[i].d_type   = entries[j].type;
         e[i].d_reclen = sizeof(struct dirent);
 

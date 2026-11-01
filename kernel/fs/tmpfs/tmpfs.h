@@ -40,8 +40,14 @@ typedef struct {
     list(inode_t*, children);
 
     ino_t next_ino;
+    uint64_t next_seq;
     spinlock_t lock;
 } tmpfs_t;
+
+typedef struct {
+    inode_t inode;
+    uint64_t seq;
+} tmpfs_entry_t;
 
 typedef struct {
 

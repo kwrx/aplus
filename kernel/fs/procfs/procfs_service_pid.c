@@ -142,7 +142,8 @@ static ssize_t procfs_service_pid_readdir(inode_t* inode, struct dirent* e, off_
     DEBUG_ASSERT(dir);
 
 
-    size_t i = 0;
+    size_t i          = 0;
+    const off_t start = pos;
 
 #define __emit(_ino, _type, _name)                          \
     do {                                                    \
@@ -151,7 +152,7 @@ static ssize_t procfs_service_pid_readdir(inode_t* inode, struct dirent* e, off_
             break;                                          \
                                                             \
         e[i].d_ino  = (_ino);                               \
-        e[i].d_off  = (off_t)(i);                           \
+        e[i].d_off  = start + i + 1;                        \
         e[i].d_type = (_type);                              \
                                                             \
         strncpy(e[i].d_name, (_name), sizeof(e[i].d_name)); \

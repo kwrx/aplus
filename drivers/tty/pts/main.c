@@ -106,7 +106,8 @@ static ssize_t pts_readdir(inode_t* inode, struct dirent* e, off_t position, siz
         return 0;
 
 
-    size_t i = 0;
+    size_t i          = 0;
+    const off_t start = position;
 
 
     pty_queue_lock();
@@ -120,7 +121,7 @@ static ssize_t pts_readdir(inode_t* inode, struct dirent* e, off_t position, siz
 
 
             e[i].d_ino    = queue->index;
-            e[i].d_off    = position;
+            e[i].d_off    = start + i + 1;
             e[i].d_reclen = sizeof(struct dirent);
             e[i].d_type   = DT_CHR;
 

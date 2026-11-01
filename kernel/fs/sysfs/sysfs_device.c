@@ -80,12 +80,12 @@ ssize_t sysfs_bus_list_devices(inode_t* inode, sysfs_bus_t* bus, struct dirent* 
     size_t i = 0;
 
     if (pos == 0 && i < count) {
-        sysfs_dirent(&e[i], inode->ino, DT_DIR, ".", (off_t)i);
+        sysfs_dirent(&e[i], inode->ino, DT_DIR, ".", 1);
         i++;
     }
 
     if (pos <= 1 && i < count) {
-        sysfs_dirent(&e[i], inode->parent->ino, DT_DIR, "..", (off_t)i);
+        sysfs_dirent(&e[i], inode->parent->ino, DT_DIR, "..", 2);
         i++;
     }
 
@@ -98,7 +98,7 @@ ssize_t sysfs_bus_list_devices(inode_t* inode, sysfs_bus_t* bus, struct dirent* 
             if (j < pos)
                 continue;
 
-            sysfs_dirent(&e[i], type == DT_LNK ? SYSFS_INO_DEVICE_FILE(d->id, SYSFS_DEVICE_SLOT_LINK) : SYSFS_INO_DEVICE(d->id), type, d->name, (off_t)i);
+            sysfs_dirent(&e[i], type == DT_LNK ? SYSFS_INO_DEVICE_FILE(d->id, SYSFS_DEVICE_SLOT_LINK) : SYSFS_INO_DEVICE(d->id), type, d->name, j + 1);
             i++;
         }
     }

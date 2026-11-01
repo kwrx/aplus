@@ -127,13 +127,13 @@ static ssize_t sysfs_bus_readdir(inode_t* inode, struct dirent* e, off_t pos, si
 
         switch (j) {
             case 0:
-                sysfs_dirent(&e[i], inode->ino, DT_DIR, ".", (off_t)i);
+                sysfs_dirent(&e[i], inode->ino, DT_DIR, ".", (off_t)(j + 1));
                 break;
             case 1:
-                sysfs_dirent(&e[i], SYSFS_INO_STATIC(SYSFS_BUS_SLOT_DIR), DT_DIR, "..", (off_t)i);
+                sysfs_dirent(&e[i], SYSFS_INO_STATIC(SYSFS_BUS_SLOT_DIR), DT_DIR, "..", (off_t)(j + 1));
                 break;
             default:
-                sysfs_dirent(&e[i], SYSFS_INO_STATIC(SYSFS_BUS_SLOT_DEVICES(slot)), DT_DIR, "devices", (off_t)i);
+                sysfs_dirent(&e[i], SYSFS_INO_STATIC(SYSFS_BUS_SLOT_DEVICES(slot)), DT_DIR, "devices", (off_t)(j + 1));
                 break;
         }
     }
@@ -175,11 +175,11 @@ static ssize_t sysfs_service_bus_readdir(inode_t* inode, struct dirent* e, off_t
     for (size_t j = (size_t)pos; j < sysfs_buses_count + 2 && i < count; j++, i++) {
 
         if (j == 0)
-            sysfs_dirent(&e[i], SYSFS_INO_STATIC(SYSFS_BUS_SLOT_DIR), DT_DIR, ".", (off_t)i);
+            sysfs_dirent(&e[i], SYSFS_INO_STATIC(SYSFS_BUS_SLOT_DIR), DT_DIR, ".", (off_t)(j + 1));
         else if (j == 1)
-            sysfs_dirent(&e[i], SYSFS_INO_ROOT, DT_DIR, "..", (off_t)i);
+            sysfs_dirent(&e[i], SYSFS_INO_ROOT, DT_DIR, "..", (off_t)(j + 1));
         else
-            sysfs_dirent(&e[i], SYSFS_INO_STATIC(SYSFS_BUS_SLOT(j - 2)), DT_DIR, sysfs_buses[j - 2].name, (off_t)i);
+            sysfs_dirent(&e[i], SYSFS_INO_STATIC(SYSFS_BUS_SLOT(j - 2)), DT_DIR, sysfs_buses[j - 2].name, (off_t)(j + 1));
     }
 
     return (ssize_t)i;
