@@ -57,6 +57,12 @@ SYSCALL(
 
 #endif
     {
+        if (!(flags & (CLONE_PARENT_SETTID | CLONE_PIDFD)))
+            parent_tid = NULL;
+
+        if (!(flags & (CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID)))
+            child_tid = NULL;
+
         if (unlikely(parent_tid && !uio_check(parent_tid, R_OK | W_OK)))
             return -EFAULT;
 
