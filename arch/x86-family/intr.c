@@ -166,7 +166,7 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
             break;
 
         case X86_INTR_VECTOR_SHUTDOWN:
-#if DEBUG_LEVEL_INFO
+#if DEBUG_LEVEL_TRACE
             kprintf("x86-intr: received a shutdown interrupt on cpu %ld, halting...\n", current_cpu->id);
 #endif
             arch_cpu_halt();
