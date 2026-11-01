@@ -105,6 +105,7 @@ typedef struct procfs_task {
 
     /* Zero when the task has exited: its address space is gone by then. */
     size_t rss_pages;
+    size_t vm_size;
     uintptr_t vm_start;
     uintptr_t vm_end;
     uintptr_t vm_stack;

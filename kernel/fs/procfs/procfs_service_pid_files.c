@@ -72,7 +72,7 @@ int procfs_pid_fetch_stat(inode_t* inode, char** buf, size_t* size, void* arg) {
 
     procfs_bprintf(&b, "%ld %ld %lu 0 %lu ", t.priority, t.priority, (unsigned long)t.threads, t.start_time);
 
-    procfs_bprintf(&b, "%lu %lu ", (unsigned long)(t.vm_end - t.vm_start), (unsigned long)t.rss_pages);
+    procfs_bprintf(&b, "%lu %lu ", (unsigned long)t.vm_size, (unsigned long)t.rss_pages);
 
     procfs_bprintf(&b, "0 %lu %lu %lu ", (unsigned long)t.vm_start, (unsigned long)t.vm_end, (unsigned long)t.vm_stack);
 
@@ -128,7 +128,7 @@ int procfs_pid_fetch_status(inode_t* inode, char** buf, size_t* size, void* arg)
         procfs_bprintf(&b, "%d ", t.groups[i]);
 
     procfs_bprintf(&b, "\n");
-    procfs_bprintf(&b, "VmSize:\t%lu kB\n", (unsigned long)((t.vm_end - t.vm_start) >> 10));
+    procfs_bprintf(&b, "VmSize:\t%lu kB\n", (unsigned long)(t.vm_size >> 10));
     procfs_bprintf(&b, "VmRSS:\t%lu kB\n", (unsigned long)((t.rss_pages * PML1_PAGESIZE) >> 10));
     procfs_bprintf(&b, "Threads:\t%lu\n", (unsigned long)t.threads);
     procfs_bprintf(&b, "voluntary_ctxt_switches:\t%lu\n", t.nvcsw);
@@ -156,7 +156,7 @@ int procfs_pid_fetch_statm(inode_t* inode, char** buf, size_t* size, void* arg) 
 
     procfs_buf_t b = procfs_scratch();
 
-    unsigned long size_pages = (unsigned long)((t.vm_end - t.vm_start) / PML1_PAGESIZE);
+    unsigned long size_pages = (unsigned long)(t.vm_size / PML1_PAGESIZE);
     unsigned long data_pages = (unsigned long)((t.heap_end - t.heap_start) / PML1_PAGESIZE);
 
     procfs_bprintf(&b, "%lu %lu 0 0 0 %lu 0\n", size_pages, (unsigned long)t.rss_pages, data_pages);

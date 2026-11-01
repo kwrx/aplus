@@ -200,6 +200,21 @@ static void __snapshot(task_t* t, cpuid_t cpu, size_t threads, procfs_task_t* o)
         o->rss_pages  = t->address_space->size;
         o->heap_start = t->address_space->mmap.heap_start;
         o->heap_end   = t->address_space->mmap.heap_end;
+        o->vm_size    = o->vm_end - o->vm_start;
+
+        for (size_t i = 0; i < CONFIG_MMAP_MAX; i++) {
+
+            const mmap_mapping_t* m = &t->address_space->mmap.mappings[i];
+
+            if (m->start && m->end > m->start)
+                o->vm_size += m->end - m->start;
+        }
+
+        for (size_t i = 0; i < SHM_ATTACH_MAX; i++) {
+
+            if (t->address_space->shm.attachments[i].addr)
+                o->vm_size += t->address_space->shm.attachments[i].size;
+        }
     }
 }
 
