@@ -155,9 +155,14 @@ static inline void __scoped_uio_restore(const int* saved) {
 __BEGIN_DECLS
 
 
-void arch_cpu_init(cpuid_t);
-void arch_cpu_startup(cpuid_t);
+__noreturn
+void arch_cpu_halt(void);
+
+void arch_cpu_init(cpuid_t index);
+void arch_cpu_startup(cpuid_t index);
+bool arch_cpu_shutdown(cpuid_t index, bool force, uint64_t timeout);
 cpuid_t arch_cpu_get_current_id(void);
+
 
 uint64_t arch_random(void);
 
@@ -169,7 +174,7 @@ int arch_debug_getc(void);
 void arch_debug_stacktrace(uintptr_t*, size_t);
 
 
-void arch_intr_enable(long);
+void arch_intr_restore(long);
 long arch_intr_disable(void);
 void arch_intr_map_irq(irq_t, void (*)(void*, irq_t), int);
 void arch_intr_unmap_irq(irq_t, int);

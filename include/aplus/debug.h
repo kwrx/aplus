@@ -59,8 +59,8 @@
 __BEGIN_DECLS
 
 void kprintf(const char*, ...) __format(printf, 1, 2);
-void kprintf_pause();
-void kprintf_resume();
+long kprintf_lock(void);
+void kprintf_unlock(long);
 void kprintf_mask(int);
 
 void kpanicf(const char*, ...) __format(printf, 1, 2) __noreturn;

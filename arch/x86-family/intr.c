@@ -40,7 +40,7 @@
 #include <arch/x86/vmm.h>
 
 
-#define X86_IRQ_COUNT (0xFE - 0x20)
+#define X86_IRQ_COUNT (X86_INTR_VECTOR_IRQ_MAX - X86_INTR_VECTOR_TIMER + 1)
 
 typedef void (*irq_handler_t)(void*, irq_t);
 
@@ -139,42 +139,17 @@ static void x86_irq_dispatch(interrupt_frame_t* frame) {
 }
 
 
-/**
- * @brief Handles every interrupt, exception and syscall, then reschedules and restarts until neither is pending.
- *
- * @param frame The interrupted context.
- * @return The frame to resume.
- */
 void* x86_exception_handler(interrupt_frame_t* frame) {
 
     DEBUG_ASSERT((frame));
-
-    // #if DEBUG_LEVEL_TRACE
-
-    //     kprintf("x86-intr: intno(%p) errno(%p) ip(%p) cs(%p) flags(%p) sp(%p) ss(%p)\n",
-    //         frame->intno,
-    //         frame->errno,
-    //         frame->ip,
-    //         frame->cs,
-    //         frame->flags,
-    //         frame->sp,
-    //         frame->ss
-    //     );
-
-    // #endif
-
-
     current_cpu->frame = frame;
-
-
 
     switch (frame->intno) {
 
-        case 0xFF:
+        case X86_INTR_VECTOR_SPURIOUS:
             return frame;
 
-
-        case 0xFE:
+        case X86_INTR_VECTOR_SYSCALL:
 
 #if defined(__x86_64__)
             frame->ax = syscall_invoke(frame->ax, frame->di, frame->si, frame->dx, frame->r10, frame->r8, frame->r9);
@@ -190,15 +165,20 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
 
             break;
 
+        case X86_INTR_VECTOR_SHUTDOWN:
+#if DEBUG_LEVEL_INFO
+            kprintf("x86-intr: received a shutdown interrupt on cpu %ld, halting...\n", current_cpu->id);
+#endif
+            arch_cpu_halt();
+            break;
 
-        case 0x21 ... 0xFD:
+        case X86_INTR_VECTOR_IRQ_MIN ... X86_INTR_VECTOR_IRQ_MAX:
 
             x86_irq_dispatch(frame);
             apic_eoi();
             break;
 
-
-        case 0x20:
+        case X86_INTR_VECTOR_TIMER:
 
         {
             current_cpu->uptime.tv_nsec += TASK_SCHEDULER_PERIOD_NS;
@@ -224,14 +204,19 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
             apic_eoi();
             break;
 
-
-        case 0x02:
-
-            // TODO: Handle NMI Interrupts
-            kpanicf("x86-nmi: PANIC! exception(%ld), errno(0x%lX), cs(0x%lX), ip(0x%lX), sp(0x%lX), bp(0x%lX), cpu(%ld)\n", frame->intno, frame->errno, frame->cs, frame->ip, frame->sp, frame->bp, current_cpu->id);
+        case X86_INTR_VECTOR_NMI:
+            kprintf_unlock(0);
+#if DEBUG_LEVEL_TRACE
+            arch_debug_putc('\n');
+            arch_debug_putc('N');
+            arch_debug_putc('M');
+            arch_debug_putc('I');
+            arch_debug_putc('\n');
+#endif
+            arch_cpu_halt();
             break;
 
-        case 0x0E:
+        case X86_INTR_VECTOR_PFE:
 
             if (pagefault_handle(frame, x86_get_cr2()) == 0)
                 break;
@@ -274,7 +259,7 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
 
 
 
-void arch_intr_enable(long s) {
+void arch_intr_restore(long s) {
 
     if (likely(s)) {
         __asm__ __volatile__("sti");
@@ -306,8 +291,8 @@ long arch_intr_disable(void) {
 
 void arch_intr_map_irq(irq_t irq, void (*handler)(void*, irq_t), int type) {
 
-    PANIC_ASSERT(irq > 0 && irq < X86_IRQ_COUNT);
     PANIC_ASSERT(handler);
+    PANIC_ASSERT(irq > 0 && irq < X86_IRQ_COUNT);
     PANIC_ASSERT(type == ARCH_INTR_TYPE_DEFAULT || type == ARCH_INTR_TYPE_PCI || type == ARCH_INTR_TYPE_MSI);
 
     scoped_lock(&irq_table_lock) {

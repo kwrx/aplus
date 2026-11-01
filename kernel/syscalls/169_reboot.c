@@ -29,6 +29,7 @@
 #include <aplus/syscall.h>
 #include <aplus/task.h>
 #include <aplus/hal.h>
+#include <aplus/smp.h>
 #include <fcntl.h>
 #include <stdint.h>
 #include <sys/stat.h>
@@ -60,9 +61,23 @@ SYSCALL(169, reboot, long sys_reboot(int magic1, int magic2, unsigned int cmd, v
     if (unlikely(magic1 != MAGIC_REBOOT_1 || magic2 != MAGIC_REBOOT_2))
         return -EINVAL;
 
+    if (unlikely(current_task->euid != 0))
+        return -EPERM;
+
+    switch (cmd) {
+        case RB_AUTOBOOT:
+        case RB_HALT_SYSTEM:
+        case RB_POWER_OFF:
+            break;
+        default:
+            return -EINVAL;
+    }
+
 #if DEBUG_LEVEL_INFO
     kprintf("reboot: requested shutdown with cmd(%d)\n", cmd);
 #endif
+
+    smp_dnit();
 
     switch (cmd) {
 
@@ -78,8 +93,6 @@ SYSCALL(169, reboot, long sys_reboot(int magic1, int magic2, unsigned int cmd, v
             arch_reboot(ARCH_REBOOT_POWEROFF);
             break;
 
-        default:
-            return -EINVAL;
     }
 
     return 0;

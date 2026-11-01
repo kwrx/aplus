@@ -36,7 +36,7 @@ static inline uint64_t spinlock_get_new_owner(spinlock_t* lock) {
 
     DEBUG_ASSERT(lock);
 
-    return (lock->flags & SPINLOCK_FLAGS_CPU_OWNER) ? (current_cpu ? current_cpu->id : 0) : (current_task ? current_task->tid : 0);
+    return (lock->flags & SPINLOCK_FLAGS_CPU_OWNER) ? (current_cpu->id) : (current_task ? current_task->tid : 0);
 }
 
 
@@ -179,6 +179,6 @@ void spinlock_unlock(spinlock_t* lock) {
 
         atomic_flag_clear_explicit(&lock->value, memory_order_release);
 
-        arch_intr_enable(e);
+        arch_intr_restore(e);
     }
 }

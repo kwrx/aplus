@@ -29,10 +29,18 @@
     #include <aplus.h>
     #include <aplus/debug.h>
 
-
     //? NOTE: IRQs allocatable from drivers (see MSI-X)
     //? @see 10.11.2 - Message Data Register Format
     #define IRQ_MSIX_ALLOCATABLE_OFFSET (0x10) // 16 or higher
+
+    #define X86_INTR_VECTOR_SPURIOUS            0xFF
+    #define X86_INTR_VECTOR_SYSCALL             0xFE
+    #define X86_INTR_VECTOR_SHUTDOWN            0xFD
+    #define X86_INTR_VECTOR_IRQ_MAX             0xFC
+    #define X86_INTR_VECTOR_IRQ_MIN             0x21
+    #define X86_INTR_VECTOR_TIMER               0x20
+    #define X86_INTR_VECTOR_PFE                 0x0E
+    #define X86_INTR_VECTOR_NMI                 0x02
 
 typedef struct {
 

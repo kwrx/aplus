@@ -43,15 +43,12 @@
 
 
     #define current_cpu (smp_get_current_cpu())
-
     #define current_task (smp_get_current_cpu())->sched_running
 
 
 
     #define cpu_has(index, feature) (core->cpu.cores[index].features[feature >> 5U] & (1U << (feature & 0x1FU)))
-
     #define boot_cpu_has(feature) cpu_has(SMP_CPU_BOOTSTRAP_ID, feature)
-
     #define current_cpu_has(feature) (current_cpu->features[feature >> 5U] & (1U << (feature & 0x1FU)))
 
 
@@ -129,7 +126,8 @@ cpu_t* smp_get_current_cpu(void) __returns_nonnull;
 cpu_t* smp_get_cpu(int) __returns_nonnull;
 int* smp_get_current_errno(void) __returns_nonnull;
 
-void smp_init();
+void smp_init(void);
+void smp_dnit(void);
 
 __END_DECLS
 

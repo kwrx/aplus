@@ -26,6 +26,7 @@
 #include <stdarg.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <stdatomic.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
@@ -33,7 +34,7 @@
 #include <aplus/ipc.h>
 
 
-static spinlock_t buflock   = SPINLOCK_INIT_WITH_FLAGS(SPINLOCK_FLAGS_CPU_OWNER | SPINLOCK_FLAGS_RECURSIVE);
+static atomic_int buflock   = 0;
 static volatile int accmask = 0;
 
 
@@ -50,20 +51,25 @@ __nosanitize("undefined") void kprintf(const char* fmt, ...) {
     va_end(v);
 
 
-    scoped_lock(&buflock) {
-        for (int i = 0; buf[i] && !((1 << current_cpu->id) & atomic_load_explicit(&accmask, memory_order_consume)); i++) {
-            arch_debug_putc(buf[i]);
-        }
+    long flags = kprintf_lock();
+    for (int i = 0; buf[i] && !((1 << current_cpu->id) & atomic_load_explicit(&accmask, memory_order_consume)); i++) {
+        arch_debug_putc(buf[i]);
     }
+    kprintf_unlock(flags);
 }
 
 
-void kprintf_pause(void) {
-    spinlock_lock(&buflock);
+long kprintf_lock(void) {
+    long flags = arch_intr_disable();
+    while (atomic_exchange_explicit(&buflock, 1, memory_order_acquire)) {
+        __cpu_pause();
+    }
+    return flags;
 }
 
-void kprintf_resume(void) {
-    spinlock_unlock(&buflock);
+void kprintf_unlock(long flags) {
+    atomic_store_explicit(&buflock, 0, memory_order_release);
+    arch_intr_restore(flags);
 }
 
 void kprintf_mask(int mask) {

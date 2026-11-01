@@ -37,7 +37,6 @@ __noreturn void arch_reboot(int mode) {
 
     // TODO: clean up the code below, and implement ACPI restart/power-off
     // TODO: implement module unloading, and call module_unload() for each module here
-    // TODO: implement cpu shutdown, and call arch_cpu_shutdown() for each CPU here
 
     switch (mode) {
 
@@ -143,8 +142,5 @@ __noreturn void arch_reboot(int mode) {
             break;
     }
 
-    for (;;) {
-        __cpu_pause();
-        __cpu_halt();
-    }
+    arch_cpu_halt();
 }

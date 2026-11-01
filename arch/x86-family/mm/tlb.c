@@ -92,7 +92,7 @@ __nonnull(1) void x86_vmm_tlb_load(vmm_address_space_t* space) {
 
     spinlock_unlock(&cpu->tlb.lock);
 
-    arch_intr_enable(irq);
+    arch_intr_restore(irq);
 }
 
 

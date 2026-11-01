@@ -78,6 +78,8 @@
 
     #define SPINLOCK_INIT               {{ATOMIC_FLAG_INIT}, 0ULL, -1ULL, 0, 0}
     #define SPINLOCK_INIT_WITH_FLAGS(p) {{ATOMIC_FLAG_INIT}, 0ULL, -1ULL, 0 | (p), 0}
+
+    #define SPINLOCK_FLAGS_THREAD_OWNER (0U << 30)
     #define SPINLOCK_FLAGS_CPU_OWNER    (1U << 30)
     #define SPINLOCK_FLAGS_RECURSIVE    (1U << 31)
 

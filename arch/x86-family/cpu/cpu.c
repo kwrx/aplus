@@ -487,8 +487,7 @@ __percpu cpuid_t arch_cpu_get_current_id(void) {
 void arch_cpu_startup(cpuid_t index) {
 
     DEBUG_ASSERT(index != SMP_CPU_BOOTSTRAP_ID);
-
-    PANIC_ASSERT(!(core->cpu.cores[index].flags & SMP_CPU_FLAGS_ENABLED));
+    PANIC_ASSERT((core->cpu.cores[index].flags & SMP_CPU_FLAGS_ENABLED) == 0);
     PANIC_ASSERT((core->cpu.cores[index].flags & SMP_CPU_FLAGS_AVAILABLE));
 
 
@@ -569,4 +568,68 @@ void arch_cpu_startup(cpuid_t index) {
 
 
     kprintf("x86-cpu: FAIL! starting up CPU #%zd: id(%ld) flags(%ld)\n", index, core->cpu.cores[index].archid, core->cpu.cores[index].flags);
+}
+
+
+void arch_cpu_send_ipi(cpuid_t index, uint8_t type, uint8_t vector) {
+
+    DEBUG_ASSERT(index < SMP_CPU_MAX);
+    PANIC_ASSERT((core->cpu.cores[index].flags & SMP_CPU_FLAGS_ENABLED));
+    PANIC_ASSERT((core->cpu.cores[index].flags & SMP_CPU_FLAGS_AVAILABLE));
+
+#if DEBUG_LEVEL_TRACE
+    kprintf("x86-cpu: sending ipi to cpu #%zd\n", index);
+#endif
+
+    if (apic_is_x2apic()) {
+
+        x86_wrmsr(X86_X2APIC_REG_ICR, (core->cpu.cores[index].archid << 32) | (1 << 14) | (type << 8) | vector);
+
+        while (((x86_rdmsr(X86_X2APIC_REG_ICR) >> 12) & 1))
+            __builtin_ia32_pause();
+
+    } else {
+
+        uintptr_t lapic = apic_get_base();
+        mmio_w32(lapic + X86_APIC_REG_ICR_HI, core->cpu.cores[index].archid << 24);
+        mmio_w32(lapic + X86_APIC_REG_ICR_LO, (1 << 14) | (type << 8) | vector);
+
+        while (((mmio_r32(lapic + X86_APIC_REG_ICR_LO) >> 12) & 1))
+            __builtin_ia32_pause();
+    }
+
+}
+
+__noreturn
+void arch_cpu_halt(void) {
+
+    arch_intr_disable();
+
+    core->cpu.cores[current_cpu->id].flags &= ~SMP_CPU_FLAGS_ENABLED;
+    for (;;) {
+        __cpu_halt();
+    }
+
+}
+
+bool arch_cpu_shutdown(cpuid_t index, bool force, uint64_t timeout) {
+    if (current_cpu->id == index) {
+        arch_cpu_halt();
+    } else {
+
+        if (force) {
+            arch_cpu_send_ipi(index, X86_CPU_IPI_NMI, 0);
+        } else {
+            arch_cpu_send_ipi(index, X86_CPU_IPI_FIXED, X86_INTR_VECTOR_SHUTDOWN);
+        }
+
+        if (likely(timeout)) {
+            uint64_t now = arch_timer_generic_getms();
+            while ((core->cpu.cores[index].flags & SMP_CPU_FLAGS_ENABLED) && (arch_timer_generic_getms() - now < timeout)) {
+                __builtin_ia32_pause();
+            }
+        }
+
+        return !(core->cpu.cores[index].flags & SMP_CPU_FLAGS_ENABLED);
+    }
 }

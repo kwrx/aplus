@@ -24,6 +24,12 @@
 #ifndef _ARCH_X86_CPU_H
 #define _ARCH_X86_CPU_H
 
+#define X86_CPU_IPI_FIXED       0x00
+#define X86_CPU_IPI_LOWEST_PRIO 0x01
+#define X86_CPU_IPI_SMI         0x02
+#define X86_CPU_IPI_NMI         0x04
+#define X86_CPU_IPI_INIT        0x05
+#define X86_CPU_IPI_SIPI        0x06
 
 
 #define X86_CR0_PE_MASK (1U << 0)
@@ -35,8 +41,6 @@
 #define X86_CR0_WP_MASK (1U << 16)
 #define X86_CR0_AM_MASK (1U << 18)
 #define X86_CR0_PG_MASK (1U << 31)
-
-
 
 #define X86_CR4_VME_MASK        (1U << 0)
 #define X86_CR4_PVI_MASK        (1U << 1)

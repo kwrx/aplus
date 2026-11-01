@@ -37,14 +37,12 @@ __returns_nonnull cpu_t* smp_get_current_cpu(void) {
         return &core->bsp;
 
 
-
     DEBUG_ASSERT(id >= 0);
     DEBUG_ASSERT(id <= SMP_CPU_MAX - 1);
 
     if (core->cpu.cores[id].flags & SMP_CPU_FLAGS_ENABLED) {
         return &core->cpu.cores[id];
     }
-
 
     kpanicf("smp_get_current_cpu(): PANIC! wrong cpu id(%ld)\n", id);
 }
@@ -66,8 +64,7 @@ __returns_nonnull cpu_t* smp_get_cpu(int index) {
 }
 
 
-void smp_init() {
-
+void smp_init(void) {
 
     size_t max_cpus = SMP_CPU_MAX;
 
@@ -86,7 +83,7 @@ void smp_init() {
 
     for (size_t i = 1; i < SMP_CPU_MAX; i++) {
 
-        if (!(core->cpu.cores[i].flags & SMP_CPU_FLAGS_AVAILABLE))
+        if ((core->cpu.cores[i].flags & SMP_CPU_FLAGS_AVAILABLE) == 0)
             continue;
 
         if ((core->cpu.cores[i].flags & SMP_CPU_FLAGS_ENABLED))
@@ -102,4 +99,34 @@ void smp_init() {
         kprintf("smp: cpu #%zd is online\n", i);
 #endif
     }
+}
+
+void smp_dnit(void) {
+
+    for (size_t i = 0; i < SMP_CPU_MAX; i++) {
+
+        if (i == smp_get_current_cpu()->id)
+            continue;
+
+        if ((core->cpu.cores[i].flags & SMP_CPU_FLAGS_AVAILABLE) == 0)
+            continue;
+
+        if ((core->cpu.cores[i].flags & SMP_CPU_FLAGS_ENABLED) == 0)
+            continue;
+
+        bool ok;
+        if ((ok = arch_cpu_shutdown(i, false, 1000)) == false) {
+            ok = arch_cpu_shutdown(i, true, 100);
+        }
+
+#if DEBUG_LEVEL_INFO
+        if (likely(ok)) {
+            kprintf("smp: cpu #%zd is offline\n", i);
+        } else {
+            kprintf("smp: cpu #%zd failed to shutdown\n", i);
+        }
+#endif
+        (void) ok;
+    }
+
 }
