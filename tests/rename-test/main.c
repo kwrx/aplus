@@ -282,7 +282,10 @@ static void test_directories(void) {
     CHECK(r == 0 && gone("d2") && holds("d4/inner", "inner"), "rename-over-empty-directory", "r=%d errno=%s", r, strerror(errno));
 
     r = rename("f", "d4/f");
-    CHECK(r < 0 && errno == EXDEV && holds("f", "alpha"), "rename-across-directories", "r=%d errno=%s", r, strerror(errno));
+    CHECK(r == 0 && gone("f") && holds("d4/f", "alpha"), "rename-across-directories", "r=%d errno=%s", r, strerror(errno));
+
+    r = rename("d4/f", "f");
+    CHECK(r == 0 && gone("d4/f") && holds("f", "alpha"), "rename-across-directories-back", "r=%d errno=%s", r, strerror(errno));
 }
 
 
