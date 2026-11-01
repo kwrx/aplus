@@ -63,6 +63,8 @@ static void virtgpu_init(device_t*);
 static void virtgpu_dnit(device_t*);
 static void virtgpu_reset(device_t*);
 static void virtgpu_modeset(device_t*);
+static int virtgpu_apply_mode(device_t*, uint32_t, uint32_t);
+static void virtgpu_set_var(device_t*);
 static void virtgpu_update(device_t*);
 static void virtgpu_flush(device_t*, uint32_t, uint32_t, uint32_t, uint32_t);
 static int virtgpu_wait_vsync(device_t*);
@@ -87,7 +89,7 @@ device_t device = {
     .dnit  = virtgpu_dnit,
     .reset = virtgpu_reset,
 
-    .vid.update      = virtgpu_update,
+    .vid.update      = virtgpu_set_var,
     .vid.flush       = virtgpu_flush,
     .vid.wait_vsync  = virtgpu_wait_vsync,
     .vid.cursor_set  = virtgpu_cursor_set,
@@ -135,6 +137,8 @@ static void virtgpu_release_scanout(struct virtgpu* gpu) {
     virtgpu_cmd_resource_unref(gpu, gpu->fb_resource_id);
 
     gpu->fb_resource_id = 0;
+    gpu->fb_width       = 0;
+    gpu->fb_height      = 0;
 }
 
 
@@ -217,6 +221,9 @@ static void virtgpu_reset_framebuffer(device_t* device) {
         device->status = DEVICE_STATUS_FAILED;
         return;
     }
+
+    gpu->fb_width  = device->vid.vs.xres;
+    gpu->fb_height = device->vid.vs.yres;
 }
 
 
@@ -284,30 +291,24 @@ static void virtgpu_reset(device_t* device) {
 }
 
 
-static void virtgpu_modeset(device_t* device) {
+static int virtgpu_apply_mode(device_t* device, uint32_t xres, uint32_t yres) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->userdata);
 
     struct virtgpu* gpu = device->userdata;
 
-    uint32_t xres = 0;
-    uint32_t yres = 0;
-
-    if (virtgpu_get_mode(gpu, &xres, &yres) < 0)
-        return;
-
     if (!xres || !yres)
-        return;
+        return errno = EINVAL, -1;
 
-    if (xres == device->vid.vs.xres && yres == device->vid.vs.yres)
-        return;
+    if (xres == gpu->fb_width && yres == gpu->fb_height)
+        return 0;
 
     if ((size_t)xres * yres * (device->vid.vs.bits_per_pixel / 8) > device->vid.fb_size) {
 #if DEBUG_LEVEL_WARN
-        kprintf("virtio-gpu: WARN! mode %dx%d does not fit the framebuffer, keeping %dx%d\n", xres, yres, device->vid.vs.xres, device->vid.vs.yres);
+        kprintf("virtio-gpu: WARN! mode %dx%d does not fit the framebuffer, keeping %dx%d\n", xres, yres, gpu->fb_width, gpu->fb_height);
 #endif
-        return;
+        return errno = EINVAL, -1;
     }
 
 
@@ -321,12 +322,55 @@ static void virtgpu_modeset(device_t* device) {
     virtgpu_reset_framebuffer(device);
     virtgpu_update(device);
 
-    if (old_resource_id) {
+    if (old_resource_id && old_resource_id != gpu->fb_resource_id) {
         virtgpu_cmd_resource_detach_backing(gpu, old_resource_id);
         virtgpu_cmd_resource_unref(gpu, old_resource_id);
     }
 
     atomic_store(&gpu->mode_stale, true);
+
+    return 0;
+}
+
+
+static void virtgpu_modeset(device_t* device) {
+
+    DEBUG_ASSERT(device);
+    DEBUG_ASSERT(device->userdata);
+
+    uint32_t xres = 0;
+    uint32_t yres = 0;
+
+    if (virtgpu_get_mode(device->userdata, &xres, &yres) < 0)
+        return;
+
+    virtgpu_apply_mode(device, xres, yres);
+}
+
+
+static void virtgpu_set_var(device_t* device) {
+
+    DEBUG_ASSERT(device);
+    DEBUG_ASSERT(device->userdata);
+
+    struct virtgpu* gpu = device->userdata;
+
+    scoped_lock(&gpu->lock) {
+
+        uint32_t xres = device->vid.vs.xres;
+        uint32_t yres = device->vid.vs.yres;
+
+        device->vid.vs.xres           = gpu->fb_width;
+        device->vid.vs.yres           = gpu->fb_height;
+        device->vid.vs.xres_virtual   = gpu->fb_width;
+        device->vid.vs.yres_virtual   = gpu->fb_height;
+        device->vid.vs.xoffset        = 0;
+        device->vid.vs.yoffset        = 0;
+        device->vid.vs.bits_per_pixel = 32;
+
+        virtgpu_apply_mode(device, xres, yres);
+        virtgpu_update(device);
+    }
 }
 
 

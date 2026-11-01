@@ -232,7 +232,9 @@ struct virtgpu {
 
     uint64_t resource_ids;
     uint64_t fb_resource_id;
-    
+    uint32_t fb_width;
+    uint32_t fb_height;
+
     bool frame_flushed;
     atomic_bool mode_changed;
     atomic_bool mode_stale;
