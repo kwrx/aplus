@@ -103,11 +103,7 @@ SYSCALL(
                     }
 
 
-                    if (!(tmp->euid == current_task->euid || tmp->euid == current_task->uid))
-                        return -EPERM;
-
-
-                    return 20 + tmp->priority;
+                    return 20 - tmp->priority;
                 }
             }
         }

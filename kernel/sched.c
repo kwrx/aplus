@@ -663,6 +663,24 @@ static int __sigqueue_on_pick(const struct sigpick* pick, int sig, const siginfo
 }
 
 
+static bool __sig_permitted(const task_t* task, int sig) {
+
+    if (current_task->euid == 0)
+        return true;
+
+    if (current_task->euid == task->uid || current_task->euid == task->suid)
+        return true;
+
+    if (current_task->uid == task->uid || current_task->uid == task->suid)
+        return true;
+
+    if (sig == SIGCONT && current_task->sid == task->sid)
+        return true;
+
+    return false;
+}
+
+
 int sched_sigqueue(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* info, int flags) {
 
     DEBUG_ASSERT(sig >= 0);
@@ -678,6 +696,7 @@ int sched_sigqueue(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* info, i
 
     size_t ncontinued = 0;
     size_t found      = 0;
+    size_t denied     = 0;
     int error         = 0;
 
     struct sigpick* picks = NULL;
@@ -706,8 +725,10 @@ int sched_sigqueue(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* info, i
                 if ((flags & SCHED_SIGQUEUE_BROADCAST) && (tmp->pid == 1 || tmp->pid == current_task->pid))
                     continue;
 
-                if (!(flags & SCHED_SIGQUEUE_KERNEL) && !(current_task->euid == tmp->uid || current_task->uid == tmp->uid))
+                if (!(flags & SCHED_SIGQUEUE_KERNEL) && !__sig_permitted(tmp, sig)) {
+                    denied++;
                     continue;
+                }
 
 
                 found++;
@@ -785,7 +806,7 @@ int sched_sigqueue(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* info, i
 
 
     if (unlikely(found == 0)) {
-        return errno = ESRCH, -1;
+        return errno = denied ? EPERM : ESRCH, -1;
     }
 
     if (unlikely(error)) {

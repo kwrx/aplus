@@ -125,8 +125,11 @@ SYSCALL(
                             return -EINVAL;
                     }
 
-                    if (unlikely(tmp->euid != current_task->euid && tmp->euid != current_task->uid))
+                    if (unlikely(current_task->euid != 0 && tmp->uid != current_task->euid && tmp->euid != current_task->euid))
                         return -EPERM;
+
+                    if (unlikely(current_task->euid != 0 && niceval < tmp->priority))
+                        return -EACCES;
 
 
                     tmp->priority = niceval;
