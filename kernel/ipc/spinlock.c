@@ -41,9 +41,6 @@ static inline uint64_t spinlock_get_new_owner(spinlock_t* lock) {
 
 
 
-/*!
- * @brief Initialize Spinlock with flags.
- */
 #if DEBUG_LEVEL_TRACE
 void __spinlock_init_with_flags(spinlock_t* lock, int flags, const char* FUNC, const char* FILE, int LINE) {
 #else
@@ -66,9 +63,6 @@ void spinlock_init_with_flags(spinlock_t* lock, int flags) {
 }
 
 
-/*!
- * @brief Initialize Spinlock.
- */
 #if DEBUG_LEVEL_TRACE
 void __spinlock_init(spinlock_t* lock, const char* FUNC, const char* FILE, int LINE) {
 #else
@@ -84,9 +78,6 @@ void spinlock_init(spinlock_t* lock) {
 
 
 
-/*!
- * @brief Lock a Spinlock.
- */
 #if DEBUG_LEVEL_TRACE
 void __spinlock_lock(spinlock_t* lock, const char* FUNC, const char* FILE, int LINE) {
 #else
@@ -156,9 +147,6 @@ void spinlock_lock(spinlock_t* lock) {
 }
 
 
-/*!
- * @brief Release a Spinlock.
- */
 #if DEBUG_LEVEL_TRACE
 void __spinlock_unlock(spinlock_t* lock, const char* FUNC, const char* FILE, int LINE) {
 #else
