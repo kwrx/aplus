@@ -188,7 +188,7 @@ static int procfs_service_self_fetch(inode_t* inode, char** buf, size_t* size, v
 
     procfs_buf_t b = procfs_scratch();
 
-    procfs_bprintf(&b, "%d", current_task->tid);
+    procfs_bprintf(&b, "%d", current_task->pid);
 
     *buf  = b.data;
     *size = b.length;

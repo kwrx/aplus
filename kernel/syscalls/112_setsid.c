@@ -50,15 +50,25 @@ SYSCALL(
     112, setsid, long sys_setsid(void) {
         DEBUG_ASSERT(current_task);
 
-        if (current_task->pgrp == current_task->tid)
-            return -EPERM;
+        pid_t pid = current_task->pid;
+
+        cpu_foreach(cpu) {
+
+            scoped_lock(&cpu->sched_lock) {
+
+                for (task_t* tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+
+                    if (tmp->pgrp == pid && tmp->status != TASK_STATUS_DEAD)
+                        return -EPERM;
+                }
+            }
+        }
 
 
-        current_task->sid  = current_task->tid;
-        current_task->pgrp = current_task->tid;
+        sched_group_setids(pid, pid, pid);
 
         if (current_task->ctty)
             shared_ptr_access(current_task->ctty, ctty, { *ctty = NULL; });
 
-        return 0;
+        return pid;
     });

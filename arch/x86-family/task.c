@@ -780,7 +780,8 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry)(void*), size_t sta
         CPU_SET(i, &task->affinity);
     }
 
-    task->pid = current_task->tid;
+    task->pid  = task->tid;
+    task->ppid = 0;
     task->flags |= TASK_FLAGS_KTHREAD;
 
 

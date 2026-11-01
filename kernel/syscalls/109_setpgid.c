@@ -51,16 +51,20 @@
 SYSCALL(
     109, setpgid, long sys_setpgid(pid_t pid, pid_t pgid) {
 
-        pid_t target_tid = 0;
+        if (unlikely(pid < 0 || pgid < 0))
+            return -EINVAL;
+
+
+        pid_t target_pid = 0;
         pid_t target_sid = 0;
 
         bool found = false;
         bool owned = false;
 
 
-        if (likely(pid == 0)) {
+        if (likely(pid == 0 || pid == current_task->pid)) {
 
-            target_tid = current_task->tid;
+            target_pid = current_task->pid;
             target_sid = current_task->sid;
 
             found = owned = true;
@@ -73,13 +77,13 @@ SYSCALL(
 
                     for (task_t* tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
 
-                        if (tmp->tid != pid)
+                        if (tmp->tid != pid || tmp->status == TASK_STATUS_DEAD)
                             continue;
 
-                        target_tid = tmp->tid;
+                        target_pid = tmp->pid;
                         target_sid = tmp->sid;
 
-                        owned = (tmp->tid == current_task->tid || tmp->ppid == current_task->pid);
+                        owned = (tmp->pid == current_task->pid || tmp->ppid == current_task->pid);
                         found = true;
 
                         break;
@@ -87,6 +91,7 @@ SYSCALL(
                 }
             }
         }
+
 
         if (unlikely(!found))
             return -ESRCH;
@@ -97,20 +102,17 @@ SYSCALL(
         if (unlikely(target_sid != current_task->sid))
             return -EPERM;
 
-        if (unlikely(target_tid == target_sid))
+        if (unlikely(target_pid == target_sid))
             return -EPERM;
 
-        if (unlikely(pgid < 0))
-            return -EINVAL;
 
         if (pgid == 0) {
 
-            pgid = target_tid;
+            pgid = target_pid;
 
-        } else if (pgid != target_tid) {
+        } else if (pgid != target_pid) {
 
-            bool same_session = false;
-            bool pgid_found   = false;
+            bool pgid_found = false;
 
             cpu_foreach_if(cpu, !pgid_found) {
 
@@ -118,12 +120,13 @@ SYSCALL(
 
                     for (task_t* tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
 
-                        if (tmp->tid != pgid)
+                        if (tmp->pgrp != pgid || tmp->sid != target_sid)
                             continue;
 
-                        same_session = (tmp->sid == target_sid);
-                        pgid_found   = true;
+                        if (tmp->status == TASK_STATUS_ZOMBIE || tmp->status == TASK_STATUS_DEAD)
+                            continue;
 
+                        pgid_found = true;
                         break;
                     }
                 }
@@ -131,46 +134,10 @@ SYSCALL(
 
             if (unlikely(!pgid_found))
                 return -EPERM;
-
-            if (unlikely(!same_session))
-                return -EPERM;
         }
 
 
-        if (likely(pid == 0)) {
-
-            scoped_lock(&current_task->lock) {
-                current_task->pgrp = pgid;
-            }
-
-            return 0;
-        }
-
-
-        bool applied = false;
-
-        cpu_foreach_if(cpu, !applied) {
-
-            scoped_lock(&cpu->sched_lock) {
-
-                for (task_t* tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
-
-                    if (tmp->tid != pid)
-                        continue;
-
-                    scoped_lock(&tmp->lock) {
-                        tmp->pgrp = pgid;
-                    }
-
-                    applied = true;
-
-                    break;
-                }
-            }
-        }
-
-        if (unlikely(!applied))
-            return -ESRCH;
+        sched_group_setids(target_pid, pgid, 0);
 
         return 0;
     });

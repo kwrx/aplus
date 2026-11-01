@@ -265,7 +265,7 @@ typedef struct task {
     char** environ;
 
     pid_t tid;
-    gid_t pid;
+    pid_t pid;
     pid_t pgrp;
 
     uid_t uid;
@@ -281,7 +281,7 @@ typedef struct task {
     size_t ngroups;
     gid_t groups[TASK_NGROUPS_MAX];
 
-    uid_t sid;
+    pid_t sid;
 
 
     ssize_t status;
@@ -562,6 +562,7 @@ void sched_enqueue(task_t*);
 void sched_bury(struct cpu*, task_t*);
 void sched_exit(void);
 void sched_group_exit(int);
+void sched_group_setids(pid_t pid, pid_t pgrp, pid_t sid);
 void sched_die(int);
 int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t*);
 int sched_sigqueue(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t*, int flags);

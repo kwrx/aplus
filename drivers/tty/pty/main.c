@@ -681,7 +681,7 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
 
         case TIOCSCTTY: {
 
-            if (unlikely(current_task->sid != current_task->tid))
+            if (unlikely(current_task->sid != current_task->pid))
                 return errno = EPERM, -1;
 
 
@@ -700,7 +700,7 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
 
                     } else {
 
-                        pty->m_pid  = current_task->tid;
+                        pty->m_pid  = current_task->pid;
                         pty->m_sid  = current_task->sid;
                         pty->s_pgrp = current_task->pgrp;
 
@@ -730,7 +730,7 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
                 return errno = ENOTTY, -1;
 
 
-            if (current_task->sid == current_task->tid && pty->m_sid == current_task->sid) {
+            if (current_task->sid == current_task->pid && pty->m_sid == current_task->sid) {
 
                 if (pty->s_pgrp > 0) {
                     sys_kill(-pty->s_pgrp, SIGHUP);

@@ -144,10 +144,10 @@ static void __snapshot(task_t* t, cpuid_t cpu, size_t threads, procfs_task_t* o)
     memset(o, 0, sizeof(procfs_task_t));
 
     o->tid  = t->tid;
-    o->pid  = (pid_t)t->pid;
+    o->pid  = t->pid;
     o->ppid = t->ppid;
     o->pgrp = t->pgrp;
-    o->sid  = (pid_t)t->sid;
+    o->sid  = t->sid;
 
     o->uid     = t->uid;
     o->euid    = t->euid;
@@ -212,17 +212,13 @@ int procfs_task_snapshot(pid_t pid, procfs_task_t* out) {
         return errno = ESRCH, -1;
 
 
-    size_t threads = 0;
-    bool found     = false;
+    bool found = false;
 
     cpu_foreach (cpu) {
 
         scoped_lock(&cpu->sched_lock) {
 
             for (task_t* t = cpu->sched_queue; t; t = t->next) {
-
-                if ((pid_t)t->pid == pid)
-                    threads++;
 
                 if (t->tid != pid)
                     continue;
@@ -240,6 +236,21 @@ int procfs_task_snapshot(pid_t pid, procfs_task_t* out) {
 
     if (!found)
         return errno = ESRCH, -1;
+
+
+    size_t threads = 0;
+
+    cpu_foreach (cpu) {
+
+        scoped_lock(&cpu->sched_lock) {
+
+            for (task_t* t = cpu->sched_queue; t; t = t->next) {
+
+                if (t->pid == out->pid && t->status != TASK_STATUS_DEAD)
+                    threads++;
+            }
+        }
+    }
 
     out->threads = threads;
 
@@ -281,7 +292,7 @@ size_t procfs_task_list(pid_t* ids, size_t max) {
 
             for (task_t* t = cpu->sched_queue; t && n < max; t = t->next) {
 
-                if (t->tid != (pid_t)t->pid)
+                if (t->tid != t->pid)
                     continue;
 
                 if (t->status == TASK_STATUS_DEAD)

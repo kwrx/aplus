@@ -52,5 +52,23 @@ SYSCALL(
         DEBUG_ASSERT(current_cpu);
         DEBUG_ASSERT(current_task);
 
-        return current_task->sid;
+        if (pid == 0)
+            return current_task->sid;
+
+        if (unlikely(pid < 0))
+            return -ESRCH;
+
+        cpu_foreach(cpu) {
+
+            scoped_lock(&cpu->sched_lock) {
+
+                for (task_t* tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+
+                    if (tmp->tid == pid && tmp->status != TASK_STATUS_DEAD)
+                        return tmp->sid;
+                }
+            }
+        }
+
+        return -ESRCH;
     });

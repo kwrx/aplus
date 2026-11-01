@@ -178,7 +178,7 @@
 #define LWIP_LOOPIF_MULTICAST 1
 
 // * Thread Options *
-#define TCPIP_THREAD_NAME         "[tcpip]"
+#define TCPIP_THREAD_NAME         "tcpipd"
 #define TCPIP_THREAD_STACKSIZE    (1024 << 10)
 #define TCPIP_THREAD_PRIO         (0)
 #define TCPIP_MBOX_SIZE           (64 << NUM_SHIFT)

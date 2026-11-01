@@ -854,7 +854,7 @@ void sched_exit(void) {
 
         self->status = TASK_STATUS_ZOMBIE;
 
-        if (self->tid != self->pid)
+        if (self->tid != self->pid || (self->flags & TASK_FLAGS_KTHREAD))
             self->flags |= TASK_FLAGS_AUTOREAP;
 
         ppid = self->ppid;
@@ -929,6 +929,33 @@ void sched_exit(void) {
         __sched_child_changed(ppid, self->pid, self->uid, WCOREDUMP(value) ? CLD_DUMPED : CLD_KILLED, WTERMSIG(value));
     else
         __sched_child_changed(ppid, self->pid, self->uid, CLD_EXITED, WEXITSTATUS(value));
+}
+
+
+void sched_group_setids(pid_t pid, pid_t pgrp, pid_t sid) {
+
+    DEBUG_ASSERT(pid > 0);
+    DEBUG_ASSERT(pgrp > 0);
+
+    cpu_foreach(cpu) {
+
+        scoped_lock(&cpu->sched_lock) {
+
+            for (task_t* t = cpu->sched_queue; t; t = t->next) {
+
+                if (t->pid != pid || t->status == TASK_STATUS_DEAD)
+                    continue;
+
+                scoped_lock(&t->lock) {
+
+                    t->pgrp = pgrp;
+
+                    if (sid > 0)
+                        t->sid = sid;
+                }
+            }
+        }
+    }
 }
 
 
