@@ -50,14 +50,12 @@
 
 SYSCALL(
     58, vfork, long sys_vfork(void) {
-        // TODO: Implements vfork() syscall in do_fork();
-
-        struct kclone_args args = {// // .flags          = CLONE_VM | CLONE_VFORK,
-                                   .exit_signal = SIGCHLD};
-
+        struct kclone_args args = {
+            .flags = CLONE_VM | CLONE_VFORK, 
+            .exit_signal = SIGCHLD
+        };
 
         pid_t pid;
-
         if ((pid = do_fork(&args, sizeof(args))) < 0)
             return -errno;
 

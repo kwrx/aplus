@@ -127,6 +127,9 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
         current_task->vfork.released = false;
         current_task->vfork.child    = 0;
 
+        if (!queue_is_empty(&current_task->sigqueue))
+            current_task->flags |= TASK_FLAGS_SIGNALED;
+
         return pid;
     }
 

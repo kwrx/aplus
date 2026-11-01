@@ -269,7 +269,11 @@ static inline void do_signals(void) {
         return;
     }
 
-    if (unlikely(current_task->vfork.pending || current_task->sighand == NULL)) {
+    if (unlikely(current_task->sighand == NULL)) {
+        return;
+    }
+
+    if (unlikely(current_task->vfork.pending && !__sigqueue_holds(&current_task->sigqueue, SIGKILL))) {
         return;
     }
 
@@ -278,11 +282,18 @@ static inline void do_signals(void) {
     }
 
 
-    siginfo_t* siginfo;
+    if (unlikely(current_task->vfork.pending)) {
 
-    if ((siginfo = (siginfo_t*)queue_pop(&current_task->sigqueue)) != NULL) {
+        sched_die(SIGKILL);
 
-        DEBUG_ASSERT(siginfo);
+    } else {
+
+        siginfo_t* siginfo = (siginfo_t*)queue_pop(&current_task->sigqueue);
+
+        if (siginfo == NULL) {
+            return;
+        }
+
         DEBUG_ASSERT(siginfo->si_signo >= 0);
         DEBUG_ASSERT(siginfo->si_signo <= _NSIG);
 
@@ -290,11 +301,11 @@ static inline void do_signals(void) {
 
         handle_signal(siginfo);
         kfree(siginfo);
-
-
-        while (unlikely(current_task->status == TASK_STATUS_ZOMBIE || current_task->status == TASK_STATUS_STOP || current_task->status == TASK_STATUS_DEAD))
-            schedule(1);
     }
+
+
+    while (unlikely(current_task->status == TASK_STATUS_ZOMBIE || current_task->status == TASK_STATUS_STOP || current_task->status == TASK_STATUS_DEAD))
+        schedule(1);
 }
 
 
@@ -347,7 +358,7 @@ static void __sched_next(void) {
 
         if (current_task->status == TASK_STATUS_SLEEP) {
 
-            if (!queue_is_empty(&current_task->sigqueue) && !current_task->vfork.pending && current_task->sighand && !arch_task_parked_in_kernel(current_task, current_task == prev)) {
+            if (!queue_is_empty(&current_task->sigqueue) && (!current_task->vfork.pending || __sigqueue_holds(&current_task->sigqueue, SIGKILL)) && current_task->sighand && !arch_task_parked_in_kernel(current_task, current_task == prev)) {
                 thread_wake(current_task);
             }
 
