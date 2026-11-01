@@ -1,8 +1,10 @@
 #include <errno.h>
+#include <sched.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/syscall.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <time.h>
@@ -113,6 +115,59 @@ static int parent_waits_for_exit(void) {
         return 2;
 
     return waited >= 150 ? 0 : 3;
+}
+
+
+static int clone_child(void* arg) {
+
+    (void)arg;
+
+    return 6;
+}
+
+
+static int clone_ignores_unused_tids(void) {
+
+    void* const ptid = (void*)0x3UL;
+    void* const ctid = (void*)0xFFFFFFFFUL;
+
+    long pid = syscall(SYS_clone, (unsigned long)SIGCHLD, NULL, ptid, ctid, 0UL);
+
+    if (pid == 0)
+        _exit(5);
+
+    if (pid < 0)
+        return 1;
+
+    int status = reap((pid_t)pid);
+
+    if (!WIFEXITED(status) || WEXITSTATUS(status) != 5)
+        return 2;
+
+    static char stack[16384] __attribute__((aligned(16)));
+
+    pid = clone(clone_child, stack + sizeof(stack), CLONE_VM | CLONE_VFORK | SIGCHLD, NULL, ptid, NULL, ctid);
+
+    if (pid < 0)
+        return 3;
+
+    status = reap((pid_t)pid);
+
+    if (!WIFEXITED(status) || WEXITSTATUS(status) != 6)
+        return 4;
+
+    errno = 0;
+    pid   = syscall(SYS_clone, (unsigned long)(CLONE_PARENT_SETTID | SIGCHLD), NULL, ptid, NULL, 0UL);
+
+    if (pid == 0)
+        _exit(0);
+
+    if (pid > 0) {
+        reap((pid_t)pid);
+        return 5;
+    }
+
+    return errno == EFAULT ? 0 : 6;
 }
 
 
@@ -351,6 +406,7 @@ int main(int argc, char** argv) {
     run("signal-held-while-parked", signal_held_while_parked, 5000);
     run("kill-parked-parent", kill_parked_parent, 8000);
     run("many-in-a-row", many_in_a_row, 20000);
+    run("clone-ignores-unused-tids", clone_ignores_unused_tids, 5000);
 
     printf("vfork-test: %d/%d passed\n", total - failures, total);
 
