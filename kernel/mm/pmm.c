@@ -36,42 +36,14 @@
 #define PMM_PREALLOCATED_END      (PML2_PAGESIZE * PML1_PREALLOCATED_BITMAPS)
 
 
-/*!
- * @brief pml2_bitmap[].
- *        Physical Page Map Level 2.
- */
 static uintptr_t pml2_bitmap[PML2_MAX_ENTRIES] = { 0 };
-
-/*!
- * @brief pml2_pusage[].
- *        Number of allocated pages in Page Map Level 1.
- */
 static uint16_t pml2_pusage[PML2_MAX_ENTRIES] = { 0 };
-
-/*!
- * @brief pml2_hint[].
- *        First bitmap word of a Page Map Level 1 that may still hold a free page.
- */
 static uint16_t pml2_hint[PML2_MAX_ENTRIES] = { 0 };
-
-/*!
- * @brief pmm_lock.
- *        Serializes all bitmap operations and allocation scans.
- */
 static spinlock_t pmm_lock = SPINLOCK_INIT_WITH_FLAGS(SPINLOCK_FLAGS_CPU_OWNER);
 
-/*!
- * @brief pml1_first_bitmap[].
- *        First preallocated Page Map Bitmap (0-2GiB)
- */
 static uint64_t pml1_first_preallocated_bitmaps[PML1_MAX_ENTRIES * PML1_PREALLOCATED_BITMAPS] = { 0 };
 
-/*!
- * @brief pmm_max_memory.
- *        Max physical memory available.
- */
 static uintptr_t pmm_max_memory = 0;
-
 static size_t pmm_usable_pages = 0;
 
 
@@ -441,13 +413,6 @@ static void pmm_validate_locked(void) {
 
 
 
-/*!
- * @brief pmm_claim_area().
- *        Mark user defined area as reserved.
- *
- * @param physaddr: Physical Address of Memory Area.
- * @param size:     Size of Memory Area in bytes.
- */
 void pmm_claim_area(uintptr_t physaddr, uintptr_t size) {
 
     uintptr_t end = 0;
@@ -464,13 +429,6 @@ void pmm_claim_area(uintptr_t physaddr, uintptr_t size) {
 
 
 
-/*!
- * @brief pmm_unclaim_area().
- *        Mark user defined area as free.
- *
- * @param physaddr: Physical Address of Memory Area.
- * @param size:     Size of Memory Area in bytes.
- */
 void pmm_unclaim_area(uintptr_t physaddr, size_t size) {
 
     uintptr_t end = 0;
@@ -487,22 +445,12 @@ void pmm_unclaim_area(uintptr_t physaddr, size_t size) {
 
 
 
-/*!
- * @brief pmm_alloc_block().
- *        Allocate a physical block of PML1_PAGESIZE bytes.
- */
 uintptr_t pmm_alloc_block() {
     return pmm_alloc_blocks(1);
 }
 
 
 
-/*!
- * @brief pmm_alloc_blocks().
- *        Allocate physical blocks of (n * PML1_PAGESIZE) bytes.
- *
- * @param blkno: Number of blocks to allocate.
- */
 uintptr_t pmm_alloc_blocks(size_t blkno) {
 
     uintptr_t address;
@@ -516,13 +464,6 @@ uintptr_t pmm_alloc_blocks(size_t blkno) {
 
 
 
-/*!
- * @brief pmm_alloc_blocks_aligned().
- *        Allocate physical blocks of (n * PML1_PAGESIZE) bytes at aligned address.
- *
- * @param blkno: Number of blocks to allocate.
- * @param align: Address alignment.
- */
 uintptr_t pmm_alloc_blocks_aligned(size_t blkno, uintptr_t align) {
 
     uintptr_t address;
@@ -536,25 +477,12 @@ uintptr_t pmm_alloc_blocks_aligned(size_t blkno, uintptr_t align) {
 
 
 
-/*!
- * @brief pmm_free_block().
- *        Frees a physical block of PML1_PAGESIZE bytes.
- *
- * @param address: Physical address of block.
- */
 void pmm_free_block(uintptr_t address) {
     pmm_unclaim_area(address, PML1_PAGESIZE);
 }
 
 
 
-/*!
- * @brief pmm_free_blocks().
- *        Frees physical blocks of (n * PML1_PAGESIZE) bytes.
- *
- * @param address: Physical address of block.
- * @param blkno: Number of blocks to free.
- */
 void pmm_free_blocks(uintptr_t address, size_t blkno) {
 
     if (!blkno || blkno > SIZE_MAX / PML1_PAGESIZE) {
@@ -567,10 +495,6 @@ void pmm_free_blocks(uintptr_t address, size_t blkno) {
 
 
 
-/*!
- * @brief pmm_get_used_memory().
- *        Get Physical Memory used by system.
- */
 uint64_t pmm_get_used_memory() {
 
     size_t free = 0;
@@ -583,22 +507,12 @@ uint64_t pmm_get_used_memory() {
 }
 
 
-/*!
- * @brief pmm_get_total_memory().
- *        Get Physical Memory size.
- */
 uint64_t pmm_get_total_memory() {
     return (uint64_t)pmm_usable_pages * PML1_PAGESIZE;
 }
 
 
 
-/*!
- * @brief pmm_init().
- *        Initialize Physical Memory Manager.
- *
- * @param max_memory: Max amount of physical memory.
- */
 void pmm_init(uintptr_t max_memory) {
 
     PANIC_ASSERT(max_memory >= (16 * 1024 * 1024));
