@@ -35,8 +35,6 @@
 #include "ext2.h"
 
 
-// TODO: rewrite all ext2 cache functions
-
 struct ext2_inode* ext2_icache_fetch(cache_t* cache, ext2_t* ext2, ino_t ino) {
 
     struct ext2_inode* i = (struct ext2_inode*)kcalloc(1, ext2->inodesize, GFP_KERNEL);

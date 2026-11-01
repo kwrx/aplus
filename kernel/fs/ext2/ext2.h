@@ -36,9 +36,6 @@
 #define EXT2_LINK_MAX  32000
 
 
-// TODO: rewrite all ext2 driver to support cache
-
-
 /* See linux/fs/ext2/ext2.h */
 
 /*

@@ -46,7 +46,7 @@ int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
     (void)args;
 
 
-    // TODO: ext2: include support for fsync and atime
+    // TODO: ext2: support atime and asynchronous writes
     flags |= MS_SYNCHRONOUS;
     flags |= MS_NOATIME;
 

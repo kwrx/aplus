@@ -590,10 +590,7 @@ _start_high64:
 
         # Align Stack
         andq    $-16, %rsp
-
-#if defined(__OPTIMIZE__) && !defined(CONFIG_HAVE_DEBUG)
-        addq    $8, %rsp  // BUG: stack not aligned when code is optimized by compiler
-#endif
+        addq    $8, %rsp
 
         # Restore boot arguments
         leaq    __raw_args, %rcx
