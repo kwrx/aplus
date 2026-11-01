@@ -41,7 +41,7 @@ extern "C" {
 
 #define UI_PATH_PICTURES "Pictures"
 
-#define UI_PROTOCOL_VERSION 7
+#define UI_PROTOCOL_VERSION 8
 #define UI_TITLE_MAX        64
 
 /**
@@ -105,6 +105,9 @@ extern "C" {
  */
 #define UI_REQ_POPUP_MENU 0x0009
 
+#define UI_REQ_CLIPBOARD_SET 0x000A
+#define UI_REQ_CLIPBOARD_GET 0x000B
+
 #define UI_EV_HELLO     0x8001
 #define UI_EV_CONFIGURE 0x8002
 #define UI_EV_KEY       0x8003
@@ -134,6 +137,10 @@ extern "C" {
  * @brief The answer to a UI_REQ_POPUP_MENU: the id of the item picked, or 0 when the menu went away without one.
  */
 #define UI_EV_MENU 0x800A
+
+#define UI_EV_CLIPBOARD         0x800B
+#define UI_EV_CLIPBOARD_CHANGED 0x800C
+#define UI_EV_CLIPBOARD_SINCE   8
 
 
 /**
@@ -362,6 +369,36 @@ typedef struct {
 } __attribute__((packed)) ui_msg_window_t;
 
 
+#define UI_CLIPBOARD_MIME_MAX 64
+#define UI_CLIPBOARD_TEXT     "text/plain;charset=utf-8"
+
+
+typedef struct {
+
+    uint32_t serial;
+    char mime[UI_CLIPBOARD_MIME_MAX];
+
+} __attribute__((packed)) ui_msg_clipboard_t;
+
+
+#define UI_CLIPBOARD_MAX (UI_MSG_PAYLOAD_MAX - sizeof(ui_msg_clipboard_t))
+
+
+typedef struct {
+
+    uint32_t serial;
+
+} __attribute__((packed)) ui_msg_clipboard_get_t;
+
+
+typedef struct {
+
+    uint32_t size;
+    char mime[UI_CLIPBOARD_MIME_MAX];
+
+} __attribute__((packed)) ui_msg_clipboard_changed_t;
+
+
 /**
  * @brief A configure hands over a surface as well as a size, the segment being created and owned by the server.
  */
@@ -553,6 +590,8 @@ typedef enum {
     UI_EVENT_SCROLL,
     UI_EVENT_THEME,
     UI_EVENT_MENU,
+    UI_EVENT_CLIPBOARD,
+    UI_EVENT_CLIPBOARD_CHANGED,
 
 } ui_event_type_t;
 
@@ -594,6 +633,11 @@ typedef struct {
             uint32_t serial;
             uint32_t id;
         } menu;
+
+        struct {
+            uint32_t serial;
+            uint32_t size;
+        } clipboard;
     };
 
 } ui_event_t;
@@ -694,6 +738,11 @@ int ui_window_set_cursor(ui_window_t* win, ui_cursor_t cursor);
  * @return 0, or -1 with errno set.
  */
 int ui_window_popup_menu(ui_window_t* win, int x, int y, const ui_menu_item_t* items, size_t count, uint32_t* serial);
+
+int ui_clipboard_set(ui_connection_t* conn, const char* mime, const void* data, size_t size);
+int ui_clipboard_set_text(ui_connection_t* conn, const char* text);
+int ui_clipboard_request(ui_connection_t* conn, uint32_t* serial);
+const void* ui_clipboard_data(ui_connection_t* conn, size_t* size, const char** mime);
 
 /**
  * @brief Waits for the next event on a connection.

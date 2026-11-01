@@ -446,6 +446,7 @@ void ui_disconnect(ui_connection_t* conn) {
         close(conn->fd);
     }
 
+    free(conn->clipboard.data);
     free(conn->rx.data);
     free(conn);
 }

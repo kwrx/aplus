@@ -775,6 +775,12 @@ typedef struct {
 
     wm_drawer_t drawer;
 
+    struct {
+        uint8_t* data;
+        size_t size;
+        char mime[UI_CLIPBOARD_MIME_MAX];
+    } clipboard;
+
     ui_damage_t damage;
 
     bool running;

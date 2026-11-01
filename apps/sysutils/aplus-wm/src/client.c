@@ -614,6 +614,98 @@ static int wm_client_handle_destroy_window(wm_client_t* client, const uint8_t* p
 }
 
 
+static int wm_client_handle_clipboard_set(wm_client_t* client, const uint8_t* payload, size_t size) {
+
+    ui_msg_clipboard_t req;
+
+    if (size < sizeof(req)) {
+        return -1;
+    }
+
+    memcpy(&req, payload, sizeof(req));
+
+    req.mime[UI_CLIPBOARD_MIME_MAX - 1] = '\0';
+
+    for (const char* c = req.mime; *c; c++) {
+
+        if (*c < 0x20 || *c > 0x7E) {
+            return -1;
+        }
+    }
+
+
+    const size_t length = size - sizeof(req);
+
+    uint8_t* data = NULL;
+
+    if (length) {
+
+        if (!(data = (uint8_t*)malloc(length))) {
+            return -1;
+        }
+
+        memcpy(data, payload + sizeof(req), length);
+    }
+
+    free(wm.clipboard.data);
+
+    wm.clipboard.data = data;
+    wm.clipboard.size = length;
+
+    memset(wm.clipboard.mime, 0, sizeof(wm.clipboard.mime));
+
+    if (length) {
+        memcpy(wm.clipboard.mime, req.mime, UI_CLIPBOARD_MIME_MAX);
+    }
+
+
+    ui_msg_clipboard_changed_t changed = {.size = (uint32_t)length};
+
+    memcpy(changed.mime, wm.clipboard.mime, UI_CLIPBOARD_MIME_MAX);
+
+    wm_client_broadcast(UI_EV_CLIPBOARD_CHANGED, UI_EV_CLIPBOARD_SINCE, &changed, sizeof(changed));
+
+    return 0;
+}
+
+
+static int wm_client_handle_clipboard_get(wm_client_t* client, const uint8_t* payload, size_t size) {
+
+    ui_msg_clipboard_get_t req;
+
+    if (size != sizeof(req)) {
+        return -1;
+    }
+
+    memcpy(&req, payload, sizeof(req));
+
+
+    const size_t length = sizeof(ui_msg_clipboard_t) + wm.clipboard.size;
+
+    uint8_t* msg = (uint8_t*)calloc(1, length);
+
+    if (!msg) {
+        return -1;
+    }
+
+    ui_msg_clipboard_t* clip = (ui_msg_clipboard_t*)msg;
+
+    clip->serial = req.serial;
+
+    memcpy(clip->mime, wm.clipboard.mime, UI_CLIPBOARD_MIME_MAX);
+
+    if (wm.clipboard.size) {
+        memcpy(msg + sizeof(*clip), wm.clipboard.data, wm.clipboard.size);
+    }
+
+    int e = wm_client_queue(client, UI_EV_CLIPBOARD, msg, length);
+
+    free(msg);
+
+    return e;
+}
+
+
 static int wm_client_handle(wm_client_t* client, uint16_t type, const uint8_t* payload, size_t size) {
 
     if (client->control) {
@@ -652,6 +744,12 @@ static int wm_client_handle(wm_client_t* client, uint16_t type, const uint8_t* p
 
         case UI_REQ_DESTROY_WINDOW:
             return wm_client_handle_destroy_window(client, payload, size);
+
+        case UI_REQ_CLIPBOARD_SET:
+            return wm_client_handle_clipboard_set(client, payload, size);
+
+        case UI_REQ_CLIPBOARD_GET:
+            return wm_client_handle_clipboard_get(client, payload, size);
 
         default:
             return 0;

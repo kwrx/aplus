@@ -100,6 +100,17 @@ struct ui_connection {
         ui_msg_theme_t msg;
 
     } theme;
+
+    struct {
+
+        uint8_t* data;
+        size_t size;
+
+        char mime[UI_CLIPBOARD_MIME_MAX];
+
+        uint32_t serial;
+
+    } clipboard;
 };
 
 

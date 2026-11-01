@@ -317,6 +317,70 @@ int ui_next_event(ui_connection_t* conn, ui_event_t* out, int timeout_ms) {
                 return 1;
             }
 
+            case UI_EV_CLIPBOARD: {
+
+                ui_msg_clipboard_t clip;
+
+                if (hdr.length < sizeof(clip)) {
+                    errno = EPROTO;
+                    return -1;
+                }
+
+                if (ui_conn_read(conn, &clip, sizeof(clip)) < 0) {
+                    return -1;
+                }
+
+                const size_t size = hdr.length - sizeof(clip);
+
+                uint8_t* data = (uint8_t*)malloc(size + 1);
+
+                if (!data) {
+                    ui_drain_payload(conn, size);
+                    return -1;
+                }
+
+                if (ui_conn_read(conn, data, size) < 0) {
+                    free(data);
+                    return -1;
+                }
+
+                data[size] = '\0';
+
+                free(conn->clipboard.data);
+
+                conn->clipboard.data   = data;
+                conn->clipboard.size   = size;
+                conn->clipboard.serial = clip.serial;
+
+                memcpy(conn->clipboard.mime, clip.mime, UI_CLIPBOARD_MIME_MAX);
+                conn->clipboard.mime[UI_CLIPBOARD_MIME_MAX - 1] = '\0';
+
+                out->type             = UI_EVENT_CLIPBOARD;
+                out->clipboard.serial = clip.serial;
+                out->clipboard.size   = (uint32_t)size;
+
+                return 1;
+            }
+
+            case UI_EV_CLIPBOARD_CHANGED: {
+
+                ui_msg_clipboard_changed_t changed;
+
+                if (hdr.length != sizeof(changed)) {
+                    errno = EPROTO;
+                    return -1;
+                }
+
+                if (ui_conn_read(conn, &changed, sizeof(changed)) < 0) {
+                    return -1;
+                }
+
+                out->type           = UI_EVENT_CLIPBOARD_CHANGED;
+                out->clipboard.size = changed.size;
+
+                return 1;
+            }
+
             default:
 
                 if (ui_drain_payload(conn, hdr.length) < 0) {
