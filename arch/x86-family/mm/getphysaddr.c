@@ -55,12 +55,7 @@ __nonnull(1) uintptr_t arch_vmm_getphysaddr(vmm_address_space_t* space, uintptr_
 
         if (likely(d && *d != X86_MMU_CLEAR)) {
 
-            const uint64_t type = *d & X86_MMU_PG_AP_TP_MASK;
-
-            if (likely(type == X86_MMU_PG_AP_TP_PAGE || type == X86_MMU_PG_AP_TP_SHARED)) {
-
-                e = (*d & X86_MMU_ADDRESS_MASK) + (virtaddr & (pagesize - 1));
-            }
+            e = (*d & X86_MMU_ADDRESS_MASK) + (virtaddr & (pagesize - 1));
         }
     }
 

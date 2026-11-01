@@ -51,23 +51,8 @@
     #define X86_MMU_PT_AP_PFB (1ULL << 9)
 
     #define X86_MMU_PG_AP_TP_PAGE (0ULL << 10)
-    #define X86_MMU_PG_AP_TP_MMAP (1ULL << 10)
-    #define X86_MMU_PG_AP_TP_COW  (2ULL << 10)
-
-    /**
-     * @brief The frame belongs to a shared memory segment rather than to this address space.
-     *
-     * Spelled as a page type rather than with the global bit, which would survive a CR3 reload.
-     */
     #define X86_MMU_PG_AP_TP_SHARED (3ULL << 10)
-
     #define X86_MMU_PG_AP_TP_MASK (3ULL << 10)
-
-
-    /**
-     * @brief Remembers whether the page was writable before it was marked copy-on-write.
-     */
-    #define X86_MMU_PG_AP_COW_RW (1ULL << 52)
 
 
     #define X86_PF_P   (1ULL << 0)

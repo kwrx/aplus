@@ -102,9 +102,7 @@ __nonnull(1) int arch_vmm_access(vmm_address_space_t* space, uintptr_t virtaddr,
             }
 
             if (mode & R_OK) {
-                if (!(perm & X86_MMU_PG_P)) {
-                    check_or_fail((*d & X86_MMU_PG_AP_TP_MASK) == X86_MMU_PG_AP_TP_COW);
-                }
+                check_or_fail(perm & X86_MMU_PG_P);
             }
 
 #if defined(__x86_64__)
@@ -114,9 +112,7 @@ __nonnull(1) int arch_vmm_access(vmm_address_space_t* space, uintptr_t virtaddr,
 #endif
 
             if (mode & W_OK) {
-                if (!(perm & X86_MMU_PG_RW)) {
-                    check_or_fail((*d & X86_MMU_PG_AP_TP_MASK) == X86_MMU_PG_AP_TP_COW);
-                }
+                check_or_fail(perm & X86_MMU_PG_RW);
             }
 
             if (mode & S_OK) {

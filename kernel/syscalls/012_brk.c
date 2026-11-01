@@ -94,9 +94,6 @@ SYSCALL(
                                  ARCH_VMM_MAP_RDWR        |
                                  ARCH_VMM_MAP_USER        |
                                  ARCH_VMM_MAP_NOEXEC      |
-#if defined(CONFIG_DEMAND_PAGING) && 0 // TODO: Fix demand paging on brk
-                                 ARCH_VMM_MAP_DEMAND      |
-#endif
                                  ARCH_VMM_MAP_TYPE_PAGE );
 
                 if (unlikely(e == ARCH_VMM_MAP_FAILED))

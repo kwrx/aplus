@@ -125,24 +125,11 @@ __nonnull(1) uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtad
 
 
 
-#if DEBUG_LEVEL_TRACE
-    if (flags & ARCH_VMM_MAP_DEMAND)
-        DEBUG_ASSERT((flags & ARCH_VMM_MAP_TYPE_MASK) == ARCH_VMM_MAP_TYPE_PAGE && "Only TYPE_PAGE can be no-prefault");
-#endif
-
     //* Set Page Type
     switch ((flags & ARCH_VMM_MAP_TYPE_MASK)) {
 
         case ARCH_VMM_MAP_TYPE_PAGE:
             b |= X86_MMU_PG_AP_TP_PAGE;
-            break;
-
-        case ARCH_VMM_MAP_TYPE_MMAP:
-            b |= X86_MMU_PG_AP_TP_MMAP;
-            break;
-
-        case ARCH_VMM_MAP_TYPE_COW:
-            b |= X86_MMU_PG_AP_TP_COW;
             break;
 
         case ARCH_VMM_MAP_TYPE_SHARED:
@@ -174,10 +161,6 @@ __nonnull(1) uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtad
             if (boot_cpu_has(X86_FEATURE_PAT))
                 b |= X86_MMU_PT_PAT; /* WC */
     }
-
-
-    if (b & X86_MMU_PG_RW)
-        b |= X86_MMU_PG_AP_COW_RW;
 
 
     bool failed = false;
@@ -216,21 +199,14 @@ __nonnull(1) uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtad
 
             } else {
 
-                if (flags & ARCH_VMM_MAP_DEMAND) {
+                uintptr_t frame = __try_alloc_frame(pagesize, true);
 
-                    *d = X86_MMU_PG_AP_TP_COW | (b & ~X86_MMU_PG_P);
-
-                } else {
-
-                    uintptr_t frame = __try_alloc_frame(pagesize, true);
-
-                    if (unlikely(frame == X86_MMU_FRAME_NONE)) {
-                        failed = true;
-                        break;
-                    }
-
-                    *d = frame | X86_MMU_PG_AP_PFB | b;
+                if (unlikely(frame == X86_MMU_FRAME_NONE)) {
+                    failed = true;
+                    break;
                 }
+
+                *d = frame | X86_MMU_PG_AP_PFB | b;
             }
         }
 

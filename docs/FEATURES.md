@@ -17,7 +17,7 @@
 | Debug         | yes    | yes     | no      |
 | Multiboot     | yes[^1]| yes[^1] | no      |
 | CPU           | yes    | yes     | no      |
-| Paging        | yes[^2]| yes[^2] | no      |
+| Paging        | yes    | yes     | no      |
 | Interrupts    | yes    | no      | no      |
 | Tasking       | yes    | no      | no      |
 | Timer         | yes    | yes     | no      |
@@ -37,7 +37,6 @@
 | RDRAND        | yes    | yes     |         |
 
 [^1]: Multiboot 2.0 Specification<br>
-[^2]: On-demand paging provided<br>
 [^3]: RDRAND support<br>
 [^4]: Interrupt and SYSCALL/SYSRET<br>
 

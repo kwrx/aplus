@@ -58,7 +58,6 @@ static uintptr_t __mm_pagesize_for_level(int level) {
     }
 
     kpanicf("__mm_pagesize_for_level(): PANIC! Page map level too high or invalid: %d\n", level);
-    return 0UL;
 }
 
 
@@ -93,41 +92,22 @@ static inline bool __mm_is_kernel_slot(int level, size_t i) {
 }
 
 
-static x86_page_t __mm_copy_data(x86_page_t* __s, size_t* size, bool on_demand, int level) {
+static x86_page_t __mm_copy_data(x86_page_t* __s, size_t* size, int level) {
 
     DEBUG_ASSERT(__s);
     DEBUG_ASSERT(size);
 
-
     uintptr_t pagesize = __mm_pagesize_for_level(level);
-
-    DEBUG_ASSERT(pagesize);
-
 
     *size += pagesize >> 12;
 
 
-#if defined(CONFIG_DEMAND_PAGING)
-    if (on_demand) {
+    uintptr_t page = __alloc_frame(pagesize, false);
 
-        x86_page_t e = (*__s & ~(X86_MMU_PG_RW | X86_MMU_PG_AP_TP_MASK)) | X86_MMU_PG_AP_TP_COW;
-
-        if (*__s & X86_MMU_PG_RW)
-            e |= X86_MMU_PG_AP_COW_RW;
-
-        return (*__s = e);
-
-    } else
-#endif
-    {
-
-        uintptr_t page = __alloc_frame(pagesize, false);
-
-        memcpy((void*)arch_vmm_p2v(page, ARCH_VMM_AREA_HEAP), (void*)arch_vmm_p2v(*__s & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP), (size_t)pagesize);
+    memcpy((void*)arch_vmm_p2v(page, ARCH_VMM_AREA_HEAP), (void*)arch_vmm_p2v(*__s & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP), (size_t)pagesize);
 
 
-        return page | X86_MMU_PG_AP_PFB | (*__s & ~X86_MMU_ADDRESS_MASK);
-    }
+    return page | X86_MMU_PG_AP_PFB | (*__s & ~X86_MMU_ADDRESS_MASK);
 }
 
 
@@ -148,15 +128,13 @@ static void __mm_copy_page(x86_page_t* __s, x86_page_t* __d, size_t* size, int l
         if (flags & ARCH_VMM_CLONE_USERSPACE) {
 
 
-            const uint64_t type = *__s & X86_MMU_PG_AP_TP_MASK;
-
-            if (type == X86_MMU_PG_AP_TP_COW || type == X86_MMU_PG_AP_TP_SHARED) {
+            if ((*__s & X86_MMU_PG_AP_TP_MASK) == X86_MMU_PG_AP_TP_SHARED) {
 
                 *__d = *__s;
 
             } else {
 
-                *__d = __mm_copy_data(__s, size, (flags & ARCH_VMM_CLONE_DEMAND), level);
+                *__d = __mm_copy_data(__s, size, level);
             }
         }
     }
@@ -206,12 +184,7 @@ static void __mm_free_data(x86_page_t* __s, int level) {
 
     DEBUG_ASSERT(__s);
 
-
     uintptr_t pagesize = __mm_pagesize_for_level(level);
-
-    DEBUG_ASSERT(pagesize);
-
-
 
     if (*__s & X86_MMU_PG_AP_PFB) {
 
@@ -229,25 +202,9 @@ static void __mm_free_page(x86_page_t* __s, int level) {
 
         return;
 
-    } else {
+    } else if ((*__s & X86_MMU_PG_AP_TP_MASK) != X86_MMU_PG_AP_TP_SHARED) {
 
-        const uint64_t type = *__s & X86_MMU_PG_AP_TP_MASK;
-
-        if (type == X86_MMU_PG_AP_TP_COW) {
-
-            /* FIXME: a copy-on-write frame may still be referenced by another address space,
-               and there is no per-frame reference count to tell, so it is deliberately leaked
-               rather than risking a double free. Only reachable with CONFIG_DEMAND_PAGING. */
-            return;
-
-        } else if (type == X86_MMU_PG_AP_TP_SHARED) {
-
-            return;
-
-        } else {
-
-            __mm_free_data(__s, level);
-        }
+        __mm_free_data(__s, level);
     }
 }
 
@@ -349,12 +306,6 @@ __returns_nonnull vmm_address_space_t* arch_vmm_create_address_space(vmm_address
 
     spinlock_init_with_flags(&dest->lock, SPINLOCK_FLAGS_CPU_OWNER | SPINLOCK_FLAGS_RECURSIVE);
     spinlock_init_with_flags(&dest->tlb.lock, SPINLOCK_FLAGS_CPU_OWNER);
-
-
-    if ((flags & ARCH_VMM_CLONE_DEMAND) && (flags & ARCH_VMM_CLONE_USERSPACE)) {
-        x86_vmm_tlb_bump(parent);
-        arch_vmm_flush_all(parent);
-    }
 
 
     return dest;

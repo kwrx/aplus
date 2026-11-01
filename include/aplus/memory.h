@@ -72,7 +72,6 @@
     #define ARCH_VMM_MAP_UNCACHED      (1 << 3)
     #define ARCH_VMM_MAP_SHARED        (1 << 4)
     #define ARCH_VMM_MAP_FIXED         (1 << 5)
-    #define ARCH_VMM_MAP_DEMAND        (1 << 6)
     #define ARCH_VMM_MAP_DISABLED      (1 << 7)
     #define ARCH_VMM_MAP_VIDEO_MEMORY  (1 << 8)
     #define ARCH_VMM_MAP_WRITE_THROUGH (1 << 9)
@@ -83,8 +82,6 @@
 
     #define ARCH_VMM_MAP_TYPE_MASK (3 << 12)
     #define ARCH_VMM_MAP_TYPE_PAGE (0 << 12)
-    #define ARCH_VMM_MAP_TYPE_MMAP (1 << 12)
-    #define ARCH_VMM_MAP_TYPE_COW  (2 << 12)
 
     /**
      * @brief A frame owned by something outside the address space, such as a System V shared memory segment.
@@ -94,7 +91,6 @@
     #define ARCH_VMM_MAP_TYPE_SHARED (3 << 12)
 
 
-    #define ARCH_VMM_CLONE_DEMAND    (1 << 1)
     #define ARCH_VMM_CLONE_USERSPACE (1 << 2)
 
     #define ARCH_VMM_CLONE_NEW_SPACE (0)

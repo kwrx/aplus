@@ -130,12 +130,6 @@ SYSCALL(
             arch_flags |= ARCH_VMM_MAP_RDWR;
 
 
-#if defined(CONFIG_DEMAND_PAGING)
-        if ((flags & MAP_ANONYMOUS) && !(flags & MAP_POPULATE) && !(flags & MAP_LOCKED))
-            arch_flags |= ARCH_VMM_MAP_DEMAND;
-#endif
-
-
         if (flags & MAP_HUGETLB) {
 
             arch_flags |= ARCH_VMM_MAP_HUGETLB;

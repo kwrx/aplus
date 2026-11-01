@@ -213,13 +213,7 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
         atomic_fetch_add(&child->address_space->refcount, 1);
     } else {
 
-        int clone_flags = ARCH_VMM_CLONE_USERSPACE;
-
-#if defined(CONFIG_DEMAND_PAGING)
-        clone_flags |= ARCH_VMM_CLONE_DEMAND;
-#endif
-
-        child->address_space = arch_vmm_create_address_space(current_task->address_space, clone_flags);
+        child->address_space = arch_vmm_create_address_space(current_task->address_space, ARCH_VMM_CLONE_USERSPACE);
     }
 
 

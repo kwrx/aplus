@@ -159,16 +159,7 @@ __nonnull(1) uintptr_t arch_vmm_mprotect(vmm_address_space_t* space, uintptr_t v
 
         /* Page Table */
         {
-            uint64_t pb = b;
-
-            if (!(*d & X86_MMU_PG_P) && !(*d & X86_MMU_ADDRESS_MASK))
-                pb &= ~X86_MMU_PG_P;
-
-            if (pb & X86_MMU_PG_RW)
-                pb |= X86_MMU_PG_AP_COW_RW;
-
-
-            *d = (*d & X86_MMU_ADDRESS_MASK) | (*d & X86_MMU_PG_AP_TP_MASK) | (*d & X86_MMU_PG_AP_PFB) | pb;
+            *d = (*d & X86_MMU_ADDRESS_MASK) | (*d & X86_MMU_PG_AP_TP_MASK) | (*d & X86_MMU_PG_AP_PFB) | b;
 
 
 

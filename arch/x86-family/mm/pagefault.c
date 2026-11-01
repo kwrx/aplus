@@ -87,10 +87,8 @@ int x86_vmm_resolve(uintptr_t pm, uintptr_t virtaddr, uint64_t err, const char**
     if (__vmm_stale_fault(*d, err))
         return 0;
 
-    // TODO: implement X86_MMU_PG_AP_TP_MMAP
-    if ((*d & X86_MMU_PG_AP_TP_MASK) != X86_MMU_PG_AP_TP_COW)
-        FAIL("page fault cannot be handled, no copy on write flags found");
-
+    if (!(*d & X86_MMU_PG_P))
+        FAIL("page not present");
 
     if (err & X86_PF_R)
         FAIL("reserved bit set in a page table entry");
@@ -101,37 +99,10 @@ int x86_vmm_resolve(uintptr_t pm, uintptr_t virtaddr, uint64_t err, const char**
     if ((err & X86_PF_I) && (*d & X86_MMU_PT_NX))
         FAIL("instruction fetch from a no-execute page");
 
-    if ((err & X86_PF_W) && !(*d & X86_MMU_PG_AP_COW_RW))
+    if ((err & X86_PF_W) && !(*d & X86_MMU_PG_RW))
         FAIL("write to a read-only page");
 
-
-    const uintptr_t src = *d & X86_MMU_ADDRESS_MASK;
-
-    uintptr_t page = __try_alloc_frame(pagesize, src == 0);
-
-    if (unlikely(page == X86_MMU_FRAME_NONE))
-        FAIL("out of physical memory");
-
-
-    if (src != 0) {
-
-        memcpy((void*)arch_vmm_p2v(page, ARCH_VMM_AREA_HEAP), (void*)arch_vmm_p2v(src, ARCH_VMM_AREA_HEAP), (size_t)pagesize);
-    }
-
-
-    uint64_t b = (*d & ~X86_MMU_ADDRESS_MASK) & ~X86_MMU_PG_AP_TP_MASK;
-
-    b |= X86_MMU_PG_P | X86_MMU_PG_AP_PFB | X86_MMU_PG_AP_TP_PAGE;
-
-    if (*d & X86_MMU_PG_AP_COW_RW)
-        b |= X86_MMU_PG_RW;
-    else
-        b &= ~X86_MMU_PG_RW;
-
-
-    *d = page | b;
-
-    return 0;
+    FAIL("protection keys, shadow stack or SGX violation");
 
 #undef FAIL
 }
