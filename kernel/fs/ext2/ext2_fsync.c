@@ -49,7 +49,17 @@ int ext2_fsync(inode_t* inode, int datasync) {
         int r                   = -1;
 
         scoped_lock(&ext2->lock) {
+
             r = ext2_utils_write_inode(ext2, inode->ino, node);
+
+            if (r == 0 && inode == inode->sb->root) {
+
+                scoped_lock(&inode->sb->cache.lock) {
+                    cache_commit_all(&inode->sb->cache);
+                }
+
+                r = ext2_utils_alloc_commit(ext2);
+            }
         }
 
         if (r < 0)

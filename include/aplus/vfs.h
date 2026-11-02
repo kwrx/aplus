@@ -216,7 +216,9 @@ typedef struct {
 typedef struct mount {
 
     inode_t* dir;
+    inode_t* dev;
     struct superblock* sb;
+    struct superblock* covered;
 
     const char* type;
     char* source;
@@ -230,10 +232,14 @@ __BEGIN_DECLS
 extern volatile uint32_t vfs_lock_event;
 
 void vfs_init(void);
+void vfs_dnit(void);
 
 //* kernel/fs/vfs.c
 extern fstable_t* fs_table;
 int vfs_mount(inode_t* dev, inode_t* dir, const char* source, const char* fs, int flags, const char* args);
+int vfs_umount(inode_t* dir);
+int vfs_sync(void);
+int vfs_syncfs(inode_t*);
 void vfs_mounts_foreach(void (*fn)(const mount_t*, void*), void* arg);
 int vfs_statfs(inode_t*, struct statfs*);
 

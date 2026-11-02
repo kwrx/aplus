@@ -37,6 +37,8 @@
 
 #include <aplus/utils/ptr.h>
 
+#include <sys/mount.h>
+
 
 #define INODE_REF_UNLINKED 0x80000000U
 
@@ -94,12 +96,28 @@ void vfs_init(void) {
 }
 
 
-static void __mount_record(inode_t* dir, inode_t* dev, const char* source, const fstable_t* fs, int flags) {
+static void __vfs_swap_mount(inode_t* dir) {
+
+    struct inode_ops ops;
+    memcpy(&ops, &dir->ops, sizeof(ops));
+    memcpy(&dir->ops, &dir->sb->ops, sizeof(ops));
+    memcpy(&dir->sb->ops, &ops, sizeof(ops));
+
+
+    dir->ino ^= dir->sb->ino;
+    dir->sb->ino ^= dir->ino;
+    dir->ino ^= dir->sb->ino;
+}
+
+
+static void __mount_record(inode_t* dir, inode_t* dev, struct superblock* covered, const char* source, const fstable_t* fs, int flags) {
 
     mount_t* m = kcalloc(1, sizeof(mount_t), GFP_KERNEL);
 
-    m->dir   = dir;
-    m->sb    = dir->sb;
+    m->dir     = dir;
+    m->dev     = dev;
+    m->sb      = dir->sb;
+    m->covered = covered;
     m->type  = fs->name;
     m->flags = flags;
 
@@ -137,9 +155,7 @@ int vfs_mount(inode_t* dev, inode_t* dir, const char* source, const char* fs, in
     DEBUG_ASSERT(dir);
     DEBUG_ASSERT(fs);
 
-
-    int i;
-    for (i = 0; fs_table[i].id; i++) {
+    for (size_t i = 0; fs_table[i].id; i++) {
 
         if (strcmp(fs_table[i].name, fs) != 0)
             continue;
@@ -149,22 +165,15 @@ int vfs_mount(inode_t* dev, inode_t* dir, const char* source, const char* fs, in
         DEBUG_ASSERT(fs_table[i].umount);
 
 
+        struct superblock* covered = dir->sb;
+
         int e;
         if ((e = fs_table[i].mount(dev, dir, flags, args)) < 0)
             return e;
 
         DEBUG_ASSERT(dir->sb);
 
-
-        struct inode_ops ops;
-        memcpy(&ops, &dir->ops, sizeof(ops));
-        memcpy(&dir->ops, &dir->sb->ops, sizeof(ops));
-        memcpy(&dir->sb->ops, &ops, sizeof(ops));
-
-
-        dir->ino ^= dir->sb->ino;
-        dir->sb->ino ^= dir->ino;
-        dir->ino ^= dir->sb->ino;
+        __vfs_swap_mount(dir);
 
 
         vfs_inode_get(dir);
@@ -173,7 +182,7 @@ int vfs_mount(inode_t* dev, inode_t* dir, const char* source, const char* fs, in
             vfs_inode_get(dev);
 
 
-        __mount_record(dir, dev, source, &fs_table[i], flags);
+        __mount_record(dir, dev, covered, source, &fs_table[i], flags);
 
 
 #if DEBUG_LEVEL_TRACE
@@ -201,18 +210,265 @@ void vfs_mounts_foreach(void (*fn)(const mount_t*, void*), void* arg) {
 }
 
 
+static struct superblock* __vfs_superblock(inode_t* inode) {
+
+    struct superblock* sb = NULL;
+
+    for (inode_t* i = inode; i && !sb; i = i->parent) {
+        sb = i->sb;
+    }
+
+    while (sb && sb->fsid == FSID_BIND && sb->dev) {
+        sb = sb->dev->sb;
+    }
+
+    return sb;
+}
+
+
+static bool __vfs_dcache_busy(inode_t* inode) {
+
+    if (!inode->dcache.map_base.table) {
+        return false;
+    }
+
+    bool busy = false;
+
+    hashmap_lock(&inode->dcache);
+    {
+        inode_t* child;
+        hashmap_foreach_data(child, &inode->dcache) {
+
+            if ((atomic_load(&child->refcount) & ~INODE_REF_UNLINKED) > 0 || __vfs_dcache_busy(child)) {
+                busy = true;
+                break;
+            }
+        }
+    }
+    hashmap_unlock(&inode->dcache);
+
+    return busy;
+}
+
+
+static int __vfs_umount(inode_t* dir, size_t held) {
+
+    DEBUG_ASSERT(dir);
+
+    mount_t* m = NULL;
+    int e      = 0;
+
+    scoped_lock(&vfs_mounts_lock) {
+
+        size_t stacked = 0;
+
+        list_each(vfs_mounts, i) {
+
+            if (i->dir != dir) {
+                continue;
+            }
+
+            m = i;
+            stacked++;
+        }
+
+        if (!m) {
+            e = EINVAL;
+        } else if ((atomic_load(&dir->refcount) & ~INODE_REF_UNLINKED) > stacked + held || __vfs_dcache_busy(dir)) {
+            e = EBUSY;
+        } else {
+            list_remove(vfs_mounts, m);
+        }
+    }
+
+    if (e) {
+        return errno = e, -1;
+    }
+
+
+    if (vfs_fsync(dir, 0) < 0 && errno != ENOSYS) {
+#if DEBUG_LEVEL_WARN
+        kprintf("umount: WARN! failed to sync %s on %s: errno(%d)\n", m->source, dir->name, errno);
+#endif
+    }
+
+
+    const fstable_t* fs = NULL;
+
+    for (size_t i = 0; fs_table[i].id; i++) {
+
+        if (fs_table[i].id == m->sb->fsid) {
+            fs = &fs_table[i];
+        }
+    }
+
+    DEBUG_ASSERT(fs);
+    DEBUG_ASSERT(fs->umount);
+
+
+    scoped_lock(&dir->lock) {
+
+        if ((e = fs->umount(dir)) == 0) {
+
+            __vfs_swap_mount(dir);
+
+            kfree(dir->sb);
+            dir->sb = m->covered;
+
+            vfs_dcache_free(dir);
+            vfs_dcache_init(dir);
+        }
+    }
+
+    if (e < 0) {
+
+        scoped_lock(&vfs_mounts_lock) {
+            list_push(vfs_mounts, m);
+        }
+
+        return -1;
+    }
+
+
+#if DEBUG_LEVEL_TRACE
+    kprintf("umount: volume %s unmounted from %s\n", m->source, dir->name);
+#endif
+
+    if (m->dev) {
+        vfs_inode_put(m->dev);
+    }
+
+    kfree(m->source);
+    kfree(m);
+
+    vfs_inode_put(dir);
+
+    return 0;
+}
+
+
+int vfs_umount(inode_t* dir) {
+    return __vfs_umount(dir, 1);
+}
+
+
+static size_t __vfs_mounts_snapshot(inode_t*** dirs) {
+
+    size_t count = 0;
+
+    *dirs = NULL;
+
+    scoped_lock(&vfs_mounts_lock) {
+
+        count = list_length(vfs_mounts);
+
+        if (count) {
+
+            *dirs = kmalloc(count * sizeof(inode_t*), GFP_KERNEL);
+
+            size_t n = 0;
+
+            list_each(vfs_mounts, m) {
+                (*dirs)[n++] = vfs_inode_get(m->dir);
+            }
+        }
+    }
+
+    return count;
+}
+
+
+int vfs_sync(void) {
+
+    inode_t** dirs = NULL;
+    size_t count   = __vfs_mounts_snapshot(&dirs);
+
+    int e = 0;
+
+    for (size_t i = 0; i < count; i++) {
+
+        if (vfs_fsync(dirs[i], 0) < 0 && errno != ENOSYS) {
+
+#if DEBUG_LEVEL_WARN
+            kprintf("sync: WARN! failed to sync %s: errno(%d)\n", dirs[i]->name, errno);
+#endif
+
+            e = -1;
+        }
+
+        vfs_inode_put(dirs[i]);
+    }
+
+    if (dirs) {
+        kfree(dirs);
+    }
+
+    return e;
+}
+
+
+int vfs_syncfs(inode_t* inode) {
+
+    DEBUG_ASSERT(inode);
+
+    struct superblock* sb = __vfs_superblock(inode);
+
+    if (!sb || !sb->root) {
+        return 0;
+    }
+
+    if (vfs_fsync(sb->root, 0) < 0 && errno != ENOSYS) {
+        return -1;
+    }
+
+    return 0;
+}
+
+
+void vfs_dnit(void) {
+
+    vfs_sync();
+
+
+    inode_t** dirs = NULL;
+    size_t count   = __vfs_mounts_snapshot(&dirs);
+
+    for (size_t i = count; i > 0; i--) {
+
+        inode_t* dir = dirs[i - 1];
+        size_t held  = 0;
+
+        for (size_t j = 0; j < i; j++) {
+            if (dirs[j] == dir) {
+                held++;
+            }
+        }
+
+        if (__vfs_umount(dir, held) < 0) {
+#if DEBUG_LEVEL_INFO
+            kprintf("vfs: %s left mounted: errno(%d)\n", dir->name, errno);
+#endif
+        }
+
+        vfs_inode_put(dir);
+    }
+
+    if (dirs) {
+        kfree(dirs);
+    }
+
+#if DEBUG_LEVEL_INFO
+    kprintf("vfs: synced and unmounted\n");
+#endif
+}
+
+
 int vfs_statfs(inode_t* inode, struct statfs* st) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(st);
 
-    struct superblock* sb = NULL;
-
-    for (inode_t* i = inode; i && !sb; i = i->parent)
-        sb = i->sb;
-
-    while (sb && sb->fsid == FSID_BIND && sb->dev)
-        sb = sb->dev->sb;
+    struct superblock* sb = __vfs_superblock(inode);
 
     if (unlikely(!sb))
         return errno = ENOSYS, -1;
