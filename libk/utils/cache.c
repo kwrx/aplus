@@ -105,7 +105,9 @@ void cache_destroy(cache_t* cache) {
             }
         }
 
-        hashmap_cleanup(&cache->map);
+        if (cache->map.map_base.table) {
+            hashmap_cleanup(&cache->map);
+        }
 
         cache->size     = 0;
         cache->userdata = NULL;
