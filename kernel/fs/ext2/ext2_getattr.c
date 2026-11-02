@@ -63,8 +63,8 @@ int ext2_getattr(inode_t* inode, struct stat* st) {
     st->st_ino     = inode->ino;
     st->st_mode    = n->i_mode;
     st->st_nlink   = n->i_links_count;
-    st->st_uid     = n->i_uid;
-    st->st_gid     = n->i_gid;
+    st->st_uid     = n->i_uid | ((uid_t)n->osd2.linux2.l_i_uid_high << 16);
+    st->st_gid     = n->i_gid | ((gid_t)n->osd2.linux2.l_i_gid_high << 16);
     st->st_size    = ext2_inode_get_size(inode->sb->fsinfo, n);
     st->st_blksize = inode->sb->st.f_bsize;
     st->st_blocks  = n->i_blocks;
