@@ -15,11 +15,13 @@ SRCDIRS     ?= .
 DESTDIR     ?= $(SYSROOT)/usr/bin
 LIBDIR		?= $(SYSROOT)/usr/lib
 
+LIBDEPS      = $(wildcard $(foreach l,$(LIBS),$(addsuffix /lib$(l).a,$(LIBDIR))))
+
 
 include $(ROOTDIR)/build/build-sources.mk
 include $(ROOTDIR)/build/build-flags.mk
 
-$(TARGET): $(OBJS) $(HDRS) $(RESOURCES)
+$(TARGET): $(OBJS) $(HDRS) $(RESOURCES) $(LIBDEPS)
 	$(QUIET)echo "    LD      $(shell realpath --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)$(LD) $(LDFLAGS) -Wl,-Map,$(TARGET).map -o $@ $(OBJS) $(addprefix -L,$(LIBDIR)) $(addprefix -l,$(LIBS))
 	
