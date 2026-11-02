@@ -314,6 +314,8 @@ __BEGIN_DECLS
 //? See kernel/kmain.c
 extern struct syscore* core;
 
+void kshutdown(int mode) __noreturn;
+
 //? See kernel/runtime/dl.c
 uintptr_t runtime_get_address(const char*) __nonnull((1));
 const char* runtime_get_name(uintptr_t);
