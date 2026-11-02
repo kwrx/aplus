@@ -22,6 +22,7 @@
  */
 
 #include <stdint.h>
+#include <sys/sysmacros.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
