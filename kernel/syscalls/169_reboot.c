@@ -28,9 +28,8 @@
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
 #include <aplus/task.h>
-#include <aplus/module.h>
 #include <aplus/hal.h>
-#include <aplus/smp.h>
+
 #include <fcntl.h>
 #include <stdint.h>
 #include <sys/stat.h>
@@ -67,36 +66,13 @@ SYSCALL(169, reboot, long sys_reboot(int magic1, int magic2, unsigned int cmd, v
 
     switch (cmd) {
         case RB_AUTOBOOT:
+            kshutdown(ARCH_REBOOT_RESTART);
         case RB_HALT_SYSTEM:
+            kshutdown(ARCH_REBOOT_HALT);
         case RB_POWER_OFF:
-            break;
+            kshutdown(ARCH_REBOOT_POWEROFF);
         default:
             return -EINVAL;
     }
-
-#if DEBUG_LEVEL_INFO
-    kprintf("reboot: requested shutdown with cmd(%d)\n", cmd);
-#endif
-
-    module_dnit();
-    smp_dnit();
-
-    switch (cmd) {
-
-        case RB_AUTOBOOT:
-            arch_reboot(ARCH_REBOOT_RESTART);
-            break;
-
-        case RB_HALT_SYSTEM:
-            arch_reboot(ARCH_REBOOT_HALT);
-            break;
-
-        case RB_POWER_OFF:
-            arch_reboot(ARCH_REBOOT_POWEROFF);
-            break;
-
-    }
-
-    return 0;
 
 });
