@@ -44,21 +44,33 @@ int ext2_getattr(inode_t* inode, struct stat* st) {
 
     struct ext2_inode* n = cache_get(&inode->sb->cache, inode->ino);
 
+    struct stat ds;
+    if (vfs_getattr(inode->sb->dev, &ds) < 0) {
+        return -1;
+    }
 
-    st->st_dev     = 0; /* FIXME */
+    dev_t rdev = 0;
+    if (S_ISCHR(n->i_mode) || S_ISBLK(n->i_mode)) {
+        if (n->i_block[0]) {
+            rdev = makedev((n->i_block[0] >> 8) & 0xFF, n->i_block[0] & 0xFF);
+        } else {
+            rdev = makedev((n->i_block[1] & 0xFFF00) >> 8, (n->i_block[1] & 0xFF) | ((n->i_block[1] >> 12) & 0xFFF00));
+        }
+    }
+
+    st->st_dev     = ds.st_rdev;
+    st->st_rdev    = rdev;
     st->st_ino     = inode->ino;
     st->st_mode    = n->i_mode;
     st->st_nlink   = n->i_links_count;
     st->st_uid     = n->i_uid;
     st->st_gid     = n->i_gid;
-    st->st_rdev    = 0; /* FIXME */
     st->st_size    = ext2_inode_get_size(inode->sb->fsinfo, n);
     st->st_blksize = inode->sb->st.f_bsize;
     st->st_blocks  = n->i_blocks;
     st->st_atime   = n->i_atime;
     st->st_ctime   = n->i_ctime;
     st->st_mtime   = n->i_mtime;
-
 
     return 0;
 }
