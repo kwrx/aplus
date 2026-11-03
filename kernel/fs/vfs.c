@@ -429,7 +429,6 @@ void vfs_dnit(void) {
 
     vfs_sync();
 
-
     inode_t** dirs = NULL;
     size_t count   = __vfs_mounts_snapshot(&dirs);
 
@@ -444,9 +443,13 @@ void vfs_dnit(void) {
             }
         }
 
+#if DEBUG_LEVEL_TRACE
+        kprintf("vfs: unmounting %s with %zu held references\n", dir->name, held);
+#endif
+
         if (__vfs_umount(dir, held) < 0) {
-#if DEBUG_LEVEL_INFO
-            kprintf("vfs: %s left mounted: errno(%d)\n", dir->name, errno);
+#if DEBUG_LEVEL_ERROR
+            kprintf("vfs: an error occurred while unmounting %s: errno(%d:%s)\n", dir->name, errno, strerror(errno));
 #endif
         }
 
@@ -458,7 +461,7 @@ void vfs_dnit(void) {
     }
 
 #if DEBUG_LEVEL_INFO
-    kprintf("vfs: synced and unmounted\n");
+    kprintf("vfs: unmounted all filesystems\n");
 #endif
 }
 
