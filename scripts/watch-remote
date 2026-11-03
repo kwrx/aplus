@@ -1,0 +1,20 @@
+#!/bin/sh
+
+if [ -z "$1" ]; then
+    echo "Usage: $0 <remote_host> [<remote_port>] [<application>]"
+    exit 1
+fi
+
+remote_host="$1"
+remote_port="${2:-5900}"
+application="${3:-/Applications/TigerVNC.app}"
+
+while true; do
+    until nc -z -G 1 "$remote_host" "$remote_port"; do
+        sleep 0.5
+    done
+    open -W -n -a "$application" --args "$remote_host:$remote_port";
+    while nc -z -G 1 "$remote_host" "$remote_port"; do
+        sleep 0.5
+    done
+done
