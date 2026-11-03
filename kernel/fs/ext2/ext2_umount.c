@@ -21,7 +21,6 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdint.h>
 #include <sys/mount.h>
 #include <sys/types.h>
 
@@ -35,9 +34,32 @@
 #include "ext2.h"
 
 
+static void ext2_release_tree(inode_t* dir, struct superblock* sb) {
+    DEBUG_ASSERT(dir);
+    DEBUG_ASSERT(sb);
+
+    if (!dir->dcache.map_base.table) {
+        return;
+    }
+
+    inode_t* child;
+    hashmap_foreach_data(child, &dir->dcache) {
+
+        if (child->sb != sb) {
+            continue;
+        }
+
+        DEBUG_ASSERT((atomic_load(&child->refcount) & ~0x80000000U) == 0);
+
+        ext2_release_tree(child, sb);
+
+        vfs_dcache_free(child);
+        kfree(child);
+    }
+}
+
 
 int ext2_umount(inode_t* dir) {
-
     DEBUG_ASSERT(dir);
     DEBUG_ASSERT(dir->sb);
     DEBUG_ASSERT(dir->sb->fsid == FSID_EXT2);
@@ -45,21 +67,21 @@ int ext2_umount(inode_t* dir) {
 
     ext2_t* ext2 = (ext2_t*)dir->sb->fsinfo;
 
-
+    ext2_release_tree(dir, dir->sb);
     cache_destroy(&dir->sb->cache);
     cache_destroy(&ext2->bcache);
 
     for (size_t i = 0; i < EXT2_IND_LEVELS; i++) {
-        if (ext2->mapcache[i].pointers)
+        if (ext2->mapcache[i].pointers) {
             kfree(ext2->mapcache[i].pointers);
+        }
     }
 
-    if (ext2->balloc.bitmap)
+    if (ext2->balloc.bitmap) {
         kfree(ext2->balloc.bitmap);
-
+    }
+    
     kfree(ext2->iocache);
     kfree(ext2);
-
-
     return 0;
 }
