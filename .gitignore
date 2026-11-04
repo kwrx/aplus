@@ -1,6 +1,8 @@
 .vscode
 .idea
+.zed
 .venv
+.clangd
 
 *.o
 *.dep
