@@ -1091,6 +1091,12 @@ static void editor_copy(bool cut) {
         }
     }
 
+    if (ui_clipboard_set(editor.conn, UI_CLIPBOARD_TEXT, text, size) < 0) {
+        free(text);
+        editor_message("Cannot copy: %s", strerror(errno));
+        return;
+    }
+
     free(editor.clipboard);
 
     editor.clipboard       = text;
@@ -1110,23 +1116,20 @@ static void editor_copy(bool cut) {
 /**
  * @brief Pastes over the selection, or above the caret's line when a whole line was copied and nothing is selected.
  */
-static void editor_paste(void) {
+static void editor_paste(const char* data, size_t size) {
 
     editor_pos_t from;
     editor_pos_t to;
 
-    if (!editor.clipboard) {
-        editor_message("Nothing to paste");
-        return;
-    }
+    const bool lines = editor.clipboard_lines && size == editor.clipboard_size && memcmp(data, editor.clipboard, size) == 0;
 
-    if (editor.clipboard_lines && !editor_selection(&from, &to)) {
+    if (lines && !editor_selection(&from, &to)) {
 
         const editor_pos_t caret = editor.caret;
 
         editor_pos_t start = {caret.line, 0};
 
-        if (editor_insert(start, editor.clipboard, editor.clipboard_size, EDITOR_MERGE_NONE)) {
+        if (editor_insert(start, data, size, EDITOR_MERGE_NONE)) {
 
             editor.caret.offset = caret.offset;
             editor.anchor       = editor.caret;
@@ -1136,7 +1139,7 @@ static void editor_paste(void) {
 
     } else {
 
-        editor_replace(editor.clipboard, editor.clipboard_size, EDITOR_MERGE_NONE);
+        editor_replace(data, size, EDITOR_MERGE_NONE);
     }
 
     editor_history_seal(&editor.history);
@@ -1146,9 +1149,9 @@ static void editor_paste(void) {
 /**
  * @brief Appends the first line of the clipboard to the prompt's entry, which takes no paste of its own.
  */
-static void editor_paste_into_entry(void) {
+static void editor_paste_into_entry(const char* data, size_t size) {
 
-    if (!editor.clipboard || ui_view_focused(editor.view) != editor.prompt_entry) {
+    if (ui_view_focused(editor.view) != editor.prompt_entry) {
         return;
     }
 
@@ -1161,7 +1164,7 @@ static void editor_paste_into_entry(void) {
 
     size_t take = 0;
 
-    while (take < editor.clipboard_size && editor.clipboard[take] != '\n' && editor.clipboard[take] != '\r') {
+    while (take < size && data[take] != '\n' && data[take] != '\r') {
         take++;
     }
 
@@ -1169,18 +1172,45 @@ static void editor_paste_into_entry(void) {
 
         take = sizeof(text) - 1 - used;
 
-        while (take > 0 && ((unsigned char)editor.clipboard[take] & 0xC0) == 0x80) {
+        while (take > 0 && ((unsigned char)data[take] & 0xC0) == 0x80) {
             take--;
         }
     }
 
-    memcpy(text + used, editor.clipboard, take);
+    memcpy(text + used, data, take);
 
     text[used + take] = '\0';
 
     ui_entry_set_text(editor.prompt_entry, text);
 
     editor_on_prompt_change(editor.prompt_entry, NULL);
+}
+
+
+static void editor_on_clipboard(const ui_event_t* event) {
+
+    if (!editor.paste_serial || event->clipboard.serial != editor.paste_serial) {
+        return;
+    }
+
+    editor.paste_serial = 0;
+
+
+    size_t size;
+    const char* mime;
+
+    const char* data = (const char*)ui_clipboard_data(editor.conn, &size, &mime);
+
+    if (!data || !size || strcmp(mime, UI_CLIPBOARD_TEXT) != 0) {
+        editor_message("Nothing to paste");
+        return;
+    }
+
+    if (ui_view_focused(editor.view) == NULL && editor.prompt != EDITOR_PROMPT_CONFIRM) {
+        editor_paste(data, size);
+    } else {
+        editor_paste_into_entry(data, size);
+    }
 }
 
 
@@ -2123,10 +2153,8 @@ static bool editor_shortcut(uint16_t vkey, bool shift) {
 
         case KEY_V:
 
-            if (text) {
-                editor_paste();
-            } else {
-                editor_paste_into_entry();
+            if (ui_clipboard_request(editor.conn, &editor.paste_serial) < 0) {
+                editor_message("Cannot paste: %s", strerror(errno));
             }
 
             return true;
@@ -2655,6 +2683,10 @@ static void editor_dispatch(const ui_event_t* event) {
         case UI_EVENT_FOCUS:
             ui_view_dispatch(editor.view, event);
             editor_on_focus(event);
+            break;
+
+        case UI_EVENT_CLIPBOARD:
+            editor_on_clipboard(event);
             break;
 
         default:

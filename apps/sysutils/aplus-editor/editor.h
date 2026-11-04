@@ -196,6 +196,7 @@ typedef struct {
     char* clipboard;
     size_t clipboard_size;
     bool clipboard_lines;
+    uint32_t paste_serial;
 
     editor_prompt_t prompt;
     editor_pending_t pending;
