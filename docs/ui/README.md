@@ -15,7 +15,7 @@ the layer that fits and never has to see the other.
           │       <aplus/ui-widgets.h>        │                  │  <aplus/ui.h>
           └─────────────────┴─────────────────┴─ libui (-lui) ───┘
                                    │
-          control:  AF_UNIX /tmp/aplus-wm.sock
+          control:  AF_UNIX /var/run/aplus-wm.sock
           pixels:   System V shared memory, one segment per window
                                    │
                                 aplus-wm

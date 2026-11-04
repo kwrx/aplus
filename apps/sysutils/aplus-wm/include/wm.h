@@ -242,7 +242,7 @@
 /**
  * @brief The server's cache on the tmpfs, and the copy of the launcher kept there, which starts without reading the disk.
  */
-#define WM_CACHE_PATH    "/tmp/.wm"
+#define WM_CACHE_PATH    "/var/run/.wm"
 #define WM_LAUNCHER_COPY WM_CACHE_PATH "/aplus-launcher"
 
 /**

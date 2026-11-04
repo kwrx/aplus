@@ -37,11 +37,11 @@ extern "C" {
 /**
  * @brief The default socket, on /tmp because unix_bind() needs a filesystem that stores an S_IFSOCK dirent.
  */
-#define UI_DEFAULT_SOCKET "/tmp/aplus-wm.sock"
+#define UI_DEFAULT_SOCKET "/var/run/aplus-wm.sock"
 
 #define UI_PATH_PICTURES "Pictures"
 
-#define UI_PROTOCOL_VERSION 8
+#define UI_PROTOCOL_VERSION 9
 #define UI_TITLE_MAX        64
 
 /**

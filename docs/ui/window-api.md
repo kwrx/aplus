@@ -14,7 +14,7 @@ int              ui_connection_fd(ui_connection_t* conn);
 `path` may be `NULL` for `UI_DEFAULT_SOCKET`:
 
 ```c
-#define UI_DEFAULT_SOCKET "/tmp/aplus-wm.sock"
+#define UI_DEFAULT_SOCKET "/var/run/aplus-wm.sock"
 ```
 
 The socket has to live on a filesystem that can store an `S_IFSOCK` dirent, which rules out

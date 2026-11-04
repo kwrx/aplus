@@ -58,7 +58,7 @@ the objects you actually reach, and cairo never enters the link.
 ui_connection_t* conn = ui_connect(NULL, 5000);
 ```
 
-`NULL` means `UI_DEFAULT_SOCKET`, which is `/tmp/aplus-wm.sock`. The socket lives on tmpfs
+`NULL` means `UI_DEFAULT_SOCKET`, which is `/var/run/aplus-wm.sock`. The socket lives on tmpfs
 rather than on the root filesystem because binding one creates a real `S_IFSOCK` directory
 entry, and ext2 here cannot store that.
 

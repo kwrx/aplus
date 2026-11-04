@@ -37,7 +37,7 @@ extern "C" {
 /**
  * @brief The control socket, apart from the window socket so that its permissions can be set on their own.
  */
-#define UI_CONTROL_SOCKET "/tmp/aplus-wm-ctl.sock"
+#define UI_CONTROL_SOCKET "/var/run/aplus-wm-ctl.sock"
 
 /**
  * @brief Where the installed themes live, one <name>.conf each, and the link naming the one in use.

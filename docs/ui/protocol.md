@@ -10,7 +10,7 @@ implementations from drifting.
 
 ## Transport
 
-`AF_UNIX`, `SOCK_STREAM`, at `/tmp/aplus-wm.sock` by default.
+`AF_UNIX`, `SOCK_STREAM`, at `/var/run/aplus-wm.sock` by default.
 
 The socket carries control only. A window's pixels live in a System V shared memory segment
 that both ends map, so the largest thing that ever travels over it is an icon name — see
@@ -94,7 +94,7 @@ server → UI_EV_THEME    { theme }       version 7 and later
 ```
 
 ```c
-#define UI_PROTOCOL_VERSION     7
+#define UI_PROTOCOL_VERSION     9
 #define UI_PROTOCOL_VERSION_MIN 6
 ```
 
@@ -159,6 +159,15 @@ Nothing breaks the other way, so the server still accepts version 6. That matter
 packaged Doom, NES emulator and NetSurf link libui statically and speak 6 until aplus-packages
 is rebuilt. They are never sent a `UI_EV_THEME`, at the hello or later, and keep libui's
 built-in dark theme.
+
+Version 8 added the clipboard: `UI_EV_CLIPBOARD_CHANGED` is broadcast only to clients that
+speak it, so the minimum stays 6.
+
+Version 9 moved both sockets from `/tmp` to `/var/run`, a tmpfs of its own. No message
+changed shape. The break comes before the hello: a client built against version 8 or earlier
+looks for the server at `/tmp/aplus-wm.sock` and never reaches it. The bump marks which
+libui knows the new path. The server still accepts 6 through 8, which a client gets only by
+connecting to `/var/run/aplus-wm.sock` explicitly.
 
 Unlike every other read in the client, the hello reply and the theme after it are read without
 skipping unknown messages: nothing else can legitimately arrive before them.
@@ -550,7 +559,7 @@ and the theme belongs to the thread that draws. See [theming.md](theming.md#the-
 ## The control socket
 
 ```c
-#define UI_CONTROL_SOCKET "/tmp/aplus-wm-ctl.sock"
+#define UI_CONTROL_SOCKET "/var/run/aplus-wm-ctl.sock"
 ```
 
 Requests that change how the server works, rather than what a window shows, go over a second
