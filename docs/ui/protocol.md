@@ -566,6 +566,7 @@ request gets exactly one reply:
 | `0x1003` | `UI_CTL_RELOAD` | none |
 | `0x1004` | `UI_CTL_SET_OPTIONS` | 1 to `UI_CTL_OPTIONS_MAX` (8) `ui_msg_ctl_option_t`, back to back |
 | `0x1005` | `UI_CTL_GET_OPTION` | one `ui_msg_ctl_option_t`, its `value` ignored |
+| `0x1006` | `UI_CTL_SCREENSHOT` | none |
 | `0x9001` | `UI_CTL_REPLY` | `ui_msg_ctl_reply_t` |
 
 ```c
@@ -581,7 +582,33 @@ warning that the switch could not be kept for the next boot. A request the serve
 know gets `ENOSYS` rather than being drained, since the peer is waiting for an answer.
 
 `ui_control_request()` sends one request and waits for its reply; `ui_control_set_theme()` is
-the same for `UI_CTL_SET_THEME`. `aplus-wmctl` is the command-line front end.
+the same for `UI_CTL_SET_THEME`. `aplus-wmctl` is the command-line front end:
+
+```sh
+aplus-wmctl set-theme midnight
+aplus-wmctl set wm.variant light
+aplus-wmctl screenshot
+```
+
+### Reloading
+
+`UI_CTL_RELOAD` re-reads `UI_SETTINGS_PATH` and the theme `UI_THEME_LINK` points at, then
+sends every client a `UI_EV_THEME`, so a theme file edited in place shows without switching
+away and back. A missing link falls back to the built-in defaults; a theme that does not parse
+keeps the one in use and answers `EINVAL` with the offending line. On success `text` is
+`reloaded <name>`.
+
+### Screenshots
+
+`UI_CTL_SCREENSHOT` copies the composited back buffer at once and answers with the path in
+`text`, before the file exists: the PNG is encoded on a thread of its own into `<path>.part`
+and renamed when complete, so a reader polling for the path never sees half a file. A failed
+write is only logged, since the reply has already gone.
+
+The file is `$HOME/Pictures/screenshot-YYYYMMDD-HHMMSS.png`, with `-1` to `-99` appended when
+that name is taken. When `$HOME` is unset or `Pictures` cannot be created it goes to `/tmp`
+instead (`UI_SCREENSHOT_DIR`, `UI_SCREENSHOT_FALLBACK`, `UI_SCREENSHOT_PREFIX`). A hundred
+taken names in one second answer `EEXIST`.
 
 ### Settings over the theme
 
@@ -624,7 +651,10 @@ To add a message:
 2. Send it with `ui_send_msg()`. Every message in the protocol is a fixed-size struct; if a
    new one needs a variable-length body, it has to be written by hand and read the same way.
 3. Handle it: a case in `ui_next_event()` for an event, or in the server's request dispatch
-   in `apps/sysutils/aplus-wm/src/client.c` for a request.
+   in `apps/sysutils/aplus-wm/src/client.c` for a request. A control request goes in
+   `<aplus/ui-control.h>` instead, with its case in `wm_control_handle()`
+   (`apps/sysutils/aplus-wm/src/control.c`); a server that lacks it answers `ENOSYS`, so
+   control requests can be added without a version bump.
 4. Validate the payload length against `sizeof()` before reading the body. Every existing
    case does this, and it is the only thing standing between a malformed frame and a read
    into the wrong bytes.
