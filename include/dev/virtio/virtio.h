@@ -194,6 +194,8 @@ struct virtio_driver {
     int (*setup)(struct virtio_driver*, uintptr_t);
     int (*interrupt)(pcidev_t, irq_t, uint8_t, struct virtio_driver*);
 
+    _Atomic(void*) userdata;
+
     struct {
 
         irq_t irq;

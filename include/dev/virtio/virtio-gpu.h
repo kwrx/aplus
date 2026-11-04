@@ -102,6 +102,8 @@
     #include <stdbool.h>
     #include <stdint.h>
 
+    #include <dev/interface.h>
+
 __BEGIN_DECLS
 
 struct virtio_gpu_config {
@@ -258,6 +260,9 @@ struct virtgpu {
         bool visible;
 
     } cursor;
+
+    device_t* device;
+    uintptr_t fb_area;
 };
 
 
