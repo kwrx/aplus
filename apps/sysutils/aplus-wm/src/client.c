@@ -614,6 +614,60 @@ static int wm_client_handle_destroy_window(wm_client_t* client, const uint8_t* p
 }
 
 
+int wm_clipboard_set(const char* mime, const void* data, size_t size) {
+
+    if (!mime || (size && !data) || strlen(mime) >= UI_CLIPBOARD_MIME_MAX) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    if (size > UI_CLIPBOARD_MAX) {
+        errno = EMSGSIZE;
+        return -1;
+    }
+
+    for (const char* c = mime; *c; c++) {
+
+        if (*c < 0x20 || *c > 0x7E) {
+            errno = EINVAL;
+            return -1;
+        }
+    }
+
+
+    uint8_t* copy = NULL;
+
+    if (size) {
+
+        if (!(copy = (uint8_t*)malloc(size))) {
+            return -1;
+        }
+
+        memcpy(copy, data, size);
+    }
+
+    free(wm.clipboard.data);
+
+    wm.clipboard.data = copy;
+    wm.clipboard.size = size;
+
+    memset(wm.clipboard.mime, 0, sizeof(wm.clipboard.mime));
+
+    if (size) {
+        strcpy(wm.clipboard.mime, mime);
+    }
+
+
+    ui_msg_clipboard_changed_t changed = {.size = (uint32_t)size};
+
+    memcpy(changed.mime, wm.clipboard.mime, UI_CLIPBOARD_MIME_MAX);
+
+    wm_client_broadcast(UI_EV_CLIPBOARD_CHANGED, UI_EV_CLIPBOARD_SINCE, &changed, sizeof(changed));
+
+    return 0;
+}
+
+
 static int wm_client_handle_clipboard_set(wm_client_t* client, const uint8_t* payload, size_t size) {
 
     ui_msg_clipboard_t req;
@@ -626,46 +680,7 @@ static int wm_client_handle_clipboard_set(wm_client_t* client, const uint8_t* pa
 
     req.mime[UI_CLIPBOARD_MIME_MAX - 1] = '\0';
 
-    for (const char* c = req.mime; *c; c++) {
-
-        if (*c < 0x20 || *c > 0x7E) {
-            return -1;
-        }
-    }
-
-
-    const size_t length = size - sizeof(req);
-
-    uint8_t* data = NULL;
-
-    if (length) {
-
-        if (!(data = (uint8_t*)malloc(length))) {
-            return -1;
-        }
-
-        memcpy(data, payload + sizeof(req), length);
-    }
-
-    free(wm.clipboard.data);
-
-    wm.clipboard.data = data;
-    wm.clipboard.size = length;
-
-    memset(wm.clipboard.mime, 0, sizeof(wm.clipboard.mime));
-
-    if (length) {
-        memcpy(wm.clipboard.mime, req.mime, UI_CLIPBOARD_MIME_MAX);
-    }
-
-
-    ui_msg_clipboard_changed_t changed = {.size = (uint32_t)length};
-
-    memcpy(changed.mime, wm.clipboard.mime, UI_CLIPBOARD_MIME_MAX);
-
-    wm_client_broadcast(UI_EV_CLIPBOARD_CHANGED, UI_EV_CLIPBOARD_SINCE, &changed, sizeof(changed));
-
-    return 0;
+    return wm_clipboard_set(req.mime, payload + sizeof(req), size - sizeof(req));
 }
 
 

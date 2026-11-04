@@ -32,6 +32,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <errno.h>
 
 #include <aplus/ui-control.h>
 
@@ -60,7 +62,9 @@ static void show_usage(int status) {
            "   set SECTION.KEY VALUE       override a theme key for every theme, and keep it\n"
            "   unset SECTION.KEY           give a key back to the theme\n"
            "   set wm.variant dark|light   pick the variant of every theme\n"
-           "   screenshot                  take a screenshot\n\n"
+           "   screenshot                  take a screenshot\n"
+           "   set-clipboard               copy STDIN to the clipboard\n"
+           "   get-clipboard               print the clipboard contents\n\n"
            "Options:\n"
            "   -s, --socket                control socket (default: " UI_CONTROL_SOCKET ")\n"
            "       --help                  show this help\n");
@@ -283,6 +287,86 @@ static int wmctl_list_themes(const char* path) {
 }
 
 
+static int wmctl_set_clipboard(const char* path, int fd) {
+
+    static char buf[UI_CLIPBOARD_MAX + 1];
+    size_t size = 0;
+
+    while (size < sizeof(buf)) {
+        ssize_t e = read(fd, buf + size, sizeof(buf) - size);
+        if (e < 0) {
+            if (errno == EINTR) {
+                continue;
+            }
+            fprintf(stderr, WMCTL_NAME ": cannot read stdin: %s\n", strerror(errno));
+            return 1;
+        }
+        if (e == 0) {
+            break;
+        }
+        size += (size_t)e;
+    }
+
+    if (size > UI_CLIPBOARD_MAX) {
+        fprintf(stderr, WMCTL_NAME ": clipboard data is too large, at most %zu bytes\n", (size_t)UI_CLIPBOARD_MAX);
+        return 1;
+    }
+
+    ui_msg_ctl_reply_t reply;
+    if (wmctl_request(path, UI_CTL_SET_CLIPBOARD, buf, size, &reply) < 0) {
+        return 1;
+    }
+
+    return 0;
+
+}
+
+
+static int wmctl_get_clipboard(const char* path, int fd) {
+
+    ui_msg_ctl_reply_t reply;
+
+    void* data  = NULL;
+    size_t size = 0;
+
+    if (ui_control_request_data(path, UI_CTL_GET_CLIPBOARD, NULL, 0, &reply, &data, &size) < 0) {
+        fprintf(stderr, WMCTL_NAME ": cannot reach the display server on %s: %s\n", path ? path : UI_CONTROL_SOCKET, strerror(errno));
+        return 1;
+    }
+
+    if (reply.status) {
+        fprintf(stderr, WMCTL_NAME ": %s\n", reply.text[0] ? reply.text : strerror(reply.status));
+        free(data);
+        return 1;
+    }
+
+
+    size_t done = 0;
+
+    while (done < size) {
+
+        ssize_t e = write(fd, (const char*)data + done, size - done);
+
+        if (e < 0) {
+
+            if (errno == EINTR) {
+                continue;
+            }
+
+            fprintf(stderr, WMCTL_NAME ": cannot write stdout: %s\n", strerror(errno));
+            free(data);
+            return 1;
+        }
+
+        done += (size_t)e;
+    }
+
+    free(data);
+
+    return 0;
+}
+
+
 int main(int argc, char** argv) {
 
     static struct option long_options[] = {
@@ -350,6 +434,14 @@ int main(int argc, char** argv) {
 
     if (strcmp(command, "screenshot") == 0) {
         return wmctl_simple(path, UI_CTL_SCREENSHOT);
+    }
+
+    if (strcmp(command, "set-clipboard") == 0) {
+        return wmctl_set_clipboard(path, STDIN_FILENO);
+    }
+
+    if (strcmp(command, "get-clipboard") == 0 && extra == 0) {
+        return wmctl_get_clipboard(path, STDOUT_FILENO);
     }
 
     show_usage(1);

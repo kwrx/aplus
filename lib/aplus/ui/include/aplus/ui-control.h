@@ -59,12 +59,14 @@ extern "C" {
  * @brief The requests a control peer may send, framed like window messages; each gets one UI_CTL_REPLY.
  */
 
-#define UI_CTL_SET_THEME   0x1001
-#define UI_CTL_GET_THEME   0x1002
-#define UI_CTL_RELOAD      0x1003
-#define UI_CTL_SET_OPTIONS 0x1004
-#define UI_CTL_GET_OPTION  0x1005
-#define UI_CTL_SCREENSHOT  0x1006
+#define UI_CTL_SET_THEME        0x1001
+#define UI_CTL_GET_THEME        0x1002
+#define UI_CTL_RELOAD           0x1003
+#define UI_CTL_SET_OPTIONS      0x1004
+#define UI_CTL_GET_OPTION       0x1005
+#define UI_CTL_SCREENSHOT       0x1006
+#define UI_CTL_SET_CLIPBOARD    0x1007
+#define UI_CTL_GET_CLIPBOARD    0x1008
 
 #define UI_CTL_REPLY 0x9001
 
@@ -129,6 +131,7 @@ typedef struct {
  * @return 0 when the server answered, or -1 with errno set when it could not be asked.
  */
 int ui_control_request(const char* path, uint16_t type, const void* payload, size_t size, ui_msg_ctl_reply_t* reply);
+int ui_control_request_data(const char* path, uint16_t type, const void* payload, size_t size, ui_msg_ctl_reply_t* reply, void** data, size_t* data_size);
 
 /**
  * @brief Switches the server and every client to an installed theme, and keeps it for the next boot.

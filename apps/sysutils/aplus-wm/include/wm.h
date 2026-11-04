@@ -1029,6 +1029,7 @@ int wm_client_flush(wm_client_t* client);
 bool wm_client_wants_write(const wm_client_t* client);
 int wm_client_queue(wm_client_t* client, uint16_t type, const void* payload, size_t size);
 void wm_client_broadcast(uint16_t type, uint32_t since, const void* payload, size_t size);
+int wm_clipboard_set(const char* mime, const void* data, size_t size);
 
 /**
  * @brief Implemented in main.c.

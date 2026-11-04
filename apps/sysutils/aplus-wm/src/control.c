@@ -27,6 +27,7 @@
 
 #include <errno.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include <wm.h>
@@ -120,6 +121,32 @@ static void wm_control_get_option(const uint8_t* payload, size_t size, ui_msg_ct
 }
 
 
+static int wm_control_get_clipboard(wm_client_t* client) {
+
+    const size_t length = sizeof(ui_msg_ctl_reply_t) + wm.clipboard.size;
+
+    uint8_t* msg = (uint8_t*)calloc(1, length);
+
+    if (!msg) {
+        return -1;
+    }
+
+    ui_msg_ctl_reply_t* reply = (ui_msg_ctl_reply_t*)msg;
+
+    snprintf(reply->text, sizeof(reply->text), "%s", wm.clipboard.mime);
+
+    if (wm.clipboard.size) {
+        memcpy(msg + sizeof(*reply), wm.clipboard.data, wm.clipboard.size);
+    }
+
+    int e = wm_client_queue(client, UI_CTL_REPLY, msg, length);
+
+    free(msg);
+
+    return e;
+}
+
+
 /**
  * @brief Answers one request from a control peer.
  *
@@ -164,6 +191,15 @@ int wm_control_handle(wm_client_t* client, uint16_t type, const uint8_t* payload
                 reply.status = errno ? errno : EIO;
             }
             break;
+
+        case UI_CTL_SET_CLIPBOARD:
+            if (wm_clipboard_set(UI_CLIPBOARD_TEXT, payload, size) < 0) {
+                reply.status = errno ? errno : EIO;
+            }
+            break;
+
+        case UI_CTL_GET_CLIPBOARD:
+            return wm_control_get_clipboard(client);
 
         default:
             reply.status = ENOSYS;

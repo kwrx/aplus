@@ -23,6 +23,7 @@
 
 #include <errno.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/un.h>
@@ -31,11 +32,16 @@
 #include <aplus/ui-control.h>
 
 
-int ui_control_request(const char* path, uint16_t type, const void* payload, size_t size, ui_msg_ctl_reply_t* reply) {
+int ui_control_request_data(const char* path, uint16_t type, const void* payload, size_t size, ui_msg_ctl_reply_t* reply, void** data, size_t* data_size) {
 
-    if (!reply) {
+    if (!reply || (data && !data_size)) {
         errno = EINVAL;
         return -1;
+    }
+
+    if (data) {
+        *data      = NULL;
+        *data_size = 0;
     }
 
     if (!path) {
@@ -75,7 +81,15 @@ int ui_control_request(const char* path, uint16_t type, const void* payload, siz
         return -1;
     }
 
-    if (hdr.type != UI_CTL_REPLY || hdr.length != sizeof(*reply)) {
+    if (hdr.type != UI_CTL_REPLY || hdr.length < sizeof(*reply)) {
+        close(fd);
+        errno = EPROTO;
+        return -1;
+    }
+
+    const size_t extra = hdr.length - sizeof(*reply);
+
+    if ((!data && extra) || extra > UI_MSG_PAYLOAD_MAX) {
         close(fd);
         errno = EPROTO;
         return -1;
@@ -86,11 +100,36 @@ int ui_control_request(const char* path, uint16_t type, const void* payload, siz
         return -1;
     }
 
-    close(fd);
-
     reply->text[sizeof(reply->text) - 1] = '\0';
 
+
+    if (extra) {
+
+        void* buf = malloc(extra);
+
+        if (!buf) {
+            close(fd);
+            return -1;
+        }
+
+        if (ui_recv_all(fd, buf, extra) < 0) {
+            free(buf);
+            close(fd);
+            return -1;
+        }
+
+        *data      = buf;
+        *data_size = extra;
+    }
+
+    close(fd);
+
     return 0;
+}
+
+
+int ui_control_request(const char* path, uint16_t type, const void* payload, size_t size, ui_msg_ctl_reply_t* reply) {
+    return ui_control_request_data(path, type, payload, size, reply, NULL, NULL);
 }
 
 
