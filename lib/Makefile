@@ -6,7 +6,7 @@ TARGETS	:= $(shell find $(LIBS) -type f -iname "Makefile" -exec dirname {} \;)
 
 
 BUILDALL:   $(TARGETS)
-	$(QUIET)for i in $^; do $(MAKE) -C $$i           || exit 1; done
+	$(QUIET)for i in $^; do $(MAKE) -C $$i install   || exit 1; done
 INSTALLALL: $(TARGETS)
 	$(QUIET)for i in $^; do $(MAKE) -C $$i install   || exit 1; done
 CLEANALL:   $(TARGETS)

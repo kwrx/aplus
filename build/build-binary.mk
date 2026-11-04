@@ -15,7 +15,7 @@ SRCDIRS     ?= .
 DESTDIR     ?= $(SYSROOT)/usr/bin
 LIBDIR		?= $(SYSROOT)/usr/lib
 
-LIBDEPS      = $(wildcard $(foreach l,$(LIBS),$(addsuffix /lib$(l).a,$(LIBDIR))))
+LIBDEPS      = $(realpath $(foreach l,$(LIBS),$(addsuffix /lib$(l).a,$(LIBDIR))))
 
 
 include $(ROOTDIR)/build/build-sources.mk
