@@ -52,15 +52,10 @@ MODULE_LICENSE("GPL");
 
 
 #define VIRTIO_NET_MAX_DEVICES 4
-
 #define VIRTIO_NET_BUFFERS 64
-
 #define VIRTIO_NET_FRAME_MAX 1514
-
 #define VIRTIO_NET_WINDOW_SIZE 2048
-
 #define VIRTIO_NET_HDR_SIZE (sizeof(struct virtio_net_hdr))
-
 #define VIRTIO_NET_PCI_DEVICE_LEGACY 0x1000
 
 
@@ -68,8 +63,6 @@ struct virtnet {
 
     struct virtio_driver* driver;
 
-    /* Set once the interface is up, which is what tells the interrupt that a frame may be
-       handed to lwIP rather than dropped. */
     bool running;
 
     struct {
@@ -78,8 +71,6 @@ struct virtnet {
         uint16_t offset;
     } rx;
 
-    /* The frame being assembled out of a pbuf chain, header included, which endoutput hands
-       to the device in one descriptor. */
     struct {
         uint8_t frame[VIRTIO_NET_HDR_SIZE + VIRTIO_NET_FRAME_MAX];
         uint16_t length;
@@ -92,9 +83,6 @@ struct virtnet {
 static struct virtnet* devices[VIRTIO_NET_MAX_DEVICES] = {0};
 
 static size_t num_devices = 0;
-
-/* What negotiate_features() settled on for the device being brought up, read by pci_find()
-   as soon as virtio_pci_init() returns. */
 static uint32_t negotiated_features = 0;
 
 
