@@ -103,7 +103,7 @@ case $1 in
 x86_64)
     arch="x86_64"
 
-    flags=""
+    flags="-machine q35"
     flags="$flags --bios $(find_ovmf) -net none"
 
     # GPU
