@@ -96,8 +96,6 @@ MODULE_LICENSE("GPL");
 #define FIS_TYPE_DEV_BITS  0xA1
 
 
-#define AHCI_HBA_SIZE (0x1100)
-
 #define AHCI_HBA_GHC_AE   (1U << 31)
 #define AHCI_HBA_GHC_MRSM (1U << 2)
 #define AHCI_HBA_GHC_IE   (1U << 1)
@@ -1474,7 +1472,6 @@ void dnit(void) {
         ahci->hba->is = ~0;
 
         pci_intx_unmap_irq(ahci->deviceid);
-        arch_vmm_unmap(&core->bsp.address_space, (uintptr_t)ahci->hba, AHCI_HBA_SIZE);
 
         /* TODO: implements ahci de-initialitation */
     }
