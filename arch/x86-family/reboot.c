@@ -23,7 +23,6 @@
 
 
 #include <stdint.h>
-#include <string.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
@@ -35,16 +34,15 @@
 
 __noreturn void arch_reboot(int mode) {
 
-    // TODO: clean up the code below, and implement ACPI restart/power-off
-
     switch (mode) {
 
         case ARCH_REBOOT_RESTART: {
 
-            /* ACPI */
-            // TODO: ACPI Restart
-#if DEBUG_LEVEL_TRACE
-            kprintf("x86-reboot: skipping acpi restart, not yet implemented\n");
+            if (acpi_reboot() == 0)
+                break;
+
+#if DEBUG_LEVEL_WARN
+            kprintf("x86-reboot: WARNING! acpi restart failed, trying keyboard reset...\n");
 #endif
 
             /* Keyboard Reset */
@@ -64,7 +62,7 @@ __noreturn void arch_reboot(int mode) {
             }
 
 #if DEBUG_LEVEL_ERROR
-            kprintf("x86-reboot: keyboard reset failed, trying triple fault...\n");
+            kprintf("x86-reboot: ERROR! keyboard reset failed, trying triple fault...\n");
 #endif
 
             /* Triple Fault */
@@ -73,17 +71,18 @@ __noreturn void arch_reboot(int mode) {
             __asm__ __volatile__("int $3");
 
 #if DEBUG_LEVEL_ERROR
-            kprintf("x86-reboot: triple fault failed, hanging...\n");
+            kprintf("x86-reboot: ERROR! triple fault failed, hanging...\n");
 #endif
 
         } break;
 
         case ARCH_REBOOT_POWEROFF: {
 
-            /* ACPI */
-            // TODO: ACPI Power-off
-#if DEBUG_LEVEL_TRACE
-            kprintf("x86-reboot: skipping acpi power-off, not yet implemented\n");
+            if (acpi_shutdown() == 0)
+                break;
+
+#if DEBUG_LEVEL_ERROR
+            kprintf("x86-reboot: ERROR! ACPI power-off failed, trying vm exit codes\n");
 #endif
 
             {
@@ -103,7 +102,7 @@ __noreturn void arch_reboot(int mode) {
             }
 
 #if DEBUG_LEVEL_ERROR
-            kprintf("x86-reboot: power-off failed, hanging...\n");
+            kprintf("x86-reboot: ERROR! power-off failed, hanging...\n");
 #endif
 
         } break;
@@ -127,7 +126,7 @@ __noreturn void arch_reboot(int mode) {
             }
 
 #if DEBUG_LEVEL_ERROR
-            kprintf("x86-reboot: crash failed, hanging...\n");
+            kprintf("x86-reboot: ERROR! crash failed, hanging...\n");
 #endif
 
         } break;

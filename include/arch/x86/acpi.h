@@ -52,6 +52,23 @@
     #define X86_MADT_INTERRUPT_TRIGGER_EDGE       0x4
     #define X86_MADT_INTERRUPT_TRIGGER_LEVEL      0xC
 
+    #define X86_ACPI_GAS_TYPE_MEMORY              0
+    #define X86_ACPI_GAS_TYPE_IO                  1
+    #define X86_ACPI_GAS_TYPE_PCI_CONFIG          2
+
+    #define X86_ACPI_GAS_SIZE_UNDEFINED           0
+    #define X86_ACPI_GAS_SIZE_BYTE                1
+    #define X86_ACPI_GAS_SIZE_WORD                2
+    #define X86_ACPI_GAS_SIZE_DWORD               3
+    #define X86_ACPI_GAS_SIZE_QWORD               4
+
+    #define X86_PCI_CONFIG_ADDRESS                0xCF8
+    #define X86_PCI_CONFIG_DATA                   0xCFC
+
+    #define X86_ACPI_GAS_PCI_DEVICE(a)            (((a) >> 32) & 0xFFFF)
+    #define X86_ACPI_GAS_PCI_FUNCTION(a)          (((a) >> 16) & 0xFFFF)
+    #define X86_ACPI_GAS_PCI_OFFSET(a)            ((a) & 0xFFFF)
+
 
 typedef struct {
 
@@ -84,6 +101,7 @@ typedef struct {
     union {
         uint32_t tables[0];
         uint64_t xtables[0];
+        uint8_t data[0];
     };
 
 } __packed acpi_sdt_t;
@@ -143,7 +161,10 @@ typedef struct {
     acpi_generic_address_t reset_reg;
 
     uint8_t reset_value;
-    uint8_t padding[3];
+    union {
+        uint8_t padding[3];
+        uint8_t __reset_reg_supported[0];
+    };
 
     uint64_t x_fwctrl;
     uint64_t x_dsdt;
@@ -152,13 +173,15 @@ typedef struct {
     acpi_generic_address_t x_pm1b_event_block;
     acpi_generic_address_t x_pm1a_control_block;
     acpi_generic_address_t x_pm1b_control_block;
-    acpi_generic_address_t x_pm2_control_block;
+    union {
+        acpi_generic_address_t x_pm2_control_block;
+        uint8_t __x_pm1_control_block_supported[0];
+    };
     acpi_generic_address_t x_pm_timer_block;
     acpi_generic_address_t x_gpe0_block;
     acpi_generic_address_t x_gpe1_block;
 
 } __packed acpi_fadt_t;
-
 
 typedef struct {
 
@@ -255,7 +278,10 @@ __BEGIN_DECLS
 
 void acpi_init(void);
 int acpi_find(acpi_sdt_t**, const char[4]);
+int acpi_find_dsdt(acpi_fadt_t* fadt, acpi_sdt_t** dsdt);
 int acpi_is_extended(void);
+int acpi_shutdown(void);
+int acpi_reboot(void);
 
 __END_DECLS
 
