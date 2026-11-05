@@ -22,7 +22,6 @@
  */
 
 #include <stdint.h>
-#include <string.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
