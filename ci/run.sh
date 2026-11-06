@@ -41,7 +41,7 @@ Options:
 
 Settings (config.txt):
   ARCH       architecture of the image (x86_64)
-  IMAGE      path of the disk image to boot
+  IMAGE      path of the disk image to boot, its format is taken from the extension
   BIOS       path of the UEFI firmware, or "auto" to look for it
   CPUS       number of CPUs
   MEMORY     amount of RAM (QEMU syntax, e.g. 4G)
@@ -144,6 +144,18 @@ find_image() {
         fi
     done
     printf 'aplus.qcow2'
+}
+
+image_format() {
+    case $1 in
+    *.qcow2 | *.qcow) printf 'qcow2' ;;
+    *.img | *.raw | *.bin) printf 'raw' ;;
+    *.vmdk) printf 'vmdk' ;;
+    *.vdi) printf 'vdi' ;;
+    *.vhd | *.vpc) printf 'vpc' ;;
+    *.qed) printf 'qed' ;;
+    *) printf '' ;;
+    esac
 }
 
 # @brief Ask a question on the terminal.
@@ -312,6 +324,8 @@ check_config() {
         die "disk image \"$IMAGE\" not found, set IMAGE in $CONFIG_FILE"
     fi
 
+    FORMAT=$(image_format "$IMAGE")
+
     case $BIOS in
     auto | Auto | AUTO | '') BIOS=$(find_firmware) ;;
     esac
@@ -421,6 +435,7 @@ fi
 
 check_config
 
+set -- "$@" -machine q35
 set -- "$@" --bios "$BIOS" -net none
 
 # GPU
@@ -443,7 +458,11 @@ fi
 set -- "$@" -netdev user,id=net0,hostfwd=tcp::2222-:22,hostfwd=tcp::8080-:8080
 
 # Block
-set -- "$@" -drive "id=disk,file=$IMAGE,if=none,format=qcow2,cache=writeback"
+if [ -n "$FORMAT" ]; then
+    set -- "$@" -drive "id=disk,file=$IMAGE,if=none,format=$FORMAT,cache=writeback"
+else
+    set -- "$@" -drive "id=disk,file=$IMAGE,if=none,cache=writeback"
+fi
 set -- "$@" -device ich9-ahci,id=ahci -device ide-hd,drive=disk,bus=ahci.0
 
 # Random
