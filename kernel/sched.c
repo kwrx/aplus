@@ -1050,6 +1050,116 @@ void sched_die(int status) {
 }
 
 
+#define SCHED_DNIT_TIMEOUT_MS 5000
+#define SCHED_DNIT_RESEND_MS  250
+#define SCHED_DNIT_POLL_MS    1
+
+
+static size_t __sched_dnit_alive(void) {
+
+    size_t alive = 0;
+
+    cpu_foreach(cpu) {
+
+        scoped_lock(&cpu->sched_lock) {
+
+            for (task_t* t = cpu->sched_queue; t; t = t->next) {
+
+                if (t == current_task || t->pid == current_task->pid) {
+                    continue;
+                }
+
+                if (t->flags & TASK_FLAGS_KTHREAD) {
+                    continue;
+                }
+
+                if (t->status == TASK_STATUS_ZOMBIE || t->status == TASK_STATUS_DEAD) {
+                    continue;
+                }
+
+                alive++;
+            }
+        }
+    }
+
+    return alive;
+}
+
+
+static void __sched_dnit_kill(void) {
+
+    siginfo_t info;
+
+    memset(&info, 0, sizeof(info));
+
+    info.si_signo = SIGKILL;
+    info.si_code  = SI_KERNEL;
+    info.si_pid   = current_task->pid;
+    info.si_uid   = current_task->uid;
+
+    if (sched_sigqueue(-1, -1, -1, SIGKILL, &info, SCHED_SIGQUEUE_KERNEL | SCHED_SIGQUEUE_BROADCAST) < 0) {
+#if DEBUG_LEVEL_WARN
+        if (errno != ESRCH) {
+            kprintf("sched: WARN! could not signal every user task: errno(%d)\n", errno);
+        }
+#endif
+    }
+}
+
+
+void sched_dnit(void) {
+
+    long irqstate = arch_intr_disable();
+    arch_intr_restore(1);
+
+    uint64_t started = arch_timer_generic_getms();
+    uint64_t resend  = started;
+
+    size_t alive = 0;
+    for (;;) {
+
+        alive = __sched_dnit_alive();
+
+        if (alive == 0) {
+            break;
+        }
+
+        uint64_t now = arch_timer_generic_getms();
+
+        if (now - started >= SCHED_DNIT_TIMEOUT_MS) {
+            break;
+        }
+
+        if (now >= resend) {
+
+            __sched_dnit_kill();
+
+            resend = now + SCHED_DNIT_RESEND_MS;
+        }
+
+        for (uint64_t poll = now + SCHED_DNIT_POLL_MS; arch_timer_generic_getms() < poll;) {
+            __cpu_pause();
+        }
+    }
+
+    arch_intr_disable();
+    arch_intr_restore(irqstate);
+
+
+#if DEBUG_LEVEL_WARN
+    if (unlikely(alive)) {
+        kprintf("sched: WARN! %zu task(s) did not exit in %d ms\n", alive, SCHED_DNIT_TIMEOUT_MS);
+    }
+#endif
+
+#if DEBUG_LEVEL_INFO
+    if (likely(!alive)) {
+        kprintf("sched: every user task exited in %ld ms\n", (long)(arch_timer_generic_getms() - started));
+    }
+#endif
+}
+
+
 int sched_fault_sigqueueinfo(int sig, siginfo_t* info) {
 
     DEBUG_ASSERT(current_task);

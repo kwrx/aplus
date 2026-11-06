@@ -571,6 +571,7 @@ void sched_sigmask(const sigset_t*);
 void sched_signals(void);
 size_t sched_nprocs(void);
 pid_t sched_lastpid(void);
+void sched_dnit(void);
 
 void schedule(int);
 
