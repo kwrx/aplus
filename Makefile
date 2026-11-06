@@ -20,14 +20,14 @@ TARGET	 := aplus.img
 REPORT   := docs/REPORT.md
 
 
-BUILDALL:   $(PROJECTS)
-	$(QUIET)for i in $^; do $(MAKE) -C $$i           || exit 1; done
-INSTALLALL: $(PROJECTS)
-	$(QUIET)for i in $^; do $(MAKE) -C $$i install   || exit 1; done
-CLEANALL:   $(PROJECTS)
-	$(QUIET)for i in $^; do $(MAKE) -C $$i clean     || exit 1; done
-DISTCLEANALL:   $(PROJECTS)
-	$(QUIET)for i in $^; do $(MAKE) -C $$i distclean || exit 1; done
+BUILDALL:
+	$(QUIET)for i in $(PROJECTS); do $(MAKE) -C $$i           || exit 1; done
+INSTALLALL: $(TARGET)
+	$(QUIET)for i in $(PROJECTS); do $(MAKE) -C $$i install   || exit 1; done
+CLEANALL:
+	$(QUIET)for i in $(PROJECTS); do $(MAKE) -C $$i clean     || exit 1; done
+DISTCLEANALL: CLEANALL
+	$(QUIET)for i in $(PROJECTS); do $(MAKE) -C $$i distclean || exit 1; done
 
 
 all: $(TARGET)
@@ -35,14 +35,15 @@ $(TARGET): BUILDALL
 
 
 .NOTPARALLEL:
+.PHONY: BUILDALL INSTALLALL CLEANALL DISTCLEANALL
 
-install: $(TARGET) .WAIT INSTALLALL
+install: INSTALLALL
 	$(QUIET)echo "    GEN     $(SYSROOT)/boot/grub.cfg"
 	$(QUIET)./scripts/gen-grubcfg $(SYSROOT)
 	$(QUIET)echo "    GEN     $(TARGET)"
 	$(QUIET)./scripts/gen-image $(SYSROOT) $(TARGET)
 
-install-live: $(TARGET) .WAIT INSTALLALL
+install-live: INSTALLALL
 	$(QUIET)echo "    GEN     $(SYSROOT)/boot/grub.cfg"
 	$(QUIET)./scripts/gen-grubcfg --live $(SYSROOT)
 	$(QUIET)echo "    GEN     ramdisk.img"
@@ -51,7 +52,7 @@ install-live: $(TARGET) .WAIT INSTALLALL
 	$(QUIET)./scripts/gen-image --live $(SYSROOT) $(TARGET)
 
 
-dist: $(TARGET) .WAIT INSTALLALL
+dist: INSTALLALL
 	$(QUIET)mkdir -p                         aplus-$(PLATFORM)
 	$(QUIET)mkdir -p                         aplus-$(PLATFORM)/utils
 	$(QUIET)cp -r $(SYSROOT)                 aplus-$(PLATFORM)
@@ -98,7 +99,7 @@ run-fast-headless:
 
 
 clean: CLEANALL
-distclean: clean DISTCLEANALL
+distclean: DISTCLEANALL
 	$(QUIET)$(RM) $(TARGET) config.mk config.mk.old config.h makew aplus-*.tar.gz aplus-*.tar.xz aplus-*.zip *.vmdk *.vdi *.vhd *.img
 	$(QUIET)$(RM) -r docs/html docs/man sdk/toolchain
 	$(QUIET)$(ROOTDIR)/scripts/get-pkg.py --clean
