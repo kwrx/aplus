@@ -28,6 +28,7 @@
 #include <aplus/hal.h>
 #include <aplus/module.h>
 #include <aplus/smp.h>
+#include <aplus/task.h>
 #include <aplus/vfs.h>
 
 
@@ -38,9 +39,10 @@ void kshutdown(int mode) {
     kprintf("core: shutting down with mode(%d)\n", mode);
 #endif
 
+    sched_dnit();
+    smp_dnit();
     vfs_dnit();
     module_dnit();
-    smp_dnit();
 
     arch_reboot(mode);
 }
