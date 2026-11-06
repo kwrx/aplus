@@ -76,26 +76,54 @@ if [ $ARG_HEADLESS -eq 1 ] && [ ! -z $ARG_REMOTE_URI ]; then
     exit 1
 fi
 
-function find_ovmf() {
-    local ovmf=""
-    # if [ -f /usr/share/OVMF/OVMF_CODE.fd ]; then
-    #     ovmf="/usr/share/OVMF/x64/OVMF_CODE.fd"
-    # elif [ -f /usr/share/OVMF/x64/OVMF_CODE.fd ]; then
-    #     ovmf="/usr/share/OVMF/OVMF_CODE.4m.fd"
-    # elif [ -f /usr/share/ovmf/x64/OVMF.fd ]; then
-    #     ovmf="/usr/share/ovmf/x64/OVMF.fd"
-    # elif [ -f /usr/share/ovmf/x64/OVMF.4m.fd ]; then
-    #     ovmf="/usr/share/ovmf/x64/OVMF.4m.fd"
-    # elif [ -f /usr/share/ovmf/x64/OVMF_CODE.fd ]; then
-    #     ovmf="/usr/share/ovmf/x64/OVMF_CODE.fd"
-    # elif [ -f /usr/share/ovmf/x64/OVMF_CODE.4m.fd ]; then
-    #     ovmf="/usr/share/ovmf/x64/OVMF_CODE.4m.fd"
-    # else
-    #     echo "run-qemu: OVMF firmware not found"
-    #     exit 1
-    # fi
-    ovmf="/usr/share/OVMF/x64/OVMF_CODE.fd"
-    echo $ovmf
+find_ovmf_code() {
+    local entries=""
+    entries="$entries OVMF_CODE.4m.fd"
+    entries="$entries OVMF_CODE.fd"
+
+    local ovmfdir=""
+    ovmfdir="$ovmfdir /usr/share/ovmf/x64"
+    ovmfdir="$ovmfdir /usr/share/OVMF/x64"
+
+    for e in $entries; do
+        for d in $ovmfdir; do
+            local f="$d/$e"
+            if [ -f $f ]; then
+                echo "$f"
+                exit 0
+            fi
+        done
+    done
+
+    if [ -n $ovmf ]; then
+        echo "run-qemu: OVMF code not found"
+        exit 1
+    fi
+}
+
+find_ovmf_vars() {
+    local entries=""
+    entries="$entries OVMF_VARS.4m.fd"
+    entries="$entries OVMF_VARS.fd"
+
+    local ovmfdir=""
+    ovmfdir="$ovmfdir /usr/share/ovmf/x64"
+    ovmfdir="$ovmfdir /usr/share/OVMF/x64"
+
+    for e in $entries; do
+        for d in $ovmfdir; do
+            local f="$d/$e"
+            if [ -f $f ]; then
+                echo "$f"
+                exit 0
+            fi
+        done
+    done
+
+    if [ -n $ovmf ]; then
+        echo "run-qemu: OVMF vars not found"
+        exit 1
+    fi
 }
 
 case $1 in
@@ -103,8 +131,12 @@ case $1 in
 x86_64)
     arch="x86_64"
 
+    # Machine
     flags="-machine q35"
-    flags="$flags --bios $(find_ovmf) -net none"
+
+    # UEFI
+    flags="$flags -drive if=pflash,format=raw,unit=0,readonly=on,file=$(find_ovmf_code)"
+    flags="$flags -drive if=pflash,format=raw,unit=1,readonly=on,file=$(find_ovmf_vars)"
 
     # GPU
     if [ $ARG_VIRTIO -eq 1 ]; then
