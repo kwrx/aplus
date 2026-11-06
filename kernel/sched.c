@@ -1154,7 +1154,7 @@ void sched_dnit(void) {
 
 #if DEBUG_LEVEL_INFO
     if (likely(!alive)) {
-        kprintf("sched: every user task exited in %ld ms\n", (long)(arch_timer_generic_getms() - started));
+        kprintf("sched: all task exited in %ld ms\n", (long)(arch_timer_generic_getms() - started));
     }
 #endif
 }

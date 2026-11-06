@@ -44,5 +44,9 @@ void kshutdown(int mode) {
     vfs_dnit();
     module_dnit();
 
+#if DEBUG_LEVEL_INFO
+    kprintf("core: bye! 👋\n");
+#endif
+
     arch_reboot(mode);
 }
