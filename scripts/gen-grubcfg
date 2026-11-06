@@ -63,11 +63,7 @@ entry() {
     echo -e "   multiboot2 /boot/aplus.gz $2"
 
     if [ $LIVE_MODE -eq 1 ]; then
-        echo -e "   module2 /boot/initrd.img.gz type=ramdisk"
-    fi
-
-    if [ -e $SYSROOT/usr/lib/modules/exports.gz ]; then
-        echo -e "   module2 /usr/lib/modules/exports.gz type=exports"
+        echo -e "   module2 /boot/ramdisk.img.gz type=ramdisk"
     fi
 
     pushd $SYSROOT &>/dev/null
@@ -103,7 +99,7 @@ fi
 
 entry "aplus" "$ARGS $DEFAULT_KARGS mode=desktop $EXTRA_KARGS" "$EXTRA_MARGS" >>$SYSROOT/boot/grub/grub.cfg
 entry "aplus - Console Mode" "$ARGS mode=console $DEFAULT_KARGS $EXTRA_KARGS" "$EXTRA_MARGS" >>$SYSROOT/boot/grub/grub.cfg
-    
+
 submenu_begin "Advanced Options" >>$SYSROOT/boot/grub/grub.cfg
     entry "aplus - Builtin Graphics" "$ARGS $DEFAULT_KARGS mode=desktop graphics=builtin $EXTRA_KARGS" "$EXTRA_MARGS" >>$SYSROOT/boot/grub/grub.cfg
     entry "aplus - Builtin Graphics (Console)" "$ARGS $DEFAULT_KARGS mode=console graphics=builtin $EXTRA_KARGS" "$EXTRA_MARGS" >>$SYSROOT/boot/grub/grub.cfg

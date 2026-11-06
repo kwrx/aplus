@@ -6,7 +6,7 @@ endif
 
 
 
-export QUIET    := @ 
+export QUIET    := @
 export VM       := kvm
 export PLATFORM := $(subst $\",,$(CONFIG_COMPILER_HOST))
 export ROOTDIR  := $(shell pwd)
@@ -37,20 +37,16 @@ $(TARGET): BUILDALL
 .NOTPARALLEL:
 
 install: $(TARGET) .WAIT INSTALLALL
-	$(QUIET)echo "    GEN     $(SYSROOT)/usr/lib/modules/exports"
-	$(QUIET)./scripts/gen-exports $(SYSROOT) $(PLATFORM) > $(SYSROOT)/usr/lib/modules/exports
 	$(QUIET)echo "    GEN     $(SYSROOT)/boot/grub.cfg"
 	$(QUIET)./scripts/gen-grubcfg $(SYSROOT)
 	$(QUIET)echo "    GEN     $(TARGET)"
 	$(QUIET)./scripts/gen-image $(SYSROOT) $(TARGET)
 
 install-live: $(TARGET) .WAIT INSTALLALL
-	$(QUIET)echo "    GEN     $(SYSROOT)/usr/lib/modules/exports"
-	$(QUIET)./scripts/gen-exports $(SYSROOT) $(PLATFORM) > $(SYSROOT)/usr/lib/modules/exports
 	$(QUIET)echo "    GEN     $(SYSROOT)/boot/grub.cfg"
 	$(QUIET)./scripts/gen-grubcfg --live $(SYSROOT)
-	$(QUIET)echo "    GEN     initrd.img"
-	$(QUIET)./scripts/gen-initrd $(SYSROOT)
+	$(QUIET)echo "    GEN     ramdisk.img"
+	$(QUIET)./scripts/gen-ramdisk $(SYSROOT)
 	$(QUIET)echo "    GEN     $(TARGET)"
 	$(QUIET)./scripts/gen-image --live $(SYSROOT) $(TARGET)
 
@@ -62,13 +58,13 @@ dist: $(TARGET) .WAIT INSTALLALL
 	$(QUIET)cp -r docs/README.md             aplus-$(PLATFORM)
 	$(QUIET)cp -r requirements.txt      	 aplus-$(PLATFORM)
 	$(QUIET)cp -r scripts/run-qemu       	 aplus-$(PLATFORM)/utils
-	$(QUIET)cp -r scripts/gen-initrd     	 aplus-$(PLATFORM)/utils
+	$(QUIET)cp -r scripts/gen-ramdisk     	 aplus-$(PLATFORM)/utils
 	$(QUIET)cp -r scripts/gen-grubcfg    	 aplus-$(PLATFORM)/utils
 	$(QUIET)cp -r scripts/gen-image          aplus-$(PLATFORM)/utils
 	$(QUIET)cp -r scripts/gen-report     	 aplus-$(PLATFORM)/utils
 	$(QUIET)cp -r scripts/gen-pkg.py     	 aplus-$(PLATFORM)/utils
-	$(QUIET)tar cJf aplus-$(PLATFORM).tar.xz aplus-$(PLATFORM) 
-	$(QUIET)tar czf aplus-$(PLATFORM).tar.gz aplus-$(PLATFORM) 
+	$(QUIET)tar cJf aplus-$(PLATFORM).tar.xz aplus-$(PLATFORM)
+	$(QUIET)tar czf aplus-$(PLATFORM).tar.gz aplus-$(PLATFORM)
 	$(QUIET)zip     aplus-$(PLATFORM).zip    aplus-$(PLATFORM)
 	$(QUIET)$(RM) -rf                        aplus-$(PLATFORM)
 
@@ -105,7 +101,7 @@ clean: CLEANALL
 distclean: clean DISTCLEANALL
 	$(QUIET)$(RM) $(TARGET) config.mk config.mk.old config.h makew aplus-*.tar.gz aplus-*.tar.xz aplus-*.zip *.vmdk *.vdi *.vhd *.img
 	$(QUIET)$(RM) -r docs/html docs/man sdk/toolchain
-	$(QUIET)$(ROOTDIR)/scripts/get-pkg.py --clean 
+	$(QUIET)$(ROOTDIR)/scripts/get-pkg.py --clean
 
 
 .PHONY: docs distdocs report

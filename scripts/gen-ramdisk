@@ -1,18 +1,18 @@
 #!/bin/bash
 
 # Usage
-#   gen-initrd SYSROOT
+#   gen-ramdisk SYSROOT
 
-# This script generates an initrd for the given sysroot.
+# This script generates an ramdisk for the given sysroot.
 
 
 set -euo pipefail
 
-OUTPUT_DIR="/tmp/aplus-initrd"
+OUTPUT_DIR="/tmp/aplus-ramdisk"
 
 if [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ]; then
-    echo "Usage: gen-initrd SYSROOT"
-    echo "  SYSROOT: The sysroot to generate an initrd for."
+    echo "Usage: gen-ramdisk SYSROOT"
+    echo "  SYSROOT: The sysroot to generate an ramdisk for."
     exit 0
 fi
 
@@ -25,7 +25,7 @@ SYSROOT="$1"
 
 for command in fakeroot mke2fs tar; do
     if ! command -v "$command" >/dev/null 2>&1; then
-        echo "gen-initrd: missing required command: $command" >&2
+        echo "gen-ramdisk: missing required command: $command" >&2
         exit 1
     fi
 done
@@ -33,7 +33,7 @@ done
 rm -rf "$OUTPUT_DIR"
 mkdir -p "$OUTPUT_DIR"
 
-STAGING_ROOT=$(mktemp -d "${TMPDIR:-/tmp}/aplus-initrd.XXXXXX")
+STAGING_ROOT=$(mktemp -d "${TMPDIR:-/tmp}/aplus-ramdisk.XXXXXX")
 trap 'rm -rf "$STAGING_ROOT"' EXIT
 
 tar -C "$SYSROOT" \
@@ -49,13 +49,13 @@ IMAGE_SIZE_KIB=$(du -sk "$STAGING_ROOT" | cut -f1)
 IMAGE_SIZE_KIB=$((IMAGE_SIZE_KIB + IMAGE_SIZE_KIB / 20 + FREE_KIB))
 
 for pass in 1 2 3; do
-    rm -f "$OUTPUT_DIR/initrd.img"
+    rm -f "$OUTPUT_DIR/ramdisk.img"
 
     fakeroot -- /bin/sh -c \
         'chown -R 0:0 "$1" && mke2fs -q -F -t ext2 -b 4096 -m 0 -d "$1" "$2" "${3}K"' \
-        _ "$STAGING_ROOT" "$OUTPUT_DIR/initrd.img" "$IMAGE_SIZE_KIB"
+        _ "$STAGING_ROOT" "$OUTPUT_DIR/ramdisk.img" "$IMAGE_SIZE_KIB"
 
-    FREE_BLOCKS=$(dumpe2fs -h "$OUTPUT_DIR/initrd.img" 2>/dev/null | sed -n 's/^Free blocks: *//p')
+    FREE_BLOCKS=$(dumpe2fs -h "$OUTPUT_DIR/ramdisk.img" 2>/dev/null | sed -n 's/^Free blocks: *//p')
     MISSING_KIB=$((FREE_KIB - FREE_BLOCKS * 4))
 
     if [ "$MISSING_KIB" -le 0 ] && [ "$MISSING_KIB" -gt -4096 ]; then

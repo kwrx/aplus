@@ -91,15 +91,15 @@ if [ "$LIVE_MODE" -eq 1 ]; then
         exit 1
     fi
 
-    if [ ! -f /tmp/aplus-initrd/initrd.img ]; then
-        echo "gen-image: live image requires /tmp/aplus-initrd/initrd.img" >&2
+    if [ ! -f /tmp/aplus-ramdisk/ramdisk.img ]; then
+        echo "gen-image: live image requires /tmp/aplus-ramdisk/ramdisk.img" >&2
         exit 1
     fi
 
     mkdir -p "$STAGING_ROOT/boot" "$STAGING_ROOT/usr/lib/modules"
     cp -a "$SOURCE/boot/." "$STAGING_ROOT/boot/"
     cp -a "$SOURCE/usr/lib/modules/." "$STAGING_ROOT/usr/lib/modules/"
-    cp -a /tmp/aplus-initrd/initrd.img "$STAGING_ROOT/boot/initrd.img"
+    cp -a /tmp/aplus-ramdisk/ramdisk.img "$STAGING_ROOT/boot/ramdisk.img"
 else
     cp -a "$SOURCE/." "$STAGING_ROOT/"
 fi
@@ -119,16 +119,12 @@ while IFS= read -r -d '' module; do
     gzip -f "$module"
 done < <(find "$STAGING_ROOT/usr/lib/modules" -type f -name "*.ko" -print0)
 
-for file in "$STAGING_ROOT/usr/lib/modules/exports" "$STAGING_ROOT/boot/aplus"; do
-    if [ -f "$file" ]; then
-        echo "    GZIP    ${file#"$STAGING_ROOT/"}"
-        gzip -f "$file"
-    fi
-done
+echo "    GZIP    boot/aplus"
+gzip -f "$STAGING_ROOT/boot/aplus"
 
 if [ "$LIVE_MODE" -eq 1 ]; then
-    echo "    GZIP    boot/initrd.img"
-    gzip -f "$STAGING_ROOT/boot/initrd.img"
+    echo "    GZIP    boot/ramdisk.img"
+    gzip -f "$STAGING_ROOT/boot/ramdisk.img"
 fi
 
 cat >"$BOOTSTRAP_CONFIG" <<EOF
