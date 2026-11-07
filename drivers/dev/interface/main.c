@@ -24,7 +24,7 @@
 
 #include <dirent.h>
 #include <fcntl.h>
-#include <stdint.h>
+#include <poll.h>
 #include <sys/types.h>
 
 #include <aplus.h>
@@ -38,6 +38,7 @@
 
 #include <aplus/utils/list.h>
 
+#include <dev/audio.h>
 #include <dev/block.h>
 #include <dev/char.h>
 #include <dev/interface.h>
@@ -49,7 +50,7 @@
 
 
 MODULE_NAME("dev/interface");
-MODULE_DEPS("dev/char,dev/block,dev/video,dev/network");
+MODULE_DEPS("dev/char,dev/block,dev/video,dev/network,dev/audio");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
@@ -78,6 +79,12 @@ static ssize_t device_read(inode_t* inode, void* buf, off_t off, size_t size) {
 
         case DEVICE_TYPE_BLOCK:
             return block_read(device, buf, off, size);
+
+        case DEVICE_TYPE_AUDIO:
+            return audio_read(device, buf, size);
+
+        case DEVICE_TYPE_MIXER:
+            return -EINVAL;
 
         case DEVICE_TYPE_VIDEO:
             return -ENOSYS;
@@ -112,6 +119,12 @@ static ssize_t device_write(inode_t* inode, const void* buf, off_t off, size_t s
         case DEVICE_TYPE_BLOCK:
             return block_write(device, buf, off, size);
 
+        case DEVICE_TYPE_AUDIO:
+            return audio_write(device, buf, size);
+
+        case DEVICE_TYPE_MIXER:
+            return -EINVAL;
+
         case DEVICE_TYPE_VIDEO:
             return -ENOSYS;
 
@@ -144,6 +157,12 @@ static int device_ioctl(inode_t* inode, long req, void* arg) {
         case DEVICE_TYPE_BLOCK:
             return errno = ENOSYS, -1; /* TODO: block_ioctl(): need implementation */
 
+        case DEVICE_TYPE_AUDIO:
+            return audio_ioctl(device, req, arg);
+
+        case DEVICE_TYPE_MIXER:
+            return mixer_ioctl(device, req, arg);
+
         case DEVICE_TYPE_VIDEO:
             return video_ioctl(device, req, arg);
 
@@ -174,6 +193,12 @@ static int device_fsync(inode_t* inode, int datasync) {
             return char_flush(device);
 
         case DEVICE_TYPE_BLOCK:
+            return 0;
+
+        case DEVICE_TYPE_AUDIO:
+            return audio_fsync(device);
+
+        case DEVICE_TYPE_MIXER:
             return 0;
 
         case DEVICE_TYPE_VIDEO:
@@ -208,6 +233,12 @@ static int device_getattr(inode_t* inode, struct stat* st) {
         case DEVICE_TYPE_BLOCK:
             return block_getattr(device, st);
 
+        case DEVICE_TYPE_AUDIO:
+            return audio_getattr(device, st);
+
+        case DEVICE_TYPE_MIXER:
+            return mixer_getattr(device, st);
+
         case DEVICE_TYPE_VIDEO:
             return video_getattr(device, st);
 
@@ -216,6 +247,87 @@ static int device_getattr(inode_t* inode, struct stat* st) {
     }
 
     kpanicf("device::getattr: unknown device type %d for /dev/%s\n", device->type, inode->name);
+}
+
+
+
+static int device_poll(inode_t* inode, int events) {
+
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(inode->userdata);
+
+
+    device_t* device = (device_t*)inode->userdata;
+
+    if (device->status != DEVICE_STATUS_READY)
+        return POLLERR;
+
+
+    switch (device->type) {
+
+        case DEVICE_TYPE_AUDIO:
+            return audio_poll(device, events);
+
+        default:
+            break;
+    }
+
+    return events & (POLLIN | POLLOUT);
+}
+
+
+
+static inode_t* device_open(inode_t* inode, int flags) {
+
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(inode->userdata);
+
+
+    device_t* device = (device_t*)inode->userdata;
+
+    if (device->status != DEVICE_STATUS_READY)
+        return errno = EBUSY, NULL;
+
+
+    switch (device->type) {
+
+        case DEVICE_TYPE_AUDIO: {
+
+            int e;
+
+            if ((e = audio_open(device, flags)) < 0)
+                return errno = -e, NULL;
+
+            break;
+        }
+
+        default:
+            break;
+    }
+
+    return inode;
+}
+
+
+
+static int device_close(inode_t* inode) {
+
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(inode->userdata);
+
+
+    device_t* device = (device_t*)inode->userdata;
+
+    switch (device->type) {
+
+        case DEVICE_TYPE_AUDIO:
+            return audio_close(device);
+
+        default:
+            break;
+    }
+
+    return 0;
 }
 
 
@@ -246,6 +358,16 @@ void device_mkdev(device_t* device, mode_t mode) {
         case DEVICE_TYPE_VIDEO:
 
             video_init(device);
+            break;
+
+        case DEVICE_TYPE_AUDIO:
+
+            audio_init(device);
+            break;
+
+        case DEVICE_TYPE_MIXER:
+
+            mixer_init(device);
             break;
 
         case DEVICE_TYPE_NETWORK:
@@ -280,6 +402,8 @@ void device_mkdev(device_t* device, mode_t mode) {
         case DEVICE_TYPE_CHAR:
         case DEVICE_TYPE_VIDEO:
         case DEVICE_TYPE_NETWORK:
+        case DEVICE_TYPE_AUDIO:
+        case DEVICE_TYPE_MIXER:
 
             mode |= S_IFCHR;
             break;
@@ -322,6 +446,13 @@ void device_mkdev(device_t* device, mode_t mode) {
     i->ops.read    = device_read;
     i->ops.ioctl   = device_ioctl;
     i->ops.fsync   = device_fsync;
+    i->ops.poll    = device_poll;
+
+    if (device->type == DEVICE_TYPE_AUDIO) {
+
+        i->ops.open  = device_open;
+        i->ops.close = device_close;
+    }
 
     i->ev = shared_ptr_new(struct inode_events, GFP_KERNEL);
 
@@ -352,6 +483,11 @@ void device_mkdev(device_t* device, mode_t mode) {
         case DEVICE_TYPE_BLOCK:
 
             block_parse_partitions(device, i, device_mkdev);
+            break;
+
+        case DEVICE_TYPE_AUDIO:
+        case DEVICE_TYPE_MIXER:
+
             break;
 
         case DEVICE_TYPE_VIDEO:

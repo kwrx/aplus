@@ -1,7 +1,7 @@
 .PHONY: all install clean distclean
 
 
-DRIVERS := block char dev video tty virtio usb
+DRIVERS := block char dev tty usb video virtio
 DRIVERS += platform/pc
 
 TARGETS	:= $(shell find $(DRIVERS) -type f -iname "Makefile" -exec dirname {} \;)

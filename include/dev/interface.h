@@ -53,6 +53,8 @@
     #define DEVICE_TYPE_BLOCK   2
     #define DEVICE_TYPE_VIDEO   3
     #define DEVICE_TYPE_NETWORK 4
+    #define DEVICE_TYPE_AUDIO   5
+    #define DEVICE_TYPE_MIXER   6
 
     #define DEVICE_MAXNAMELEN 32
     #define DEVICE_MAXDESCLEN 256
@@ -159,6 +161,61 @@ typedef struct device {
             struct netif interface;
 
         } net;
+
+        struct {
+
+            uint16_t index;
+
+            uint32_t formats;
+            uint32_t caps;
+
+            uint32_t minrate;
+            uint32_t maxrate;
+            uint16_t maxchannels;
+
+            size_t fragsize;
+            size_t fragcount;
+
+            struct {
+
+                uint32_t rate;
+                uint32_t format;
+                uint16_t channels;
+
+            } params;
+
+            int (*configure)(struct device*);
+            ssize_t (*output)(struct device*, const void*, size_t);
+            ssize_t (*input)(struct device*, void*, size_t);
+            ssize_t (*ospace)(struct device*);
+            ssize_t (*ispace)(struct device*);
+            ssize_t (*odelay)(struct device*);
+            int (*trigger)(struct device*, int);
+            int (*drain)(struct device*);
+            int (*flush)(struct device*);
+
+            uint8_t* bounce;
+            size_t bouncesize;
+
+            int trigger_mask;
+            uint8_t opened;
+            uint8_t configured;
+
+        } snd;
+
+        struct {
+
+            struct device* card;
+
+            uint32_t devmask;
+            uint32_t stereomask;
+            uint32_t recmask;
+            uint32_t recsrc;
+
+            int (*get)(struct device*, int, uint32_t*);
+            int (*set)(struct device*, int, uint32_t*);
+
+        } mix;
     };
 
 
