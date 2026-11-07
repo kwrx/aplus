@@ -21,158 +21,410 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <ctype.h>
 #include <errno.h>
-#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <strings.h>
-#include <sys/stat.h>
-#include <unistd.h>
+
+#include <libavcodec/avcodec.h>
+#include <libavformat/avformat.h>
+#include <libavutil/channel_layout.h>
+#include <libavutil/log.h>
+#include <libavutil/mathematics.h>
+#include <libswresample/swresample.h>
 
 #include "player.h"
 
 
-#define WAVE_FORMAT_PCM        0x0001
-#define WAVE_FORMAT_EXTENSIBLE 0xFFFE
-
-#define SOURCE_CHUNK_BYTES 8192
+#define DECODER_PREROLL_MS 250
 
 
-static uint16_t source_le16(const uint8_t* p) {
-    return (uint16_t)(p[0] | (p[1] << 8));
-}
+struct player_decoder {
+
+    char* path;
+
+    AVFormatContext* format;
+    AVCodecContext* codec;
+    SwrContext* swr;
+    AVPacket* packet;
+    AVFrame* frame;
+
+    int stream;
+    int64_t start;
+
+    int16_t (*pending)[2];
+    size_t pending_capacity;
+    size_t pending_count;
+    size_t pending_at;
+
+    int64_t next;
+    int64_t skip;
+    int64_t offset;
+
+    bool calibrating;
+    bool seeking;
+    bool flushing;
+    bool finished;
+    bool touched;
+};
 
 
-static uint32_t source_le32(const uint8_t* p) {
-    return (uint32_t)p[0] | ((uint32_t)p[1] << 8) | ((uint32_t)p[2] << 16) | ((uint32_t)p[3] << 24);
-}
+static const struct {
+
+    const char* name;
+    const char* label;
+
+} decoder_labels[] = {
+
+    {"vorbis",  "Vorbis" },
+    {"opus",    "Opus"   },
+    {"wavpack", "WavPack"},
+    {"ape",     "Monkey's Audio"},
+    {"wmav1",   "WMA"    },
+    {"wmav2",   "WMA"    },
+    {"wmapro",  "WMA Pro"},
+};
 
 
-static ssize_t source_read_full(int fd, void* buf, size_t size) {
+static void decoder_label(player_source_t* source, enum AVCodecID id) {
 
-    size_t done = 0;
+    const AVCodecDescriptor* descriptor = avcodec_descriptor_get(id);
 
-    while (done < size) {
+    const char* name = descriptor ? descriptor->name : "audio";
 
-        const ssize_t r = read(fd, (uint8_t*)buf + done, size - done);
+    if (strncmp(name, "pcm_", 4) == 0) {
 
-        if (r < 0) {
+        const char* container = source->decoder->format->iformat->name;
 
-            if (errno == EINTR) {
-                continue;
-            }
-
-            return done ? (ssize_t)done : -1;
+        if (strcmp(container, "wav") == 0) {
+            snprintf(source->codec, sizeof(source->codec), "WAV");
+        } else if (strcmp(container, "aiff") == 0) {
+            snprintf(source->codec, sizeof(source->codec), "AIFF");
+        } else if (strcmp(container, "s16le") == 0) {
+            snprintf(source->codec, sizeof(source->codec), "Raw PCM");
+        } else {
+            snprintf(source->codec, sizeof(source->codec), "PCM");
         }
+
+        return;
+    }
+
+    for (size_t i = 0; i < sizeof(decoder_labels) / sizeof(decoder_labels[0]); i++) {
+
+        if (strcmp(name, decoder_labels[i].name) == 0) {
+            snprintf(source->codec, sizeof(source->codec), "%s", decoder_labels[i].label);
+            return;
+        }
+    }
+
+    size_t i = 0;
+
+    for (; name[i] && i < sizeof(source->codec) - 1; i++) {
+        source->codec[i] = (char)toupper((unsigned char)name[i]);
+    }
+
+    source->codec[i] = '\0';
+}
+
+
+static const char* decoder_tag(const player_decoder_t* decoder, const char* key) {
+
+    const AVDictionaryEntry* entry = av_dict_get(decoder->format->metadata, key, NULL, 0);
+
+    if (!entry || !entry->value[0]) {
+        entry = av_dict_get(decoder->format->streams[decoder->stream]->metadata, key, NULL, 0);
+    }
+
+    return entry && entry->value[0] ? entry->value : NULL;
+}
+
+
+static void decoder_describe(player_source_t* source) {
+
+    const player_decoder_t* decoder = source->decoder;
+
+    const AVStream* stream = decoder->format->streams[decoder->stream];
+
+
+    decoder_label(source, decoder->codec->codec_id);
+
+
+    source->bits = (uint16_t)decoder->codec->bits_per_raw_sample;
+
+    const AVCodecDescriptor* descriptor = avcodec_descriptor_get(decoder->codec->codec_id);
+
+    if (source->bits == 0 && descriptor && strncmp(descriptor->name, "pcm_", 4) == 0) {
+        source->bits = (uint16_t)av_get_bits_per_sample(decoder->codec->codec_id);
+    }
+
+
+    int64_t bitrate = stream->codecpar->bit_rate;
+
+    if (bitrate <= 0) {
+        bitrate = decoder->format->bit_rate;
+    }
+
+    source->bitrate = bitrate > 0 ? (uint32_t)(bitrate / 1000) : 0;
+
+
+    const char* title  = decoder_tag(decoder, "title");
+    const char* artist = decoder_tag(decoder, "artist");
+
+    if (title && artist) {
+        snprintf(source->title, sizeof(source->title), "%s \xE2\x80\x94 %s", artist, title);
+    } else if (title) {
+        snprintf(source->title, sizeof(source->title), "%s", title);
+    }
+
+
+    if (stream->duration != AV_NOPTS_VALUE && stream->duration > 0) {
+        source->frames = (uint64_t)av_rescale_q(stream->duration, stream->time_base, (AVRational){1, (int)source->rate});
+    } else if (decoder->format->duration != AV_NOPTS_VALUE && decoder->format->duration > 0) {
+        source->frames = (uint64_t)av_rescale(decoder->format->duration, source->rate, AV_TIME_BASE);
+    } else {
+        source->frames = 0;
+    }
+}
+
+
+static int decoder_resampler(player_decoder_t* decoder) {
+
+    const AVChannelLayout stereo = AV_CHANNEL_LAYOUT_STEREO;
+
+    if (swr_alloc_set_opts2(&decoder->swr, &stereo, AV_SAMPLE_FMT_S16, decoder->codec->sample_rate, &decoder->codec->ch_layout, decoder->codec->sample_fmt, decoder->codec->sample_rate, 0, NULL) < 0) {
+        return -1;
+    }
+
+    if (decoder->codec->ch_layout.nb_channels == 1) {
+
+        const double matrix[2] = {1.0, 1.0};
+
+        if (swr_set_matrix(decoder->swr, matrix, 1) < 0) {
+            return -1;
+        }
+    }
+
+    return swr_init(decoder->swr);
+}
+
+
+static int decoder_convert(player_source_t* source) {
+
+    player_decoder_t* decoder = source->decoder;
+
+    AVFrame* frame = decoder->frame;
+
+    const int room = swr_get_out_samples(decoder->swr, frame->nb_samples);
+
+    if (room <= 0) {
+        return 0;
+    }
+
+    if ((size_t)room > decoder->pending_capacity) {
+
+        int16_t (*pending)[2] = realloc(decoder->pending, (size_t)room * sizeof(pending[0]));
+
+        if (!pending) {
+            return -1;
+        }
+
+        decoder->pending          = pending;
+        decoder->pending_capacity = (size_t)room;
+    }
+
+
+    uint8_t* out = (uint8_t*)decoder->pending;
+
+    const int got = swr_convert(decoder->swr, &out, room, (const uint8_t**)frame->extended_data, frame->nb_samples);
+
+    if (got < 0) {
+        return -1;
+    }
+
+
+    const AVStream* stream = decoder->format->streams[decoder->stream];
+
+    int64_t start = decoder->next;
+
+    if (frame->best_effort_timestamp != AV_NOPTS_VALUE) {
+
+        start = av_rescale_q(frame->best_effort_timestamp - decoder->start, stream->time_base, (AVRational){1, (int)source->rate});
+
+        const int64_t nominal = frame->duration > 0 ? av_rescale_q(frame->duration, stream->time_base, (AVRational){1, (int)source->rate}) : 0;
+
+        if (start < 0 && nominal > got) {
+            start += nominal - got;
+        }
+
+        if (decoder->calibrating) {
+            decoder->offset = start;
+        }
+
+        start -= decoder->offset;
+    }
+
+    decoder->calibrating = false;
+
+    decoder->next = start + got;
+
+
+    size_t drop = 0;
+
+    if (decoder->seeking && decoder->skip > start) {
+        drop = decoder->skip - start < got ? (size_t)(decoder->skip - start) : (size_t)got;
+    }
+
+    if (drop < (size_t)got) {
+        decoder->seeking = false;
+    }
+
+    decoder->pending_at    = drop;
+    decoder->pending_count = (size_t)got;
+
+    return 0;
+}
+
+
+static int decoder_step(player_source_t* source) {
+
+    player_decoder_t* decoder = source->decoder;
+
+    for (;;) {
+
+        const int r = avcodec_receive_frame(decoder->codec, decoder->frame);
 
         if (r == 0) {
-            break;
+
+            const int e = decoder_convert(source);
+
+            av_frame_unref(decoder->frame);
+
+            return e;
         }
 
-        done += (size_t)r;
-    }
+        if (r == AVERROR_EOF) {
+            decoder->finished = true;
+            return 0;
+        }
 
-    return (ssize_t)done;
+        if (r != AVERROR(EAGAIN)) {
+            decoder->finished = true;
+            return -1;
+        }
+
+        if (decoder->flushing) {
+            decoder->finished = true;
+            return 0;
+        }
+
+
+        const int e = av_read_frame(decoder->format, decoder->packet);
+
+        if (e < 0) {
+            decoder->flushing = true;
+            avcodec_send_packet(decoder->codec, NULL);
+            continue;
+        }
+
+        if (decoder->packet->stream_index == decoder->stream) {
+            avcodec_send_packet(decoder->codec, decoder->packet);
+        }
+
+        av_packet_unref(decoder->packet);
+    }
 }
 
 
-static bool source_pread_full(int fd, off_t offset, void* buf, size_t size) {
+static void decoder_stop(player_decoder_t* decoder) {
 
-    if (lseek(fd, offset, SEEK_SET) < 0) {
-        return false;
-    }
-
-    return source_read_full(fd, buf, size) == (ssize_t)size;
+    swr_free(&decoder->swr);
+    av_frame_free(&decoder->frame);
+    av_packet_free(&decoder->packet);
+    avcodec_free_context(&decoder->codec);
+    avformat_close_input(&decoder->format);
 }
 
 
-static int source_open_wav(player_source_t* source, off_t size, const char** error) {
+static int decoder_start(player_decoder_t* decoder, const char** error) {
 
-    uint8_t riff[12];
+    const AVInputFormat* input = NULL;
 
-    if (!source_pread_full(source->fd, 0, riff, sizeof(riff)) || memcmp(riff, "RIFF", 4) != 0 || memcmp(riff + 8, "WAVE", 4) != 0) {
-        *error = "Not a WAV file";
+    AVDictionary* options = NULL;
+
+    const char* dot = strrchr(decoder->path, '.');
+
+    if (dot && strcasecmp(dot, ".pcm") == 0) {
+
+        input = av_find_input_format("s16le");
+
+        av_dict_set_int(&options, "sample_rate", PLAYER_PCM_RATE, 0);
+        av_dict_set(&options, "ch_layout", PLAYER_PCM_LAYOUT, 0);
+    }
+
+
+    const int e = avformat_open_input(&decoder->format, decoder->path, input, &options);
+
+    av_dict_free(&options);
+
+    if (e < 0) {
+        *error = e == AVERROR(ENOENT) || e == AVERROR(EACCES) ? strerror(AVUNERROR(e)) : "Unsupported file format";
+        return -1;
+    }
+
+    if (avformat_find_stream_info(decoder->format, NULL) < 0) {
+        *error = "The file is damaged";
         return -1;
     }
 
 
-    bool have_fmt  = false;
-    bool have_data = false;
+    const AVCodec* codec = NULL;
 
-    uint16_t tag  = 0;
-    uint64_t data = 0;
+    if ((decoder->stream = av_find_best_stream(decoder->format, AVMEDIA_TYPE_AUDIO, -1, -1, &codec, 0)) < 0) {
+        *error = decoder->stream == AVERROR_DECODER_NOT_FOUND ? "Unsupported audio codec" : "The file has no audio";
+        return -1;
+    }
 
-    off_t pos = sizeof(riff);
+    for (unsigned i = 0; i < decoder->format->nb_streams; i++) {
 
-    while (pos + 8 <= size && !(have_fmt && have_data)) {
-
-        uint8_t head[8];
-
-        if (!source_pread_full(source->fd, pos, head, sizeof(head))) {
-            break;
+        if ((int)i != decoder->stream) {
+            decoder->format->streams[i]->discard = AVDISCARD_ALL;
         }
-
-        const uint32_t length = source_le32(head + 4);
-
-        if (memcmp(head, "fmt ", 4) == 0 && length >= 16) {
-
-            uint8_t fmt[40] = {0};
-
-            const size_t want = length < sizeof(fmt) ? length : sizeof(fmt);
-
-            if (source_read_full(source->fd, fmt, want) != (ssize_t)want) {
-                break;
-            }
-
-            tag              = source_le16(fmt);
-            source->channels = source_le16(fmt + 2);
-            source->rate     = source_le32(fmt + 4);
-            source->block    = source_le16(fmt + 12);
-            source->bits     = source_le16(fmt + 14);
-
-            if (tag == WAVE_FORMAT_EXTENSIBLE && want >= 26) {
-                tag = source_le16(fmt + 24);
-            }
-
-            have_fmt = true;
-
-        } else if (memcmp(head, "data", 4) == 0) {
-
-            source->offset = pos + 8;
-            data           = length;
-            have_data      = true;
-        }
-
-        pos += 8 + (off_t)length + (length & 1);
     }
 
 
-    if (!have_fmt || !have_data) {
-        *error = "The WAV file is damaged";
+    const AVStream* stream = decoder->format->streams[decoder->stream];
+
+    if ((decoder->codec = avcodec_alloc_context3(codec)) == NULL || avcodec_parameters_to_context(decoder->codec, stream->codecpar) < 0) {
+        *error = strerror(ENOMEM);
         return -1;
     }
 
-    if (tag != WAVE_FORMAT_PCM) {
-        *error = "Only PCM WAV files are supported";
+    decoder->codec->thread_count = 1;
+
+    if (avcodec_open2(decoder->codec, codec, NULL) < 0) {
+        *error = "Unsupported audio codec";
         return -1;
     }
 
-    if (source->bits != 8 && source->bits != 16 && source->bits != 24 && source->bits != 32) {
-        *error = "Unsupported sample size";
+    if (decoder->codec->sample_rate <= 0 || decoder->codec->ch_layout.nb_channels <= 0) {
+        *error = "The file is damaged";
         return -1;
     }
 
-    if (source->channels == 0 || source->rate == 0 || source->block < source->channels * (source->bits / 8)) {
-        *error = "The WAV file is damaged";
+
+    if (decoder_resampler(decoder) < 0) {
+        *error = "Unsupported channel layout";
         return -1;
     }
 
-    if (source->offset >= size) {
-        data = 0;
-    } else if (data == 0 || source->offset + (off_t)data > size) {
-        data = (uint64_t)(size - source->offset);
+    if ((decoder->packet = av_packet_alloc()) == NULL || (decoder->frame = av_frame_alloc()) == NULL) {
+        *error = strerror(ENOMEM);
+        return -1;
     }
 
-    source->frames = data / source->block;
+    decoder->start = stream->start_time != AV_NOPTS_VALUE ? stream->start_time : 0;
 
     return 0;
 }
@@ -180,51 +432,47 @@ static int source_open_wav(player_source_t* source, off_t size, const char** err
 
 int player_source_open(player_source_t* source, const char* path, const char** error) {
 
-    memset(source, 0, sizeof(*source));
+    av_log_set_level(AV_LOG_QUIET);
 
-    source->fd = open(path, O_RDONLY);
 
-    if (source->fd < 0) {
-        *error = strerror(errno);
+    player_decoder_t* decoder = calloc(1, sizeof(*decoder));
+
+    if (!decoder) {
+        *error = strerror(ENOMEM);
         return -1;
     }
 
+    memset(source, 0, sizeof(*source));
 
-    struct stat st;
+    source->decoder = decoder;
 
-    if (fstat(source->fd, &st) < 0 || !S_ISREG(st.st_mode)) {
-        *error = "Not a regular file";
+    if ((decoder->path = strdup(path)) == NULL) {
+        *error = strerror(ENOMEM);
         player_source_close(source);
         return -1;
     }
 
+    if (decoder_start(decoder, error) < 0) {
+        player_source_close(source);
+        return -1;
+    }
 
-    const char* dot = strrchr(path, '.');
+    source->rate     = (uint32_t)decoder->codec->sample_rate;
+    source->channels = (uint16_t)decoder->codec->ch_layout.nb_channels;
+    source->position = 0;
 
-    if (dot && strcasecmp(dot, ".pcm") == 0) {
+    decoder_describe(source);
 
-        source->format   = PLAYER_FORMAT_PCM;
-        source->rate     = PLAYER_PCM_RATE;
-        source->channels = PLAYER_PCM_CHANNELS;
-        source->bits     = PLAYER_PCM_BITS;
-        source->block    = PLAYER_PCM_CHANNELS * (PLAYER_PCM_BITS / 8);
-        source->offset   = 0;
-        source->frames   = (uint64_t)st.st_size / source->block;
 
-    } else {
+    decoder->calibrating = true;
 
-        source->format = PLAYER_FORMAT_WAV;
+    while (decoder->pending_count == 0 && !decoder->finished) {
 
-        if (source_open_wav(source, st.st_size, error) < 0) {
+        if (decoder_step(source) < 0) {
+            *error = "The file is damaged";
             player_source_close(source);
             return -1;
         }
-    }
-
-    if (player_source_seek(source, 0) < 0) {
-        *error = strerror(errno);
-        player_source_close(source);
-        return -1;
     }
 
     return 0;
@@ -233,23 +481,105 @@ int player_source_open(player_source_t* source, const char* path, const char** e
 
 void player_source_close(player_source_t* source) {
 
-    if (source->fd >= 0) {
-        close(source->fd);
+    player_decoder_t* decoder = source->decoder;
+
+    if (!decoder) {
+        return;
     }
 
-    source->fd = -1;
+    decoder_stop(decoder);
+
+    if (decoder->pending) {
+        free(decoder->pending);
+    }
+
+    if (decoder->path) {
+        free(decoder->path);
+    }
+
+    free(decoder);
+
+    source->decoder = NULL;
+}
+
+
+static int decoder_rewind(player_decoder_t* decoder) {
+
+    const char* error = NULL;
+
+    decoder_stop(decoder);
+
+    if (decoder_start(decoder, &error) < 0) {
+        decoder_stop(decoder);
+        errno = EIO;
+        return -1;
+    }
+
+    return 0;
 }
 
 
 int player_source_seek(player_source_t* source, uint64_t frame) {
 
-    if (frame > source->frames) {
-        frame = source->frames;
+    player_decoder_t* decoder = source->decoder;
+
+    if (frame == 0 && !decoder->touched) {
+        source->position = 0;
+        return 0;
     }
 
-    if (lseek(source->fd, source->offset + (off_t)(frame * source->block), SEEK_SET) < 0) {
+    if (!decoder->format) {
+        errno = EIO;
         return -1;
     }
+
+
+    const AVStream* stream = decoder->format->streams[decoder->stream];
+
+    int64_t preroll = stream->codecpar->seek_preroll;
+
+    if (preroll < (int64_t)source->rate * DECODER_PREROLL_MS / 1000) {
+        preroll = (int64_t)source->rate * DECODER_PREROLL_MS / 1000;
+    }
+
+
+    if ((int64_t)frame <= preroll) {
+
+        if (decoder_rewind(decoder) < 0) {
+            decoder->finished = true;
+            return -1;
+        }
+
+        decoder->next = 0;
+
+    } else {
+
+        const int64_t target = decoder->start + av_rescale_q((int64_t)frame - preroll, (AVRational){1, (int)source->rate}, stream->time_base);
+
+        if (av_seek_frame(decoder->format, decoder->stream, target, AVSEEK_FLAG_BACKWARD) < 0) {
+            errno = ESPIPE;
+            return -1;
+        }
+
+        avcodec_flush_buffers(decoder->codec);
+
+        swr_free(&decoder->swr);
+
+        if (decoder_resampler(decoder) < 0) {
+            errno = ENOMEM;
+            return -1;
+        }
+
+        decoder->next = (int64_t)frame;
+    }
+
+    decoder->pending_count = 0;
+    decoder->pending_at    = 0;
+    decoder->skip          = (int64_t)frame;
+    decoder->seeking       = frame > 0;
+    decoder->flushing      = false;
+    decoder->finished      = false;
+    decoder->touched       = true;
 
     source->position = frame;
 
@@ -257,74 +587,45 @@ int player_source_seek(player_source_t* source, uint64_t frame) {
 }
 
 
-static int32_t source_sample(const uint8_t* p, uint16_t bits) {
-
-    switch (bits) {
-
-        case 8:
-            return ((int32_t)p[0] - 128) << 8;
-
-        case 16:
-            return (int16_t)source_le16(p);
-
-        case 24:
-            return (int32_t)(((uint32_t)p[0] << 8) | ((uint32_t)p[1] << 16) | ((uint32_t)p[2] << 24)) >> 16;
-
-        default:
-            return (int32_t)source_le32(p) >> 16;
-    }
-}
-
-
 size_t player_source_read(player_source_t* source, int16_t (*out)[2], size_t frames) {
 
-    static uint8_t raw[SOURCE_CHUNK_BYTES];
+    player_decoder_t* decoder = source->decoder;
 
-    const size_t width = source->bits / 8;
+    decoder->touched = true;
+
 
     size_t total = 0;
 
-    while (total < frames && source->position < source->frames) {
+    while (total < frames) {
 
-        size_t want = frames - total;
+        if (decoder->pending_at < decoder->pending_count) {
 
-        if (want > sizeof(raw) / source->block) {
-            want = sizeof(raw) / source->block;
+            size_t take = decoder->pending_count - decoder->pending_at;
+
+            if (take > frames - total) {
+                take = frames - total;
+            }
+
+            memcpy(out + total, decoder->pending + decoder->pending_at, take * sizeof(out[0]));
+
+            decoder->pending_at += take;
+            total += take;
+
+            continue;
         }
 
-        if (want > source->frames - source->position) {
-            want = (size_t)(source->frames - source->position);
-        }
-
-
-        const ssize_t got = source_read_full(source->fd, raw, want * source->block);
-
-        if (got <= 0) {
-            source->frames = source->position;
+        if (decoder->finished || decoder_step(source) < 0) {
             break;
         }
+    }
 
 
-        const size_t count = (size_t)got / source->block;
+    source->position += total;
 
-        for (size_t i = 0; i < count; i++) {
-
-            const uint8_t* frame = raw + i * source->block;
-
-            const int32_t left  = source_sample(frame, source->bits);
-            const int32_t right = source->channels > 1 ? source_sample(frame + width, source->bits) : left;
-
-            out[total + i][0] = (int16_t)left;
-            out[total + i][1] = (int16_t)right;
-        }
-
-        total += count;
-        source->position += count;
-
-        if (count < want) {
-            source->frames = source->position;
-            break;
-        }
+    if (decoder->finished && decoder->pending_at >= decoder->pending_count && total < frames) {
+        source->frames = source->position;
+    } else if (source->position > source->frames) {
+        source->frames = source->position;
     }
 
     return total;

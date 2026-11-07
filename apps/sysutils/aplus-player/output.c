@@ -22,12 +22,7 @@
  */
 
 #include <errno.h>
-#include <fcntl.h>
 #include <string.h>
-#include <sys/ioctl.h>
-#include <unistd.h>
-
-#include <aplus/soundcard.h>
 
 #include "player.h"
 
@@ -66,96 +61,58 @@ static void output_clear(player_output_t* output) {
 
 int player_output_open(player_output_t* output, uint32_t rate, const char** error) {
 
-    output->fd = open(PLAYER_DSP_PATH, O_WRONLY | O_NONBLOCK);
-
-    if (output->fd < 0) {
+    if ((output->stream = audio_stream_open("aplus-player", rate, 2, AUDIO_FORMAT_S16_LE)) == NULL) {
         *error = output_open_error(errno);
         return -1;
     }
 
-
-    int format = AFMT_S16_LE;
-
-    if (ioctl(output->fd, SNDCTL_DSP_SETFMT, &format) < 0 || (format != AFMT_S16_LE && format != AFMT_U8)) {
-
-        format = AFMT_U8;
-
-        if (ioctl(output->fd, SNDCTL_DSP_SETFMT, &format) < 0 || format != AFMT_U8) {
-            *error = "The audio device has no usable sample format";
-            goto fail;
-        }
-    }
-
-
-    int channels = 2;
-
-    if (ioctl(output->fd, SNDCTL_DSP_CHANNELS, &channels) < 0 || channels < 1 || channels > 2) {
-        *error = "The audio device has no usable channel layout";
-        goto fail;
-    }
-
-
-    int speed = (int)rate;
-
-    if (ioctl(output->fd, SNDCTL_DSP_SPEED, &speed) < 0 || speed <= 0) {
-        *error = "The audio device cannot play at this sample rate";
-        goto fail;
-    }
-
-
-    int query = AFMT_QUERY;
-
-    if (ioctl(output->fd, SNDCTL_DSP_SETFMT, &query) == 0 && (query == AFMT_S16_LE || query == AFMT_U8)) {
-        format = query;
-    }
-
-
-    int fragment = 0;
-
-    if (ioctl(output->fd, SNDCTL_DSP_GETBLKSIZE, &fragment) < 0 || fragment <= 0) {
-        fragment = PLAYER_OUTPUT_BYTES;
-    }
-
-    output->rate     = (uint32_t)speed;
-    output->channels = (uint16_t)channels;
-    output->bits     = format == AFMT_U8 ? 8 : 16;
-    output->frame    = (size_t)output->channels * (output->bits / 8);
-    output->fragment = (size_t)fragment - (size_t)fragment % output->frame;
+    output->rate     = audio_stream_rate(output->stream);
+    output->channels = audio_stream_channels(output->stream);
+    output->bits     = audio_stream_format(output->stream) == AUDIO_FORMAT_U8 ? 8 : 16;
+    output->frame    = audio_stream_frame(output->stream);
+    output->fragment = audio_stream_fragment(output->stream);
     output->step     = ((uint64_t)rate << 32) / output->rate;
 
     output_clear(output);
 
     return 0;
-
-fail:
-
-    close(output->fd);
-    output->fd = -1;
-
-    return -1;
 }
 
 
 void player_output_close(player_output_t* output) {
 
-    if (output->fd < 0) {
+    if (!output->stream) {
         return;
     }
 
-    ioctl(output->fd, SNDCTL_DSP_RESET, 0);
-    close(output->fd);
+    audio_stream_close(output->stream);
 
-    output->fd = -1;
+    output->stream = NULL;
 }
 
 
 void player_output_reset(player_output_t* output) {
 
-    if (output->fd >= 0) {
-        ioctl(output->fd, SNDCTL_DSP_RESET, 0);
+    if (output->stream) {
+        audio_stream_reset(output->stream);
     }
 
     output_clear(output);
+}
+
+
+bool player_output_active(const player_output_t* output) {
+    return output->stream != NULL;
+}
+
+
+int player_output_fd(const player_output_t* output) {
+    return output->stream ? audio_stream_fd(output->stream) : -1;
+}
+
+
+short player_output_events(const player_output_t* output) {
+    return output->stream ? audio_stream_events(output->stream) : 0;
 }
 
 
@@ -277,7 +234,7 @@ static size_t output_produce(player_output_t* output, player_source_t* source, u
 
 int player_output_fill(player_output_t* output, player_source_t* source, uint32_t gain) {
 
-    if (output->fd < 0) {
+    if (!output->stream) {
         errno = EBADF;
         return -1;
     }
@@ -289,7 +246,7 @@ int player_output_fill(player_output_t* output, player_source_t* source, uint32_
 
         if (left >= output->frame) {
 
-            const ssize_t w = write(output->fd, output->output + output->output_done, left);
+            const ssize_t w = audio_stream_write(output->stream, output->output + output->output_done, left);
 
             if (w < 0) {
 
@@ -363,14 +320,14 @@ int player_output_fill(player_output_t* output, player_source_t* source, uint32_
 
 uint64_t player_output_heard(player_output_t* output) {
 
-    if (output->fd < 0 || output->frame == 0) {
+    if (!output->stream || output->frame == 0) {
         return 0;
     }
 
 
-    int delay = 0;
+    ssize_t delay = audio_stream_delay(output->stream);
 
-    if (ioctl(output->fd, SNDCTL_DSP_GETODELAY, &delay) < 0 || delay < 0) {
+    if (delay < 0) {
         delay = 0;
     }
 

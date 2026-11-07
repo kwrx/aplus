@@ -29,12 +29,11 @@
 #include <stdint.h>
 #include <sys/types.h>
 
+#include <aplus/audio.h>
 
-#define PLAYER_DSP_PATH "/dev/dsp"
 
-#define PLAYER_PCM_RATE     44100
-#define PLAYER_PCM_CHANNELS 2
-#define PLAYER_PCM_BITS     16
+#define PLAYER_PCM_RATE   44100
+#define PLAYER_PCM_LAYOUT "stereo"
 
 #define PLAYER_INPUT_FRAMES  2048
 #define PLAYER_OUTPUT_FRAMES 1024
@@ -42,27 +41,24 @@
 
 #define PLAYER_GAIN_UNITY 65536
 
+#define PLAYER_CODEC_MAX 32
+#define PLAYER_TAG_MAX   160
 
-typedef enum {
 
-    PLAYER_FORMAT_WAV = 0,
-    PLAYER_FORMAT_PCM,
-
-} player_format_t;
+typedef struct player_decoder player_decoder_t;
 
 
 typedef struct {
 
-    int fd;
+    player_decoder_t* decoder;
 
-    player_format_t format;
+    char codec[PLAYER_CODEC_MAX];
+    char title[PLAYER_TAG_MAX];
+    uint32_t bitrate;
 
     uint32_t rate;
     uint16_t channels;
     uint16_t bits;
-    uint16_t block;
-
-    off_t offset;
 
     uint64_t frames;
     uint64_t position;
@@ -72,7 +68,7 @@ typedef struct {
 
 typedef struct {
 
-    int fd;
+    audio_stream_t* stream;
 
     uint32_t rate;
     uint16_t channels;
@@ -109,6 +105,9 @@ size_t player_source_read(player_source_t* source, int16_t (*out)[2], size_t fra
 int player_output_open(player_output_t* output, uint32_t rate, const char** error);
 void player_output_close(player_output_t* output);
 void player_output_reset(player_output_t* output);
+bool player_output_active(const player_output_t* output);
+int player_output_fd(const player_output_t* output);
+short player_output_events(const player_output_t* output);
 int player_output_fill(player_output_t* output, player_source_t* source, uint32_t gain);
 uint64_t player_output_heard(player_output_t* output);
 bool player_output_done(player_output_t* output);

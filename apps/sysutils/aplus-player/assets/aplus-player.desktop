@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Music Player
-Comment=Play WAV and raw PCM audio files
+Comment=Play music and other audio files
 Exec=aplus-player
 Icon=aplus-player
 Terminal=false

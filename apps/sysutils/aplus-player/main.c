@@ -124,8 +124,6 @@ static struct {
 
 } playback = {
 
-    .source = {.fd = -1},
-    .output = {.fd = -1},
     .volume = PLAYER_VOLUME_START,
 };
 
@@ -159,7 +157,7 @@ static double player_seconds(uint64_t frames) {
 
 static uint64_t player_position(void) {
 
-    if (playback.state != PLAYER_PLAYING || playback.output.fd < 0) {
+    if (playback.state != PLAYER_PLAYING || !player_output_active(&playback.output)) {
         return playback.position;
     }
 
@@ -229,7 +227,7 @@ static void player_refresh(void) {
     if (playback.error) {
         status = playback.error;
     } else if (!playback.loaded) {
-        status = "Open a WAV or PCM file from the file manager";
+        status = "Open an audio file from the file manager";
     } else if (playback.state == PLAYER_PLAYING) {
         status = "Playing";
     } else if (playback.state == PLAYER_PAUSED) {
@@ -732,9 +730,27 @@ static void player_describe(void) {
     }
 
 
-    char details[PLAYER_TEXT_MAX];
+    const char* format = playback.source.codec;
 
-    snprintf(details, sizeof(details), "%s \xC2\xB7 %s kHz \xC2\xB7 %u-bit \xC2\xB7 %s", playback.source.format == PLAYER_FORMAT_WAV ? "WAV" : "Raw PCM", rate, playback.source.bits, channels);
+
+    char depth[32];
+
+    if (playback.source.bits > 0) {
+        snprintf(depth, sizeof(depth), "%u-bit", playback.source.bits);
+    } else if (playback.source.bitrate > 0) {
+        snprintf(depth, sizeof(depth), "%u kbps", playback.source.bitrate);
+    } else {
+        depth[0] = '\0';
+    }
+
+
+    char details[PLAYER_TEXT_MAX * 2];
+
+    if (depth[0]) {
+        snprintf(details, sizeof(details), "%s \xC2\xB7 %s kHz \xC2\xB7 %s \xC2\xB7 %s", format, rate, depth, channels);
+    } else {
+        snprintf(details, sizeof(details), "%s \xC2\xB7 %s kHz \xC2\xB7 %s", format, rate, channels);
+    }
 
     ui_label_set_text(player.details, details);
 }
@@ -764,6 +780,10 @@ static void player_load(const char* path) {
     }
 
     playback.loaded = true;
+
+    if (playback.source.title[0]) {
+        ui_label_set_text(player.title, playback.source.title);
+    }
 
     ui_slider_set_range(player.seek, 0.0, player_seconds(playback.source.frames));
 
@@ -814,10 +834,10 @@ static int player_run(void) {
         struct pollfd fds[2] = {
 
             {.fd = ui_connection_fd(player.conn), .events = POLLIN,  .revents = 0},
-            {.fd = playback.output.fd,            .events = POLLOUT, .revents = 0},
+            {.fd = player_output_fd(&playback.output), .events = player_output_events(&playback.output), .revents = 0},
         };
 
-        const nfds_t count = playback.state == PLAYER_PLAYING && playback.output.fd >= 0 && player_output_wants(&playback.output) ? 2 : 1;
+        const nfds_t count = playback.state == PLAYER_PLAYING && player_output_active(&playback.output) && player_output_wants(&playback.output) ? 2 : 1;
 
         if (poll(fds, count, timeout) < 0 && errno != EINTR) {
             return -1;
@@ -835,7 +855,7 @@ static int player_run(void) {
 static void show_usage(void) {
 
     printf("Use: aplus-player [FILE]\n"
-           "Play a WAV file or a raw PCM file.\n\n"
+           "Play an audio file: WAV, MP3, FLAC, Ogg Vorbis, Opus, AAC/M4A, ALAC, AIFF, WavPack, APE or WMA.\n\n"
            "Raw .pcm files are read as signed 16-bit little-endian stereo at %u Hz.\n",
            PLAYER_PCM_RATE);
 }
