@@ -304,12 +304,44 @@ static void virtnet_receive(struct virtnet* vn) {
 }
 
 
+static void virtnet_update_link(struct virtnet* vn) {
+
+    DEBUG_ASSERT(vn);
+
+    struct virtio_net_config volatile* cfg = (struct virtio_net_config volatile*)vn->driver->internals.device_config;
+
+    if (!cfg || !(negotiated_features & VIRTIO_NET_F_STATUS)) {
+        return;
+    }
+
+    const bool up = (le16_to_cpu(mmio_r16(&cfg->status)) & VIRTIO_NET_S_LINK_UP) != 0;
+
+    LOCK_TCPIP_CORE();
+
+    if (up) {
+        netif_set_link_up(&vn->device.net.interface);
+    } else {
+        netif_set_link_down(&vn->device.net.interface);
+    }
+
+    UNLOCK_TCPIP_CORE();
+
+#if DEBUG_LEVEL_INFO
+    kprintf("virtio-net: %s link is %s\n", vn->device.name, up ? "up" : "down");
+#endif
+}
+
+
 static int interrupt_handler(pcidev_t device, irq_t vector, uint8_t type, struct virtio_driver* driver) {
 
     for (size_t i = 0; i < num_devices; i++) {
 
         if (devices[i]->driver != driver)
             continue;
+
+        if (type == VIRTIO_INTERRUPT_TYPE_CONFIG && devices[i]->running) {
+            virtnet_update_link(devices[i]);
+        }
 
         while (virtq_reap(driver, VIRTIO_NET_QUEUE_TX, NULL, NULL))
             ;
