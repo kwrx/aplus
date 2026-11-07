@@ -49,6 +49,7 @@
 #define APPEARANCE_COLUMNS      4
 #define APPEARANCE_FAMILY_MAX   64
 #define APPEARANCE_FONT_DIR     "/usr/share/fonts/ttf"
+#define APPEARANCE_FONT_INDEX   "/etc/fonts/fonts.conf"
 #define APPEARANCE_THEME_SUFFIX ".conf"
 #define APPEARANCE_SIZE_MIN     9
 #define APPEARANCE_SIZE_MAX     28
@@ -438,10 +439,85 @@ static void appearance_add_font(appearance_fonts_t* group, const char* family, c
 }
 
 
-/**
- * @brief Finds the font families installed in APPEARANCE_FONT_DIR, keeping those with a regular weight.
- */
-static void appearance_scan_fonts(void) {
+static FT_Byte* appearance_read_file(const char* path, size_t* size) {
+
+    FILE* fp = fopen(path, "rb");
+
+    if (!fp) {
+        return NULL;
+    }
+
+    FT_Byte* data = NULL;
+    long length   = 0;
+
+    if (fseek(fp, 0, SEEK_END) == 0 && (length = ftell(fp)) > 0 && fseek(fp, 0, SEEK_SET) == 0 && (data = malloc((size_t)length))) {
+
+        if (fread(data, 1, (size_t)length, fp) != (size_t)length) {
+            free(data);
+            data = NULL;
+        }
+    }
+
+    fclose(fp);
+
+    *size = (size_t)length;
+
+    return data;
+}
+
+
+static bool appearance_scan_index(void) {
+
+    FILE* fp = fopen(APPEARANCE_FONT_INDEX, "r");
+
+    if (!fp) {
+        return false;
+    }
+
+    bool found = false;
+
+    char line[1024];
+
+    while (fgets(line, sizeof(line), fp)) {
+
+        line[strcspn(line, "\r\n")] = '\0';
+
+        char* family  = strchr(line, ':');
+        char* spacing = strrchr(line, ':');
+
+        if (!family || spacing == family) {
+            continue;
+        }
+
+        *spacing++ = '\0';
+
+        char* style = strrchr(line, ':');
+
+        if (style == family) {
+            continue;
+        }
+
+        *family++ = '\0';
+        *style++  = '\0';
+
+        if (!family[0] || strncmp(line, APPEARANCE_FONT_DIR "/", sizeof(APPEARANCE_FONT_DIR)) != 0) {
+            continue;
+        }
+
+        const bool mono = atoi(spacing) >= 100 || strstr(family, "Mono");
+
+        appearance_add_font(&appearance.fonts[mono ? APPEARANCE_MONOSPACE : APPEARANCE_INTERFACE], family, style, line);
+
+        found = true;
+    }
+
+    fclose(fp);
+
+    return found;
+}
+
+
+static void appearance_scan_dir(void) {
 
     FT_Library library;
 
@@ -472,9 +548,17 @@ static void appearance_scan_fonts(void) {
             continue;
         }
 
+        size_t size;
+        FT_Byte* data = appearance_read_file(path, &size);
+
+        if (!data) {
+            continue;
+        }
+
         FT_Face face;
 
-        if (FT_New_Face(library, path, 0, &face) != 0) {
+        if (FT_New_Memory_Face(library, data, (FT_Long)size, 0, &face) != 0) {
+            free(data);
             continue;
         }
 
@@ -486,12 +570,23 @@ static void appearance_scan_fonts(void) {
         }
 
         FT_Done_Face(face);
+        free(data);
     }
 
     closedir(dir);
 
     FT_Done_FreeType(library);
+}
 
+
+/**
+ * @brief Finds the font families installed in APPEARANCE_FONT_DIR, keeping those with a regular weight.
+ */
+static void appearance_scan_fonts(void) {
+
+    if (!appearance_scan_index()) {
+        appearance_scan_dir();
+    }
 
     for (size_t g = 0; g < APPEARANCE_GROUPS; g++) {
 
