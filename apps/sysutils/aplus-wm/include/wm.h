@@ -225,6 +225,13 @@
 #define WM_TASKBAR_SESSION_ROWS  3
 #define WM_TASKBAR_SESSION_GLYPH 7.0
 
+#define WM_TASKBAR_VOLUME_WIDTH  232
+#define WM_TASKBAR_VOLUME_STEP   5
+#define WM_TASKBAR_VOLUME_UNMUTE 50
+#define WM_TASKBAR_VOLUME_TRACK  4.0
+#define WM_TASKBAR_VOLUME_KNOB   7.0
+#define WM_TASKBAR_VOLUME_TEXT   40
+
 /**
  * @brief What the taskbar's own items name in place of a window id, and what the launcher's button starts.
  */
@@ -234,10 +241,14 @@
 #define WM_TASKBAR_RESTART  (UINT32_MAX - 3)
 #define WM_TASKBAR_SHUTDOWN (UINT32_MAX - 4)
 #define WM_TASKBAR_HALT     (UINT32_MAX - 5)
+#define WM_TASKBAR_VOLUME   (UINT32_MAX - 6)
+#define WM_TASKBAR_MUTE     (UINT32_MAX - 7)
+#define WM_TASKBAR_SLIDER   (UINT32_MAX - 8)
 #define WM_TASKBAR_MENU(i)  (UINT32_MAX - 32 - (uint32_t)(i))
 #define WM_TASKBAR_PIN(i)   (UINT32_MAX - 64 - (uint32_t)(i))
 #define WM_SHUTDOWN_PATH    "/usr/sbin/shutdown"
 #define WM_LAUNCHER_PATH    "/usr/bin/aplus-launcher"
+#define WM_MIXER_PATH       "/dev/mixer"
 
 /**
  * @brief The server's cache on the tmpfs, and the copy of the launcher kept there, which starts without reading the disk.
@@ -749,7 +760,16 @@ typedef struct {
         uint32_t pressed;
         ui_anim_t hover_launcher;
         ui_anim_t hover_power;
+        ui_anim_t hover_volume;
         long minute;
+
+        struct {
+            ui_anim_t open;
+            ui_anim_t hover_mute;
+            wm_rect_t painted;
+            int value;
+            int restore;
+        } volume;
 
         struct {
             ui_anim_t open;
@@ -910,6 +930,7 @@ void wm_taskbar_forget(const wm_window_t* win);
 void wm_taskbar_dismiss_at(int x, int y);
 bool wm_taskbar_dismiss(void);
 bool wm_taskbar_context(int x, int y);
+bool wm_taskbar_scroll(int x, int y, int dz);
 bool wm_taskbar_menu_key(uint16_t vkey);
 void wm_taskbar_drawer_toggle(void);
 void wm_taskbar_session_toggle(void);

@@ -811,7 +811,7 @@ static void input_handle_event(const event_t ev) {
 
             const wm_rect_t old = wm_cursor_rect();
 
-            if (ev.ev_rel.z) {
+            if (ev.ev_rel.z && !wm_taskbar_scroll(wm.pointer.x, wm.pointer.y, ev.ev_rel.z)) {
                 input_send_scroll(ev.ev_rel.z);
             }
 

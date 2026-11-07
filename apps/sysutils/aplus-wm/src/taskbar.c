@@ -27,15 +27,18 @@
  */
 
 #include <errno.h>
+#include <fcntl.h>
 #include <math.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/ioctl.h>
 #include <sys/socket.h>
 #include <time.h>
 #include <unistd.h>
 
 #include <aplus/input.h>
+#include <aplus/soundcard.h>
 #include <aplus/ulog.h>
 
 #include <wm.h>
@@ -138,6 +141,53 @@ static int wm_taskbar_menu_index(uint32_t item) {
 }
 
 
+static int wm_mixer_channel(int fd) {
+
+    int mask = 0;
+
+    if (ioctl(fd, SOUND_MIXER_READ_DEVMASK, &mask) < 0) {
+        return -1;
+    }
+
+    if (mask & SOUND_MASK_VOLUME) {
+        return SOUND_MIXER_VOLUME;
+    }
+
+    if (mask & SOUND_MASK_PCM) {
+        return SOUND_MIXER_PCM;
+    }
+
+    return -1;
+}
+
+
+static int wm_mixer_io(int value) {
+
+    const int fd = open(WM_MIXER_PATH, O_RDWR | O_CLOEXEC);
+
+    if (fd < 0) {
+        return -1;
+    }
+
+    const int channel = wm_mixer_channel(fd);
+
+    int level = value < 0 ? 0 : value | value << 8;
+    int e     = -1;
+
+    if (channel >= 0) {
+        e = ioctl(fd, value < 0 ? SOUND_MIXER_READ(channel) : SOUND_MIXER_WRITE(channel), &level);
+    }
+
+    close(fd);
+
+    if (e < 0) {
+        return -1;
+    }
+
+    return WM_CLAMP(((level & 0xFF) + ((level >> 8) & 0xFF)) / 2, 0, 100);
+}
+
+
 /**
  * @brief A thread that sleeps until each minute turns over and says so down a socketpair the main loop polls.
  */
@@ -195,6 +245,9 @@ int wm_taskbar_open(void) {
 
     pthread_detach(thread);
 
+    wm.taskbar.volume.value   = wm_mixer_io(-1);
+    wm.taskbar.volume.restore = wm.taskbar.volume.value;
+
     return wm_clock_pipe[0];
 }
 
@@ -222,6 +275,81 @@ wm_rect_t wm_workarea(void) {
     const wm_rect_t r = {WM_TASKBAR_WIDTH, WM_TASKBAR_BORDER, wm.display.width - WM_TASKBAR_WIDTH - WM_TASKBAR_BORDER, wm.display.height - 2 * WM_TASKBAR_BORDER};
 
     return r;
+}
+
+
+/**
+ * @brief Reports where the power button sits, at the foot of the rail.
+ *
+ * @return The button's square, mirroring the launcher's at the head.
+ */
+static wm_rect_t wm_taskbar_power_rect(void) {
+
+    const wm_rect_t r = {WM_TASKBAR_PAD, wm.display.height - WM_TASKBAR_PAD - 4 - WM_TASKBAR_ITEM, WM_TASKBAR_ITEM, WM_TASKBAR_ITEM};
+
+    return r;
+}
+
+
+/**
+ * @brief Reports where the clock sits, just above the power button.
+ *
+ * @return The clock's rectangle, as wide as the rail.
+ */
+static wm_rect_t wm_taskbar_clock_rect(void) {
+
+    const wm_rect_t power = wm_taskbar_power_rect();
+
+    const wm_rect_t r = {0, power.y - WM_TASKBAR_GAP - WM_TASKBAR_CLOCK, WM_TASKBAR_WIDTH, WM_TASKBAR_CLOCK};
+
+    return r;
+}
+
+
+static wm_rect_t wm_taskbar_volume_button_rect(void) {
+
+    const wm_rect_t clock = wm_taskbar_clock_rect();
+
+    const wm_rect_t r = {WM_TASKBAR_PAD, clock.y - WM_TASKBAR_GAP - WM_TASKBAR_ITEM, WM_TASKBAR_ITEM, WM_TASKBAR_ITEM};
+
+    return r;
+}
+
+
+static wm_rect_t wm_taskbar_volume_rect(void) {
+
+    const wm_rect_t button = wm_taskbar_volume_button_rect();
+
+    const wm_rect_t r = {WM_TASKBAR_WIDTH, button.y - WM_TASKBAR_PAD, WM_TASKBAR_VOLUME_WIDTH, WM_TASKBAR_ITEM + 2 * WM_TASKBAR_PAD};
+
+    return r;
+}
+
+
+static wm_rect_t wm_taskbar_mute_rect(void) {
+
+    const wm_rect_t panel = wm_taskbar_volume_rect();
+
+    const wm_rect_t r = {panel.x + WM_TASKBAR_PAD, panel.y + WM_TASKBAR_PAD, WM_TASKBAR_ITEM, WM_TASKBAR_ITEM};
+
+    return r;
+}
+
+
+static wm_rect_t wm_taskbar_slider_rect(void) {
+
+    const wm_rect_t panel = wm_taskbar_volume_rect();
+    const wm_rect_t mute  = wm_taskbar_mute_rect();
+    const int x           = mute.x + mute.width + WM_TASKBAR_GAP;
+
+    const wm_rect_t r = {x, mute.y, panel.x + panel.width - WM_TASKBAR_POPOUT_PAD - WM_TASKBAR_VOLUME_TEXT - x, WM_TASKBAR_ITEM};
+
+    return r;
+}
+
+
+static bool wm_taskbar_volume_open(void) {
+    return ui_anim_target(&wm.taskbar.volume.open) > 0.0;
 }
 
 
@@ -270,6 +398,12 @@ bool wm_taskbar_contains(int x, int y) {
     const wm_rect_t session = wm_taskbar_session_rect();
 
     if (wm_taskbar_session_open() && wm_rect_contains_point(&session, x, y)) {
+        return true;
+    }
+
+    const wm_rect_t volume = wm_taskbar_volume_rect();
+
+    if (wm_taskbar_volume_open() && wm_rect_contains_point(&volume, x, y)) {
         return true;
     }
 
@@ -452,6 +586,26 @@ static wm_rect_t wm_taskbar_session_extent(uint64_t now) {
 }
 
 
+static wm_rect_t wm_taskbar_volume_extent(uint64_t now) {
+
+    const double open = ui_anim_value(&wm.taskbar.volume.open, now);
+
+    if (open <= 0.0) {
+
+        const wm_rect_t none = {0, 0, 0, 0};
+
+        return none;
+    }
+
+
+    const wm_rect_t panel = wm_taskbar_volume_rect();
+
+    const wm_rect_t r = {panel.x, panel.y - WM_TASKBAR_POPOUT_RADIUS - 2, (int)ceil(panel.width * open) + 2, panel.height + 2 * WM_TASKBAR_POPOUT_RADIUS + 4};
+
+    return wm_taskbar_shadow_extent(r);
+}
+
+
 /**
  * @brief Repaints the rail, and the popout and the session and context menus where the last frame drew them and where the next one will.
  */
@@ -460,6 +614,7 @@ void wm_taskbar_damage(void) {
     const wm_rect_t bar     = wm_taskbar_rect();
     const wm_rect_t popout  = wm_taskbar_popout_extent(wm.frame_time);
     const wm_rect_t session = wm_taskbar_session_extent(wm.frame_time);
+    const wm_rect_t volume  = wm_taskbar_volume_extent(wm.frame_time);
     const wm_rect_t menu    = wm_menu_extent(wm.frame_time);
 
     wm_damage(&bar);
@@ -467,6 +622,8 @@ void wm_taskbar_damage(void) {
     wm_damage(&popout);
     wm_damage(&wm.taskbar.session.painted);
     wm_damage(&session);
+    wm_damage(&wm.taskbar.volume.painted);
+    wm_damage(&volume);
     wm_damage(&wm.menu.painted);
     wm_damage(&menu);
 }
@@ -566,34 +723,6 @@ static wm_rect_t wm_taskbar_launcher_rect(void) {
 
 
 /**
- * @brief Reports where the power button sits, at the foot of the rail.
- *
- * @return The button's square, mirroring the launcher's at the head.
- */
-static wm_rect_t wm_taskbar_power_rect(void) {
-
-    const wm_rect_t r = {WM_TASKBAR_PAD, wm.display.height - WM_TASKBAR_PAD - 4 - WM_TASKBAR_ITEM, WM_TASKBAR_ITEM, WM_TASKBAR_ITEM};
-
-    return r;
-}
-
-
-/**
- * @brief Reports where the clock sits, just above the power button.
- *
- * @return The clock's rectangle, as wide as the rail.
- */
-static wm_rect_t wm_taskbar_clock_rect(void) {
-
-    const wm_rect_t power = wm_taskbar_power_rect();
-
-    const wm_rect_t r = {0, power.y - WM_TASKBAR_GAP - WM_TASKBAR_CLOCK, WM_TASKBAR_WIDTH, WM_TASKBAR_CLOCK};
-
-    return r;
-}
-
-
-/**
  * @brief Reports where a row of the session menu is, once the menu is all the way out.
  *
  * @param index The row's place in wm_taskbar_session_rows.
@@ -618,11 +747,11 @@ static wm_rect_t wm_taskbar_session_row(int index) {
 static wm_rect_t wm_taskbar_slot(size_t index) {
 
     const wm_rect_t launcher = wm_taskbar_launcher_rect();
-    const wm_rect_t clock    = wm_taskbar_clock_rect();
+    const wm_rect_t volume   = wm_taskbar_volume_button_rect();
 
     wm_rect_t r = {launcher.x, launcher.y + launcher.height + 3 * WM_TASKBAR_GAP + (int)index * (WM_TASKBAR_ITEM + WM_TASKBAR_GAP), WM_TASKBAR_ITEM, WM_TASKBAR_ITEM};
 
-    if (r.y + r.height > clock.y - 2 * WM_TASKBAR_GAP) {
+    if (r.y + r.height > volume.y - 2 * WM_TASKBAR_GAP) {
         r.width = 0;
     }
 
@@ -682,6 +811,10 @@ static wm_rect_t wm_taskbar_item_rect(uint32_t item) {
         return wm_taskbar_power_rect();
     }
 
+    if (item == WM_TASKBAR_VOLUME) {
+        return wm_taskbar_volume_button_rect();
+    }
+
 
     wm_taskbar_entry_t entries[WM_TASKBAR_ENTRIES_MAX + WM_PINS_MAX];
 
@@ -726,6 +859,20 @@ static uint32_t wm_taskbar_item_at(int x, int y) {
     }
 
 
+    if (ui_anim_target(&wm.taskbar.volume.open) >= 1.0) {
+
+        const wm_rect_t mute   = wm_taskbar_mute_rect();
+        const wm_rect_t slider = wm_taskbar_slider_rect();
+
+        if (wm_rect_contains_point(&mute, x, y)) {
+            return WM_TASKBAR_MUTE;
+        }
+
+        if (wm_rect_contains_point(&slider, x, y)) {
+            return WM_TASKBAR_SLIDER;
+        }
+    }
+
     if (ui_anim_target(&wm.taskbar.session.open) >= 1.0) {
 
         for (int i = 0; i < WM_TASKBAR_SESSION_ROWS; i++) {
@@ -742,6 +889,12 @@ static uint32_t wm_taskbar_item_at(int x, int y) {
 
     if (wm_rect_contains_point(&power, x, y)) {
         return WM_TASKBAR_POWER;
+    }
+
+    const wm_rect_t volume = wm_taskbar_volume_button_rect();
+
+    if (wm_rect_contains_point(&volume, x, y)) {
+        return WM_TASKBAR_VOLUME;
     }
 
 
@@ -787,12 +940,13 @@ static uint32_t wm_taskbar_item_at(int x, int y) {
 static bool wm_taskbar_label(uint32_t item, char* out, size_t size) {
 
     char date[64];
+    char level[32];
 
     const char* text = NULL;
 
     const int pin = wm_taskbar_pin_index(item);
 
-    if (wm_menu_shown() || wm_taskbar_session_index(item) >= 0) {
+    if (wm_menu_shown() || wm_taskbar_volume_open() || wm_taskbar_session_index(item) >= 0) {
 
         return false;
 
@@ -803,6 +957,17 @@ static bool wm_taskbar_label(uint32_t item, char* out, size_t size) {
     } else if (item == WM_TASKBAR_POWER) {
 
         text = wm_taskbar_session_open() ? NULL : "Power";
+
+    } else if (item == WM_TASKBAR_VOLUME) {
+
+        if (wm.taskbar.volume.value < 0) {
+            text = "No audio device";
+        } else if (wm.taskbar.volume.value == 0) {
+            text = "Muted";
+        } else {
+            snprintf(level, sizeof(level), "Volume %d%%", wm.taskbar.volume.value);
+            text = level;
+        }
 
     } else if (item == WM_TASKBAR_LAUNCHER) {
 
@@ -878,6 +1043,56 @@ static void wm_taskbar_popout(uint32_t item) {
 }
 
 
+static void wm_taskbar_volume_store(int value) {
+
+    if (value > 0) {
+        wm.taskbar.volume.restore = value;
+    }
+
+    if (value != wm.taskbar.volume.value) {
+
+        wm.taskbar.volume.value = value;
+
+        wm_taskbar_damage();
+    }
+}
+
+
+static void wm_taskbar_volume_set(int value) {
+
+    value = WM_CLAMP(value, 0, 100);
+
+    if (wm.taskbar.volume.value < 0 || value == wm.taskbar.volume.value) {
+        return;
+    }
+
+    wm_taskbar_volume_store(wm_mixer_io(value));
+    wm_taskbar_popout(wm.taskbar.hover);
+}
+
+
+static void wm_taskbar_volume_mute(void) {
+
+    if (wm.taskbar.volume.value > 0) {
+        wm_taskbar_volume_set(0);
+    } else if (wm.taskbar.volume.restore > 0) {
+        wm_taskbar_volume_set(wm.taskbar.volume.restore);
+    } else {
+        wm_taskbar_volume_set(WM_TASKBAR_VOLUME_UNMUTE);
+    }
+}
+
+
+static int wm_taskbar_slider_value(int x) {
+
+    const wm_rect_t r = wm_taskbar_slider_rect();
+
+    const double t = (x - (r.x + WM_TASKBAR_VOLUME_KNOB)) / (r.width - 2.0 * WM_TASKBAR_VOLUME_KNOB);
+
+    return (int)lround(WM_CLAMP(t, 0.0, 1.0) * 100.0);
+}
+
+
 /**
  * @brief Finds the wash behind a taskbar item.
  *
@@ -893,6 +1108,12 @@ static ui_anim_t* wm_taskbar_hover_anim(uint32_t item) {
 
         case WM_TASKBAR_POWER:
             return &wm.taskbar.hover_power;
+
+        case WM_TASKBAR_VOLUME:
+            return &wm.taskbar.hover_volume;
+
+        case WM_TASKBAR_MUTE:
+            return &wm.taskbar.volume.hover_mute;
 
     }
 
@@ -955,6 +1176,10 @@ static void wm_taskbar_set_hover(uint32_t item) {
 
     wm.taskbar.hover = item;
 
+    if (item == WM_TASKBAR_VOLUME) {
+        wm_taskbar_volume_store(wm_mixer_io(-1));
+    }
+
     if (item) {
         wm_taskbar_light(item, true);
     }
@@ -970,6 +1195,11 @@ static void wm_taskbar_set_hover(uint32_t item) {
  * @param y The pointer.
  */
 void wm_taskbar_hover(int x, int y) {
+
+    if (wm.taskbar.pressed == WM_TASKBAR_SLIDER) {
+        wm_taskbar_volume_set(wm_taskbar_slider_value(x));
+    }
+
     wm_taskbar_set_hover(wm.drag.window ? 0 : wm_taskbar_item_at(x, y));
 }
 
@@ -977,6 +1207,10 @@ void wm_taskbar_hover(int x, int y) {
 void wm_taskbar_press(int x, int y) {
 
     wm.taskbar.pressed = wm_taskbar_item_at(x, y);
+
+    if (wm.taskbar.pressed == WM_TASKBAR_SLIDER) {
+        wm_taskbar_volume_set(wm_taskbar_slider_value(x));
+    }
 
     wm_taskbar_damage();
 }
@@ -1013,8 +1247,31 @@ static void wm_taskbar_session(bool open) {
     ui_anim_to(&wm.taskbar.session.open, open ? 1.0 : 0.0, open ? UI_MOTION_NORMAL : UI_MOTION_FAST, ui_anim_now());
 
     if (open) {
+        ui_anim_to(&wm.taskbar.volume.open, 0.0, UI_MOTION_FAST, ui_anim_now());
         wm_menu_hide();
     }
+
+    wm_taskbar_refresh();
+}
+
+
+static void wm_taskbar_volume(bool open) {
+
+    const uint64_t now = ui_anim_now();
+
+    if (open) {
+
+        wm_taskbar_volume_store(wm_mixer_io(-1));
+
+        if (wm.taskbar.volume.value < 0) {
+            return;
+        }
+
+        ui_anim_to(&wm.taskbar.session.open, 0.0, UI_MOTION_FAST, now);
+        wm_menu_hide();
+    }
+
+    ui_anim_to(&wm.taskbar.volume.open, open ? 1.0 : 0.0, open ? UI_MOTION_NORMAL : UI_MOTION_FAST, now);
 
     wm_taskbar_refresh();
 }
@@ -1072,6 +1329,7 @@ static void wm_taskbar_menu_open(uint32_t item) {
 
 
     ui_anim_to(&wm.taskbar.session.open, 0.0, UI_MOTION_FAST, ui_anim_now());
+    ui_anim_to(&wm.taskbar.volume.open, 0.0, UI_MOTION_FAST, ui_anim_now());
 
     if (wm.drawer.window) {
         wm_window_request_close(wm.drawer.window);
@@ -1223,6 +1481,13 @@ void wm_taskbar_dismiss_at(int x, int y) {
         wm_taskbar_session(false);
     }
 
+    const wm_rect_t volume = wm_taskbar_volume_rect();
+    const wm_rect_t button = wm_taskbar_volume_button_rect();
+
+    if (wm_taskbar_volume_open() && !wm_rect_contains_point(&volume, x, y) && !wm_rect_contains_point(&button, x, y)) {
+        wm_taskbar_volume(false);
+    }
+
     if (wm_menu_shown() && !wm_menu_contains(x, y)) {
         wm_taskbar_menu_close();
     }
@@ -1239,6 +1504,13 @@ bool wm_taskbar_dismiss(void) {
     if (wm_menu_shown()) {
 
         wm_taskbar_menu_close();
+
+        return true;
+    }
+
+    if (wm_taskbar_volume_open()) {
+
+        wm_taskbar_volume(false);
 
         return true;
     }
@@ -1279,6 +1551,20 @@ bool wm_taskbar_context(int x, int y) {
     if (!again && (wm_taskbar_pin_index(item) >= 0 || wm_window_from_id(item))) {
         wm_taskbar_menu_open(item);
     }
+
+    return true;
+}
+
+
+bool wm_taskbar_scroll(int x, int y, int dz) {
+
+    const wm_rect_t panel = wm_taskbar_volume_rect();
+
+    if (wm_taskbar_item_at(x, y) != WM_TASKBAR_VOLUME && !(wm_taskbar_volume_open() && wm_rect_contains_point(&panel, x, y))) {
+        return false;
+    }
+
+    wm_taskbar_volume_set(wm.taskbar.volume.value + dz * WM_TASKBAR_VOLUME_STEP);
 
     return true;
 }
@@ -1366,6 +1652,24 @@ bool wm_taskbar_release(int x, int y) {
 
         wm_taskbar_session(!wm_taskbar_session_open());
 
+        return true;
+    }
+
+    if (pressed == WM_TASKBAR_VOLUME) {
+
+        wm_taskbar_volume(!wm_taskbar_volume_open());
+
+        return true;
+    }
+
+    if (pressed == WM_TASKBAR_MUTE) {
+
+        wm_taskbar_volume_mute();
+
+        return true;
+    }
+
+    if (pressed == WM_TASKBAR_SLIDER) {
         return true;
     }
 
@@ -1698,6 +2002,68 @@ static void wm_taskbar_paint_power(cairo_t* cr) {
 }
 
 
+static void wm_taskbar_paint_volume_glyph(cairo_t* cr, double x, double y, int value) {
+
+    const double s = x - 4.0;
+
+    cairo_save(cr);
+
+    cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
+    cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
+
+    cairo_new_path(cr);
+    cairo_move_to(cr, s - 5.0, y - 2.5);
+    cairo_line_to(cr, s - 2.0, y - 2.5);
+    cairo_line_to(cr, s + 2.0, y - 6.0);
+    cairo_line_to(cr, s + 2.0, y + 6.0);
+    cairo_line_to(cr, s - 2.0, y + 2.5);
+    cairo_line_to(cr, s - 5.0, y + 2.5);
+    cairo_close_path(cr);
+    cairo_set_line_width(cr, 1.0);
+    cairo_fill_preserve(cr);
+    cairo_stroke(cr);
+
+    cairo_set_line_width(cr, 2.0);
+
+    if (value <= 0) {
+
+        cairo_move_to(cr, s + 6.0, y - 3.5);
+        cairo_line_to(cr, s + 13.0, y + 3.5);
+        cairo_move_to(cr, s + 13.0, y - 3.5);
+        cairo_line_to(cr, s + 6.0, y + 3.5);
+        cairo_stroke(cr);
+
+    } else {
+
+        cairo_new_path(cr);
+        cairo_arc(cr, s + 2.0, y, 5.0, -0.75, 0.75);
+        cairo_stroke(cr);
+
+        if (value >= 50) {
+            cairo_new_path(cr);
+            cairo_arc(cr, s + 2.0, y, 9.5, -0.8, 0.8);
+            cairo_stroke(cr);
+        }
+    }
+
+    cairo_restore(cr);
+}
+
+
+static void wm_taskbar_paint_volume(cairo_t* cr) {
+
+    const wm_rect_t r = wm_taskbar_volume_button_rect();
+
+    const bool held   = wm.taskbar.pressed == WM_TASKBAR_VOLUME && wm.taskbar.hover == WM_TASKBAR_VOLUME;
+    const double open = ui_anim_value(&wm.taskbar.volume.open, wm.frame_time);
+
+    wm_taskbar_paint_wash(cr, &r, ui_anim_value(&wm.taskbar.hover_volume, wm.frame_time), held, open);
+
+    wm_source(cr, wm.taskbar.volume.value > 0 ? wm.theme.title_active : wm.theme.taskbar_mark, 1.0);
+    wm_taskbar_paint_volume_glyph(cr, r.x + r.width / 2.0, r.y + r.height / 2.0, wm.taskbar.volume.value);
+}
+
+
 /**
  * @brief Draws one window's entry: its icon, and a mark against the rail's edge.
  *
@@ -2025,6 +2391,119 @@ static void wm_taskbar_paint_session(cairo_t* cr) {
 }
 
 
+static void wm_taskbar_paint_volume_panel(cairo_t* cr) {
+
+    wm.taskbar.volume.painted = wm_taskbar_volume_extent(wm.frame_time);
+
+    const double open     = ui_anim_value(&wm.taskbar.volume.open, wm.frame_time);
+    const wm_rect_t panel = wm_taskbar_volume_rect();
+
+    const double x0 = panel.x;
+    const double x1 = x0 + panel.width * open;
+
+    if (x1 - x0 < 1.0) {
+        return;
+    }
+
+
+    const double top    = panel.y;
+    const double bottom = panel.y + panel.height;
+
+    const double fillet = WM_MIN(WM_TASKBAR_POPOUT_RADIUS, x1 - x0);
+    const double corner = WM_MIN(WM_TASKBAR_POPOUT_RADIUS, (x1 - x0) / 2.0);
+
+    const wm_rect_t shape = {(int)x0, (int)top, (int)ceil(x1 - x0), (int)(bottom - top)};
+
+    wm_taskbar_shadow(cr, &shape, open);
+
+    cairo_new_path(cr);
+    wm_taskbar_popout_outline(cr, x0, x1, top, bottom, fillet, corner, 0.5);
+    wm_taskbar_edge(cr);
+
+    cairo_save(cr);
+
+    cairo_new_path(cr);
+    wm_taskbar_popout_outline(cr, x0, x1, top, bottom, fillet, corner, 0.0);
+    cairo_close_path(cr);
+
+    wm_source(cr, wm.theme.taskbar, 1.0);
+    cairo_fill_preserve(cr);
+    cairo_clip(cr);
+
+
+    const int shift = (int)round(panel.width - (x1 - x0));
+    const int value = WM_MAX(wm.taskbar.volume.value, 0);
+
+    wm_rect_t mute = wm_taskbar_mute_rect();
+
+    mute.x -= shift;
+
+    const bool held = wm.taskbar.pressed == WM_TASKBAR_MUTE && wm.taskbar.hover == WM_TASKBAR_MUTE;
+
+    wm_taskbar_paint_wash(cr, &mute, ui_anim_value(&wm.taskbar.volume.hover_mute, wm.frame_time), held, 0.0);
+
+    wm_source(cr, value > 0 ? wm.theme.title_active : wm.theme.taskbar_mark, open);
+    wm_taskbar_paint_volume_glyph(cr, mute.x + mute.width / 2.0, mute.y + mute.height / 2.0, value);
+
+
+    wm_rect_t slider = wm_taskbar_slider_rect();
+
+    slider.x -= shift;
+
+    const double left  = slider.x + WM_TASKBAR_VOLUME_KNOB;
+    const double right = slider.x + slider.width - WM_TASKBAR_VOLUME_KNOB;
+    const double cy    = slider.y + slider.height / 2.0;
+    const double at    = ui_lerp(left, right, value / 100.0);
+    const bool grab    = wm.taskbar.pressed == WM_TASKBAR_SLIDER || wm.taskbar.hover == WM_TASKBAR_SLIDER;
+
+    cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
+    cairo_set_line_width(cr, WM_TASKBAR_VOLUME_TRACK);
+
+    cairo_new_path(cr);
+    cairo_move_to(cr, left, cy);
+    cairo_line_to(cr, right, cy);
+    wm_source(cr, wm.theme.taskbar_mark, 0.5 * open);
+    cairo_stroke(cr);
+
+    cairo_new_path(cr);
+    cairo_move_to(cr, left, cy);
+    cairo_line_to(cr, at, cy);
+    wm_source(cr, wm.theme.accent, open);
+    cairo_stroke(cr);
+
+    cairo_new_path(cr);
+    cairo_arc(cr, at, cy, grab ? WM_TASKBAR_VOLUME_KNOB : WM_TASKBAR_VOLUME_KNOB - 1.5, 0.0, 2.0 * M_PI);
+    cairo_fill(cr);
+
+
+    cairo_font_face_t* face = ui_font_face(wm.theme.font);
+
+    if (face) {
+
+        char text[16];
+
+        snprintf(text, sizeof(text), "%d%%", value);
+
+        cairo_font_extents_t font;
+        cairo_text_extents_t extents;
+
+        cairo_set_font_face(cr, face);
+        cairo_set_font_size(cr, WM_TASKBAR_FONT_SIZE);
+        cairo_font_extents(cr, &font);
+        cairo_text_extents(cr, text, &extents);
+
+        const double x = panel.x + panel.width - WM_TASKBAR_POPOUT_PAD - shift - extents.x_advance;
+        const double y = cy - (font.ascent + font.descent) / 2.0 + font.ascent;
+
+        wm_source(cr, wm.theme.title_active, open);
+        cairo_move_to(cr, round(x), round(y));
+        cairo_show_text(cr, text);
+    }
+
+    cairo_restore(cr);
+}
+
+
 /**
  * @brief Reports whether any damage reaches the taskbar: the rail, the border, a corner it rounds off, the popout, the session menu
  * or the context menu.
@@ -2050,6 +2529,8 @@ static bool wm_taskbar_visible(const wm_rect_t* damage, size_t count) {
         wm_taskbar_popout_extent(wm.frame_time),
         wm.taskbar.session.painted,
         wm_taskbar_session_extent(wm.frame_time),
+        wm.taskbar.volume.painted,
+        wm_taskbar_volume_extent(wm.frame_time),
         wm.menu.painted,
         wm_menu_extent(wm.frame_time),
     };
@@ -2106,6 +2587,7 @@ void wm_taskbar_paint(cairo_t* cr, const wm_rect_t* damage, size_t count) {
     wm_taskbar_edge(cr);
 
     wm_taskbar_paint_session(cr);
+    wm_taskbar_paint_volume_panel(cr);
     wm_taskbar_paint_popout(cr);
     wm_menu_paint(cr, wm.taskbar.pressed == wm.taskbar.hover ? wm_taskbar_menu_index(wm.taskbar.pressed) : -1);
 
@@ -2143,9 +2625,10 @@ void wm_taskbar_paint(cairo_t* cr, const wm_rect_t* damage, size_t count) {
     }
 
 
-    const wm_rect_t clock = wm_taskbar_clock_rect();
+    const wm_rect_t volume = wm_taskbar_volume_button_rect();
 
-    wm_taskbar_paint_title(cr, below, clock.y);
+    wm_taskbar_paint_title(cr, below, volume.y);
+    wm_taskbar_paint_volume(cr);
     wm_taskbar_paint_clock(cr);
     wm_taskbar_paint_power(cr);
 
