@@ -36,26 +36,106 @@
 #include <dev/pci.h>
 
 
+#define PCI_INTX_UNCLAIMED_MAX 1000
+
+static uint32_t pci_intx_unclaimed[UINT8_MAX + 1] = {0};
+
+
+static int pci_intx_quiesce_unclaimed(irq_t irq) {
+
+    int found = 0;
+
+    for (uint8_t slot = 0; slot < 32; slot++) {
+
+        for (uint8_t func = 0; func < 8; func++) {
+
+            pcidev_t device = pci_box_device(0, slot, func);
+
+            if (pci_read(device, PCI_VENDOR_ID, 2) == 0xFFFF) {
+                continue;
+            }
+
+            if ((pci_read(device, PCI_COMMAND, 2) & PCI_COMMAND_REG_INTR_DISABLE) != 0) {
+                continue;
+            }
+
+            if ((pci_read(device, PCI_STATUS, 2) & PCI_STATUS_REG_INTERRUPT) == 0) {
+                continue;
+            }
+
+            if (pci_read(device, PCI_INTERRUPT_LINE, 1) != irq) {
+                continue;
+            }
+
+            if (pci_dev_get_index(device) != PCI_NONE) {
+                continue;
+            }
+
+            pci_intx_mask(device);
+
+            found++;
+
+#if DEBUG_LEVEL_WARN
+            kprintf("pci-intx: WARN! %02x:%02x.%x asserts irq(%d) with no driver attached, disabling its INTx\n", 0, slot, func, irq);
+#endif
+        }
+    }
+
+    return found;
+}
+
+
 static void pci_intx_interrupt_handler(void* frame, irq_t irq) {
 
-    for (size_t index = 0; index < PCI_DEVICES_MAX; index++) {
+    (void)frame;
 
-        pcidev_t device = pci_dev_get_device(index);
-        if (device == 0)
+    uint16_t indexes[PCI_DEVICES_MAX];
+    uint16_t claimed = 0;
+
+    uint16_t count = pci_dev_get_irq_devices(irq, indexes, PCI_DEVICES_MAX);
+
+    for (uint16_t i = 0; i < count; i++) {
+
+        pcidev_t device = pci_dev_get_device(indexes[i]);
+
+        if (device == 0) {
             continue;
+        }
 
-        if ((pci_read(device, PCI_INTERRUPT_LINE, 1) != irq))
+        if ((pci_read(device, PCI_STATUS, 2) & PCI_STATUS_REG_INTERRUPT) == 0) {
             continue;
+        }
 
-        if ((pci_read(device, PCI_STATUS, 2) & PCI_STATUS_REG_INTERRUPT) == 0)
+        if ((pci_read(device, PCI_COMMAND, 2) & PCI_COMMAND_REG_INTR_DISABLE) != 0) {
             continue;
+        }
 
-        if ((pci_read(device, PCI_COMMAND, 2) & PCI_COMMAND_REG_INTR_DISABLE) != 0)
+        if (pci_dev_call_handler(indexes[i], irq) < 0) {
             continue;
+        }
 
-        pci_dev_call_handler(index, irq);
-
+        claimed++;
     }
+
+    if (claimed) {
+        pci_intx_unclaimed[irq] = 0;
+        return;
+    }
+
+    if (++pci_intx_unclaimed[irq] != PCI_INTX_UNCLAIMED_MAX) {
+        return;
+    }
+
+    if (pci_intx_quiesce_unclaimed(irq) > 0) {
+        pci_intx_unclaimed[irq] = 0;
+        return;
+    }
+
+#if DEBUG_LEVEL_WARN
+    kprintf("pci-intx: WARN! irq(%d) asserted %d times with no device claiming it, masking the line\n", irq, PCI_INTX_UNCLAIMED_MAX);
+#endif
+
+    arch_intr_mask_irq(irq, ARCH_INTR_TYPE_PCI);
 }
 
 
@@ -100,7 +180,10 @@ void pci_intx_fixup_irqs(void) {
                 continue;
 
 
-            uint8_t link = (uint8_t)((slot + pin - 2) & 3);
+            pci_intx_mask(device);
+
+
+            uint8_t link  = (uint8_t)((slot + pin - 1) & (PCI_PIRQ_LINKS - 1));
             uint8_t route = pci_read(router, PCI_PIRQ_ROUTE(link), 1);
 
             if (route & PCI_PIRQ_DISABLED)
@@ -122,7 +205,7 @@ void pci_intx_fixup_irqs(void) {
             pci_write(device, PCI_INTERRUPT_LINE, 1, irq);
 
 #if DEBUG_LEVEL_INFO
-            kprintf("pci-intx: %02x:%02x.%x routed through PIRQ%c to irq(%d), correcting stale interrupt line(%d)\n", 0, slot, func, 'A' + link, irq, line);
+            kprintf("pci-intx: %02x:%02x.%x routed through PIRQ%c to irq(%d), correcting interrupt line(%d)\n", 0, slot, func, 'A' + link, irq, line);
 #endif
         }
     }
@@ -138,6 +221,8 @@ int pci_intx_map_irq(pcidev_t device, irq_t irq, pci_irq_handler_t handler, pci_
 #endif
         return errno = ENOSPC, -1;
     }
+
+    pci_dev_set_irq(index, irq);
 
     arch_intr_map_irq(irq, pci_intx_interrupt_handler, ARCH_INTR_TYPE_PCI);
     return 0;

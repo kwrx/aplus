@@ -386,3 +386,26 @@ void arch_intr_unmap_irq(irq_t irq, int type) {
     kprintf("x86-intr: unmap irq(%d)\n", irq);
 #endif
 }
+
+
+void arch_intr_mask_irq(irq_t irq, int type) {
+
+    PANIC_ASSERT(irq > 0 && irq < X86_IRQ_COUNT);
+    PANIC_ASSERT(type == ARCH_INTR_TYPE_DEFAULT || type == ARCH_INTR_TYPE_PCI || type == ARCH_INTR_TYPE_MSI);
+
+    if (type == ARCH_INTR_TYPE_MSI) {
+        return;
+    }
+
+    uint32_t gsi = irq;
+
+    if (type == ARCH_INTR_TYPE_DEFAULT && irq < 16) {
+        apic_get_isa_irq(irq, &gsi, NULL);
+    }
+
+    ioapic_unmap_irq(gsi);
+
+#if DEBUG_LEVEL_TRACE
+    kprintf("x86-intr: mask irq(%d)\n", irq);
+#endif
+}

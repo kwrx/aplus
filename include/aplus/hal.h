@@ -178,6 +178,7 @@ void arch_intr_restore(long);
 long arch_intr_disable(void);
 void arch_intr_map_irq(irq_t, void (*)(void*, irq_t), int);
 void arch_intr_unmap_irq(irq_t, int);
+void arch_intr_mask_irq(irq_t, int);
 
 
 void arch_task_switch(task_t*, task_t*);

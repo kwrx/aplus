@@ -38,6 +38,7 @@
 
 static struct {
     uint16_t vector;
+    irq_t irq;
     pcidev_t device;
     pci_irq_handler_t handler;
     pci_irq_data_t data;
@@ -55,6 +56,7 @@ uint16_t pci_dev_register(pcidev_t device, pci_irq_handler_t handler, pci_irq_da
                 continue;
 
             pci_devices[i].vector  = vector;
+            pci_devices[i].irq     = 0;
             pci_devices[i].device  = device;
             pci_devices[i].handler = handler;
             pci_devices[i].data    = data;
@@ -77,6 +79,7 @@ uint16_t pci_dev_unregister(pcidev_t device) {
 
             pci_devices[i].device  = 0;
             pci_devices[i].vector  = 0;
+            pci_devices[i].irq     = 0;
             pci_devices[i].handler = NULL;
             pci_devices[i].data    = NULL;
 
@@ -92,6 +95,57 @@ pcidev_t pci_dev_get_device(uint16_t index) {
         return pci_devices[index].device;
     }
     return 0;
+}
+
+uint16_t pci_dev_get_index(pcidev_t device) {
+    scoped_lock(&pci_dev_lock) {
+
+        for (size_t i = 0; i < PCI_DEVICES_MAX; i++) {
+
+            if (pci_devices[i].device != device) {
+                continue;
+            }
+
+            return (uint16_t)i;
+        }
+    }
+    return PCI_NONE;
+}
+
+void pci_dev_set_irq(uint16_t index, irq_t irq) {
+    DEBUG_ASSERT(index < PCI_DEVICES_MAX);
+    scoped_lock(&pci_dev_lock) {
+        pci_devices[index].irq = irq;
+    }
+}
+
+uint16_t pci_dev_get_irq_devices(irq_t irq, uint16_t* indexes, uint16_t max) {
+
+    DEBUG_ASSERT(indexes);
+
+    uint16_t count = 0;
+
+    scoped_lock(&pci_dev_lock) {
+
+        for (size_t i = 0; i < PCI_DEVICES_MAX; i++) {
+
+            if (count == max) {
+                continue;
+            }
+
+            if (pci_devices[i].device == 0) {
+                continue;
+            }
+
+            if (pci_devices[i].irq != irq) {
+                continue;
+            }
+
+            indexes[count++] = (uint16_t)i;
+        }
+    }
+
+    return count;
 }
 
 int pci_dev_call_handler(uint16_t index, irq_t irq) {

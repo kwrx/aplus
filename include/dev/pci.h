@@ -143,7 +143,8 @@ typedef uint32_t pcidev_t;
 
     #define PCI_MSIX_INTR_BASE   66
 
-    #define PCI_PIRQ_ROUTE(i) (0x60 + (i))
+    #define PCI_PIRQ_ROUTE(i) ((i) < 4 ? (0x60 + (i)) : (0x68 + ((i) - 4)))
+    #define PCI_PIRQ_LINKS    (8)
     #define PCI_PIRQ_DISABLED (0x80)
     #define PCI_PIRQ_IRQ_MASK (0x0F)
 
@@ -301,6 +302,9 @@ uint16_t pci_dev_register(pcidev_t, pci_irq_handler_t, pci_irq_data_t, uint16_t)
 uint16_t pci_dev_unregister(pcidev_t);
 pcidev_t pci_dev_get_device(uint16_t);
 int pci_dev_call_handler(uint16_t index, irq_t irq);
+void pci_dev_set_irq(uint16_t, irq_t);
+uint16_t pci_dev_get_index(pcidev_t);
+uint16_t pci_dev_get_irq_devices(irq_t, uint16_t*, uint16_t);
 
 /* Sysfs */
 void pci_sysfs_init(void);
