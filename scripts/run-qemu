@@ -145,34 +145,6 @@ x86_64)
         flags="$flags -vga std"
     fi
 
-    # Pointer
-    flags="$flags -device virtio-tablet-pci,disable-legacy=on"
-
-    # Network
-    if [ $ARG_VIRTIO -eq 1 ]; then
-        flags="$flags -device virtio-net-pci,netdev=net0,disable-legacy=on"
-    else
-        flags="$flags -device pcnet,netdev=net0"
-    fi
-
-    flags="$flags -netdev user,id=net0,hostfwd=tcp::2222-:22,hostfwd=tcp::8080-:8080"
-
-    # Block
-    # if [ $ARG_VIRTIO -eq 1 ]; then
-    #     flags="$flags -drive id=disk,file=aplus.img,if=none,format=raw -device virtio-blk-pci-non-transitional,drive=disk"
-    # else
-        flags="$flags -drive id=disk,file=aplus.img,if=none,format=raw -device ich9-ahci,id=ahci -device ide-hd,drive=disk,bus=ahci.0"
-    # fi
-
-    # Random
-    flags="$flags -object rng-random,filename=/dev/random,id=rng0"
-    flags="$flags -device virtio-rng-pci,rng=rng0,disable-legacy=on"
-
-    # Console
-    flags="$flags -chardev file,id=vc0,path=console.log"
-    flags="$flags -device virtio-serial-pci,disable-legacy=on"
-    flags="$flags -device virtconsole,chardev=vc0"
-
     # CPU
     if [ $ARG_KVM -eq 1 ]; then
         flags="$flags -enable-kvm"
@@ -195,6 +167,38 @@ x86_64)
 
     # Quick Exit
     flags="$flags -device isa-debug-exit,iobase=0xf4,iosize=0x04"
+
+    # Pointer
+    flags="$flags -device virtio-tablet-pci,disable-legacy=on"
+
+    # Network
+    if [ $ARG_VIRTIO -eq 1 ]; then
+        flags="$flags -device virtio-net-pci,netdev=net0,disable-legacy=on"
+    else
+        flags="$flags -device pcnet,netdev=net0"
+    fi
+
+    flags="$flags -netdev user,id=net0,hostfwd=tcp::2222-:22,hostfwd=tcp::8080-:8080"
+
+    # Block
+    # if [ $ARG_VIRTIO -eq 1 ]; then
+    #     flags="$flags -drive id=disk,file=aplus.img,if=none,format=raw -device virtio-blk-pci-non-transitional,drive=disk"
+    # else
+        flags="$flags -drive id=disk,file=aplus.img,if=none,format=raw -device ich9-ahci,id=ahci -device ide-hd,drive=disk,bus=ahci.0"
+    # fi
+
+    # Audio
+    flags="$flags -audiodev pa,id=snd0"
+    flags="$flags -device AC97,audiodev=snd0"
+
+    # Random
+    flags="$flags -object rng-random,filename=/dev/random,id=rng0"
+    flags="$flags -device virtio-rng-pci,rng=rng0,disable-legacy=on"
+
+    # Console
+    flags="$flags -chardev file,id=vc0,path=console.log"
+    flags="$flags -device virtio-serial-pci,disable-legacy=on"
+    flags="$flags -device virtconsole,chardev=vc0"
 
     ;;
 
