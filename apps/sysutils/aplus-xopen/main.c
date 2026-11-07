@@ -186,6 +186,19 @@ static const struct {
     {".nes",     XOPEN_KIND_NES_ROM },
     {".wav",     XOPEN_KIND_AUDIO   },
     {".pcm",     XOPEN_KIND_AUDIO   },
+    {".mp3",     XOPEN_KIND_AUDIO   },
+    {".ogg",     XOPEN_KIND_AUDIO   },
+    {".oga",     XOPEN_KIND_AUDIO   },
+    {".opus",    XOPEN_KIND_AUDIO   },
+    {".flac",    XOPEN_KIND_AUDIO   },
+    {".m4a",     XOPEN_KIND_AUDIO   },
+    {".aac",     XOPEN_KIND_AUDIO   },
+    {".aif",     XOPEN_KIND_AUDIO   },
+    {".aiff",    XOPEN_KIND_AUDIO   },
+    {".ape",     XOPEN_KIND_AUDIO   },
+    {".wv",      XOPEN_KIND_AUDIO   },
+    {".wma",     XOPEN_KIND_AUDIO   },
+    {".mka",     XOPEN_KIND_AUDIO   },
 };
 
 
