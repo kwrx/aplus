@@ -765,6 +765,71 @@ the theme names them — `ui_theme()->font_regular` for a label on its defaults.
 drawing of your own; see
 [tutorial-custom-drawing.md](tutorial-custom-drawing.md#text-without-widgets).
 
+## Slider
+
+```c
+typedef void (*ui_slider_fn)(ui_widget_t* widget, double value, void* user);
+
+ui_widget_t* ui_slider_create(ui_view_t* view, double min, double max);
+
+void   ui_slider_set_range(ui_widget_t* widget, double min, double max);
+void   ui_slider_set_value(ui_widget_t* widget, double value);
+double ui_slider_value(const ui_widget_t* widget);
+void   ui_slider_set_step(ui_widget_t* widget, double step);
+bool   ui_slider_dragging(const ui_widget_t* widget);
+
+void ui_slider_on_change(ui_widget_t* widget, ui_slider_fn fn, void* user);
+void ui_slider_on_commit(ui_widget_t* widget, ui_slider_fn fn, void* user);
+```
+
+A horizontal track with a round knob, for a value between `min` and `max`: a volume, or a
+position in something that plays. The part of the track behind the knob is filled.
+
+| Property | Default |
+|---|---|
+| track | `theme->surface_sunken`, outlined in `theme->border`, filled up to the knob in `theme->primary` |
+| knob | `theme->primary` with a `theme->on_primary` rim, growing while hovered or dragged |
+| focus | a `theme->focus_ring` circle around the knob, faded in while focused |
+| step | a twentieth of the range |
+
+The two callbacks split what a value change means. `on_change` runs every time the value moves:
+on every pointer motion of a drag, and once for a key or a wheel step. `on_commit` runs when
+the user is done with it: on the release that ends a drag, and right after `on_change` for a key
+or a wheel step. A volume listens to the first; a seek bar listens to the second, and uses the
+first only to preview where the drag would land, since seeking on every motion event is what
+makes playback stutter.
+
+`ui_slider_set_value()` runs neither callback, and **does nothing while a drag is in progress**:
+a playback loop refreshing the position several times a second would otherwise yank the knob
+back out from under the pointer. `ui_slider_dragging()` tells such a loop to leave its labels
+alone too. Values are clamped to the range; a range whose `max` is below `min` collapses to
+`min`.
+
+| Key | |
+|---|---|
+| `Left` / `Down` | One step down |
+| `Right` / `Up` | One step up |
+| `Page Down` / `Page Up` | Five steps |
+| `Home` / `End` | Either end of the range |
+
+The wheel moves the value one step per notch. Keys reach the slider only while it holds the
+keyboard focus, which a click gives it; everything else falls through to the view.
+
+## Image
+
+```c
+ui_widget_t* ui_image_create(ui_view_t* view, const char* icon);
+
+void ui_image_set_icon(ui_widget_t* widget, const char* icon);
+void ui_image_set_size(ui_widget_t* widget, int size);
+```
+
+An icon from the theme, centred in the widget's rectangle and transparent around it. The icon
+is named, not loaded, exactly as a button's or a list row's is — see [Icons](icons.md). By
+default it fills the smaller side of the rectangle; `ui_image_set_size()` caps it at a size in
+pixels, which is the way to stay on a size the theme ships rather than scale one up. Like a
+panel, it takes no pointer input, and a disabled image is faded like a disabled button's icon.
+
 ## Adding a widget
 
 The set is five widgets because five were needed, not because the shape resists a sixth —

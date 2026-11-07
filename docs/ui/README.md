@@ -61,7 +61,7 @@ its whole frame instead — see
 | `lib/aplus/ui/ui_event.c` | Event decoding and `ui_next_event()` |
 | `lib/aplus/ui/ui_view.c` | The view: surface binding, dispatch, paint, run loop |
 | `lib/aplus/ui/ui_widget.c` | Widget base, grid, rect helpers |
-| `lib/aplus/ui/ui_panel.c`, `ui_label.c`, `ui_button.c`, `ui_list.c`, `ui_entry.c` | The widgets themselves |
+| `lib/aplus/ui/ui_panel.c`, `ui_label.c`, `ui_button.c`, `ui_list.c`, `ui_entry.c`, `ui_slider.c`, `ui_image.c` | The widgets themselves |
 | `lib/aplus/ui/ui_keymap.c` | The console keymap, for the widget that needs characters rather than key codes |
 | `lib/aplus/ui/ui_theme.c` | The colour scheme, the default dark theme, and the system theme the server sends |
 | `lib/aplus/ui/ui_draw.c`, `ui_font.c` | Cairo drawing helpers and the FreeType face cache |

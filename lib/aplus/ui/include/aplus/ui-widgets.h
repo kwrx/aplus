@@ -547,6 +547,23 @@ void ui_entry_on_change(ui_widget_t* widget, ui_action_fn fn, void* user);
 void ui_entry_on_submit(ui_widget_t* widget, ui_action_fn fn, void* user);
 
 
+ui_widget_t* ui_image_create(ui_view_t* view, const char* icon);
+void ui_image_set_icon(ui_widget_t* widget, const char* icon);
+void ui_image_set_size(ui_widget_t* widget, int size);
+
+
+typedef void (*ui_slider_fn)(ui_widget_t* widget, double value, void* user);
+
+ui_widget_t* ui_slider_create(ui_view_t* view, double min, double max);
+void ui_slider_set_range(ui_widget_t* widget, double min, double max);
+void ui_slider_set_value(ui_widget_t* widget, double value);
+double ui_slider_value(const ui_widget_t* widget);
+void ui_slider_set_step(ui_widget_t* widget, double step);
+bool ui_slider_dragging(const ui_widget_t* widget);
+void ui_slider_on_change(ui_widget_t* widget, ui_slider_fn fn, void* user);
+void ui_slider_on_commit(ui_widget_t* widget, ui_slider_fn fn, void* user);
+
+
 /**
  * @brief Grid: cell rectangles over a region, whose rows and columns share out the remainder pixels.
  */

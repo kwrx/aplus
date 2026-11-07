@@ -73,6 +73,8 @@ typedef enum {
     UI_WIDGET_BUTTON,
     UI_WIDGET_LIST,
     UI_WIDGET_ENTRY,
+    UI_WIDGET_SLIDER,
+    UI_WIDGET_IMAGE,
 
 } ui_widget_kind_t;
 
@@ -264,6 +266,36 @@ struct ui_widget {
             void* on_submit_user;
 
         } entry;
+
+        struct {
+
+            double min;
+            double max;
+            double value;
+            double step;
+
+            bool hovered;
+            bool dragging;
+            bool focused;
+
+            ui_anim_t hover_anim;
+            ui_anim_t drag_anim;
+            ui_anim_t focus_anim;
+
+            ui_slider_fn on_change;
+            void* on_change_user;
+
+            ui_slider_fn on_commit;
+            void* on_commit_user;
+
+        } slider;
+
+        struct {
+
+            char icon[UI_ICON_NAME_MAX];
+            int size;
+
+        } image;
     };
 
     struct ui_widget* next;
