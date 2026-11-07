@@ -175,6 +175,7 @@ stage_3() {
     packages="$packages libwebp"
     packages="$packages mesa"
     packages="$packages ncurses"
+    packages="$packages ffmpeg"
 
     if [ $ARG_ONLY_REQUIRED_PACKAGES -eq 0 ]; then
         packages="$packages binutils"
