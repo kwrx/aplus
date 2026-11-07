@@ -22,7 +22,6 @@
  */
 
 #include <stdint.h>
-#include <string.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
@@ -171,7 +170,7 @@ void timer_init(void) {
     }
 
     if (!known) {
-        
+
         if (!ref_getticks && pit_init() == 0) {
             ref_getticks = pit_getticks;
             ref_getres   = pit_getres;
