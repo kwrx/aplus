@@ -1289,6 +1289,10 @@ static void wm_taskbar_network_poll(void) {
 
     wm_taskbar_damage();
 
+    if (count == 0 && wm_taskbar_network_open()) {
+        ui_anim_to(&wm.taskbar.network.open, 0.0, UI_MOTION_FAST, ui_anim_now());
+    }
+
     if (wm.taskbar.hover == WM_TASKBAR_NETWORK) {
         wm_taskbar_popout(wm.taskbar.hover);
     }
@@ -1505,6 +1509,10 @@ static void wm_taskbar_network(bool open) {
     if (open) {
 
         wm_taskbar_network_poll();
+
+        if (wm.taskbar.network.count == 0) {
+            return;
+        }
 
         ui_anim_to(&wm.taskbar.session.open, 0.0, UI_MOTION_FAST, now);
         ui_anim_to(&wm.taskbar.volume.open, 0.0, UI_MOTION_FAST, now);
