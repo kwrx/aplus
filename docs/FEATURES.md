@@ -136,6 +136,7 @@
 - [x] Terminal Emulator
 - [x] File Manager
 - [x] PDF and Image Viewer
+- [x] Music Player (WAV, raw PCM)
 - [x] Application Launcher
 - [x] IRC Client
 - [x] Web Browser (NetSurf)

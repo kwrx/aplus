@@ -58,7 +58,7 @@ Userspace is still under development. It is built from this repository plus preb
 * **Init**, [apps/core/init](/apps/core/init), runs the [init.sh](/apps/core/init/scripts/init.sh) boot script
 * **Package manager**, [apps/core/pkg](/apps/core/pkg), `pkg` installs, upgrades and removes packages from the aplus-packages releases, tracking them in a local SQLite index
 * **Desktop**, [aplus-wm](/apps/sysutils/aplus-wm), a display server that owns the framebuffer and the input devices and draws every window frame, with [libui](/lib/aplus/ui) for its clients
-* **Applications**, [apps/sysutils](/apps/sysutils), terminal, file manager, text editor, PDF and image viewer, calculator, and a launcher with an optional AI assistant
+* **Applications**, [apps/sysutils](/apps/sysutils), terminal, file manager, text editor, PDF and image viewer, music player, calculator, and a launcher with an optional AI assistant
 * **Extras**, [apps/extra](/apps/extra), `kilo`, `nyancat`, an IRC client and MesaGL demos
 * **Tests**, [tests](/tests), guest-side integration tests run from the shell
 * **Packages**, BusyBox, `dash` and `bash`, the graphics and TLS libraries, MesaGL, [NetSurf](https://www.netsurf-browser.org/), [MuPDF](https://mupdf.com/), Doom, a NES emulator, the [Bochs](https://bochs.sourceforge.io/) PC emulator and a native `gcc` toolchain
