@@ -39,6 +39,7 @@
 #include <unistd.h>
 
 #include <aplus/fb.h>
+#include <aplus/soundcard.h>
 #include <aplus/ui-draw.h>
 
 #include "settings.h"
@@ -48,6 +49,7 @@
 #define ABOUT_LOGO_SIZE   48
 #define ABOUT_LOGO_ICON   "computer"
 #define ABOUT_FRAMEBUFFER "/dev/fb0"
+#define ABOUT_MIXER       "/dev/mixer"
 #define ABOUT_CPUINFO     "/proc/cpuinfo"
 #define ABOUT_HOSTNAME    "/etc/hostname"
 #define ABOUT_NAME_MAX    63
@@ -64,6 +66,7 @@ typedef enum {
     ABOUT_MEMORY,
     ABOUT_DISK,
     ABOUT_DISPLAY,
+    ABOUT_AUDIO,
     ABOUT_PROCESSES,
     ABOUT_UPTIME,
 
@@ -76,7 +79,7 @@ typedef enum {
  * @brief The names the rows are shown under.
  */
 static const char* const about_keys[ABOUT_COUNT] = {
-    "Device name", "Processor", "Architecture", "Memory", "Disk", "Display", "Processes", "Uptime",
+    "Device name", "Processor", "Architecture", "Memory", "Disk", "Display", "Audio", "Processes", "Uptime",
 };
 
 
@@ -358,6 +361,25 @@ static void about_probe(void) {
 
         close(fd);
     }
+
+
+    const int mixer = open(ABOUT_MIXER, O_RDONLY | O_CLOEXEC);
+
+    if (mixer < 0) {
+        settings_row_set(&about.card.rows[ABOUT_AUDIO], "None");
+        return;
+    }
+
+    mixer_info info;
+
+    memset(&info, 0, sizeof(info));
+
+    if (ioctl(mixer, SOUND_MIXER_INFO, &info) == 0 && info.name[0]) {
+        snprintf(text, sizeof(text), "%.*s", (int)sizeof(info.name), info.name);
+        settings_row_set(&about.card.rows[ABOUT_AUDIO], text);
+    }
+
+    close(mixer);
 }
 
 

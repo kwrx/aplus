@@ -53,7 +53,7 @@
  * @brief The pages, in the order the sidebar lists them.
  */
 static const settings_page_t* const settings_pages[] = {
-    &settings_appearance, &settings_wallpaper, &settings_network, &settings_software, &settings_about,
+    &settings_appearance, &settings_wallpaper, &settings_network, &settings_audio, &settings_software, &settings_about,
 };
 
 #define SETTINGS_PAGES (sizeof(settings_pages) / sizeof(settings_pages[0]))

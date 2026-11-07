@@ -42,7 +42,7 @@
 #define SETTINGS_SECTION_GAP  20
 #define SETTINGS_CARD_PADDING 14
 #define SETTINGS_KEY_WIDTH    150
-#define SETTINGS_CARD_ROWS    8
+#define SETTINGS_CARD_ROWS    9
 #define SETTINGS_TEXT_MAX     128
 #define SETTINGS_UNKNOWN      "Unknown"
 #define SETTINGS_TIMES        "\xC3\x97"
@@ -111,6 +111,7 @@ typedef struct {
 extern const settings_page_t settings_appearance;
 extern const settings_page_t settings_wallpaper;
 extern const settings_page_t settings_network;
+extern const settings_page_t settings_audio;
 extern const settings_page_t settings_software;
 extern const settings_page_t settings_about;
 

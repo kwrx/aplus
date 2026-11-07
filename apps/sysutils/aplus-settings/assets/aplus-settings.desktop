@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Settings
-Comment=Change the theme and see what the system runs on
+Comment=Change the theme, network and volume, and see what the system runs on
 Exec=aplus-settings
 Icon=aplus-settings
 Terminal=false
