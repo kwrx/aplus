@@ -231,6 +231,7 @@ static const struct {
     {".webp",    "image-x-generic"       },
 
     {".wav",     "audio-x-generic"       },
+    {".pcm",     "audio-x-generic"       },
     {".mp3",     "audio-x-generic"       },
     {".ogg",     "audio-x-generic"       },
     {".flac",    "audio-x-generic"       },

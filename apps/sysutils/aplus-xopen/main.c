@@ -82,6 +82,8 @@
  */
 #define XOPEN_NES_EMULATOR "nesemu"
 
+#define XOPEN_AUDIO_PLAYER "aplus-player"
+
 /**
  * @brief How much of a file with no known extension is read to tell text from binary.
  */
@@ -115,6 +117,7 @@ typedef enum {
     XOPEN_KIND_DOCUMENT,
     XOPEN_KIND_TEXT,
     XOPEN_KIND_NES_ROM,
+    XOPEN_KIND_AUDIO,
 
 } xopen_kind_t;
 
@@ -181,6 +184,8 @@ static const struct {
     {".ini",     XOPEN_KIND_TEXT    },
     {".log",     XOPEN_KIND_TEXT    },
     {".nes",     XOPEN_KIND_NES_ROM },
+    {".wav",     XOPEN_KIND_AUDIO   },
+    {".pcm",     XOPEN_KIND_AUDIO   },
 };
 
 
@@ -538,6 +543,7 @@ int main(int argc, char** argv) {
     char* viewer[]   = {(char*)XOPEN_VIEWER, (char*)path, NULL};
     char* editor[]   = {(char*)XOPEN_TEXT_EDITOR, (char*)path, NULL};
     char* emulator[] = {(char*)XOPEN_NES_EMULATOR, (char*)path, NULL};
+    char* audio[]    = {(char*)XOPEN_AUDIO_PLAYER, (char*)path, NULL};
 
     switch (xopen_kind(path, &st)) {
 
@@ -555,6 +561,9 @@ int main(int argc, char** argv) {
 
         case XOPEN_KIND_NES_ROM:
             return xopen_run(emulator);
+
+        case XOPEN_KIND_AUDIO:
+            return xopen_run(audio);
 
         default:
             break;
