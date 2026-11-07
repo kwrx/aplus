@@ -176,6 +176,7 @@ stage_3() {
     packages="$packages mesa"
     packages="$packages ncurses"
     packages="$packages ffmpeg"
+    packages="$packages bzip2"
 
     if [ $ARG_ONLY_REQUIRED_PACKAGES -eq 0 ]; then
         packages="$packages binutils"
@@ -193,7 +194,6 @@ stage_3() {
         packages="$packages make"
         packages="$packages lua"
         packages="$packages git"
-        packages="$packages bzip2"
         packages="$packages zstd"
         packages="$packages nano"
         packages="$packages util-linux"
