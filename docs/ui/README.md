@@ -70,7 +70,7 @@ its whole frame instead — see
 | `lib/aplus/ui/ui_damage.c` | The damage set both the window and the view keep |
 | `apps/sysutils/aplus-wm/` | The server, and the themes it installs in `/usr/share/themes` |
 | `apps/sysutils/aplus-wmctl/` | Switches the theme from the command line, over the control socket |
-| `apps/sysutils/aplus-settings/` | The settings: theme, fonts and wallpaper over the control socket, network, volume through `/dev/mixer`, packages and the device's name, one file per page; a loop of its own folds in each page's ticks, hand-drawn thumbnails and pointer handling |
+| `apps/sysutils/aplus-settings/` | The settings: theme, fonts and wallpaper over the control socket, network, volume through `/dev/mixer`, packages, and the device's name and sound card, one file per page; a loop of its own folds in each page's ticks, hand-drawn thumbnails and pointer handling |
 | `apps/sysutils/aplus-calculator/` | The reference widget-layer application: a grid of buttons and a keyboard |
 | `apps/sysutils/aplus-explorer/` | The other one: a list, a selection and a keyboard focus |
 | `apps/sysutils/aplus-viewer/` | The one that mixes the layers: a toolbar of widgets around a PDF or a picture that mupdf renders a tile at a time straight into the window pixels, and the canvas scrolls, zooms and drags over |
@@ -237,9 +237,16 @@ and the taskbar puts it away.
 
 Below the button is an entry for every decorated window, in the order the windows opened,
 with its icon; the active one is lit and marked in the accent against the rail's edge, and its
-title runs up the free stretch of rail under the entries. The foot of the rail shows the time,
-the hours over the minutes. Hovering an item pops a label out of the rail beside it: the
-window's title, `Applications` for the launcher's button, the date for the clock. Clicking an
+title runs up the free stretch of rail under the entries. The foot of the rail holds, from the
+top, a network indicator, a speaker, the time with the hours over the minutes, and the power
+button that opens the session menu. The network glyph is lit while an interface is up, linked
+and has an address; clicking it slides out a panel listing every interface but loopback with
+its address, or `Off`, `Disconnected` or `No address`, rescanned every few seconds and as the
+panel opens. Clicking the speaker slides out a slider and a mute button for the master channel
+of `/dev/mixer`, and the wheel over either changes the volume in steps of 5%. Hovering an item
+pops a label out of the rail beside it: the window's title, `Applications` for the launcher's
+button, the date for the clock, the volume for the speaker and the address of the connected
+interface for the network glyph. Clicking an
 entry brings that window to the front, or hides it if it is already there, and brings a hidden
 one back. The third titlebar button hides a window too, which then shrinks into its entry. A
 borderless window gets no entry, and `Alt+Tab` steps over the hidden ones.

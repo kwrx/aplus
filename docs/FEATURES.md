@@ -109,7 +109,7 @@
 - [x] PCI MSIX
 - [x] AHCI Controller (SATA)
 - [x] IDE Controller (PATA)
-- [ ] AC97 Audio Adapter
+- [x] AC97 Audio Adapter
 - [ ] Intel HD Audio Adapter
 - [x] Serial Port UARTx
 - [x] PS/2 Keyboard/Mouse
