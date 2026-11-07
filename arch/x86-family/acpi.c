@@ -32,7 +32,6 @@
 #include <aplus/ipc.h>
 #include <aplus/memory.h>
 #include <aplus/errno.h>
-#include <aplus/multiboot.h>
 
 #include <arch/x86/acpi.h>
 #include <arch/x86/asm.h>

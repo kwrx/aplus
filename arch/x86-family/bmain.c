@@ -198,18 +198,21 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
                 break;
 
             case MULTIBOOT_TAG_TYPE_ACPI_OLD:
-
-                core->acpi.rsdp_address = (uintptr_t) & ((struct multiboot_tag_old_acpi*)btags)->rsdp[0];
-                core->acpi.rsdp_size    = (uintptr_t)((struct multiboot_tag_old_acpi*)btags)->size;
-
-                break;
-
             case MULTIBOOT_TAG_TYPE_ACPI_NEW:
 
-                core->acpi.rsdp_address = (uintptr_t) & ((struct multiboot_tag_new_acpi*)btags)->rsdp[0];
-                core->acpi.rsdp_size    = (uintptr_t)((struct multiboot_tag_new_acpi*)btags)->size;
+            {
 
-                break;
+                size_t size = MIN(btags->size - sizeof(struct multiboot_tag_new_acpi), sizeof(core->acpi.rsdp));
+
+                memset(&core->acpi.rsdp[0], 0, sizeof(core->acpi.rsdp));
+                memcpy(&core->acpi.rsdp[0], &((struct multiboot_tag_new_acpi*)btags)->rsdp[0], size);
+
+                core->acpi.rsdp_address = (uintptr_t)&core->acpi.rsdp[0];
+                core->acpi.rsdp_size    = size;
+
+            }
+
+            break;
 
             case MULTIBOOT_TAG_TYPE_NETWORK:
                 break;

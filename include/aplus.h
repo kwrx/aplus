@@ -260,6 +260,7 @@ struct syscore {
     struct {
         uintptr_t rsdp_address;
         uintptr_t rsdp_size;
+        uint8_t rsdp[36];
     } acpi;
 
 
