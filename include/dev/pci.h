@@ -93,9 +93,7 @@ typedef uint32_t pcidev_t;
     #define PCI_TYPE_ETHERNET 0x0200
     #define PCI_TYPE_USB      0x0C03
     #define PCI_TYPE_SCSI     0x0100
-    #define PCI_TYPE_AUDIO    0x0403
-
-
+    #define PCI_TYPE_AUDIO    0x0401
 
     #define PCI_ADDRESS_PORT 0xCF8
     #define PCI_VALUE_PORT   0xCFC
@@ -116,7 +114,7 @@ typedef uint32_t pcidev_t;
 
 
     #define PCI_MSI_CAPID        (0x05)
-    
+
     #define PCI_MSI_HDR_CAPID    (0)
     #define PCI_MSI_HDR_CAPNEXT  (1)
     #define PCI_MSI_HDR_MSGCTL   (2)
@@ -127,7 +125,7 @@ typedef uint32_t pcidev_t;
     #define PCI_MSI_MSGCTL_MSG_COUNT_MASK       (0x0070)
 
     #define PCI_MSI_INTR_BASE   66
-    
+
 
     #define PCI_MSIX_CAPID     (0x11)
 

@@ -125,11 +125,14 @@ uintptr_t pci_map_bar(pcidev_t device, int field, uintptr_t* size) {
 
             pci_mmio_next += span;
 
-            if (arch_vmm_map(&core->bsp.address_space, v, phys, span, ARCH_VMM_MAP_FIXED | ARCH_VMM_MAP_RDWR | ARCH_VMM_MAP_UNCACHED | ARCH_VMM_MAP_WRITE_THROUGH | ARCH_VMM_MAP_NOEXEC) == ARCH_VMM_MAP_FAILED)
+            if (arch_vmm_map(&core->bsp.address_space, v, phys, span, ARCH_VMM_MAP_FIXED | ARCH_VMM_MAP_RDWR | ARCH_VMM_MAP_UNCACHED | ARCH_VMM_MAP_WRITE_THROUGH | ARCH_VMM_MAP_NOEXEC) == ARCH_VMM_MAP_FAILED) {
+#if DEBUG_LEVEL_ERROR
+                kprintf("pci: failed to map mmio region at phys(%p), span(%p)\n", phys, span);
+#endif
                 return 0;
+            }
 
             pci_mmio_mappings[pci_mmio_count++] = (struct pci_mmio_mapping){phys, span, v};
-
             virt = v;
         }
     }
