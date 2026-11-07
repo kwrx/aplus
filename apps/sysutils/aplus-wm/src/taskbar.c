@@ -26,9 +26,12 @@
  * in the order they opened, a clock and a power button, joined to a border round the rest of the screen.
  */
 
+#include <arpa/inet.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <math.h>
+#include <net/if.h>
+#include <netinet/in.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <string.h>
@@ -188,6 +191,87 @@ static int wm_mixer_io(int value) {
 }
 
 
+static size_t wm_network_scan(wm_netif_t* out) {
+
+    const int fd = socket(AF_INET, SOCK_DGRAM, 0);
+
+    if (fd < 0) {
+        return 0;
+    }
+
+    struct ifreq reqs[WM_TASKBAR_NETWORK_IFACES * 2];
+    struct ifconf conf = {.ifc_len = sizeof(reqs), .ifc_req = reqs};
+
+    size_t n = 0;
+
+    memset(out, 0, WM_TASKBAR_NETWORK_IFACES * sizeof(*out));
+
+    if (ioctl(fd, SIOCGIFCONF, &conf) == 0) {
+
+        const size_t count = (size_t)conf.ifc_len / sizeof(reqs[0]);
+
+        for (size_t i = 0; i < count && n < WM_TASKBAR_NETWORK_IFACES; i++) {
+
+            struct ifreq ifr = reqs[i];
+
+            if (ioctl(fd, SIOCGIFFLAGS, &ifr) < 0 || (ifr.ifr_flags & IFF_LOOPBACK)) {
+                continue;
+            }
+
+            snprintf(out[n].name, sizeof(out[n].name), "%.*s", (int)sizeof(out[n].name) - 1, reqs[i].ifr_name);
+
+            out[n].addr    = ((const struct sockaddr_in*)&reqs[i].ifr_addr)->sin_addr.s_addr;
+            out[n].up      = (ifr.ifr_flags & IFF_UP) != 0;
+            out[n].running = (ifr.ifr_flags & IFF_RUNNING) != 0;
+
+            n++;
+        }
+    }
+
+    close(fd);
+
+    return n;
+}
+
+
+static bool wm_netif_connected(const wm_netif_t* netif) {
+    return netif->up && netif->running && netif->addr != 0;
+}
+
+
+static const wm_netif_t* wm_network_primary(void) {
+
+    for (size_t i = 0; i < wm.taskbar.network.count; i++) {
+
+        if (wm_netif_connected(&wm.taskbar.network.ifaces[i])) {
+            return &wm.taskbar.network.ifaces[i];
+        }
+    }
+
+    return NULL;
+}
+
+
+static void wm_netif_status(const wm_netif_t* netif, char* out, size_t size) {
+
+    if (wm_netif_connected(netif)) {
+
+        struct in_addr in = {.s_addr = netif->addr};
+
+        if (!inet_ntop(AF_INET, &in, out, (socklen_t)size)) {
+            snprintf(out, size, "Connected");
+        }
+
+    } else if (!netif->up) {
+        snprintf(out, size, "Off");
+    } else if (!netif->running) {
+        snprintf(out, size, "Disconnected");
+    } else {
+        snprintf(out, size, "No address");
+    }
+}
+
+
 /**
  * @brief A thread that sleeps until each minute turns over and says so down a socketpair the main loop polls.
  */
@@ -207,6 +291,11 @@ static void* wm_clock_thread(void* arg) {
         }
 
         struct timespec nap = {59 - now.tv_sec % 60, 1000000000L - now.tv_nsec};
+
+        if (nap.tv_sec >= WM_TASKBAR_NETWORK_POLL) {
+            nap.tv_sec  = WM_TASKBAR_NETWORK_POLL;
+            nap.tv_nsec = 0;
+        }
 
         while (nanosleep(&nap, &nap) < 0 && errno == EINTR) {
             ;
@@ -247,6 +336,8 @@ int wm_taskbar_open(void) {
 
     wm.taskbar.volume.value   = wm_mixer_io(-1);
     wm.taskbar.volume.restore = wm.taskbar.volume.value;
+
+    wm.taskbar.network.count = wm_network_scan(wm.taskbar.network.ifaces);
 
     return wm_clock_pipe[0];
 }
@@ -353,6 +444,47 @@ static bool wm_taskbar_volume_open(void) {
 }
 
 
+static wm_rect_t wm_taskbar_network_button_rect(void) {
+
+    const wm_rect_t volume = wm_taskbar_volume_button_rect();
+
+    const wm_rect_t r = {WM_TASKBAR_PAD, volume.y - WM_TASKBAR_GAP - WM_TASKBAR_ITEM, WM_TASKBAR_ITEM, WM_TASKBAR_ITEM};
+
+    return r;
+}
+
+
+static int wm_taskbar_network_rows(void) {
+    return (int)WM_MAX(wm.taskbar.network.count, 1);
+}
+
+
+static wm_rect_t wm_taskbar_network_rect(void) {
+
+    const wm_rect_t button = wm_taskbar_network_button_rect();
+    const int height       = wm_taskbar_network_rows() * (WM_TASKBAR_ITEM + WM_TASKBAR_GAP) - WM_TASKBAR_GAP + 2 * WM_TASKBAR_PAD;
+
+    const wm_rect_t r = {WM_TASKBAR_WIDTH, button.y + button.height + WM_TASKBAR_PAD - height, WM_TASKBAR_NETWORK_WIDTH, height};
+
+    return r;
+}
+
+
+static wm_rect_t wm_taskbar_network_row(int index) {
+
+    const wm_rect_t panel = wm_taskbar_network_rect();
+
+    const wm_rect_t r = {panel.x + WM_TASKBAR_PAD, panel.y + WM_TASKBAR_PAD + index * (WM_TASKBAR_ITEM + WM_TASKBAR_GAP), panel.width - 2 * WM_TASKBAR_PAD, WM_TASKBAR_ITEM};
+
+    return r;
+}
+
+
+static bool wm_taskbar_network_open(void) {
+    return ui_anim_target(&wm.taskbar.network.open) > 0.0;
+}
+
+
 /**
  * @brief Reports where the session menu is once all the way out, leaving out the fillets that join it to the rail and the border.
  *
@@ -404,6 +536,12 @@ bool wm_taskbar_contains(int x, int y) {
     const wm_rect_t volume = wm_taskbar_volume_rect();
 
     if (wm_taskbar_volume_open() && wm_rect_contains_point(&volume, x, y)) {
+        return true;
+    }
+
+    const wm_rect_t network = wm_taskbar_network_rect();
+
+    if (wm_taskbar_network_open() && wm_rect_contains_point(&network, x, y)) {
         return true;
     }
 
@@ -606,6 +744,26 @@ static wm_rect_t wm_taskbar_volume_extent(uint64_t now) {
 }
 
 
+static wm_rect_t wm_taskbar_network_extent(uint64_t now) {
+
+    const double open = ui_anim_value(&wm.taskbar.network.open, now);
+
+    if (open <= 0.0) {
+
+        const wm_rect_t none = {0, 0, 0, 0};
+
+        return none;
+    }
+
+
+    const wm_rect_t panel = wm_taskbar_network_rect();
+
+    const wm_rect_t r = {panel.x, panel.y - WM_TASKBAR_POPOUT_RADIUS - 2, (int)ceil(panel.width * open) + 2, panel.height + 2 * WM_TASKBAR_POPOUT_RADIUS + 4};
+
+    return wm_taskbar_shadow_extent(r);
+}
+
+
 /**
  * @brief Repaints the rail, and the popout and the session and context menus where the last frame drew them and where the next one will.
  */
@@ -615,8 +773,11 @@ void wm_taskbar_damage(void) {
     const wm_rect_t popout  = wm_taskbar_popout_extent(wm.frame_time);
     const wm_rect_t session = wm_taskbar_session_extent(wm.frame_time);
     const wm_rect_t volume  = wm_taskbar_volume_extent(wm.frame_time);
+    const wm_rect_t network = wm_taskbar_network_extent(wm.frame_time);
     const wm_rect_t menu    = wm_menu_extent(wm.frame_time);
 
+    wm_damage(&wm.taskbar.network.painted);
+    wm_damage(&network);
     wm_damage(&bar);
     wm_damage(&wm.taskbar.popout.painted);
     wm_damage(&popout);
@@ -747,11 +908,11 @@ static wm_rect_t wm_taskbar_session_row(int index) {
 static wm_rect_t wm_taskbar_slot(size_t index) {
 
     const wm_rect_t launcher = wm_taskbar_launcher_rect();
-    const wm_rect_t volume   = wm_taskbar_volume_button_rect();
+    const wm_rect_t network  = wm_taskbar_network_button_rect();
 
     wm_rect_t r = {launcher.x, launcher.y + launcher.height + 3 * WM_TASKBAR_GAP + (int)index * (WM_TASKBAR_ITEM + WM_TASKBAR_GAP), WM_TASKBAR_ITEM, WM_TASKBAR_ITEM};
 
-    if (r.y + r.height > volume.y - 2 * WM_TASKBAR_GAP) {
+    if (r.y + r.height > network.y - 2 * WM_TASKBAR_GAP) {
         r.width = 0;
     }
 
@@ -813,6 +974,10 @@ static wm_rect_t wm_taskbar_item_rect(uint32_t item) {
 
     if (item == WM_TASKBAR_VOLUME) {
         return wm_taskbar_volume_button_rect();
+    }
+
+    if (item == WM_TASKBAR_NETWORK) {
+        return wm_taskbar_network_button_rect();
     }
 
 
@@ -897,6 +1062,12 @@ static uint32_t wm_taskbar_item_at(int x, int y) {
         return WM_TASKBAR_VOLUME;
     }
 
+    const wm_rect_t network = wm_taskbar_network_button_rect();
+
+    if (wm_rect_contains_point(&network, x, y)) {
+        return WM_TASKBAR_NETWORK;
+    }
+
 
     const wm_rect_t launcher = wm_taskbar_launcher_rect();
 
@@ -946,7 +1117,7 @@ static bool wm_taskbar_label(uint32_t item, char* out, size_t size) {
 
     const int pin = wm_taskbar_pin_index(item);
 
-    if (wm_menu_shown() || wm_taskbar_volume_open() || wm_taskbar_session_index(item) >= 0) {
+    if (wm_menu_shown() || wm_taskbar_volume_open() || wm_taskbar_network_open() || wm_taskbar_session_index(item) >= 0) {
 
         return false;
 
@@ -967,6 +1138,24 @@ static bool wm_taskbar_label(uint32_t item, char* out, size_t size) {
         } else {
             snprintf(level, sizeof(level), "Volume %d%%", wm.taskbar.volume.value);
             text = level;
+        }
+
+    } else if (item == WM_TASKBAR_NETWORK) {
+
+        const wm_netif_t* primary = wm_network_primary();
+
+        if (wm.taskbar.network.count == 0) {
+            text = "No network adapter";
+        } else if (!primary) {
+            text = "Disconnected";
+        } else {
+
+            char addr[INET_ADDRSTRLEN];
+
+            wm_netif_status(primary, addr, sizeof(addr));
+            snprintf(date, sizeof(date), "Connected \xC2\xB7 %s", addr);
+
+            text = date;
         }
 
     } else if (item == WM_TASKBAR_LAUNCHER) {
@@ -1083,6 +1272,29 @@ static void wm_taskbar_volume_mute(void) {
 }
 
 
+static void wm_taskbar_network_poll(void) {
+
+    wm_netif_t ifaces[WM_TASKBAR_NETWORK_IFACES];
+
+    const size_t count = wm_network_scan(ifaces);
+
+    if (count == wm.taskbar.network.count && memcmp(ifaces, wm.taskbar.network.ifaces, sizeof(ifaces)) == 0) {
+        return;
+    }
+
+    wm_taskbar_damage();
+
+    memcpy(wm.taskbar.network.ifaces, ifaces, sizeof(ifaces));
+    wm.taskbar.network.count = count;
+
+    wm_taskbar_damage();
+
+    if (wm.taskbar.hover == WM_TASKBAR_NETWORK) {
+        wm_taskbar_popout(wm.taskbar.hover);
+    }
+}
+
+
 static int wm_taskbar_slider_value(int x) {
 
     const wm_rect_t r = wm_taskbar_slider_rect();
@@ -1114,6 +1326,9 @@ static ui_anim_t* wm_taskbar_hover_anim(uint32_t item) {
 
         case WM_TASKBAR_MUTE:
             return &wm.taskbar.volume.hover_mute;
+
+        case WM_TASKBAR_NETWORK:
+            return &wm.taskbar.hover_network;
 
     }
 
@@ -1178,6 +1393,10 @@ static void wm_taskbar_set_hover(uint32_t item) {
 
     if (item == WM_TASKBAR_VOLUME) {
         wm_taskbar_volume_store(wm_mixer_io(-1));
+    }
+
+    if (item == WM_TASKBAR_NETWORK) {
+        wm_taskbar_network_poll();
     }
 
     if (item) {
@@ -1248,6 +1467,7 @@ static void wm_taskbar_session(bool open) {
 
     if (open) {
         ui_anim_to(&wm.taskbar.volume.open, 0.0, UI_MOTION_FAST, ui_anim_now());
+        ui_anim_to(&wm.taskbar.network.open, 0.0, UI_MOTION_FAST, ui_anim_now());
         wm_menu_hide();
     }
 
@@ -1268,10 +1488,30 @@ static void wm_taskbar_volume(bool open) {
         }
 
         ui_anim_to(&wm.taskbar.session.open, 0.0, UI_MOTION_FAST, now);
+        ui_anim_to(&wm.taskbar.network.open, 0.0, UI_MOTION_FAST, now);
         wm_menu_hide();
     }
 
     ui_anim_to(&wm.taskbar.volume.open, open ? 1.0 : 0.0, open ? UI_MOTION_NORMAL : UI_MOTION_FAST, now);
+
+    wm_taskbar_refresh();
+}
+
+
+static void wm_taskbar_network(bool open) {
+
+    const uint64_t now = ui_anim_now();
+
+    if (open) {
+
+        wm_taskbar_network_poll();
+
+        ui_anim_to(&wm.taskbar.session.open, 0.0, UI_MOTION_FAST, now);
+        ui_anim_to(&wm.taskbar.volume.open, 0.0, UI_MOTION_FAST, now);
+        wm_menu_hide();
+    }
+
+    ui_anim_to(&wm.taskbar.network.open, open ? 1.0 : 0.0, open ? UI_MOTION_NORMAL : UI_MOTION_FAST, now);
 
     wm_taskbar_refresh();
 }
@@ -1330,6 +1570,7 @@ static void wm_taskbar_menu_open(uint32_t item) {
 
     ui_anim_to(&wm.taskbar.session.open, 0.0, UI_MOTION_FAST, ui_anim_now());
     ui_anim_to(&wm.taskbar.volume.open, 0.0, UI_MOTION_FAST, ui_anim_now());
+    ui_anim_to(&wm.taskbar.network.open, 0.0, UI_MOTION_FAST, ui_anim_now());
 
     if (wm.drawer.window) {
         wm_window_request_close(wm.drawer.window);
@@ -1488,6 +1729,13 @@ void wm_taskbar_dismiss_at(int x, int y) {
         wm_taskbar_volume(false);
     }
 
+    const wm_rect_t network = wm_taskbar_network_rect();
+    const wm_rect_t netbtn  = wm_taskbar_network_button_rect();
+
+    if (wm_taskbar_network_open() && !wm_rect_contains_point(&network, x, y) && !wm_rect_contains_point(&netbtn, x, y)) {
+        wm_taskbar_network(false);
+    }
+
     if (wm_menu_shown() && !wm_menu_contains(x, y)) {
         wm_taskbar_menu_close();
     }
@@ -1511,6 +1759,13 @@ bool wm_taskbar_dismiss(void) {
     if (wm_taskbar_volume_open()) {
 
         wm_taskbar_volume(false);
+
+        return true;
+    }
+
+    if (wm_taskbar_network_open()) {
+
+        wm_taskbar_network(false);
 
         return true;
     }
@@ -1670,6 +1925,13 @@ bool wm_taskbar_release(int x, int y) {
     }
 
     if (pressed == WM_TASKBAR_SLIDER) {
+        return true;
+    }
+
+    if (pressed == WM_TASKBAR_NETWORK) {
+
+        wm_taskbar_network(!wm_taskbar_network_open());
+
         return true;
     }
 
@@ -2061,6 +2323,53 @@ static void wm_taskbar_paint_volume(cairo_t* cr) {
 
     wm_source(cr, wm.taskbar.volume.value > 0 ? wm.theme.title_active : wm.theme.taskbar_mark, 1.0);
     wm_taskbar_paint_volume_glyph(cr, r.x + r.width / 2.0, r.y + r.height / 2.0, wm.taskbar.volume.value);
+}
+
+
+static void wm_taskbar_paint_network_glyph(cairo_t* cr, double x, double y, bool connected) {
+
+    cairo_save(cr);
+
+    cairo_new_path(cr);
+    ui_draw_rounded_rect_d(cr, x - 3.0, y - 9.0, 6.0, 5.0, 1.5);
+    ui_draw_rounded_rect_d(cr, x - 9.0, y + 4.0, 6.0, 5.0, 1.5);
+    ui_draw_rounded_rect_d(cr, x + 3.0, y + 4.0, 6.0, 5.0, 1.5);
+    cairo_fill(cr);
+
+    cairo_set_line_width(cr, 2.0);
+    cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
+
+    cairo_move_to(cr, x, y - 4.0);
+    cairo_line_to(cr, x, y);
+    cairo_move_to(cr, x - 6.0, y + 4.0);
+    cairo_line_to(cr, x - 6.0, y);
+    cairo_line_to(cr, x + 6.0, y);
+    cairo_line_to(cr, x + 6.0, y + 4.0);
+    cairo_stroke(cr);
+
+    if (!connected) {
+        cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
+        cairo_move_to(cr, x - 9.0, y - 9.0);
+        cairo_line_to(cr, x + 9.0, y + 9.0);
+        cairo_stroke(cr);
+    }
+
+    cairo_restore(cr);
+}
+
+
+static void wm_taskbar_paint_network(cairo_t* cr) {
+
+    const wm_rect_t r = wm_taskbar_network_button_rect();
+
+    const bool held      = wm.taskbar.pressed == WM_TASKBAR_NETWORK && wm.taskbar.hover == WM_TASKBAR_NETWORK;
+    const double open    = ui_anim_value(&wm.taskbar.network.open, wm.frame_time);
+    const bool connected = wm_network_primary() != NULL;
+
+    wm_taskbar_paint_wash(cr, &r, ui_anim_value(&wm.taskbar.hover_network, wm.frame_time), held, open);
+
+    wm_source(cr, connected ? wm.theme.title_active : wm.theme.taskbar_mark, 1.0);
+    wm_taskbar_paint_network_glyph(cr, r.x + r.width / 2.0, r.y + r.height / 2.0, connected);
 }
 
 
@@ -2504,6 +2813,123 @@ static void wm_taskbar_paint_volume_panel(cairo_t* cr) {
 }
 
 
+static void wm_taskbar_paint_network_row(cairo_t* cr, int index, int shift, double alpha) {
+
+    wm_rect_t r = wm_taskbar_network_row(index);
+
+    r.x -= shift;
+
+    const double cx = r.x + WM_TASKBAR_ITEM / 2.0;
+    const double cy = r.y + r.height / 2.0;
+
+    const char* label  = NULL;
+    const char* detail = NULL;
+
+    char status[INET_ADDRSTRLEN + 16];
+
+    if (wm.taskbar.network.count == 0) {
+
+        wm_source(cr, wm.theme.taskbar_mark, alpha);
+        wm_taskbar_paint_network_glyph(cr, cx, cy, false);
+
+        label = "No network adapter";
+
+    } else {
+
+        const wm_netif_t* netif = &wm.taskbar.network.ifaces[index];
+        const bool connected    = wm_netif_connected(netif);
+
+        wm_source(cr, connected ? wm.theme.title_active : wm.theme.taskbar_mark, alpha);
+        wm_taskbar_paint_network_glyph(cr, cx, cy, connected);
+
+        wm_netif_status(netif, status, sizeof(status));
+
+        label  = netif->name;
+        detail = status;
+    }
+
+
+    cairo_font_face_t* face = ui_font_face(wm.theme.font);
+
+    if (!face) {
+        return;
+    }
+
+    cairo_font_extents_t font;
+
+    cairo_set_font_face(cr, face);
+    cairo_set_font_size(cr, WM_TASKBAR_FONT_SIZE);
+    cairo_font_extents(cr, &font);
+
+    const double y = r.y + (r.height - (font.ascent + font.descent)) / 2.0 + font.ascent;
+
+    wm_source(cr, wm.theme.title_active, alpha);
+    cairo_move_to(cr, r.x + WM_TASKBAR_ITEM, round(y));
+    cairo_show_text(cr, label);
+
+    if (detail) {
+
+        cairo_text_extents_t extents;
+
+        cairo_text_extents(cr, detail, &extents);
+
+        wm_source(cr, wm.theme.title_idle, alpha);
+        cairo_move_to(cr, round(r.x + r.width - WM_TASKBAR_GAP - extents.x_advance), round(y));
+        cairo_show_text(cr, detail);
+    }
+}
+
+
+static void wm_taskbar_paint_network_panel(cairo_t* cr) {
+
+    wm.taskbar.network.painted = wm_taskbar_network_extent(wm.frame_time);
+
+    const double open     = ui_anim_value(&wm.taskbar.network.open, wm.frame_time);
+    const wm_rect_t panel = wm_taskbar_network_rect();
+
+    const double x0 = panel.x;
+    const double x1 = x0 + panel.width * open;
+
+    if (x1 - x0 < 1.0) {
+        return;
+    }
+
+
+    const double top    = panel.y;
+    const double bottom = panel.y + panel.height;
+
+    const double fillet = WM_MIN(WM_TASKBAR_POPOUT_RADIUS, x1 - x0);
+    const double corner = WM_MIN(WM_TASKBAR_POPOUT_RADIUS, (x1 - x0) / 2.0);
+
+    const wm_rect_t shape = {(int)x0, (int)top, (int)ceil(x1 - x0), (int)(bottom - top)};
+
+    wm_taskbar_shadow(cr, &shape, open);
+
+    cairo_new_path(cr);
+    wm_taskbar_popout_outline(cr, x0, x1, top, bottom, fillet, corner, 0.5);
+    wm_taskbar_edge(cr);
+
+    cairo_save(cr);
+
+    cairo_new_path(cr);
+    wm_taskbar_popout_outline(cr, x0, x1, top, bottom, fillet, corner, 0.0);
+    cairo_close_path(cr);
+
+    wm_source(cr, wm.theme.taskbar, 1.0);
+    cairo_fill_preserve(cr);
+    cairo_clip(cr);
+
+    const int shift = (int)round(panel.width - (x1 - x0));
+    const int rows  = wm_taskbar_network_rows();
+
+    for (int i = 0; i < rows; i++) {
+        wm_taskbar_paint_network_row(cr, i, shift, open);
+    }
+
+    cairo_restore(cr);
+}
+
+
 /**
  * @brief Reports whether any damage reaches the taskbar: the rail, the border, a corner it rounds off, the popout, the session menu
  * or the context menu.
@@ -2531,6 +2957,8 @@ static bool wm_taskbar_visible(const wm_rect_t* damage, size_t count) {
         wm_taskbar_session_extent(wm.frame_time),
         wm.taskbar.volume.painted,
         wm_taskbar_volume_extent(wm.frame_time),
+        wm.taskbar.network.painted,
+        wm_taskbar_network_extent(wm.frame_time),
         wm.menu.painted,
         wm_menu_extent(wm.frame_time),
     };
@@ -2588,6 +3016,7 @@ void wm_taskbar_paint(cairo_t* cr, const wm_rect_t* damage, size_t count) {
 
     wm_taskbar_paint_session(cr);
     wm_taskbar_paint_volume_panel(cr);
+    wm_taskbar_paint_network_panel(cr);
     wm_taskbar_paint_popout(cr);
     wm_menu_paint(cr, wm.taskbar.pressed == wm.taskbar.hover ? wm_taskbar_menu_index(wm.taskbar.pressed) : -1);
 
@@ -2625,9 +3054,10 @@ void wm_taskbar_paint(cairo_t* cr, const wm_rect_t* damage, size_t count) {
     }
 
 
-    const wm_rect_t volume = wm_taskbar_volume_button_rect();
+    const wm_rect_t network = wm_taskbar_network_button_rect();
 
-    wm_taskbar_paint_title(cr, below, volume.y);
+    wm_taskbar_paint_title(cr, below, network.y);
+    wm_taskbar_paint_network(cr);
     wm_taskbar_paint_volume(cr);
     wm_taskbar_paint_clock(cr);
     wm_taskbar_paint_power(cr);
@@ -2648,6 +3078,8 @@ void wm_taskbar_tick(int fd) {
     if (read(fd, ticks, sizeof(ticks)) <= 0) {
         return;
     }
+
+    wm_taskbar_network_poll();
 
 
     const long minute = (long)(time(NULL) / 60);

@@ -159,6 +159,8 @@ int wm_animate(uint64_t now) {
     running |= wm_anim_step(&wm.taskbar.hover_volume, now, &rail);
     running |= wm_anim_step(&wm.taskbar.volume.open, now, &rail);
     running |= wm_anim_step(&wm.taskbar.volume.hover_mute, now, &rail);
+    running |= wm_anim_step(&wm.taskbar.hover_network, now, &rail);
+    running |= wm_anim_step(&wm.taskbar.network.open, now, &rail);
     running |= wm_anim_step(&wm.taskbar.session.open, now, &rail);
 
     for (size_t i = 0; i < WM_ARRAY_COUNT(wm.taskbar.session.hover); i++) {

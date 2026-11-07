@@ -232,6 +232,11 @@
 #define WM_TASKBAR_VOLUME_KNOB   7.0
 #define WM_TASKBAR_VOLUME_TEXT   40
 
+#define WM_TASKBAR_NETWORK_WIDTH  248
+#define WM_TASKBAR_NETWORK_IFACES 4
+#define WM_TASKBAR_NETWORK_POLL   5
+#define WM_TASKBAR_NETWORK_NAME   16
+
 /**
  * @brief What the taskbar's own items name in place of a window id, and what the launcher's button starts.
  */
@@ -244,6 +249,7 @@
 #define WM_TASKBAR_VOLUME   (UINT32_MAX - 6)
 #define WM_TASKBAR_MUTE     (UINT32_MAX - 7)
 #define WM_TASKBAR_SLIDER   (UINT32_MAX - 8)
+#define WM_TASKBAR_NETWORK  (UINT32_MAX - 9)
 #define WM_TASKBAR_MENU(i)  (UINT32_MAX - 32 - (uint32_t)(i))
 #define WM_TASKBAR_PIN(i)   (UINT32_MAX - 64 - (uint32_t)(i))
 #define WM_SHUTDOWN_PATH    "/usr/sbin/shutdown"
@@ -507,6 +513,16 @@ typedef struct {
 } wm_pin_t;
 
 
+typedef struct {
+
+    char name[WM_TASKBAR_NETWORK_NAME];
+    uint32_t addr;
+    bool up;
+    bool running;
+
+} wm_netif_t;
+
+
 /**
  * @brief The marks drawn in front of a context menu's rows.
  */
@@ -761,6 +777,7 @@ typedef struct {
         ui_anim_t hover_launcher;
         ui_anim_t hover_power;
         ui_anim_t hover_volume;
+        ui_anim_t hover_network;
         long minute;
 
         struct {
@@ -770,6 +787,13 @@ typedef struct {
             int value;
             int restore;
         } volume;
+
+        struct {
+            ui_anim_t open;
+            wm_rect_t painted;
+            wm_netif_t ifaces[WM_TASKBAR_NETWORK_IFACES];
+            size_t count;
+        } network;
 
         struct {
             ui_anim_t open;
