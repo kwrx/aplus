@@ -895,6 +895,21 @@ int mixer_ioctl(device_t* device, long req, void* arg) {
 
     switch (nr) {
 
+        case AUDIO_IOC_NR(SOUND_MIXER_INFO): {
+
+            if (unlikely(!uio_check((uint8_t*)arg + sizeof(mixer_info) - 1, R_OK | W_OK))) {
+                return errno = EFAULT, -1;
+            }
+
+            mixer_info info = {0};
+
+            strncpy(info.id, card->name, sizeof(info.id) - 1);
+            strncpy(info.name, device->description[0] ? device->description : card->description, sizeof(info.name) - 1);
+
+            uio_memcpy_s2u(arg, &info, sizeof(info));
+            return 0;
+        }
+
         case SOUND_MIXER_DEVMASK:
 
             uio_w32((uint32_t*)arg, device->mix.devmask);

@@ -128,6 +128,8 @@
     #define SOUND_MIXER_READ_RECSRC     SOUND_MIXER_READ(SOUND_MIXER_RECSRC)
     #define SOUND_MIXER_READ_CAPS       SOUND_MIXER_READ(SOUND_MIXER_CAPS)
 
+    #define SOUND_MIXER_INFO _IOR('M', 101, mixer_info)
+
     #define SOUND_MIXER_WRITE_VOLUME SOUND_MIXER_WRITE(SOUND_MIXER_VOLUME)
     #define SOUND_MIXER_WRITE_PCM    SOUND_MIXER_WRITE(SOUND_MIXER_PCM)
     #define SOUND_MIXER_WRITE_LINE   SOUND_MIXER_WRITE(SOUND_MIXER_LINE)
@@ -158,6 +160,15 @@ struct count_info {
     int blocks;
     int ptr;
 };
+
+typedef struct mixer_info {
+
+    char id[16];
+    char name[32];
+    int modify_counter;
+    int fillers[10];
+
+} mixer_info;
 
 #endif
 #endif
