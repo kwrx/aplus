@@ -304,26 +304,40 @@ static void virtnet_receive(struct virtnet* vn) {
 }
 
 
-static void virtnet_update_link(struct virtnet* vn) {
-
-    DEBUG_ASSERT(vn);
+static bool virtnet_link_up(struct virtnet* vn) {
 
     struct virtio_net_config volatile* cfg = (struct virtio_net_config volatile*)vn->driver->internals.device_config;
 
     if (!cfg || !(negotiated_features & VIRTIO_NET_F_STATUS)) {
-        return;
+        return true;
     }
 
-    const bool up = (le16_to_cpu(mmio_r16(&cfg->status)) & VIRTIO_NET_S_LINK_UP) != 0;
+    return (le16_to_cpu(mmio_r16(&cfg->status)) & VIRTIO_NET_S_LINK_UP) != 0;
+}
 
-    LOCK_TCPIP_CORE();
+
+static void virtnet_set_link(struct virtnet* vn, bool up) {
 
     if (up) {
         netif_set_link_up(&vn->device.net.interface);
     } else {
         netif_set_link_down(&vn->device.net.interface);
     }
+}
 
+
+static void virtnet_update_link(struct virtnet* vn) {
+
+    DEBUG_ASSERT(vn);
+
+    if (!(negotiated_features & VIRTIO_NET_F_STATUS)) {
+        return;
+    }
+
+    const bool up = virtnet_link_up(vn);
+
+    LOCK_TCPIP_CORE();
+    virtnet_set_link(vn, up);
     UNLOCK_TCPIP_CORE();
 
 #if DEBUG_LEVEL_INFO
@@ -493,10 +507,7 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
     netif_set_default(&vn->device.net.interface);
     netif_set_up(&vn->device.net.interface);
 
-    if (cfg && (negotiated_features & VIRTIO_NET_F_STATUS) && !(le16_to_cpu(mmio_r16(&cfg->status)) & VIRTIO_NET_S_LINK_UP))
-        netif_set_link_down(&vn->device.net.interface);
-    else
-        netif_set_link_up(&vn->device.net.interface);
+    virtnet_set_link(vn, virtnet_link_up(vn));
 
     device_mkdev(&vn->device, 0666);
 

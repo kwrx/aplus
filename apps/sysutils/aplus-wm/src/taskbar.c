@@ -724,9 +724,9 @@ static wm_rect_t wm_taskbar_session_extent(uint64_t now) {
 }
 
 
-static wm_rect_t wm_taskbar_volume_extent(uint64_t now) {
+static wm_rect_t wm_taskbar_panel_extent(const ui_anim_t* anim, wm_rect_t panel, uint64_t now) {
 
-    const double open = ui_anim_value(&wm.taskbar.volume.open, now);
+    const double open = ui_anim_value(anim, now);
 
     if (open <= 0.0) {
 
@@ -735,8 +735,6 @@ static wm_rect_t wm_taskbar_volume_extent(uint64_t now) {
         return none;
     }
 
-
-    const wm_rect_t panel = wm_taskbar_volume_rect();
 
     const wm_rect_t r = {panel.x, panel.y - WM_TASKBAR_POPOUT_RADIUS - 2, (int)ceil(panel.width * open) + 2, panel.height + 2 * WM_TASKBAR_POPOUT_RADIUS + 4};
 
@@ -744,23 +742,13 @@ static wm_rect_t wm_taskbar_volume_extent(uint64_t now) {
 }
 
 
+static wm_rect_t wm_taskbar_volume_extent(uint64_t now) {
+    return wm_taskbar_panel_extent(&wm.taskbar.volume.open, wm_taskbar_volume_rect(), now);
+}
+
+
 static wm_rect_t wm_taskbar_network_extent(uint64_t now) {
-
-    const double open = ui_anim_value(&wm.taskbar.network.open, now);
-
-    if (open <= 0.0) {
-
-        const wm_rect_t none = {0, 0, 0, 0};
-
-        return none;
-    }
-
-
-    const wm_rect_t panel = wm_taskbar_network_rect();
-
-    const wm_rect_t r = {panel.x, panel.y - WM_TASKBAR_POPOUT_RADIUS - 2, (int)ceil(panel.width * open) + 2, panel.height + 2 * WM_TASKBAR_POPOUT_RADIUS + 4};
-
-    return wm_taskbar_shadow_extent(r);
+    return wm_taskbar_panel_extent(&wm.taskbar.network.open, wm_taskbar_network_rect(), now);
 }
 
 
@@ -1333,7 +1321,6 @@ static ui_anim_t* wm_taskbar_hover_anim(uint32_t item) {
 
         case WM_TASKBAR_NETWORK:
             return &wm.taskbar.hover_network;
-
     }
 
     const int row = wm_taskbar_session_index(item);
@@ -2529,6 +2516,31 @@ static void wm_taskbar_paint_clock(cairo_t* cr) {
 }
 
 
+static void wm_taskbar_paint_shell(cairo_t* cr, double x0, double x1, double top, double bottom, double open) {
+
+    const double fillet = WM_MIN(WM_TASKBAR_POPOUT_RADIUS, x1 - x0);
+    const double corner = WM_MIN(WM_TASKBAR_POPOUT_RADIUS, (x1 - x0) / 2.0);
+
+    const wm_rect_t shape = {(int)x0, (int)top, (int)ceil(x1 - x0), (int)(bottom - top)};
+
+    wm_taskbar_shadow(cr, &shape, open);
+
+    cairo_new_path(cr);
+    wm_taskbar_popout_outline(cr, x0, x1, top, bottom, fillet, corner, 0.5);
+    wm_taskbar_edge(cr);
+
+    cairo_save(cr);
+
+    cairo_new_path(cr);
+    wm_taskbar_popout_outline(cr, x0, x1, top, bottom, fillet, corner, 0.0);
+    cairo_close_path(cr);
+
+    wm_source(cr, wm.theme.taskbar, 1.0);
+    cairo_fill_preserve(cr);
+    cairo_clip(cr);
+}
+
+
 /**
  * @brief Draws the popout out of the rail beside the hovered item, its corners flaring into the rail's edge.
  *
@@ -2553,26 +2565,7 @@ static void wm_taskbar_paint_popout(cairo_t* cr) {
     const double top    = round(center - WM_TASKBAR_ITEM / 2.0);
     const double bottom = top + WM_TASKBAR_ITEM;
 
-    const double fillet = WM_MIN(WM_TASKBAR_POPOUT_RADIUS, x1 - x0);
-    const double corner = WM_MIN(WM_TASKBAR_POPOUT_RADIUS, (x1 - x0) / 2.0);
-
-    const wm_rect_t shape = {(int)x0, (int)top, (int)ceil(x1 - x0), (int)(bottom - top)};
-
-    wm_taskbar_shadow(cr, &shape, open);
-
-    cairo_new_path(cr);
-    wm_taskbar_popout_outline(cr, x0, x1, top, bottom, fillet, corner, 0.5);
-    wm_taskbar_edge(cr);
-
-    cairo_save(cr);
-
-    cairo_new_path(cr);
-    wm_taskbar_popout_outline(cr, x0, x1, top, bottom, fillet, corner, 0.0);
-    cairo_close_path(cr);
-
-    wm_source(cr, wm.theme.taskbar, 1.0);
-    cairo_fill_preserve(cr);
-    cairo_clip(cr);
+    wm_taskbar_paint_shell(cr, x0, x1, top, bottom, open);
 
 
     cairo_font_face_t* face = ui_font_face(wm.theme.font);
@@ -2726,26 +2719,7 @@ static void wm_taskbar_paint_volume_panel(cairo_t* cr) {
     const double top    = panel.y;
     const double bottom = panel.y + panel.height;
 
-    const double fillet = WM_MIN(WM_TASKBAR_POPOUT_RADIUS, x1 - x0);
-    const double corner = WM_MIN(WM_TASKBAR_POPOUT_RADIUS, (x1 - x0) / 2.0);
-
-    const wm_rect_t shape = {(int)x0, (int)top, (int)ceil(x1 - x0), (int)(bottom - top)};
-
-    wm_taskbar_shadow(cr, &shape, open);
-
-    cairo_new_path(cr);
-    wm_taskbar_popout_outline(cr, x0, x1, top, bottom, fillet, corner, 0.5);
-    wm_taskbar_edge(cr);
-
-    cairo_save(cr);
-
-    cairo_new_path(cr);
-    wm_taskbar_popout_outline(cr, x0, x1, top, bottom, fillet, corner, 0.0);
-    cairo_close_path(cr);
-
-    wm_source(cr, wm.theme.taskbar, 1.0);
-    cairo_fill_preserve(cr);
-    cairo_clip(cr);
+    wm_taskbar_paint_shell(cr, x0, x1, top, bottom, open);
 
 
     const int shift = (int)round(panel.width - (x1 - x0));
@@ -2906,26 +2880,7 @@ static void wm_taskbar_paint_network_panel(cairo_t* cr) {
     const double top    = panel.y;
     const double bottom = panel.y + panel.height;
 
-    const double fillet = WM_MIN(WM_TASKBAR_POPOUT_RADIUS, x1 - x0);
-    const double corner = WM_MIN(WM_TASKBAR_POPOUT_RADIUS, (x1 - x0) / 2.0);
-
-    const wm_rect_t shape = {(int)x0, (int)top, (int)ceil(x1 - x0), (int)(bottom - top)};
-
-    wm_taskbar_shadow(cr, &shape, open);
-
-    cairo_new_path(cr);
-    wm_taskbar_popout_outline(cr, x0, x1, top, bottom, fillet, corner, 0.5);
-    wm_taskbar_edge(cr);
-
-    cairo_save(cr);
-
-    cairo_new_path(cr);
-    wm_taskbar_popout_outline(cr, x0, x1, top, bottom, fillet, corner, 0.0);
-    cairo_close_path(cr);
-
-    wm_source(cr, wm.theme.taskbar, 1.0);
-    cairo_fill_preserve(cr);
-    cairo_clip(cr);
+    wm_taskbar_paint_shell(cr, x0, x1, top, bottom, open);
 
     const int shift = (int)round(panel.width - (x1 - x0));
     const int rows  = wm_taskbar_network_rows();

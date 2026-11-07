@@ -83,14 +83,17 @@ static int audio_mixer_open(void) {
 }
 
 
+static int audio_clamp(int level) {
+    return level < 0 ? 0 : level > 100 ? 100 : level;
+}
+
+
 static int audio_level(uint32_t raw, int channel) {
 
     const int left  = (int)(raw & 0xFF);
     const int right = (int)((raw >> 8) & 0xFF);
 
-    const int level = (audio.stereo & (1U << channel)) ? (left + right) / 2 : left;
-
-    return level < 0 ? 0 : level > 100 ? 100 : level;
+    return audio_clamp((audio.stereo & (1U << channel)) ? (left + right) / 2 : left);
 }
 
 
@@ -179,9 +182,7 @@ static void audio_on_change(ui_widget_t* widget, double value, void* user) {
     const size_t row  = (size_t)(intptr_t)user;
     const int channel = audio.channels[row];
 
-    int level = (int)(value + 0.5);
-
-    level = level < 0 ? 0 : level > 100 ? 100 : level;
+    const int level = audio_clamp((int)(value + 0.5));
 
     uint32_t raw = (uint32_t)level;
 
@@ -190,22 +191,21 @@ static void audio_on_change(ui_widget_t* widget, double value, void* user) {
     }
 
     const int fd = audio_mixer_open();
+    const int e  = fd < 0 || ioctl(fd, SOUND_MIXER_WRITE(channel), &raw) < 0 ? errno : 0;
 
-    if (fd < 0 || ioctl(fd, SOUND_MIXER_WRITE(channel), &raw) < 0) {
+    if (fd >= 0) {
+        close(fd);
+    }
+
+    if (e) {
 
         char text[SETTINGS_TEXT_MAX];
 
-        snprintf(text, sizeof(text), "Cannot change %s: %s", audio.keys[row], strerror(errno));
+        snprintf(text, sizeof(text), "Cannot change %s: %s", audio.keys[row], strerror(e));
         audio_report(text);
-
-        if (fd >= 0) {
-            close(fd);
-        }
 
         return;
     }
-
-    close(fd);
 
     audio_show_level(row, audio_level(raw, channel));
     audio_report("");

@@ -77,6 +77,7 @@ Drivers are loadable kernel objects: one directory with a `main.c` per module, e
 
 ### Notable modules
 * **Device Interface**, [dev/*](/drivers/dev), provides a standard interface for drivers (block, char, network, video, pci)
+* **AC97**, [platform/pc/audio/ac97](/drivers/platform/pc/audio/ac97/main.c), AC'97 sound card behind the OSS `/dev/dsp` and `/dev/mixer` of [dev/audio](/drivers/dev/audio/main.c)
 * **AHCI** (Advanced Host Controller Interface), [platform/pc/block/ahci](/drivers/platform/pc/block/ahci/main.c), almost full SATA/SATAPI driver
 * **Bochs VGA**, [platform/pc/video/bochs-vga](/drivers/platform/pc/video/bochs-vga/main.c), Bochs Virtual VGA Adapter
 * **VMware VGA**, [platform/pc/video/vmware](/drivers/platform/pc/video/vmware/main.c), VMware SVGA II Adapter
@@ -85,7 +86,7 @@ Drivers are loadable kernel objects: one directory with a `main.c` per module, e
 * **PS/2**, [platform/pc/input/ps2](/drivers/platform/pc/input/ps2/main.c), keyboard and mouse
 * **TTY**, [tty/*](/drivers/tty), terminal devices, `/dev/ptmx` and pseudo-terminal pairs
 * **USB**, [usb/*](/drivers/usb), an xHCI host stack — [core](/drivers/usb/core/main.c) enumeration and hubs, the [xHCI](/drivers/usb/xhci/main.c) controller, and [HID](/drivers/usb/hid/main.c) boot-protocol [keyboards](/drivers/usb/keyboard/main.c) and [mice](/drivers/usb/mouse/main.c) feeding `/dev/kbd` and `/dev/mouse`
-* **VirtIO**, [virtio/*](/drivers/virtio), VirtIO device interfaces over VirtIO PCI — [gpu](/drivers/virtio/virtio-gpu/main.c) with damage flushing and a cursor plane, [input](/drivers/virtio/virtio-input/main.c) for absolute pointing devices, [net](/drivers/virtio/virtio-net/main.c) feeding the lwIP stack, plus console and random
+* **VirtIO**, [virtio/*](/drivers/virtio), VirtIO device interfaces over VirtIO PCI — [gpu](/drivers/virtio/virtio-gpu/main.c) with damage flushing and a cursor plane, [input](/drivers/virtio/virtio-input/main.c) for absolute pointing devices, [net](/drivers/virtio/virtio-net/main.c) feeding the lwIP stack and following the link state, plus console and random
 
 ---
 
