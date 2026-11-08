@@ -52,7 +52,17 @@ MODULE_LICENSE("GPL");
 
 #define CDC_CS_INTERFACE       0x24
 #define CDC_ETHERNET_FUNCTION  0x0f
+#define CDC_NCM_FUNCTION       0x1a
+#define NCM_SET_PACKET_FILTER  0x43
 #define NCM_SET_NTB_INPUT_SIZE 0x86
+
+#define NCM_CAP_PACKET_FILTER (1 << 0)
+#define NCM_CAP_NTB_INPUT_8   (1 << 5)
+
+#define NCM_FILTER_PROMISCUOUS   (1 << 0)
+#define NCM_FILTER_ALL_MULTICAST (1 << 1)
+#define NCM_FILTER_DIRECTED      (1 << 2)
+#define NCM_FILTER_BROADCAST     (1 << 3)
 #define DT_STRING              3
 #define LANGID_EN_US           0x0409
 
@@ -407,16 +417,17 @@ static void ncm_destroy(usbdev_t* dev) {
 }
 
 
-static bool ncm_probe(usbdev_t* dev, int* control, int* data, int* imac) {
+static bool ncm_probe(usbdev_t* dev, int* control, int* data, int* imac, uint8_t* caps) {
 
     configuration_descriptor_t* cd = dev->configuration;
 
-    u8* ptr = (u8*)cd + cd->bLength;
-    u8* end = (u8*)cd + cd->wTotalLength;
+    uint8_t* ptr = (uint8_t*)cd + cd->bLength;
+    uint8_t* end = (uint8_t*)cd + cd->wTotalLength;
 
     *control = -1;
     *data    = -1;
     *imac    = 0;
+    *caps    = 0;
 
     bool inside = false;
 
@@ -441,6 +452,8 @@ static bool ncm_probe(usbdev_t* dev, int* control, int* data, int* imac) {
 
         } else if (inside && ptr[1] == CDC_CS_INTERFACE && ptr[0] >= 4 && ptr[2] == CDC_ETHERNET_FUNCTION) {
             *imac = ptr[3];
+        } else if (inside && ptr[1] == CDC_CS_INTERFACE && ptr[0] >= 6 && ptr[2] == CDC_NCM_FUNCTION) {
+            *caps = ptr[5];
         }
     }
 
@@ -465,8 +478,9 @@ static void ncm_init(usbdev_t* dev) {
     int control;
     int data;
     int imac;
+    uint8_t caps;
 
-    if (!ncm_probe(dev, &control, &data, &imac)) {
+    if (!ncm_probe(dev, &control, &data, &imac, &caps)) {
         dev->init = usb_generic_init;
         usb_generic_init(dev);
         return;
@@ -508,9 +522,9 @@ static void ncm_init(usbdev_t* dev) {
         n->device.net.address[5] = (uint8_t)n_dev;
     }
 
-    uint32_t insize = cpu_to_le32(NCM_RX_SIZE);
+    uint32_t insize[2] = {cpu_to_le32(NCM_RX_SIZE), 0};
 
-    ncm_request(dev, OUT, class_type, iface_recp, NCM_SET_NTB_INPUT_SIZE, 0, control, &insize, sizeof(insize));
+    ncm_request(dev, OUT, class_type, iface_recp, NCM_SET_NTB_INPUT_SIZE, 0, control, insize, (caps & NCM_CAP_NTB_INPUT_8) ? 8 : 4);
 
     if (ncm_request(dev, OUT, standard_type, iface_recp, SET_INTERFACE, 1, data, NULL, 0) < 0) {
 #if DEBUG_LEVEL_ERROR
@@ -518,6 +532,21 @@ static void ncm_init(usbdev_t* dev) {
 #endif
         usb_detach_device(dev->controller, dev->address);
         return;
+    }
+
+    if (caps & NCM_CAP_PACKET_FILTER) {
+
+        int filter = NCM_FILTER_DIRECTED | NCM_FILTER_BROADCAST | NCM_FILTER_ALL_MULTICAST;
+
+#if defined(CONFIG_NETWORK_PROMISCUOUS)
+        filter |= NCM_FILTER_PROMISCUOUS;
+#endif
+
+        if (ncm_request(dev, OUT, class_type, iface_recp, NCM_SET_PACKET_FILTER, filter, control, NULL, 0) < 0) {
+#if DEBUG_LEVEL_WARN
+            kprintf("usb-cdc-ncm: WARN! %04x:%04x refused packet filter 0x%02x\n", dev->descriptor->idVendor, dev->descriptor->idProduct, filter);
+#endif
+        }
     }
 
     n->rxq = dev->controller->create_intr_queue(n->in, NCM_RX_SIZE, NCM_RX_DEPTH, 0);

@@ -408,7 +408,13 @@ static void e1000_init(void* internals, uint8_t* address, void* mcast) {
     wrcmd(dev, REG_RXDESCHEAD, 0);
     wrcmd(dev, REG_RXDESCTAIL, E1000_NUM_RX_DESC - 1);
 
-    wrcmd(dev, REG_RCTRL, RCTL_EN | RCTL_SBP | RCTL_UPE | RCTL_MPE | RCTL_LBM_NONE | RTCL_RDMTS_HALF | RCTL_BAM | RCTL_SECRC | RCTL_BSIZE_8192);
+    uint32_t rctl = RCTL_EN | RCTL_SBP | RCTL_MPE | RCTL_LBM_NONE | RTCL_RDMTS_HALF | RCTL_BAM | RCTL_SECRC | RCTL_BSIZE_8192;
+
+#if defined(CONFIG_NETWORK_PROMISCUOUS)
+    rctl |= RCTL_UPE;
+#endif
+
+    wrcmd(dev, REG_RCTRL, rctl);
 
 
 

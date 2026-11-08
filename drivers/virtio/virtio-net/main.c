@@ -93,11 +93,49 @@ static int negotiate_features(struct virtio_driver* driver, uint32_t* features, 
     if (index != 0)
         return 0;
 
-    *features &= (VIRTIO_NET_F_MAC | VIRTIO_NET_F_STATUS);
+    *features &= (VIRTIO_NET_F_MAC | VIRTIO_NET_F_STATUS | VIRTIO_NET_F_CTRL_VQ | VIRTIO_NET_F_CTRL_RX);
+
+    if (!(*features & VIRTIO_NET_F_CTRL_VQ)) {
+        *features &= ~VIRTIO_NET_F_CTRL_RX;
+    }
+
+    if (*features & VIRTIO_NET_F_CTRL_VQ) {
+        driver->max_queues = 3;
+    }
 
     negotiated_features = *features;
 
     return 0;
+}
+
+
+static void virtnet_rx_mode(struct virtnet* vn, uint8_t command, bool on) {
+
+    if (!(negotiated_features & VIRTIO_NET_F_CTRL_RX) || vn->driver->internals.num_queues <= VIRTIO_NET_QUEUE_CTRL) {
+        return;
+    }
+
+    uint8_t request[3] = {VIRTIO_NET_CTRL_RX, command, on};
+    uint8_t ack        = !VIRTIO_NET_OK;
+
+    if (virtq_sendrecv(vn->driver, VIRTIO_NET_QUEUE_CTRL, request, sizeof(request), &ack, sizeof(ack)) < 0 || ack != VIRTIO_NET_OK) {
+#if DEBUG_LEVEL_WARN
+        kprintf("virtio-net: WARN! %s refused rx mode %d=%d\n", vn->device.name, command, on);
+#endif
+    }
+}
+
+
+static void virtnet_set_filter(struct virtnet* vn) {
+
+#if defined(CONFIG_NETWORK_PROMISCUOUS)
+    bool promisc = true;
+#else
+    bool promisc = !(negotiated_features & VIRTIO_NET_F_MAC);
+#endif
+
+    virtnet_rx_mode(vn, VIRTIO_NET_CTRL_RX_PROMISC, promisc);
+    virtnet_rx_mode(vn, VIRTIO_NET_CTRL_RX_ALLMULTI, true);
 }
 
 
@@ -485,6 +523,8 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
     vn->device.net.interface.state = &vn->device;
     vn->device.net.internals       = vn;
+
+    virtnet_set_filter(vn);
 
 
     devices[num_devices] = vn;

@@ -354,7 +354,11 @@ static void pcnet_init(void* internals, uint8_t* address, void* mcast) {
 
 
     mmio_w8(eth->vbuf + 0, 0x00);
+#if defined(CONFIG_NETWORK_PROMISCUOUS)
+    mmio_w8(eth->vbuf + 1, 0x80);
+#else
     mmio_w8(eth->vbuf + 1, 0x00);
+#endif
     mmio_w8(eth->vbuf + 2, 5 << 4);
     mmio_w8(eth->vbuf + 3, 3 << 4);
     mmio_w8(eth->vbuf + 4, address[0]);

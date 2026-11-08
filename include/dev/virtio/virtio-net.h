@@ -30,6 +30,13 @@
  */
 #define VIRTIO_NET_QUEUE_RX 0
 #define VIRTIO_NET_QUEUE_TX 1
+#define VIRTIO_NET_QUEUE_CTRL 2
+
+
+#define VIRTIO_NET_CTRL_RX          0
+#define VIRTIO_NET_CTRL_RX_PROMISC  0
+#define VIRTIO_NET_CTRL_RX_ALLMULTI 1
+#define VIRTIO_NET_OK               0
 
 
 // Features, word 0
