@@ -4,10 +4,12 @@
 
 import argparse
 import collections
+import contextlib
 import errno
 import functools
 import hmac
 import html
+import io
 import itertools
 import json
 import logging
@@ -43,6 +45,10 @@ MAX_OUTPUT = 256 * 1024
 MAX_LOG_TAIL = 1024 * 1024
 MAX_PREVIEW = 1024 * 1024
 MAX_ENTRIES = 2000
+MAX_UPLOAD = 512 * 1024 * 1024
+MAX_FORM_UPLOAD = 64 * 1024 * 1024
+MAX_DISCARD = 8 * 1024 * 1024
+UPLOAD_CHUNK = 64 * 1024
 HEXDUMP_BYTES = 4096
 INITD_DIR = "/etc/init.d"
 INITD_RUN_DIR = "/var/run/init.d"
@@ -64,6 +70,9 @@ SERVICE_FIELD = re.compile(r"^\s*(EXEC_NAME|EXEC_DESC)=[\"']?([^\"'\n]*)", re.M)
 ## @brief Octal escape /proc/mounts writes for a space, tab, newline or backslash in a field.
 MOUNT_ESCAPE = re.compile(r"\\([0-7]{3})")
 
+MULTIPART_BOUNDARY = re.compile(r'boundary="?([^";]+)"?', re.I)
+MULTIPART_PARAM = re.compile(r'(\w+)="((?:[^"\\]|\\.)*)"')
+
 CSP = "default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; frame-ancestors 'none'"
 
 log = logging.getLogger("pymonitor")
@@ -76,6 +85,9 @@ ERRNO_STATUS = {
     errno.ENOTDIR: HTTPStatus.BAD_REQUEST,
     errno.EISDIR: HTTPStatus.BAD_REQUEST,
     errno.ELOOP: HTTPStatus.BAD_REQUEST,
+    errno.ENAMETOOLONG: HTTPStatus.BAD_REQUEST,
+    errno.EROFS: HTTPStatus.FORBIDDEN,
+    errno.ENOSPC: HTTPStatus.INSUFFICIENT_STORAGE,
 }
 
 ## @brief File types the explorer tells apart, by st_mode test.
@@ -823,6 +835,85 @@ def preview_file(path, size):
     }
 
 
+def upload_target(directory, name, overwrite):
+    name = str(name or "")
+    if name in ("", ".", "..") or "/" in name or "\0" in name:
+        raise ApiError(HTTPStatus.BAD_REQUEST, f"{name!r} is not a valid file name")
+    directory, st = resolve_path(directory)
+    if not stat.S_ISDIR(st.st_mode):
+        raise ApiError(HTTPStatus.BAD_REQUEST, f"{directory} is not a directory")
+    target = os.path.join(directory, name)
+    try:
+        old = os.lstat(target)
+    except FileNotFoundError:
+        return target, None
+    except OSError as e:
+        raise os_error(e, target) from None
+    if not stat.S_ISREG(old.st_mode):
+        raise ApiError(HTTPStatus.CONFLICT, f"{target} exists and is a {file_kind(old.st_mode)} file")
+    if not overwrite:
+        raise ApiError(HTTPStatus.CONFLICT, f"{target} already exists")
+    return target, old
+
+
+def write_upload(target, old, source, length):
+    temp = os.path.join(os.path.dirname(target), f".{os.path.basename(target)}.upload-{secrets.token_hex(4)}")
+    try:
+        fd = os.open(temp, os.O_WRONLY | os.O_CREAT | os.O_EXCL, stat.S_IMODE(old.st_mode) if old else 0o644)
+    except OSError as e:
+        raise os_error(e, target) from None
+    try:
+        with os.fdopen(fd, "wb") as f:
+            left = length
+            while left > 0:
+                chunk = source.read(min(UPLOAD_CHUNK, left))
+                if not chunk:
+                    raise ApiError(HTTPStatus.BAD_REQUEST, f"upload of {target} cut short after {length - left} of {length} bytes")
+                f.write(chunk)
+                left -= len(chunk)
+        if old and os.geteuid() == 0:
+            with contextlib.suppress(OSError):
+                os.chown(temp, old.st_uid, old.st_gid)
+        os.replace(temp, target)
+    except OSError as e:
+        with contextlib.suppress(OSError):
+            os.unlink(temp)
+        raise os_error(e, target) from None
+    except BaseException:
+        with contextlib.suppress(OSError):
+            os.unlink(temp)
+        raise
+    verb = "replaced" if old else "uploaded"
+    return {"path": target, "size": length, "replaced": old is not None, "output": f"{verb} {target} ({fmt_bytes(length)})\n"}
+
+
+def parse_multipart(body, content_type):
+    m = MULTIPART_BOUNDARY.search(content_type)
+    if not m:
+        raise ApiError(HTTPStatus.BAD_REQUEST, "multipart body without a boundary")
+    form = {}
+    for part in body.split(b"--" + m.group(1).encode("latin-1"))[1:]:
+        if part.startswith(b"--"):
+            break
+        head, sep, data = part.partition(b"\r\n\r\n")
+        if not sep:
+            continue
+        if data.endswith(b"\r\n"):
+            data = data[:-2]
+        params = {}
+        for line in head.decode("utf-8", "replace").split("\r\n"):
+            key, _, value = line.partition(":")
+            if key.strip().lower() == "content-disposition":
+                params = {k.lower(): v.replace('\\"', '"') for k, v in MULTIPART_PARAM.findall(value)}
+        if "name" not in params:
+            continue
+        if "filename" in params:
+            form[params["name"]] = (params["filename"].replace("\\", "/").rsplit("/", 1)[-1], data)
+        else:
+            form[params["name"]] = data.decode("utf-8", "replace")
+    return form
+
+
 KMSG_PATH = "/dev/kmsg"
 KMSG_RECORD = re.compile(rb"^(\d+),(\d+),(\d+),[^;]*;(.*)$", re.M)
 KMSG_READS = 256
@@ -1218,7 +1309,7 @@ def route_files(handler, args):
     path, st = resolve_path(args.get("path") or "/")
     if not stat.S_ISDIR(st.st_mode):
         return {"path": path, "kind": file_kind(st.st_mode)}
-    return list_directory(path)
+    return dict(list_directory(path), max_upload=MAX_UPLOAD)
 
 
 ## @brief GET /api/file?path=P&bytes=N: previews the start of a regular file.
@@ -1228,6 +1319,31 @@ def route_files(handler, args):
 def route_file(handler, args):
     size = clamp(int_arg(args, "bytes") if "bytes" in args else 65536, 1024, MAX_PREVIEW)
     return preview_file(args.get("path"), size)
+
+
+def route_upload(handler, args):
+    handler.close_connection = True
+    length = handler.content_length(MAX_UPLOAD)
+    try:
+        target, old = upload_target(args.get("path"), args.get("name"), args.get("overwrite") == "1")
+    except ApiError:
+        if length <= MAX_DISCARD:
+            handler.rfile.read(length)
+        raise
+    r = write_upload(target, old, handler.rfile, length)
+    log.info("%s %s %s, %d bytes", handler.client_address[0], "replaced" if old else "uploaded", target, length)
+    return r
+
+
+def route_form_upload(handler, args):
+    upload = args.get("file")
+    if not isinstance(upload, tuple) or not upload[0]:
+        raise ApiError(HTTPStatus.BAD_REQUEST, "choose a file to upload")
+    name, data = upload
+    target, old = upload_target(args.get("path"), name, args.get("overwrite") == "1")
+    r = write_upload(target, old, io.BytesIO(data), len(data))
+    log.info("%s %s %s, %d bytes", handler.client_address[0], "replaced" if old else "uploaded", target, len(data))
+    return r
 
 
 ## @brief POST /api/signal {pid, signal}.
@@ -1832,12 +1948,14 @@ def basic_files(handler, args):
     form = f'<form method="get" action="/basic" class="toolbar">{up} {basic_hidden({"tab": "files", "bytes": size})}<input type="text" name="path" value="{esc(path)}" size="48"> <input type="submit" class="btn primary" value="Open"> {basic_link("Refresh", basic_url(tab="files", path=path, file=preview, bytes=size))}</form>'
     notice = "".join(f'<div class="card notice error"><pre class="out">{esc(e)}</pre></div>' for e in errors)
     table = f'<div class="crumbs">{"".join(crumbs)}</div><table><thead><tr><th>Name</th><th class="num">Size</th><th>Mode</th><th>Owner</th><th>Modified</th></tr></thead><tbody>{body}</tbody></table><p class="sub">{len(listing["entries"])} entries{", listing cut short" if listing["truncated"] else ""}</p>'
-    return form + notice + basic_file_preview(preview, path, size) + basic_card(None, None, table, "card table-wrap")
+    fields = basic_hidden({"token": handler.server.token, "do": "upload", "back": "files", "path": path})
+    upload = f'<form method="post" action="/basic" enctype="multipart/form-data" class="toolbar">{fields}<input type="file" name="file"> <label><input type="checkbox" name="overwrite" value="1"> Replace an existing file</label> <input type="submit" class="btn" value="Upload here"> <span class="sub">Up to {fmt_bytes(MAX_FORM_UPLOAD)} from this view.</span></form>'
+    return form + upload + notice + basic_file_preview(preview, path, size) + basic_card(None, None, table, "card table-wrap")
 
 
 def basic_file_preview(preview, path, size):
     if not preview:
-        return basic_card(None, None, '<p class="sub">Select a file to preview it. Read only. Only regular files are opened.</p>')
+        return basic_card(None, None, '<p class="sub">Select a file to preview it. Only regular files are opened.</p>')
     try:
         r = preview_file(preview, size)
     except ApiError as e:
@@ -1906,6 +2024,7 @@ BASIC_ACTIONS = {
     "exec": route_exec,
     "sync": route_sync,
     "power": route_power,
+    "upload": route_form_upload,
 }
 
 
@@ -1919,6 +2038,9 @@ def basic_action_title(args):
         return f"{args.get('name')}: {args.get('action')}"
     if action == "power":
         return POWER_WORDS.get(args.get("action"), "Power")
+    if action == "upload":
+        upload = args.get("file")
+        return f"Upload {upload[0] if isinstance(upload, tuple) and upload[0] else 'a file'} to {args.get('path') or '/'}"
     return "Sync disks"
 
 
@@ -1944,7 +2066,8 @@ def basic_post(handler, args):
     note = handler.server.add_note(basic_action(handler, args))
     back = args.get("back") if args.get("back") in dict(BASIC_TABS) else "overview"
     pid = args.get("pid") if back == "processes" else None
-    return basic_url(tab=back, pid=pid, note=note)
+    path = args.get("path") if back == "files" else None
+    return basic_url(tab=back, pid=pid, path=path, note=note)
 
 
 def basic_note(note):
@@ -2140,9 +2263,19 @@ class DashboardHandler(BaseHTTPRequestHandler):
                 return
             if url.path == "/basic":
                 if post:
-                    self.send_redirect(basic_post(self, self.read_form()))
+                    try:
+                        form = self.read_form()
+                    except ApiError as e:
+                        self.close_connection = True
+                        self.send_redirect(basic_url(tab="files", note=self.server.add_note({"title": "Request rejected", "ok": False, "text": e.message + "\n"})))
+                        return
+                    self.send_redirect(basic_post(self, form))
                 else:
                     self.send_body(HTTPStatus.OK, render_basic(self, dict(urllib.parse.parse_qsl(url.query))), "text/html; charset=utf-8")
+                return
+            if post and url.path == "/api/upload":
+                self.authorize(post)
+                self.send_json(HTTPStatus.OK, route_upload(self, dict(urllib.parse.parse_qsl(url.query))))
                 return
             args = self.read_json() if post else dict(urllib.parse.parse_qsl(url.query))
             if not post and url.path == "/api/download":
@@ -2178,17 +2311,23 @@ class DashboardHandler(BaseHTTPRequestHandler):
             raise ApiError(HTTPStatus.BAD_REQUEST, "expected a JSON object")
         return data
 
-    def read_body(self):
+    def content_length(self, limit):
         try:
             length = int(self.headers.get("Content-Length") or 0)
         except ValueError:
             raise ApiError(HTTPStatus.BAD_REQUEST, "invalid Content-Length") from None
-        if length < 0 or length > MAX_BODY:
+        if length < 0 or length > limit:
             self.close_connection = True
-            raise ApiError(HTTPStatus.REQUEST_ENTITY_TOO_LARGE, "request body too large")
-        return self.rfile.read(length)
+            raise ApiError(HTTPStatus.REQUEST_ENTITY_TOO_LARGE, f"request body larger than {fmt_bytes(limit)}")
+        return length
+
+    def read_body(self, limit=MAX_BODY):
+        return self.rfile.read(self.content_length(limit))
 
     def read_form(self):
+        content_type = self.headers.get("Content-Type") or ""
+        if content_type.lower().startswith("multipart/form-data"):
+            return parse_multipart(self.read_body(MAX_FORM_UPLOAD), content_type)
         return dict(urllib.parse.parse_qsl(self.read_body().decode("utf-8", "replace"), keep_blank_values=True))
 
     def send_redirect(self, location):
@@ -2432,6 +2571,8 @@ pre.out { background: var(--surface-2); border-radius: 8px; padding: 12px; margi
 #files-table td.name .target { color: var(--ink-2); }
 #files-table td.mono { font-family: var(--mono); font-size: 12px; color: var(--ink-2); }
 #file-view { height: 62vh; }
+#files-card.dropping { outline: 2px dashed var(--accent); outline-offset: -6px; }
+#files-upload-status { color: var(--ink-2); font-size: 13px; font-variant-numeric: tabular-nums; }
 .preview-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-bottom: 4px; }
 .preview-head .mono { overflow-wrap: anywhere; }
 a.btn { text-decoration: none; display: inline-block; color: inherit; }
@@ -2585,9 +2726,12 @@ a.btn { text-decoration: none; display: inline-block; color: inherit; }
       <input type="text" id="files-path" class="grow" value="/" aria-label="Path to open">
       <button class="btn primary" type="submit">Open</button>
       <button class="btn" type="button" id="files-refresh">Refresh</button>
+      <button class="btn" type="button" id="files-upload" title="Upload files from this computer into the open directory, or drop them on the listing">Upload…</button>
+      <input type="file" id="files-input" multiple hidden>
+      <span id="files-upload-status" hidden></span>
     </form>
     <div class="grid files">
-      <div class="card table-wrap">
+      <div class="card table-wrap" id="files-card">
         <div class="crumbs" id="files-crumbs"></div>
         <table id="files-table"><thead><tr><th>Name</th><th class="num">Size</th><th>Mode</th><th>Owner</th><th>Modified</th></tr></thead><tbody></tbody></table>
         <p class="sub" id="files-note" style="margin:10px 0 0"></p>
@@ -2603,7 +2747,7 @@ a.btn { text-decoration: none; display: inline-block; color: inherit; }
           </select>
           <a class="btn" id="file-download" download hidden>Download</a>
         </div>
-        <p class="sub" id="file-meta">Read only. Only regular files are opened.</p>
+        <p class="sub" id="file-meta">Only regular files are opened.</p>
         <pre class="out" id="file-view"></pre>
       </div>
     </div>
@@ -2655,6 +2799,9 @@ const state = {
   logPath: null,
   filesPath: storageGet("pymonitor-files-path") || "/",
   filesLoaded: false,
+  filesEntries: [],
+  maxUpload: 0,
+  uploading: false,
   preview: null,
   history: [],
   historyPos: 0,
@@ -3518,6 +3665,8 @@ async function openPath(path) {
 function renderFiles(r) {
   state.filesPath = r.path;
   state.filesLoaded = true;
+  state.filesEntries = r.entries;
+  state.maxUpload = r.max_upload || 0;
   storageSet("pymonitor-files-path", r.path);
   $("#files-path").value = r.path;
   $("#files-up").disabled = r.parent === null;
@@ -3581,6 +3730,59 @@ async function previewFile(path) {
     $("#file-view").textContent = e.message;
     $("#file-download").hidden = true;
   }
+}
+
+function sendFile(dir, file, overwrite, progress) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", `/api/upload?${new URLSearchParams({path: dir, name: file.name, overwrite: overwrite ? "1" : "0"})}`);
+    xhr.setRequestHeader("X-Dashboard", "1");
+    xhr.setRequestHeader("Content-Type", "application/octet-stream");
+    xhr.upload.onprogress = ev => { if (ev.lengthComputable) progress(ev.loaded / ev.total); };
+    xhr.onload = () => {
+      let data = {};
+      try { data = JSON.parse(xhr.responseText); } catch (e) { data = {}; }
+      if (xhr.status === 200) resolve(data);
+      else reject(new Error(data.error || `${xhr.status} ${xhr.statusText}`));
+    };
+    xhr.onerror = () => reject(new Error("connection lost during the upload"));
+    xhr.send(file);
+  });
+}
+
+async function uploadFiles(list) {
+  let files = Array.from(list || []);
+  if (!files.length || state.uploading) return;
+  const dir = state.filesPath;
+  if (state.maxUpload) {
+    for (const f of files.filter(f => f.size > state.maxUpload)) toast(`${f.name} is larger than the ${fmtBytes(state.maxUpload)} upload limit`, true);
+    files = files.filter(f => f.size <= state.maxUpload);
+  }
+  const existing = new Set(state.filesEntries.map(e => e.name));
+  const clashes = files.filter(f => existing.has(f.name));
+  const overwrite = clashes.length > 0 && confirm(`Replace ${clashes.map(f => f.name).join(", ")} in ${dir}?`);
+  if (!overwrite) files = files.filter(f => !existing.has(f.name));
+  if (!files.length) return;
+  state.uploading = true;
+  $("#files-upload").disabled = true;
+  const status = $("#files-upload-status");
+  status.hidden = false;
+  const done = [];
+  for (const [i, file] of files.entries()) {
+    const label = files.length > 1 ? `${file.name} (${i + 1}/${files.length})` : file.name;
+    status.textContent = `Uploading ${label}…`;
+    try {
+      await sendFile(dir, file, overwrite, p => { status.textContent = `Uploading ${label}: ${Math.round(p * 100)}% of ${fmtBytes(file.size)}`; });
+      done.push(file.name);
+    } catch (e) {
+      toast(`${file.name}: ${e.message}`, true);
+    }
+  }
+  status.hidden = true;
+  state.uploading = false;
+  $("#files-upload").disabled = false;
+  if (done.length) toast(done.length === 1 ? `Uploaded ${joinPath(dir, done[0])}` : `Uploaded ${done.length} files to ${dir}`);
+  if (state.filesPath === dir) openPath(dir);
 }
 
 /**
@@ -3697,6 +3899,25 @@ $("#log-bytes").addEventListener("change", () => runTask("log", loadLog));
 $("#files-form").addEventListener("submit", ev => { ev.preventDefault(); openPath($("#files-path").value.trim() || "/"); });
 $("#files-up").addEventListener("click", () => openPath(state.filesPath.replace(/\/[^/]*$/, "") || "/"));
 $("#files-refresh").addEventListener("click", () => openPath(state.filesPath));
+$("#files-upload").addEventListener("click", () => $("#files-input").click());
+$("#files-input").addEventListener("change", ev => { const files = Array.from(ev.target.files); ev.target.value = ""; uploadFiles(files); });
+{
+  const card = $("#files-card");
+  const carriesFiles = ev => ev.dataTransfer && Array.from(ev.dataTransfer.types).includes("Files");
+  card.addEventListener("dragover", ev => {
+    if (!carriesFiles(ev)) return;
+    ev.preventDefault();
+    ev.dataTransfer.dropEffect = state.uploading ? "none" : "copy";
+    card.classList.add("dropping");
+  });
+  card.addEventListener("dragleave", ev => { if (!card.contains(ev.relatedTarget)) card.classList.remove("dropping"); });
+  card.addEventListener("drop", ev => {
+    if (!carriesFiles(ev)) return;
+    ev.preventDefault();
+    card.classList.remove("dropping");
+    uploadFiles(ev.dataTransfer.files);
+  });
+}
 $("#file-bytes").addEventListener("change", () => { if (state.preview) previewFile(state.preview); });
 $("#console-form").addEventListener("submit", ev => { ev.preventDefault(); runCommand(); });
 $("#command").addEventListener("keydown", walkHistory);
