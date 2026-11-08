@@ -468,6 +468,7 @@ set_address(hci_t *controller, usb_speed speed, int hubport, int hubaddr)
 	/* Gather the endpoints of every interface's default setting (or only of the known one) */
 	interface_descriptor_t *intf = NULL;
 	int ifcur = -1;
+	int ifalt = -1;
 	dev->num_endp = 1;
 	for (ptr = (void *)dev->configuration + sizeof(*cd);
 			ptr + 2 <= end && ptr[0] && ptr + ptr[0] <= end; ptr += ptr[0]) {
@@ -478,10 +479,17 @@ set_address(hci_t *controller, usb_speed speed, int hubport, int hubaddr)
 				usb_debug("Skipping broken DT_INTF\n");
 				continue;
 			}
-			if (id->bAlternateSetting != 0)
-				continue;
 			if (ifnum >= 0 && id->bInterfaceNumber != ifnum)
 				continue;
+			if (id->bAlternateSetting != 0) {
+				if (id->bInterfaceNumber == ifalt && id->bNumEndpoints) {
+					ifcur = ifalt;
+					ifalt = -1;
+				}
+				continue;
+			}
+			if (id->bInterfaceClass == 0x0A && !id->bNumEndpoints)
+				ifalt = id->bInterfaceNumber;
 			usb_debug("Interface %d: class 0x%x, sub 0x%x. proto 0x%x\n",
 				id->bInterfaceNumber, id->bInterfaceClass,
 				id->bInterfaceSubClass, id->bInterfaceProtocol);
