@@ -173,20 +173,19 @@ wm_rect_t wm_window_shadow_rect(const wm_window_t* win) {
 
     const wm_rect_t f = wm_window_frame(win);
 
-    if (win->maximized) {
-        return f;
-    }
+    return win->maximized ? f : wm_shadow_reach(&f);
+}
 
 
-    wm_rect_t r = {
+wm_rect_t wm_shadow_reach(const wm_rect_t* frame) {
 
-        .x      = f.x - WM_SHADOW_KEY_BLUR,
-        .y      = f.y - WM_SHADOW_KEY_BLUR,
-        .width  = f.width + 2 * WM_SHADOW_KEY_BLUR,
-        .height = f.height + 2 * WM_SHADOW_KEY_BLUR + WM_SHADOW_KEY_OFFSET,
+    return (wm_rect_t){
+
+        .x      = frame->x - WM_SHADOW_KEY_BLUR,
+        .y      = frame->y - WM_SHADOW_KEY_BLUR,
+        .width  = frame->width + 2 * WM_SHADOW_KEY_BLUR,
+        .height = frame->height + 2 * WM_SHADOW_KEY_BLUR + WM_SHADOW_KEY_OFFSET,
     };
-
-    return r;
 }
 
 
@@ -220,16 +219,6 @@ wm_rect_t wm_window_button_rect(const wm_window_t* win, wm_region_t region) {
     };
 
     return r;
-}
-
-
-wm_rect_t wm_window_close_rect(const wm_window_t* win) {
-    return wm_window_button_rect(win, WM_REGION_CLOSE);
-}
-
-
-wm_rect_t wm_window_maximize_rect(const wm_window_t* win) {
-    return wm_window_button_rect(win, WM_REGION_MAXIMIZE);
 }
 
 
@@ -692,33 +681,33 @@ static wm_region_t wm_window_region(const wm_window_t* win, int x, int y) {
 
     const wm_rect_t f = wm_window_frame(win);
 
-    if (!wm_rect_contains_point(&f, x, y)) {
+    if (!ui_rect_contains_point(&f, x, y)) {
         return WM_REGION_NONE;
     }
 
 
     const wm_rect_t content = {win->x, win->y, win->width, win->height};
 
-    if (wm_rect_contains_point(&content, x, y)) {
+    if (ui_rect_contains_point(&content, x, y)) {
         return WM_REGION_CONTENT;
     }
 
 
-    const wm_rect_t c = wm_window_close_rect(win);
+    const wm_rect_t c = wm_window_button_rect(win, WM_REGION_CLOSE);
 
-    if (wm_rect_contains_point(&c, x, y)) {
+    if (ui_rect_contains_point(&c, x, y)) {
         return WM_REGION_CLOSE;
     }
 
-    const wm_rect_t m = wm_window_maximize_rect(win);
+    const wm_rect_t m = wm_window_button_rect(win, WM_REGION_MAXIMIZE);
 
-    if (wm_rect_contains_point(&m, x, y)) {
+    if (ui_rect_contains_point(&m, x, y)) {
         return WM_REGION_MAXIMIZE;
     }
 
     const wm_rect_t n = wm_window_button_rect(win, WM_REGION_MINIMIZE);
 
-    if (wm_rect_contains_point(&n, x, y)) {
+    if (ui_rect_contains_point(&n, x, y)) {
         return WM_REGION_MINIMIZE;
     }
 
@@ -869,7 +858,7 @@ void wm_window_focus(wm_window_t* win) {
         ui_msg_focus_t msg = {.window_id = previous->id, .focused = 0};
 
         wm_client_queue(previous->client, UI_EV_FOCUS, &msg, sizeof(msg));
-        wm_damage_window(previous);
+        wm_damage_window_edges(previous);
 
         ui_anim_to(&previous->focus, 0.0, UI_MOTION_NORMAL, now);
     }
@@ -879,7 +868,7 @@ void wm_window_focus(wm_window_t* win) {
         ui_msg_focus_t msg = {.window_id = win->id, .focused = 1};
 
         wm_client_queue(win->client, UI_EV_FOCUS, &msg, sizeof(msg));
-        wm_damage_window(win);
+        wm_damage_window_edges(win);
 
         if (win->committed) {
             ui_anim_to(&win->focus, 1.0, UI_MOTION_NORMAL, now);
@@ -1320,7 +1309,7 @@ void wm_window_restore(wm_window_t* win) {
  * @param f The window's frame.
  * @param focus How focused the window is, 0 to 1.
  */
-static void wm_window_paint_title(cairo_t* cr, const wm_window_t* win, const wm_rect_t* f, double focus) {
+static void wm_window_paint_title(cairo_t* cr, wm_window_t* win, const wm_rect_t* f, double focus) {
 
     cairo_font_face_t* face = ui_font_face(wm.theme.font);
 
@@ -1348,16 +1337,27 @@ static void wm_window_paint_title(cairo_t* cr, const wm_window_t* win, const wm_
     cairo_clip(cr);
 
 
-    cairo_text_extents_t extents;
+    if (win->title_measure.face != face || win->title_measure.size != wm.theme.font_size) {
+
+        cairo_text_extents_t extents;
+
+        cairo_text_extents(cr, win->title, &extents);
+
+        win->title_measure.face    = face;
+        win->title_measure.size    = wm.theme.font_size;
+        win->title_measure.advance = extents.x_advance;
+    }
+
+    const double advance = win->title_measure.advance;
+
     cairo_font_extents_t font;
 
-    cairo_text_extents(cr, win->title, &extents);
     cairo_font_extents(cr, &font);
 
-    double x = f->x + (f->width - extents.x_advance) / 2.0;
+    double x = f->x + (f->width - advance) / 2.0;
 
-    if (x + extents.x_advance > right) {
-        x = right - extents.x_advance;
+    if (x + advance > right) {
+        x = right - advance;
     }
 
     if (x < left) {
@@ -1504,6 +1504,19 @@ static void wm_window_paint_button(cairo_t* cr, wm_window_t* win, wm_region_t re
 }
 
 
+static void wm_window_blit(cairo_t* cr, const wm_window_t* win, int top, int bottom, int width) {
+
+    if (bottom <= top || width <= 0) {
+        return;
+    }
+
+    cairo_set_source_surface(cr, win->backstore, win->x, win->y);
+    cairo_pattern_set_filter(cairo_get_source(cr), CAIRO_FILTER_BILINEAR);
+    cairo_rectangle(cr, win->x, top, width, bottom - top);
+    cairo_fill(cr);
+}
+
+
 /**
  * @brief Draws a window as it stands, with no transition applied: shadow, frame, content and outline, over a backdrop
  * blurred from the back buffer when it is frosted, or over the last one when drawn anywhere else.
@@ -1607,12 +1620,15 @@ void wm_window_paint_still(cairo_t* cr, wm_window_t* win) {
         cairo_set_fill_rule(cr, CAIRO_FILL_RULE_WINDING);
     }
 
-    cairo_set_source_surface(cr, win->backstore, win->x, win->y);
-    cairo_pattern_set_filter(cairo_get_source(cr), CAIRO_FILTER_BILINEAR);
-    cairo_rectangle(cr, win->x, win->y, cw, ch);
-    cairo_fill(cr);
+    const int middle_top    = WM_CLAMP(f.y + (int)radius, win->y, win->y + ch);
+    const int middle_bottom = WM_CLAMP(f.y + f.height - (int)radius, middle_top, win->y + ch);
+
+    wm_window_blit(cr, win, win->y, middle_top, cw);
+    wm_window_blit(cr, win, middle_bottom, win->y + ch, cw);
 
     cairo_restore(cr);
+
+    wm_window_blit(cr, win, middle_top, middle_bottom, cw);
 
 
     if (borderless) {

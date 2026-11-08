@@ -65,18 +65,11 @@ void ui_widget_invalidate(ui_widget_t* widget) {
 
 void ui_widget_invalidate_rect(ui_widget_t* widget, ui_rect_t rect) {
 
-    const int x0 = rect.x > widget->rect.x ? rect.x : widget->rect.x;
-    const int y0 = rect.y > widget->rect.y ? rect.y : widget->rect.y;
-    const int x1 = rect.x + rect.width < widget->rect.x + widget->rect.width ? rect.x + rect.width : widget->rect.x + widget->rect.width;
-    const int y1 = rect.y + rect.height < widget->rect.y + widget->rect.height ? rect.y + rect.height : widget->rect.y + widget->rect.height;
+    const ui_rect_t clipped = ui_rect_intersect(&rect, &widget->rect);
 
-    if (x1 <= x0 || y1 <= y0) {
-        return;
+    if (!ui_rect_empty(&clipped)) {
+        ui_view_damage(widget->view, clipped);
     }
-
-    ui_rect_t clipped = {x0, y0, x1 - x0, y1 - y0};
-
-    ui_view_damage(widget->view, clipped);
 }
 
 
@@ -218,6 +211,10 @@ void ui_view_destroy(ui_view_t* view) {
     while (widget) {
 
         ui_widget_t* next = widget->next;
+
+        if (widget->ops->destroy) {
+            widget->ops->destroy(widget);
+        }
 
         free(widget);
 
@@ -552,6 +549,10 @@ bool ui_view_dispatch(ui_view_t* view, const ui_event_t* event) {
         return false;
     }
 
+    if (event->window_id && event->window_id != ui_window_id(view->window)) {
+        return false;
+    }
+
 
     switch (event->type) {
 
@@ -793,12 +794,16 @@ int ui_view_present(ui_view_t* view) {
         }
 
 
+        const ui_rect_t shown = w->clipped ? ui_rect_intersect(&w->rect, &w->clip) : w->rect;
+
+        if (ui_rect_empty(&shown)) {
+            continue;
+        }
+
         bool touched = false;
 
         for (size_t i = 0; i < area.count && !touched; i++) {
-
-            touched = w->rect.x < area.rects[i].x + area.rects[i].width && area.rects[i].x < w->rect.x + w->rect.width && w->rect.y < area.rects[i].y + area.rects[i].height &&
-                      area.rects[i].y < w->rect.y + w->rect.height;
+            touched = ui_rect_intersects(&shown, &area.rects[i]);
         }
 
         if (!touched) {
@@ -807,6 +812,11 @@ int ui_view_present(ui_view_t* view) {
 
 
         cairo_save(cr);
+
+        if (w->clipped) {
+            cairo_rectangle(cr, w->clip.x, w->clip.y, w->clip.width, w->clip.height);
+            cairo_clip(cr);
+        }
 
         ui_widget_draw(w, cr);
 

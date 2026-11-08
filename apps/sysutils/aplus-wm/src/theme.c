@@ -155,6 +155,7 @@ static const wm_theme_key_t wm_theme_keys[] = {
     WM_THEME_WM_NUMBER(shadow_key, 0.0, 1.0),
     WM_THEME_WM_NUMBER(shadow_ambient, 0.0, 1.0),
     WM_THEME_WM_NUMBER(taskbar_shadow, 0.0, 1.0),
+    WM_THEME_WM_NUMBER(taskbar_opacity, 0.0, 1.0),
     WM_THEME_WM_PATH(font, WM_THEME_PATH),
     WM_THEME_WM_NUMBER(font_size, 4.0, 72.0),
     WM_THEME_WM_PATH(wallpaper, WM_THEME_PATH_OPTIONAL),
@@ -215,9 +216,10 @@ static void wm_theme_defaults(wm_theme_t* theme) {
     theme->taskbar_power  = (ui_color_t){WM_COLOR_TASKBAR_POWER, 1.0};
     theme->taskbar_edge   = (ui_color_t){WM_COLOR_TASKBAR_EDGE};
 
-    theme->shadow_key     = WM_SHADOW_KEY_ALPHA;
-    theme->shadow_ambient = WM_SHADOW_AMBIENT_ALPHA;
-    theme->taskbar_shadow = WM_SHADOW_TASKBAR;
+    theme->shadow_key      = WM_SHADOW_KEY_ALPHA;
+    theme->shadow_ambient  = WM_SHADOW_AMBIENT_ALPHA;
+    theme->taskbar_shadow  = WM_SHADOW_TASKBAR;
+    theme->taskbar_opacity = WM_TASKBAR_OPACITY;
 
     snprintf(theme->font, sizeof(theme->font), "%s", WM_FONT_PATH);
     snprintf(theme->wallpaper, sizeof(theme->wallpaper), "%s", WM_WALLPAPER_PATH);

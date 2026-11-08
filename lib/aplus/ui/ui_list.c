@@ -335,7 +335,7 @@ ui_widget_t* ui_list_create(ui_view_t* view) {
 
 void ui_list_clear(ui_widget_t* widget) {
 
-    if (!widget || widget->kind != UI_WIDGET_LIST) {
+    if (!ui_widget_is(widget, UI_WIDGET_LIST)) {
         return;
     }
 
@@ -369,7 +369,7 @@ int ui_list_add(ui_widget_t* widget, const char* text, const char* detail, void*
 
 int ui_list_add_icon(ui_widget_t* widget, const char* icon, const char* text, const char* detail, void* user) {
 
-    if (!widget || widget->kind != UI_WIDGET_LIST) {
+    if (!ui_widget_is(widget, UI_WIDGET_LIST)) {
         return -1;
     }
 
@@ -415,7 +415,7 @@ int ui_list_add_icon(ui_widget_t* widget, const char* icon, const char* text, co
 
 void ui_list_set_icon(ui_widget_t* widget, int index, const char* icon) {
 
-    if (!widget || widget->kind != UI_WIDGET_LIST) {
+    if (!ui_widget_is(widget, UI_WIDGET_LIST)) {
         return;
     }
 
@@ -442,7 +442,7 @@ void ui_list_set_icon(ui_widget_t* widget, int index, const char* icon) {
 
 const char* ui_list_icon(const ui_widget_t* widget, int index) {
 
-    if (!widget || widget->kind != UI_WIDGET_LIST) {
+    if (!ui_widget_is(widget, UI_WIDGET_LIST)) {
         return NULL;
     }
 
@@ -456,7 +456,7 @@ const char* ui_list_icon(const ui_widget_t* widget, int index) {
 
 void ui_list_set_icon_size(ui_widget_t* widget, int size) {
 
-    if (!widget || widget->kind != UI_WIDGET_LIST) {
+    if (!ui_widget_is(widget, UI_WIDGET_LIST)) {
         return;
     }
 
@@ -476,7 +476,7 @@ void ui_list_set_icon_size(ui_widget_t* widget, int size) {
 
 size_t ui_list_count(const ui_widget_t* widget) {
 
-    if (!widget || widget->kind != UI_WIDGET_LIST) {
+    if (!ui_widget_is(widget, UI_WIDGET_LIST)) {
         return 0;
     }
 
@@ -486,7 +486,7 @@ size_t ui_list_count(const ui_widget_t* widget) {
 
 const char* ui_list_text(const ui_widget_t* widget, int index) {
 
-    if (!widget || widget->kind != UI_WIDGET_LIST) {
+    if (!ui_widget_is(widget, UI_WIDGET_LIST)) {
         return NULL;
     }
 
@@ -500,7 +500,7 @@ const char* ui_list_text(const ui_widget_t* widget, int index) {
 
 void* ui_list_item_user(const ui_widget_t* widget, int index) {
 
-    if (!widget || widget->kind != UI_WIDGET_LIST) {
+    if (!ui_widget_is(widget, UI_WIDGET_LIST)) {
         return NULL;
     }
 
@@ -514,7 +514,7 @@ void* ui_list_item_user(const ui_widget_t* widget, int index) {
 
 int ui_list_selected(const ui_widget_t* widget) {
 
-    if (!widget || widget->kind != UI_WIDGET_LIST) {
+    if (!ui_widget_is(widget, UI_WIDGET_LIST)) {
         return -1;
     }
 
@@ -524,7 +524,7 @@ int ui_list_selected(const ui_widget_t* widget) {
 
 void ui_list_scroll_to(ui_widget_t* widget, int index) {
 
-    if (!widget || widget->kind != UI_WIDGET_LIST) {
+    if (!ui_widget_is(widget, UI_WIDGET_LIST)) {
         return;
     }
 
@@ -557,7 +557,7 @@ void ui_list_scroll_to(ui_widget_t* widget, int index) {
 
 void ui_list_select(ui_widget_t* widget, int index) {
 
-    if (!widget || widget->kind != UI_WIDGET_LIST) {
+    if (!ui_widget_is(widget, UI_WIDGET_LIST)) {
         return;
     }
 
@@ -618,7 +618,7 @@ static void ui_list_apply_row_height(ui_widget_t* widget, int height) {
 
 void ui_list_set_row_height(ui_widget_t* widget, int height) {
 
-    if (!widget || widget->kind != UI_WIDGET_LIST) {
+    if (!ui_widget_is(widget, UI_WIDGET_LIST)) {
         return;
     }
 
@@ -643,7 +643,7 @@ static void ui_list_restyle(ui_widget_t* widget) {
 
 void ui_list_on_select(ui_widget_t* widget, ui_list_fn fn, void* user) {
 
-    if (!widget || widget->kind != UI_WIDGET_LIST) {
+    if (!ui_widget_is(widget, UI_WIDGET_LIST)) {
         return;
     }
 
@@ -654,7 +654,7 @@ void ui_list_on_select(ui_widget_t* widget, ui_list_fn fn, void* user) {
 
 void ui_list_on_activate(ui_widget_t* widget, ui_list_fn fn, void* user) {
 
-    if (!widget || widget->kind != UI_WIDGET_LIST) {
+    if (!ui_widget_is(widget, UI_WIDGET_LIST)) {
         return;
     }
 
@@ -665,7 +665,7 @@ void ui_list_on_activate(ui_widget_t* widget, ui_list_fn fn, void* user) {
 
 void ui_list_on_context(ui_widget_t* widget, ui_list_fn fn, void* user) {
 
-    if (!widget || widget->kind != UI_WIDGET_LIST) {
+    if (!ui_widget_is(widget, UI_WIDGET_LIST)) {
         return;
     }
 

@@ -427,6 +427,8 @@ static int wm_client_handle_set_title(wm_client_t* client, const uint8_t* payloa
 
     wm_utf8_sanitize(win->title);
 
+    win->title_measure.face = NULL;
+
     wm_damage_window(win);
     wm_taskbar_damage();
 

@@ -51,6 +51,17 @@ static int ui_drain_payload(ui_connection_t* conn, size_t size) {
 }
 
 
+static int ui_read_message(ui_connection_t* conn, uint32_t length, void* msg, size_t size) {
+
+    if (length != size) {
+        errno = EPROTO;
+        return -1;
+    }
+
+    return ui_conn_read(conn, msg, size);
+}
+
+
 /**
  * @brief Waits for the next event on a connection, recording a configure rather than acting on it.
  *
@@ -125,12 +136,7 @@ int ui_next_event(ui_connection_t* conn, ui_event_t* out, int timeout_ms) {
 
                 ui_msg_configure_t cfg;
 
-                if (hdr.length != sizeof(cfg)) {
-                    errno = EPROTO;
-                    return -1;
-                }
-
-                if (ui_conn_read(conn, &cfg, sizeof(cfg)) < 0) {
+                if (ui_read_message(conn, hdr.length, &cfg, sizeof(cfg)) < 0) {
                     return -1;
                 }
 
@@ -160,12 +166,7 @@ int ui_next_event(ui_connection_t* conn, ui_event_t* out, int timeout_ms) {
 
                 ui_msg_key_t key;
 
-                if (hdr.length != sizeof(key)) {
-                    errno = EPROTO;
-                    return -1;
-                }
-
-                if (ui_conn_read(conn, &key, sizeof(key)) < 0) {
+                if (ui_read_message(conn, hdr.length, &key, sizeof(key)) < 0) {
                     return -1;
                 }
 
@@ -181,12 +182,7 @@ int ui_next_event(ui_connection_t* conn, ui_event_t* out, int timeout_ms) {
 
                 ui_msg_pointer_t ptr;
 
-                if (hdr.length != sizeof(ptr)) {
-                    errno = EPROTO;
-                    return -1;
-                }
-
-                if (ui_conn_read(conn, &ptr, sizeof(ptr)) < 0) {
+                if (ui_read_message(conn, hdr.length, &ptr, sizeof(ptr)) < 0) {
                     return -1;
                 }
 
@@ -203,12 +199,7 @@ int ui_next_event(ui_connection_t* conn, ui_event_t* out, int timeout_ms) {
 
                 ui_msg_scroll_t scroll;
 
-                if (hdr.length != sizeof(scroll)) {
-                    errno = EPROTO;
-                    return -1;
-                }
-
-                if (ui_conn_read(conn, &scroll, sizeof(scroll)) < 0) {
+                if (ui_read_message(conn, hdr.length, &scroll, sizeof(scroll)) < 0) {
                     return -1;
                 }
 
@@ -224,12 +215,7 @@ int ui_next_event(ui_connection_t* conn, ui_event_t* out, int timeout_ms) {
 
                 ui_msg_menu_t menu;
 
-                if (hdr.length != sizeof(menu)) {
-                    errno = EPROTO;
-                    return -1;
-                }
-
-                if (ui_conn_read(conn, &menu, sizeof(menu)) < 0) {
+                if (ui_read_message(conn, hdr.length, &menu, sizeof(menu)) < 0) {
                     return -1;
                 }
 
@@ -245,12 +231,7 @@ int ui_next_event(ui_connection_t* conn, ui_event_t* out, int timeout_ms) {
 
                 ui_msg_focus_t focus;
 
-                if (hdr.length != sizeof(focus)) {
-                    errno = EPROTO;
-                    return -1;
-                }
-
-                if (ui_conn_read(conn, &focus, sizeof(focus)) < 0) {
+                if (ui_read_message(conn, hdr.length, &focus, sizeof(focus)) < 0) {
                     return -1;
                 }
 
@@ -265,12 +246,7 @@ int ui_next_event(ui_connection_t* conn, ui_event_t* out, int timeout_ms) {
 
                 ui_msg_window_t win;
 
-                if (hdr.length != sizeof(win)) {
-                    errno = EPROTO;
-                    return -1;
-                }
-
-                if (ui_conn_read(conn, &win, sizeof(win)) < 0) {
+                if (ui_read_message(conn, hdr.length, &win, sizeof(win)) < 0) {
                     return -1;
                 }
 
@@ -284,12 +260,7 @@ int ui_next_event(ui_connection_t* conn, ui_event_t* out, int timeout_ms) {
 
                 ui_msg_window_t win;
 
-                if (hdr.length != sizeof(win)) {
-                    errno = EPROTO;
-                    return -1;
-                }
-
-                if (ui_conn_read(conn, &win, sizeof(win)) < 0) {
+                if (ui_read_message(conn, hdr.length, &win, sizeof(win)) < 0) {
                     return -1;
                 }
 
@@ -301,12 +272,7 @@ int ui_next_event(ui_connection_t* conn, ui_event_t* out, int timeout_ms) {
 
             case UI_EV_THEME: {
 
-                if (hdr.length != sizeof(conn->theme.msg)) {
-                    errno = EPROTO;
-                    return -1;
-                }
-
-                if (ui_conn_read(conn, &conn->theme.msg, sizeof(conn->theme.msg)) < 0) {
+                if (ui_read_message(conn, hdr.length, &conn->theme.msg, sizeof(conn->theme.msg)) < 0) {
                     return -1;
                 }
 
@@ -366,12 +332,7 @@ int ui_next_event(ui_connection_t* conn, ui_event_t* out, int timeout_ms) {
 
                 ui_msg_clipboard_changed_t changed;
 
-                if (hdr.length != sizeof(changed)) {
-                    errno = EPROTO;
-                    return -1;
-                }
-
-                if (ui_conn_read(conn, &changed, sizeof(changed)) < 0) {
+                if (ui_read_message(conn, hdr.length, &changed, sizeof(changed)) < 0) {
                     return -1;
                 }
 

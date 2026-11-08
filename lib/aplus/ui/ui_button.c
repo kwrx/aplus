@@ -73,6 +73,7 @@ ui_widget_t* ui_button_create(ui_view_t* view, const char* text, ui_action_fn on
     }
 
     widget->button.style     = UI_BUTTON_STYLE_DEFAULT;
+    widget->button.align     = UI_ALIGN_CENTER;
     widget->button.weight    = UI_FONT_MEDIUM;
     widget->button.size      = widget->theme->font_size;
     widget->button.icon_size = UI_BUTTON_ICON_SIZE;
@@ -90,7 +91,7 @@ ui_widget_t* ui_button_create(ui_view_t* view, const char* text, ui_action_fn on
 
 void ui_button_set_text(ui_widget_t* widget, const char* text) {
 
-    if (!widget || widget->kind != UI_WIDGET_BUTTON) {
+    if (!ui_widget_is(widget, UI_WIDGET_BUTTON)) {
         return;
     }
 
@@ -113,7 +114,7 @@ void ui_button_set_text(ui_widget_t* widget, const char* text) {
 
 void ui_button_set_style(ui_widget_t* widget, ui_button_style_t style) {
 
-    if (!widget || widget->kind != UI_WIDGET_BUTTON) {
+    if (!ui_widget_is(widget, UI_WIDGET_BUTTON)) {
         return;
     }
 
@@ -125,7 +126,7 @@ void ui_button_set_style(ui_widget_t* widget, ui_button_style_t style) {
 
 void ui_button_set_font(ui_widget_t* widget, ui_font_weight_t weight, double size) {
 
-    if (!widget || widget->kind != UI_WIDGET_BUTTON) {
+    if (!ui_widget_is(widget, UI_WIDGET_BUTTON)) {
         return;
     }
 
@@ -142,6 +143,18 @@ void ui_button_set_font(ui_widget_t* widget, ui_font_weight_t weight, double siz
  *
  * @param widget The button.
  */
+void ui_button_set_align(ui_widget_t* widget, ui_align_t align) {
+
+    if (!ui_widget_is(widget, UI_WIDGET_BUTTON) || widget->button.align == align) {
+        return;
+    }
+
+    widget->button.align = align;
+
+    ui_widget_invalidate(widget);
+}
+
+
 static void ui_button_restyle(ui_widget_t* widget) {
 
     if (!widget->button.size_set) {
@@ -152,7 +165,7 @@ static void ui_button_restyle(ui_widget_t* widget) {
 
 void ui_button_set_icon(ui_widget_t* widget, const char* icon) {
 
-    if (!widget || widget->kind != UI_WIDGET_BUTTON) {
+    if (!ui_widget_is(widget, UI_WIDGET_BUTTON)) {
         return;
     }
 
@@ -175,7 +188,7 @@ void ui_button_set_icon(ui_widget_t* widget, const char* icon) {
 
 void ui_button_set_icon_size(ui_widget_t* widget, int size) {
 
-    if (!widget || widget->kind != UI_WIDGET_BUTTON) {
+    if (!ui_widget_is(widget, UI_WIDGET_BUTTON)) {
         return;
     }
 
@@ -187,7 +200,7 @@ void ui_button_set_icon_size(ui_widget_t* widget, int size) {
 
 void ui_button_activate(ui_widget_t* widget) {
 
-    if (!widget || widget->kind != UI_WIDGET_BUTTON || !widget->enabled || !widget->visible) {
+    if (!ui_widget_is(widget, UI_WIDGET_BUTTON) || !widget->enabled || !widget->visible) {
         return;
     }
 
@@ -212,7 +225,7 @@ static void ui_button_update_press(ui_widget_t* widget) {
 
 void ui_button_set_held(ui_widget_t* widget, bool held) {
 
-    if (!widget || widget->kind != UI_WIDGET_BUTTON || widget->button.held == held) {
+    if (!ui_widget_is(widget, UI_WIDGET_BUTTON) || widget->button.held == held) {
         return;
     }
 
@@ -225,7 +238,7 @@ void ui_button_set_held(ui_widget_t* widget, bool held) {
 
 bool ui_button_held(const ui_widget_t* widget) {
 
-    if (!widget || widget->kind != UI_WIDGET_BUTTON) {
+    if (!ui_widget_is(widget, UI_WIDGET_BUTTON)) {
         return false;
     }
 
@@ -346,6 +359,12 @@ static void ui_button_colors(const ui_widget_t* widget, ui_color_t* fill, ui_col
             *text = theme->on_danger;
             break;
 
+        case UI_BUTTON_STYLE_FLAT:
+            *fill   = theme->secondary;
+            fill->a = 0.0;
+            *text   = theme->text;
+            break;
+
         case UI_BUTTON_STYLE_DEFAULT:
         default:
             *fill = theme->secondary;
@@ -370,7 +389,15 @@ static void ui_button_draw_icon(ui_widget_t* widget, cairo_t* cr, ui_color_t col
     const int label = widget->button.text[0] ? (int)ceil(ui_draw_text_width(widget->button.text, font, widget->button.size)) : 0;
     const int width = label > 0 ? size + UI_BUTTON_ICON_GAP + label : size;
 
-    const int x = width < widget->rect.width ? widget->rect.x + (widget->rect.width - width) / 2 : widget->rect.x;
+    const int inset = (widget->rect.height - size) / 2;
+
+    int x = width < widget->rect.width ? widget->rect.x + (widget->rect.width - width) / 2 : widget->rect.x;
+
+    if (widget->button.align == UI_ALIGN_LEFT) {
+        x = widget->rect.x + inset;
+    } else if (widget->button.align == UI_ALIGN_RIGHT && width + inset < widget->rect.width) {
+        x = widget->rect.x + widget->rect.width - inset - width;
+    }
 
     const ui_rect_t box = {x, widget->rect.y + (widget->rect.height - size) / 2, size, size};
 
@@ -437,14 +464,34 @@ static void ui_button_draw(ui_widget_t* widget, cairo_t* cr) {
     }
 
 
-    ui_draw_rounded_rect(cr, widget->rect, theme->corner_radius);
-    ui_draw_set_color(cr, fill);
-    cairo_fill(cr);
+    if (widget->button.style == UI_BUTTON_STYLE_FLAT) {
+
+        const double hover = widget->enabled ? ui_widget_anim(widget, &widget->button.hover_anim) : 0.0;
+
+        ui_draw_rounded_rect(cr, widget->rect, theme->corner_radius);
+        ui_draw_set_color(cr, ui_color_alpha(theme->hover, hover));
+        cairo_fill_preserve(cr);
+        ui_draw_set_color(cr, ui_color_alpha(theme->active, press));
+        cairo_fill(cr);
+
+    } else {
+
+        ui_draw_rounded_rect(cr, widget->rect, theme->corner_radius);
+        ui_draw_set_color(cr, fill);
+        cairo_fill(cr);
+    }
 
 
     if (widget->button.icon[0]) {
         ui_button_draw_icon(widget, cr, text);
     } else {
-        ui_draw_text(cr, widget->rect, widget->button.text, ui_draw_font(theme, widget->button.weight), widget->button.size, text, UI_ALIGN_CENTER);
+        ui_rect_t rect = widget->rect;
+
+        if (widget->button.align != UI_ALIGN_CENTER) {
+            rect.x += theme->corner_radius;
+            rect.width -= 2 * (int)theme->corner_radius;
+        }
+
+        ui_draw_text(cr, rect, widget->button.text, ui_draw_font(theme, widget->button.weight), widget->button.size, text, widget->button.align);
     }
 }

@@ -52,7 +52,7 @@ ui_widget_t* ui_image_create(ui_view_t* view, const char* icon) {
 
 void ui_image_set_icon(ui_widget_t* widget, const char* icon) {
 
-    if (!widget || widget->kind != UI_WIDGET_IMAGE) {
+    if (!ui_widget_is(widget, UI_WIDGET_IMAGE)) {
         return;
     }
 
@@ -75,7 +75,7 @@ void ui_image_set_icon(ui_widget_t* widget, const char* icon) {
 
 void ui_image_set_size(ui_widget_t* widget, int size) {
 
-    if (!widget || widget->kind != UI_WIDGET_IMAGE) {
+    if (!ui_widget_is(widget, UI_WIDGET_IMAGE)) {
         return;
     }
 

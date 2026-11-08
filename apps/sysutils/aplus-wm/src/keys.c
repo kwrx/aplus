@@ -30,6 +30,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <pthread.h>
+#include <signal.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
@@ -550,7 +551,24 @@ bool wm_keys_handle(uint16_t vkey, uint8_t down) {
 /**
  * @brief Reaps the zombies left by spawned clients, which nothing else waits for.
  */
+static volatile sig_atomic_t wm_keys_exited = 1;
+
+
+void wm_keys_on_child(int signum) {
+
+    (void)signum;
+
+    wm_keys_exited = 1;
+}
+
+
 void wm_keys_reap(void) {
+
+    if (!wm_keys_exited) {
+        return;
+    }
+
+    wm_keys_exited = 0;
 
     while (waitpid(-1, NULL, WNOHANG) > 0) {
         ;

@@ -54,8 +54,8 @@ int wm_display_cursor_image(wm_display_t* display, const uint32_t* image, int wi
         .height = (uint32_t)height,
         .hot_x  = (uint32_t)hot_x,
         .hot_y  = (uint32_t)hot_y,
-        .x      = wm.pointer.x,
-        .y      = wm.pointer.y,
+        .x      = display->cursor_x,
+        .y      = display->cursor_y,
         .image  = image,
     };
 
@@ -102,6 +102,9 @@ static void wm_display_cursor_init(wm_display_t* display) {
 
 
 void wm_display_cursor_move(wm_display_t* display, int x, int y) {
+
+    display->cursor_x = x;
+    display->cursor_y = y;
 
     if (!display->hwcursor) {
         return;
@@ -200,7 +203,7 @@ int wm_display_background(wm_display_t* display) {
     cairo_pattern_t* background = wm_wallpaper_load(wm_theme_wallpaper(), display->width, display->height);
 
     if (!background) {
-        background = wm_wallpaper_gradient(display->height);
+        background = wm_wallpaper_gradient(display->width, display->height);
     }
 
     if (!background || cairo_pattern_status(background) != CAIRO_STATUS_SUCCESS) {
@@ -392,8 +395,10 @@ int wm_display_flush(wm_display_t* display, const wm_rect_t* rects, size_t count
  */
 void wm_display_clear(wm_display_t* display) {
 
+    cairo_save(display->cr);
     cairo_set_operator(display->cr, CAIRO_OPERATOR_CLEAR);
     cairo_paint(display->cr);
+    cairo_restore(display->cr);
 
     wm_rect_t rect = {
         .x      = 0,

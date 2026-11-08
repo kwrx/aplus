@@ -120,7 +120,9 @@ struct ui_widget {
     const ui_widget_ops_t* ops;
 
     ui_rect_t rect;
+    ui_rect_t clip;
 
+    bool clipped;
     bool visible;
     bool enabled;
 
@@ -170,6 +172,7 @@ struct ui_widget {
             char text[UI_LABEL_TEXT_MAX];
 
             ui_button_style_t style;
+            ui_align_t align;
 
             ui_font_weight_t weight;
 
@@ -422,5 +425,9 @@ void ui_draw_text(cairo_t* cr, ui_rect_t rect, const char* text, const char* fon
  * @return The faded colour.
  */
 ui_color_t ui_draw_dim(ui_color_t color, const ui_theme_t* theme);
+
+static inline bool ui_widget_is(const ui_widget_t* widget, ui_widget_kind_t kind) {
+    return widget && widget->kind == kind;
+}
 
 #endif

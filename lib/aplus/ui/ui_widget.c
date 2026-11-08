@@ -141,7 +141,11 @@ bool ui_widget_hit(const ui_widget_t* widget, int x, int y) {
         return false;
     }
 
-    return x >= widget->rect.x && y >= widget->rect.y && x < widget->rect.x + widget->rect.width && y < widget->rect.y + widget->rect.height;
+    if (widget->clipped && !ui_rect_contains_point(&widget->clip, x, y)) {
+        return false;
+    }
+
+    return ui_rect_contains_point(&widget->rect, x, y);
 }
 
 
@@ -169,6 +173,30 @@ void ui_widget_set_rect(ui_widget_t* widget, int x, int y, int width, int height
 
 void ui_widget_place(ui_widget_t* widget, ui_rect_t rect) {
     ui_widget_set_rect(widget, rect.x, rect.y, rect.width, rect.height);
+}
+
+
+void ui_widget_set_clip(ui_widget_t* widget, const ui_rect_t* clip) {
+
+    if (!widget) {
+        return;
+    }
+
+    if (!clip && !widget->clipped) {
+        return;
+    }
+
+    if (clip && widget->clipped && widget->clip.x == clip->x && widget->clip.y == clip->y && widget->clip.width == clip->width && widget->clip.height == clip->height) {
+        return;
+    }
+
+    widget->clipped = clip != NULL;
+
+    if (clip) {
+        widget->clip = *clip;
+    }
+
+    ui_widget_invalidate(widget);
 }
 
 

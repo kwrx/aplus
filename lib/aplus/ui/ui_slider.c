@@ -118,7 +118,7 @@ ui_widget_t* ui_slider_create(ui_view_t* view, double min, double max) {
 
 void ui_slider_set_range(ui_widget_t* widget, double min, double max) {
 
-    if (!widget || widget->kind != UI_WIDGET_SLIDER) {
+    if (!ui_widget_is(widget, UI_WIDGET_SLIDER)) {
         return;
     }
 
@@ -132,7 +132,7 @@ void ui_slider_set_range(ui_widget_t* widget, double min, double max) {
 
 void ui_slider_set_value(ui_widget_t* widget, double value) {
 
-    if (!widget || widget->kind != UI_WIDGET_SLIDER || widget->slider.dragging) {
+    if (!ui_widget_is(widget, UI_WIDGET_SLIDER) || widget->slider.dragging) {
         return;
     }
 
@@ -150,7 +150,7 @@ void ui_slider_set_value(ui_widget_t* widget, double value) {
 
 double ui_slider_value(const ui_widget_t* widget) {
 
-    if (!widget || widget->kind != UI_WIDGET_SLIDER) {
+    if (!ui_widget_is(widget, UI_WIDGET_SLIDER)) {
         return 0.0;
     }
 
@@ -160,7 +160,7 @@ double ui_slider_value(const ui_widget_t* widget) {
 
 void ui_slider_set_step(ui_widget_t* widget, double step) {
 
-    if (!widget || widget->kind != UI_WIDGET_SLIDER) {
+    if (!ui_widget_is(widget, UI_WIDGET_SLIDER)) {
         return;
     }
 
@@ -170,7 +170,7 @@ void ui_slider_set_step(ui_widget_t* widget, double step) {
 
 bool ui_slider_dragging(const ui_widget_t* widget) {
 
-    if (!widget || widget->kind != UI_WIDGET_SLIDER) {
+    if (!ui_widget_is(widget, UI_WIDGET_SLIDER)) {
         return false;
     }
 
@@ -180,7 +180,7 @@ bool ui_slider_dragging(const ui_widget_t* widget) {
 
 void ui_slider_on_change(ui_widget_t* widget, ui_slider_fn fn, void* user) {
 
-    if (!widget || widget->kind != UI_WIDGET_SLIDER) {
+    if (!ui_widget_is(widget, UI_WIDGET_SLIDER)) {
         return;
     }
 
@@ -191,7 +191,7 @@ void ui_slider_on_change(ui_widget_t* widget, ui_slider_fn fn, void* user) {
 
 void ui_slider_on_commit(ui_widget_t* widget, ui_slider_fn fn, void* user) {
 
-    if (!widget || widget->kind != UI_WIDGET_SLIDER) {
+    if (!ui_widget_is(widget, UI_WIDGET_SLIDER)) {
         return;
     }
 

@@ -548,6 +548,15 @@ typedef struct {
 } ui_rect_t;
 
 
+bool ui_rect_empty(const ui_rect_t* rect);
+bool ui_rect_contains_point(const ui_rect_t* rect, int x, int y);
+bool ui_rect_contains(const ui_rect_t* outer, const ui_rect_t* inner);
+bool ui_rect_intersects(const ui_rect_t* a, const ui_rect_t* b);
+ui_rect_t ui_rect_intersect(const ui_rect_t* a, const ui_rect_t* b);
+ui_rect_t ui_rect_union(const ui_rect_t* a, const ui_rect_t* b);
+ui_rect_t ui_rect_clip(const ui_rect_t* rect, int width, int height);
+
+
 /**
  * @brief How many damaged rectangles are kept apart before they start being merged.
  */

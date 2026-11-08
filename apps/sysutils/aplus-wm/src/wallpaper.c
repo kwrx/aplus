@@ -200,20 +200,41 @@ cairo_pattern_t* wm_wallpaper_load(const char* path, int width, int height) {
  * @param height The height of the screen, which the gradient spans.
  * @return The pattern, or NULL.
  */
-cairo_pattern_t* wm_wallpaper_gradient(int height) {
+cairo_pattern_t* wm_wallpaper_gradient(int width, int height) {
 
-    cairo_pattern_t* pattern = cairo_pattern_create_linear(0.0, 0.0, 0.0, (double)height);
+    cairo_pattern_t* gradient = cairo_pattern_create_linear(0.0, 0.0, 0.0, (double)height);
 
-    if (cairo_pattern_status(pattern) != CAIRO_STATUS_SUCCESS) {
-        cairo_pattern_destroy(pattern);
+    if (cairo_pattern_status(gradient) != CAIRO_STATUS_SUCCESS) {
+        cairo_pattern_destroy(gradient);
         return NULL;
     }
 
     const ui_color_t top    = wm.theme.desktop_top;
     const ui_color_t bottom = wm.theme.desktop_bottom;
 
-    cairo_pattern_add_color_stop_rgb(pattern, 0.0, top.r, top.g, top.b);
-    cairo_pattern_add_color_stop_rgb(pattern, 1.0, bottom.r, bottom.g, bottom.b);
+    cairo_pattern_add_color_stop_rgb(gradient, 0.0, top.r, top.g, top.b);
+    cairo_pattern_add_color_stop_rgb(gradient, 1.0, bottom.r, bottom.g, bottom.b);
+
+
+    cairo_surface_t* surface = wm_surface_create(CAIRO_FORMAT_RGB24, width, height);
+
+    if (!surface) {
+        return gradient;
+    }
+
+    cairo_t* cr = cairo_create(surface);
+
+    cairo_set_source(cr, gradient);
+    cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
+    cairo_paint(cr);
+    cairo_destroy(cr);
+
+    cairo_pattern_destroy(gradient);
+
+
+    cairo_pattern_t* pattern = cairo_pattern_create_for_surface(surface);
+
+    cairo_surface_destroy(surface);
 
     return pattern;
 }

@@ -50,7 +50,7 @@ ui_widget_t* ui_panel_create(ui_view_t* view) {
 
 void ui_panel_set_color(ui_widget_t* widget, ui_color_t color) {
 
-    if (!widget || widget->kind != UI_WIDGET_PANEL) {
+    if (!ui_widget_is(widget, UI_WIDGET_PANEL)) {
         return;
     }
 
@@ -63,7 +63,7 @@ void ui_panel_set_color(ui_widget_t* widget, ui_color_t color) {
 
 void ui_panel_set_radius(ui_widget_t* widget, double radius) {
 
-    if (!widget || widget->kind != UI_WIDGET_PANEL) {
+    if (!ui_widget_is(widget, UI_WIDGET_PANEL)) {
         return;
     }
 
@@ -75,7 +75,7 @@ void ui_panel_set_radius(ui_widget_t* widget, double radius) {
 
 void ui_panel_set_border(ui_widget_t* widget, ui_color_t color, double width) {
 
-    if (!widget || widget->kind != UI_WIDGET_PANEL) {
+    if (!ui_widget_is(widget, UI_WIDGET_PANEL)) {
         return;
     }
 

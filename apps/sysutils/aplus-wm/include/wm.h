@@ -82,6 +82,8 @@
  */
 #define WM_SHADOW_TASKBAR 0.60
 
+#define WM_TASKBAR_OPACITY 0.9
+
 /**
  * @brief How a window grows into place when it opens and shrinks away when it closes.
  */
@@ -237,6 +239,9 @@
 #define WM_TASKBAR_NETWORK_POLL   5
 #define WM_TASKBAR_NETWORK_NAME   16
 
+#define WM_TASKBAR_FRAME_STRIPS 4
+#define WM_TASKBAR_GLASS_MAX    (WM_TASKBAR_FRAME_STRIPS + 6)
+
 /**
  * @brief What the taskbar's own items name in place of a window id, and what the launcher's button starts.
  */
@@ -374,6 +379,7 @@ typedef struct {
     double shadow_key;
     double shadow_ambient;
     double taskbar_shadow;
+    double taskbar_opacity;
 
     char font[UI_THEME_PATH_MAX];
     double font_size;
@@ -423,6 +429,9 @@ typedef struct {
 
     bool hwcursor;
 
+    int cursor_x;
+    int cursor_y;
+
 } wm_display_t;
 
 
@@ -432,6 +441,7 @@ typedef struct {
 typedef struct {
 
     cairo_surface_t* pieces[3][3];
+    cairo_pattern_t* patterns[3][3];
 
     int blur;
     int corner;
@@ -466,6 +476,10 @@ typedef struct {
     cairo_surface_t* surface;
     wm_rect_t rect;
 
+    ui_damage_t dirty;
+    uint64_t seen;
+    bool stale;
+
 } wm_blur_t;
 
 
@@ -483,6 +497,7 @@ typedef struct {
     ui_anim_t height;
 
     wm_rect_t painted;
+    wm_blur_t backdrop;
 
 } wm_drawer_t;
 
@@ -617,6 +632,12 @@ typedef struct wm_window {
     bool committed;
 
     char title[UI_TITLE_MAX];
+
+    struct {
+        cairo_font_face_t* face;
+        double size;
+        double advance;
+    } title_measure;
 
     char app[UI_ICON_NAME_MAX];
     cairo_surface_t* icon;
@@ -784,6 +805,7 @@ typedef struct {
             ui_anim_t open;
             ui_anim_t hover_mute;
             wm_rect_t painted;
+            wm_blur_t backdrop;
             int value;
             int restore;
         } volume;
@@ -791,6 +813,7 @@ typedef struct {
         struct {
             ui_anim_t open;
             wm_rect_t painted;
+            wm_blur_t backdrop;
             wm_netif_t ifaces[WM_TASKBAR_NETWORK_IFACES];
             size_t count;
         } network;
@@ -799,6 +822,7 @@ typedef struct {
             ui_anim_t open;
             ui_anim_t hover[WM_TASKBAR_SESSION_ROWS];
             wm_rect_t painted;
+            wm_blur_t backdrop;
         } session;
 
         struct {
@@ -807,7 +831,10 @@ typedef struct {
             ui_anim_t center;
             ui_anim_t width;
             wm_rect_t painted;
+            wm_blur_t backdrop;
         } popout;
+
+        wm_blur_t frame[WM_TASKBAR_FRAME_STRIPS];
 
         wm_pin_t pins[WM_PINS_MAX];
         size_t pins_count;
@@ -826,6 +853,7 @@ typedef struct {
     } clipboard;
 
     ui_damage_t damage;
+    ui_damage_t glass_damage;
 
     bool running;
 
@@ -834,15 +862,6 @@ typedef struct {
 
 extern wm_server_t wm;
 
-
-/**
- * @brief Implemented in rect.c.
- */
-bool wm_rect_contains_point(const wm_rect_t* rect, int x, int y);
-bool wm_rect_contains(const wm_rect_t* outer, const wm_rect_t* inner);
-bool wm_rect_intersects(const wm_rect_t* a, const wm_rect_t* b);
-wm_rect_t wm_rect_clip(const wm_rect_t* rect, int width, int height);
-wm_rect_t wm_rect_union(const wm_rect_t* a, const wm_rect_t* b);
 
 /**
  * @brief Implemented in image.c.
@@ -903,7 +922,7 @@ cairo_surface_t* wm_window_snapshot(wm_window_t* win, wm_rect_t* rect);
  * @brief Implemented in wallpaper.c.
  */
 cairo_pattern_t* wm_wallpaper_load(const char* path, int width, int height);
-cairo_pattern_t* wm_wallpaper_gradient(int height);
+cairo_pattern_t* wm_wallpaper_gradient(int width, int height);
 
 /**
  * @brief Implemented in theme.c.
@@ -935,6 +954,7 @@ void wm_input_refresh_cursor(void);
  */
 bool wm_keys_handle(uint16_t vkey, uint8_t down);
 void wm_keys_reap(void);
+void wm_keys_on_child(int signum);
 void wm_spawn(const char* const* argv);
 void wm_launcher_copy(void);
 
@@ -964,9 +984,14 @@ int wm_taskbar_open(void);
 void wm_taskbar_tick(int fd);
 void wm_taskbar_fini(void);
 wm_rect_t wm_taskbar_shadow_extent(wm_rect_t extent);
+wm_rect_t wm_taskbar_panel_extent(const ui_anim_t* anim, wm_rect_t panel, uint64_t now);
 void wm_taskbar_shadow(cairo_t* cr, const wm_rect_t* shape, double strength);
 void wm_taskbar_edge(cairo_t* cr);
-void wm_taskbar_popout_outline(cairo_t* cr, double x0, double x1, double top, double bottom, double fillet, double corner, double edge);
+bool wm_taskbar_frosted(void);
+size_t wm_taskbar_glass_shapes(wm_rect_t* shapes, wm_blur_t** backdrops, size_t max);
+void wm_taskbar_capture(const wm_rect_t* damage, size_t count);
+void wm_taskbar_glass(cairo_t* cr, const wm_blur_t* backdrop);
+void wm_taskbar_paint_shell(cairo_t* cr, double x0, double x1, double top, double bottom, double open, const wm_blur_t* backdrop);
 
 /**
  * @brief Implemented in menu.c.
@@ -1042,8 +1067,7 @@ wm_insets_t wm_window_insets(const wm_window_t* win);
 cairo_format_t wm_window_format(const wm_window_t* win);
 wm_rect_t wm_window_frame(const wm_window_t* win);
 wm_rect_t wm_window_shadow_rect(const wm_window_t* win);
-wm_rect_t wm_window_close_rect(const wm_window_t* win);
-wm_rect_t wm_window_maximize_rect(const wm_window_t* win);
+wm_rect_t wm_shadow_reach(const wm_rect_t* frame);
 wm_rect_t wm_window_button_rect(const wm_window_t* win, wm_region_t region);
 ui_anim_t* wm_window_button_hover(wm_window_t* win, wm_region_t region);
 int wm_window_radius(const wm_window_t* win);
@@ -1080,6 +1104,8 @@ int wm_clipboard_set(const char* mime, const void* data, size_t size);
  * @brief Implemented in main.c.
  */
 void wm_damage(const wm_rect_t* rect);
+void wm_damage_glass(const wm_rect_t* rect);
 void wm_damage_window(const wm_window_t* win);
+void wm_damage_window_edges(const wm_window_t* win);
 
 #endif

@@ -86,8 +86,8 @@ void wm_drawer_damage(void) {
 
     const wm_rect_t extent = wm_drawer_extent(wm.frame_time);
 
-    wm_damage(&wm.drawer.painted);
-    wm_damage(&extent);
+    wm_damage_glass(&wm.drawer.painted);
+    wm_damage_glass(&extent);
 }
 
 
@@ -261,7 +261,7 @@ wm_window_t* wm_drawer_at(int x, int y) {
 
     const wm_rect_t r = {win->x, win->y, win->width, WM_MIN(win->height, (int)ui_anim_value(&wm.drawer.height, wm.frame_time))};
 
-    return wm_rect_contains_point(&r, x, y) ? win : NULL;
+    return ui_rect_contains_point(&r, x, y) ? win : NULL;
 }
 
 
@@ -281,7 +281,7 @@ void wm_drawer_paint(cairo_t* cr, const wm_rect_t* damage, size_t count) {
     bool visible = false;
 
     for (size_t i = 0; i < count && !visible && extent.width > 0; i++) {
-        visible = wm_rect_intersects(&extent, &damage[i]);
+        visible = ui_rect_intersects(&extent, &damage[i]);
     }
 
     if (!visible) {
@@ -319,9 +319,7 @@ void wm_drawer_paint(cairo_t* cr, const wm_rect_t* damage, size_t count) {
     cairo_close_path(cr);
 
     cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
-    wm_source(cr, wm.theme.taskbar, 1.0);
-    cairo_fill_preserve(cr);
-    cairo_clip(cr);
+    wm_taskbar_glass(cr, &wm.drawer.backdrop);
 
 
     const wm_window_t* win = wm.drawer.window;
@@ -349,6 +347,8 @@ void wm_drawer_paint(cairo_t* cr, const wm_rect_t* damage, size_t count) {
 void wm_drawer_fini(void) {
 
     wm_drawer_drop_still();
+
+    wm_blur_fini(&wm.drawer.backdrop);
 
     wm.drawer.window = NULL;
 }

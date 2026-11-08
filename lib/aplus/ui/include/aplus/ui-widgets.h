@@ -340,6 +340,7 @@ void ui_widget_destroy(ui_widget_t* widget);
 void ui_widget_set_rect(ui_widget_t* widget, int x, int y, int width, int height);
 void ui_widget_place(ui_widget_t* widget, ui_rect_t rect);
 ui_rect_t ui_widget_rect(const ui_widget_t* widget);
+void ui_widget_set_clip(ui_widget_t* widget, const ui_rect_t* clip);
 
 void ui_widget_set_visible(ui_widget_t* widget, bool visible);
 bool ui_widget_visible(const ui_widget_t* widget);
@@ -390,6 +391,7 @@ typedef enum {
     UI_BUTTON_STYLE_DEFAULT = 0,
     UI_BUTTON_STYLE_PRIMARY,
     UI_BUTTON_STYLE_DANGER,
+    UI_BUTTON_STYLE_FLAT,
 
 } ui_button_style_t;
 
@@ -397,6 +399,7 @@ typedef enum {
 ui_widget_t* ui_button_create(ui_view_t* view, const char* text, ui_action_fn on_click, void* user);
 void ui_button_set_text(ui_widget_t* widget, const char* text);
 void ui_button_set_style(ui_widget_t* widget, ui_button_style_t style);
+void ui_button_set_align(ui_widget_t* widget, ui_align_t align);
 void ui_button_set_font(ui_widget_t* widget, ui_font_weight_t weight, double size);
 
 /**

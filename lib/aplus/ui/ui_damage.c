@@ -34,48 +34,15 @@
 
 
 static int64_t ui_rect_area(const ui_rect_t* r) {
-
     return (int64_t)r->width * (int64_t)r->height;
-}
-
-
-static ui_rect_t ui_rect_union(const ui_rect_t* a, const ui_rect_t* b) {
-
-    const int x0 = a->x < b->x ? a->x : b->x;
-    const int y0 = a->y < b->y ? a->y : b->y;
-
-    const int ax1 = a->x + a->width;
-    const int ay1 = a->y + a->height;
-    const int bx1 = b->x + b->width;
-    const int by1 = b->y + b->height;
-
-    const int x1 = ax1 > bx1 ? ax1 : bx1;
-    const int y1 = ay1 > by1 ? ay1 : by1;
-
-    ui_rect_t r = {x0, y0, x1 - x0, y1 - y0};
-
-    return r;
 }
 
 
 static int64_t ui_rect_overlap(const ui_rect_t* a, const ui_rect_t* b) {
 
-    const int x0 = a->x > b->x ? a->x : b->x;
-    const int y0 = a->y > b->y ? a->y : b->y;
+    const ui_rect_t r = ui_rect_intersect(a, b);
 
-    const int ax1 = a->x + a->width;
-    const int ay1 = a->y + a->height;
-    const int bx1 = b->x + b->width;
-    const int by1 = b->y + b->height;
-
-    const int x1 = ax1 < bx1 ? ax1 : bx1;
-    const int y1 = ay1 < by1 ? ay1 : by1;
-
-    if (x0 >= x1 || y0 >= y1) {
-        return 0;
-    }
-
-    return (int64_t)(x1 - x0) * (int64_t)(y1 - y0);
+    return ui_rect_area(&r);
 }
 
 
@@ -188,28 +155,11 @@ void ui_damage_clip(ui_damage_t* damage, int width, int height) {
 
     for (size_t i = 0; i < damage->count; i++) {
 
-        int x0 = damage->rects[i].x < 0 ? 0 : damage->rects[i].x;
-        int y0 = damage->rects[i].y < 0 ? 0 : damage->rects[i].y;
+        const ui_rect_t r = ui_rect_clip(&damage->rects[i], width, height);
 
-        int x1 = damage->rects[i].x + damage->rects[i].width;
-        int y1 = damage->rects[i].y + damage->rects[i].height;
-
-        if (x1 > width) {
-            x1 = width;
+        if (!ui_rect_empty(&r)) {
+            damage->rects[kept++] = r;
         }
-
-        if (y1 > height) {
-            y1 = height;
-        }
-
-        if (x0 >= x1 || y0 >= y1) {
-            continue;
-        }
-
-
-        ui_rect_t r = {x0, y0, x1 - x0, y1 - y0};
-
-        damage->rects[kept++] = r;
     }
 
     damage->count = kept;

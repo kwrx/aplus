@@ -56,7 +56,13 @@ wm_server_t wm = {0};
  */
 void wm_damage(const wm_rect_t* rect) {
 
-    ui_damage_add(&wm.damage, wm_rect_clip(rect, wm.display.width, wm.display.height));
+    ui_damage_add(&wm.damage, ui_rect_clip(rect, wm.display.width, wm.display.height));
+}
+
+
+void wm_damage_glass(const wm_rect_t* rect) {
+
+    ui_damage_add(&wm.glass_damage, ui_rect_clip(rect, wm.display.width, wm.display.height));
 }
 
 
@@ -73,6 +79,30 @@ void wm_damage_window(const wm_window_t* win) {
 }
 
 
+void wm_damage_window_edges(const wm_window_t* win) {
+
+    const wm_rect_t s     = wm_window_shadow_rect(win);
+    const wm_rect_t f     = wm_window_frame(win);
+    const wm_insets_t in  = wm_window_insets(win);
+    const int corner      = WM_MAX(wm_window_radius(win), 3);
+    const int top         = WM_MAX(in.top, corner);
+    const int bottom      = WM_MAX(in.bottom, corner);
+    const int left        = WM_MAX(in.left, 3);
+    const int right       = WM_MAX(in.right, 3);
+
+    const wm_rect_t strips[] = {
+        {s.x,                    s.y,                       s.width,                                  f.y - s.y + top                          },
+        {s.x,                    f.y + f.height - bottom,   s.width,                                  s.y + s.height - (f.y + f.height) + bottom},
+        {s.x,                    f.y + top,                 f.x - s.x + left,                         f.height - top - bottom                  },
+        {f.x + f.width - right,  f.y + top,                 s.x + s.width - (f.x + f.width) + right,  f.height - top - bottom                  },
+    };
+
+    for (size_t i = 0; i < WM_ARRAY_COUNT(strips); i++) {
+        wm_damage(&strips[i]);
+    }
+}
+
+
 /**
  * @brief Reports whether some window paints over the whole of a rectangle anyway.
  *
@@ -82,9 +112,27 @@ void wm_damage_window(const wm_window_t* win) {
  * @param rect The rectangle to test.
  * @return true when the desktop behind it never becomes visible.
  */
-static bool wm_damage_is_covered(const wm_rect_t* rect) {
+static bool wm_damage_is_covered(const wm_rect_t* rect, const wm_window_t* below) {
 
-    for (wm_window_t* win = wm.windows; win; win = win->next) {
+    bool covered = false;
+
+    for (wm_window_t* win = wm.windows; win && win != below; win = win->next) {
+
+        if (wm_window_drawer(win)) {
+            continue;
+        }
+
+        if (wm_window_frosted(win)) {
+
+            const wm_rect_t frame = wm_window_frame(win);
+            const wm_rect_t reach = {frame.x - WM_BLUR_RADIUS, frame.y - WM_BLUR_RADIUS, frame.width + 2 * WM_BLUR_RADIUS, frame.height + 2 * WM_BLUR_RADIUS};
+
+            if (ui_rect_intersects(&reach, rect)) {
+                covered = false;
+            }
+
+            continue;
+        }
 
         if (!wm_window_opaque(win)) {
             continue;
@@ -101,16 +149,12 @@ static bool wm_damage_is_covered(const wm_rect_t* rect) {
             .height = win->height - radius,
         };
 
-        if (opaque.width <= 0 || opaque.height <= 0) {
-            continue;
-        }
-
-        if (wm_rect_contains(&opaque, rect)) {
-            return true;
+        if (opaque.width > 0 && opaque.height > 0 && ui_rect_contains(&opaque, rect)) {
+            covered = true;
         }
     }
 
-    return false;
+    return covered;
 }
 
 
@@ -140,13 +184,56 @@ static int wm_display_changed(void) {
 }
 
 
+static struct {
+
+    struct pollfd* pfds;
+    wm_client_t** owners;
+    size_t size;
+
+} wm_poll;
+
+
+static size_t wm_poll_reserve(size_t count) {
+
+    if (count <= wm_poll.size) {
+        return wm_poll.size;
+    }
+
+    const size_t grown = WM_MAX(count, 2 * wm_poll.size);
+
+    struct pollfd* pfds  = realloc(wm_poll.pfds, grown * sizeof(*pfds));
+
+    if (pfds) {
+        wm_poll.pfds = pfds;
+    }
+
+    wm_client_t** owners = realloc(wm_poll.owners, grown * sizeof(*owners));
+
+    if (owners) {
+        wm_poll.owners = owners;
+    }
+
+    if (pfds && owners) {
+        wm_poll.size = grown;
+    }
+
+    return wm_poll.size;
+}
+
+
 static void wm_composite(void) {
 
-    if (!wm.damage.count) {
+    if (!wm.damage.count && !wm.glass_damage.count) {
         return;
     }
 
     wm_blur_damage();
+
+    for (size_t i = 0; i < wm.glass_damage.count; i++) {
+        ui_damage_add(&wm.damage, wm.glass_damage.rects[i]);
+    }
+
+    ui_damage_reset(&wm.glass_damage);
 
 
     wm_rect_t damage[UI_DAMAGE_MAX];
@@ -177,7 +264,7 @@ static void wm_composite(void) {
 
     for (size_t i = 0; i < count; i++) {
 
-        if (wm_damage_is_covered(&damage[i])) {
+        if (wm_damage_is_covered(&damage[i], NULL)) {
             continue;
         }
 
@@ -204,11 +291,27 @@ static void wm_composite(void) {
     }
 
 
-    wm_window_t* stack[64];
+    static wm_window_t** stack;
+    static size_t stack_size;
 
     size_t depth = 0;
 
-    for (wm_window_t* win = wm.windows; win && depth < WM_ARRAY_COUNT(stack); win = win->next) {
+    for (wm_window_t* win = wm.windows; win; win = win->next) {
+
+        if (depth == stack_size) {
+
+            const size_t grown = stack_size ? stack_size * 2 : 64;
+
+            wm_window_t** bigger = realloc(stack, grown * sizeof(*stack));
+
+            if (!bigger) {
+                break;
+            }
+
+            stack      = bigger;
+            stack_size = grown;
+        }
+
         stack[depth++] = win;
     }
 
@@ -223,7 +326,10 @@ static void wm_composite(void) {
         bool visible = stack[depth]->morph != NULL;
 
         for (size_t i = 0; i < count && !visible; i++) {
-            visible = wm_rect_intersects(&extent, &damage[i]);
+
+            const wm_rect_t shown = ui_rect_intersect(&extent, &damage[i]);
+
+            visible = !ui_rect_empty(&shown) && !wm_damage_is_covered(&shown, stack[depth]);
         }
 
         if (!visible) {
@@ -234,6 +340,8 @@ static void wm_composite(void) {
     }
 
     wm_ghost_paint(cr, damage, count);
+
+    wm_taskbar_capture(damage, count);
 
     wm_taskbar_paint(cr, damage, count);
 
@@ -385,6 +493,8 @@ int main(int argc, char** argv) {
     wm.pointer.x = wm.display.width / 2;
     wm.pointer.y = wm.display.height / 2;
 
+    wm_display_cursor_move(&wm.display, wm.pointer.x, wm.pointer.y);
+
 
     ui_font_face(wm.theme.font);
 
@@ -427,6 +537,7 @@ int main(int argc, char** argv) {
 
     signal(SIGINT, wm_on_signal);
     signal(SIGTERM, wm_on_signal);
+    signal(SIGCHLD, wm_keys_on_child);
     signal(SIGPIPE, SIG_IGN);
     signal(SIGHUP, SIG_IGN);
 
@@ -446,8 +557,21 @@ int main(int argc, char** argv) {
 
     while (wm.running) {
 
-        struct pollfd pfds[64];
-        wm_client_t* owners[64];
+        size_t clients = 4;
+
+        for (wm_client_t* client = wm.clients; client; client = client->next) {
+            clients++;
+        }
+
+        const size_t room = wm_poll_reserve(clients);
+
+        if (room < 4) {
+            ulog_errorf("cannot allocate the poll set");
+            break;
+        }
+
+        struct pollfd* pfds  = wm_poll.pfds;
+        wm_client_t** owners = wm_poll.owners;
 
         nfds_t count = 0;
 
@@ -472,7 +596,7 @@ int main(int argc, char** argv) {
         owners[count]       = NULL;
         count++;
 
-        for (wm_client_t* client = wm.clients; client && count < WM_ARRAY_COUNT(pfds); client = client->next) {
+        for (wm_client_t* client = wm.clients; client && count < room; client = client->next) {
 
             pfds[count].fd      = client->fd;
             pfds[count].events  = POLLIN | (wm_client_wants_write(client) ? POLLOUT : 0);

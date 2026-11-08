@@ -444,7 +444,7 @@ bool wm_menu_shown(void) {
  * @return true inside its outline, leaving out the fillets.
  */
 bool wm_menu_contains(int x, int y) {
-    return wm_menu_shown() && wm_rect_contains_point(&wm.menu.rect, x, y);
+    return wm_menu_shown() && ui_rect_contains_point(&wm.menu.rect, x, y);
 }
 
 
@@ -465,7 +465,7 @@ int wm_menu_row_at(int x, int y) {
 
         const wm_rect_t r = wm_menu_row_rect(i);
 
-        if (!(wm.menu.rows[i].flags & (UI_MENU_SEPARATOR | UI_MENU_DISABLED)) && wm_rect_contains_point(&r, x, y)) {
+        if (!(wm.menu.rows[i].flags & (UI_MENU_SEPARATOR | UI_MENU_DISABLED)) && ui_rect_contains_point(&r, x, y)) {
             return i;
         }
     }
@@ -518,26 +518,17 @@ double wm_menu_hold(uint32_t owner, uint64_t now) {
  */
 wm_rect_t wm_menu_extent(uint64_t now) {
 
-    const double open = ui_anim_value(&wm.menu.open, now);
-
-    if (open <= 0.0) {
-
-        const wm_rect_t none = {0, 0, 0, 0};
-
-        return none;
-    }
-
-
     const wm_rect_t panel = wm.menu.rect;
 
-    if (wm.menu.anchor == WM_MENU_POINTER) {
-
-        const wm_rect_t r = {panel.x - 1, panel.y - 1, panel.width + 2, panel.height + 2};
-
-        return wm_taskbar_shadow_extent(r);
+    if (wm.menu.anchor != WM_MENU_POINTER) {
+        return wm_taskbar_panel_extent(&wm.menu.open, panel, now);
     }
 
-    const wm_rect_t r = {panel.x, panel.y - WM_TASKBAR_POPOUT_RADIUS - 2, (int)ceil(panel.width * open) + 2, panel.height + 2 * WM_TASKBAR_POPOUT_RADIUS + 4};
+    if (ui_anim_value(&wm.menu.open, now) <= 0.0) {
+        return (wm_rect_t){0, 0, 0, 0};
+    }
+
+    const wm_rect_t r = {panel.x - 1, panel.y - 1, panel.width + 2, panel.height + 2};
 
     return wm_taskbar_shadow_extent(r);
 }
@@ -887,27 +878,7 @@ static bool wm_menu_paint_shape(cairo_t* cr, const wm_menu_palette_t* palette, d
         return false;
     }
 
-    const double top    = panel.y;
-    const double bottom = panel.y + panel.height;
-
-    const double fillet = WM_MIN(WM_TASKBAR_POPOUT_RADIUS, x1 - x0);
-    const double corner = WM_MIN(WM_TASKBAR_POPOUT_RADIUS, (x1 - x0) / 2.0);
-
-    const wm_rect_t shape = {(int)x0, (int)top, (int)ceil(x1 - x0), (int)(bottom - top)};
-
-    wm_taskbar_shadow(cr, &shape, open);
-
-    cairo_new_path(cr);
-    wm_taskbar_popout_outline(cr, x0, x1, top, bottom, fillet, corner, 0.5);
-    wm_taskbar_edge(cr);
-
-    cairo_new_path(cr);
-    wm_taskbar_popout_outline(cr, x0, x1, top, bottom, fillet, corner, 0.0);
-    cairo_close_path(cr);
-
-    wm_source(cr, palette->fill, 1.0);
-    cairo_fill_preserve(cr);
-    cairo_clip(cr);
+    wm_taskbar_paint_shell(cr, x0, x1, panel.y, panel.y + panel.height, open, &wm.menu.backdrop);
 
     *dx = -(int)round(panel.width - (x1 - x0));
     *dy = 0;

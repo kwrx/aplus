@@ -355,7 +355,7 @@ static ui_keymap_t* ui_entry_keymap(ui_widget_t* widget) {
 
 void ui_entry_set_text(ui_widget_t* widget, const char* text) {
 
-    if (!widget || widget->kind != UI_WIDGET_ENTRY) {
+    if (!ui_widget_is(widget, UI_WIDGET_ENTRY)) {
         return;
     }
 
@@ -381,7 +381,7 @@ void ui_entry_set_text(ui_widget_t* widget, const char* text) {
 
 const char* ui_entry_text(const ui_widget_t* widget) {
 
-    if (!widget || widget->kind != UI_WIDGET_ENTRY) {
+    if (!ui_widget_is(widget, UI_WIDGET_ENTRY)) {
         return NULL;
     }
 
@@ -391,7 +391,7 @@ const char* ui_entry_text(const ui_widget_t* widget) {
 
 void ui_entry_set_placeholder(ui_widget_t* widget, const char* text) {
 
-    if (!widget || widget->kind != UI_WIDGET_ENTRY) {
+    if (!ui_widget_is(widget, UI_WIDGET_ENTRY)) {
         return;
     }
 
@@ -414,7 +414,7 @@ void ui_entry_set_placeholder(ui_widget_t* widget, const char* text) {
 
 void ui_entry_set_font(ui_widget_t* widget, ui_font_weight_t weight, double size) {
 
-    if (!widget || widget->kind != UI_WIDGET_ENTRY) {
+    if (!ui_widget_is(widget, UI_WIDGET_ENTRY)) {
         return;
     }
 
@@ -446,7 +446,7 @@ static void ui_entry_restyle(ui_widget_t* widget) {
 
 void ui_entry_on_change(ui_widget_t* widget, ui_action_fn fn, void* user) {
 
-    if (!widget || widget->kind != UI_WIDGET_ENTRY) {
+    if (!ui_widget_is(widget, UI_WIDGET_ENTRY)) {
         return;
     }
 
@@ -457,7 +457,7 @@ void ui_entry_on_change(ui_widget_t* widget, ui_action_fn fn, void* user) {
 
 void ui_entry_on_submit(ui_widget_t* widget, ui_action_fn fn, void* user) {
 
-    if (!widget || widget->kind != UI_WIDGET_ENTRY) {
+    if (!ui_widget_is(widget, UI_WIDGET_ENTRY)) {
         return;
     }
 
@@ -551,16 +551,25 @@ static bool ui_entry_on_press(ui_widget_t* widget, int x, int y) {
     const size_t length = strlen(widget->entry.text);
 
     size_t caret = 0;
+    size_t lo    = 1;
+    size_t hi    = length;
 
-    while (caret < length) {
+    while (lo <= hi) {
 
-        const size_t next = ui_entry_next(widget, caret);
+        const size_t mid = lo + (hi - lo) / 2;
 
-        if (ui_entry_width_to(widget, next) > (double)target) {
-            break;
+        size_t at = mid;
+
+        while (at > 0 && ((unsigned char)widget->entry.text[at] & 0xC0) == 0x80) {
+            at--;
         }
 
-        caret = next;
+        if (ui_entry_width_to(widget, at) <= (double)target) {
+            caret = at > caret ? at : caret;
+            lo    = mid + 1;
+        } else {
+            hi = mid - 1;
+        }
     }
 
     widget->entry.caret = caret;
@@ -661,6 +670,16 @@ static bool ui_entry_on_focus(ui_widget_t* widget, bool focused) {
 }
 
 
+static ui_rect_t ui_entry_caret_rect(ui_widget_t* widget) {
+
+    const ui_rect_t text = ui_entry_text_rect(widget);
+
+    const int caret = text.x + (int)ui_entry_width_to(widget, widget->entry.caret) - widget->entry.scroll;
+
+    return (ui_rect_t){caret - 1, text.y, (int)UI_ENTRY_CARET_WIDTH + 3, text.height};
+}
+
+
 /**
  * @brief Blinks the caret, and keeps painting while the focus ring fades in or out.
  *
@@ -691,7 +710,7 @@ static int ui_entry_tick(ui_widget_t* widget, uint64_t now) {
 
         elapsed = 0;
 
-        ui_widget_invalidate(widget);
+        ui_widget_invalidate_rect(widget, ui_entry_caret_rect(widget));
     }
 
     return (int)(UI_ENTRY_BLINK_MS - elapsed);

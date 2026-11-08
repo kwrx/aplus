@@ -22,6 +22,7 @@
  */
 
 #include <math.h>
+#include <stdint.h>
 #include <string.h>
 
 #include "ui_widget_internal.h"
@@ -185,36 +186,52 @@ void ui_draw_ellipsize(char* out, size_t size, const char* text, const char* fon
     }
 
 
+    if (size < sizeof(ellipsis)) {
+        out[0] = '\0';
+        return;
+    }
+
     size_t len = strlen(out);
 
-    const size_t guess = (size_t)((double)len * (max_width / full));
-
-    if (guess < len) {
-        len = guess;
+    if (len > size - sizeof(ellipsis)) {
+        len = size - sizeof(ellipsis);
     }
 
 
-    while (len > 0) {
+    size_t lo   = 0;
+    size_t hi   = len;
+    size_t best = SIZE_MAX;
 
-        while (len > 0 && ((unsigned char)out[len] & 0xC0) == 0x80) {
-            len--;
+    while (lo <= hi) {
+
+        const size_t mid = lo + (hi - lo) / 2;
+
+        size_t cut = mid;
+
+        while (cut > 0 && ((unsigned char)text[cut] & 0xC0) == 0x80) {
+            cut--;
         }
 
-        if (len + sizeof(ellipsis) <= size) {
+        memcpy(out, text, cut);
+        memcpy(out + cut, ellipsis, sizeof(ellipsis));
 
-            memcpy(out + len, ellipsis, sizeof(ellipsis));
-
-            if (ui_draw_text_width(out, font, fsize) <= max_width) {
-                return;
-            }
-
-            out[len] = '\0';
+        if (ui_draw_text_width(out, font, fsize) <= max_width) {
+            best = cut;
+            lo   = mid + 1;
+        } else if (mid == 0) {
+            break;
+        } else {
+            hi = mid - 1;
         }
-
-        len--;
     }
 
-    out[0] = '\0';
+    if (best == SIZE_MAX) {
+        out[0] = '\0';
+        return;
+    }
+
+    memcpy(out, text, best);
+    memcpy(out + best, ellipsis, sizeof(ellipsis));
 }
 
 

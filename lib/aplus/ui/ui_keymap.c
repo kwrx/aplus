@@ -79,14 +79,29 @@ typedef struct {
 } __attribute__((packed)) ui_keymap_key_t;
 
 
-struct ui_keymap {
+typedef struct ui_keymap_tables {
+
+    struct ui_keymap_tables* next;
+
+    size_t refs;
+    char* path;
 
     struct {
         ui_keymap_key_t keys[NR_KEYS];
     } __attribute__((packed)) maps[UI_KEYMAP_MAPS];
 
+} ui_keymap_tables_t;
+
+
+struct ui_keymap {
+
+    ui_keymap_tables_t* tables;
+
     uint8_t modifiers;
 };
+
+
+static ui_keymap_tables_t* ui_keymap_loaded;
 
 
 /**
@@ -130,20 +145,30 @@ ui_keymap_t* ui_keymap_open(const char* path) {
     }
 
 
-    gzFile file = gzopen(path, "rb");
-
-    if (!file) {
-        return NULL;
-    }
-
-
     ui_keymap_t* keymap = (ui_keymap_t*)calloc(1, sizeof(ui_keymap_t));
 
     if (!keymap) {
+        return NULL;
+    }
+
+    for (ui_keymap_tables_t* t = ui_keymap_loaded; t; t = t->next) {
+
+        if (strcmp(t->path, path) == 0) {
+            t->refs++;
+            keymap->tables = t;
+            return keymap;
+        }
+    }
+
+
+    ui_keymap_tables_t* tables = (ui_keymap_tables_t*)calloc(1, sizeof(ui_keymap_tables_t));
+
+    if (!tables || !(tables->path = strdup(path))) {
 
         const int saved = errno;
 
-        gzclose(file);
+        free(tables);
+        free(keymap);
 
         errno = saved;
         return NULL;
@@ -154,11 +179,18 @@ ui_keymap_t* ui_keymap_open(const char* path) {
 
     errno = 0;
 
-    if (!ui_keymap_read_all(file, magic, sizeof(magic)) || memcmp(magic, UI_KEYMAP_MAGIC, sizeof(magic)) != 0 || !ui_keymap_read_all(file, keymap->maps, sizeof(keymap->maps))) {
+    gzFile file = gzopen(path, "rb");
+
+    if (!file || !ui_keymap_read_all(file, magic, sizeof(magic)) || memcmp(magic, UI_KEYMAP_MAGIC, sizeof(magic)) != 0 || !ui_keymap_read_all(file, tables->maps, sizeof(tables->maps))) {
 
         const int saved = errno == 0 ? EPROTO : errno;
 
-        gzclose(file);
+        if (file) {
+            gzclose(file);
+        }
+
+        free(tables->path);
+        free(tables);
         free(keymap);
 
         errno = saved;
@@ -167,11 +199,38 @@ ui_keymap_t* ui_keymap_open(const char* path) {
 
     gzclose(file);
 
+
+    tables->refs     = 1;
+    tables->next     = ui_keymap_loaded;
+    ui_keymap_loaded = tables;
+
+    keymap->tables = tables;
+
     return keymap;
 }
 
 
 void ui_keymap_close(ui_keymap_t* keymap) {
+
+    if (!keymap) {
+        return;
+    }
+
+    ui_keymap_tables_t* tables = keymap->tables;
+
+    if (--tables->refs == 0) {
+
+        ui_keymap_tables_t** it = &ui_keymap_loaded;
+
+        while (*it != tables) {
+            it = &(*it)->next;
+        }
+
+        *it = tables->next;
+
+        free(tables->path);
+        free(tables);
+    }
 
     free(keymap);
 }
@@ -189,7 +248,7 @@ uint16_t ui_keymap_lookup(const ui_keymap_t* keymap, uint16_t vkey) {
         return 0;
     }
 
-    return keymap->maps[keymap->modifiers].keys[vkey].raw;
+    return keymap->tables->maps[keymap->modifiers].keys[vkey].raw;
 }
 
 
@@ -208,7 +267,7 @@ size_t ui_keymap_translate(ui_keymap_t* keymap, uint16_t vkey, bool down, char* 
     }
 
 
-    const ui_keymap_key_t key = keymap->maps[keymap->modifiers].keys[vkey];
+    const ui_keymap_key_t key = keymap->tables->maps[keymap->modifiers].keys[vkey];
 
     switch (key.typ) {
 

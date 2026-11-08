@@ -245,6 +245,13 @@ int wm_shadow_init(wm_shadow_t* shadow, int blur, int radius) {
                 wm_shadow_fini(shadow);
                 return -1;
             }
+
+            cairo_pattern_t* pattern = cairo_pattern_create_for_surface(shadow->pieces[row][col]);
+
+            cairo_pattern_set_extend(pattern, CAIRO_EXTEND_PAD);
+            cairo_pattern_set_filter(pattern, CAIRO_FILTER_BILINEAR);
+
+            shadow->patterns[row][col] = pattern;
         }
     }
 
@@ -264,6 +271,11 @@ void wm_shadow_fini(wm_shadow_t* shadow) {
     for (int row = 0; row < 3; row++) {
 
         for (int col = 0; col < 3; col++) {
+
+            if (shadow->patterns[row][col]) {
+                cairo_pattern_destroy(shadow->patterns[row][col]);
+                shadow->patterns[row][col] = NULL;
+            }
 
             if (shadow->pieces[row][col]) {
                 cairo_surface_destroy(shadow->pieces[row][col]);
@@ -347,14 +359,12 @@ void wm_shadow_paint(cairo_t* cr, const wm_shadow_t* shadow, const wm_rect_t* fr
             }
 
 
-            cairo_pattern_t* pattern = cairo_pattern_create_for_surface(shadow->pieces[rows[r].piece][cols[c].piece]);
+            cairo_pattern_t* pattern = shadow->patterns[rows[r].piece][cols[c].piece];
 
             cairo_matrix_t matrix;
 
             cairo_matrix_init_translate(&matrix, -cols[c].anchor, -rows[r].anchor);
             cairo_pattern_set_matrix(pattern, &matrix);
-            cairo_pattern_set_extend(pattern, CAIRO_EXTEND_PAD);
-            cairo_pattern_set_filter(pattern, CAIRO_FILTER_BILINEAR);
 
             cairo_save(cr);
 
@@ -364,8 +374,6 @@ void wm_shadow_paint(cairo_t* cr, const wm_shadow_t* shadow, const wm_rect_t* fr
             cairo_mask(cr, pattern);
 
             cairo_restore(cr);
-
-            cairo_pattern_destroy(pattern);
         }
     }
 

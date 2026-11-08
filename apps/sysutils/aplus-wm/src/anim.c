@@ -58,25 +58,6 @@ static bool wm_anim_step(ui_anim_t* anim, uint64_t now, bool* dirty) {
 
 
 /**
- * @brief Repaints the part of the screen a frame's shadow could reach, wherever the frame happens to be.
- *
- * @param frame The frame.
- */
-static void wm_damage_frame(const wm_rect_t* frame) {
-
-    wm_rect_t area = {
-
-        .x      = frame->x - WM_SHADOW_KEY_BLUR,
-        .y      = frame->y - WM_SHADOW_KEY_BLUR,
-        .width  = frame->width + 2 * WM_SHADOW_KEY_BLUR,
-        .height = frame->height + 2 * WM_SHADOW_KEY_BLUR + WM_SHADOW_KEY_OFFSET,
-    };
-
-    wm_damage(&area);
-}
-
-
-/**
  * @brief Advances every transition to the frame about to be composited, damaging what it moved.
  *
  * @param now The clock reading of that frame.
@@ -92,13 +73,14 @@ int wm_animate(uint64_t now) {
         bool whole   = false;
         bool buttons = false;
         bool bar     = false;
+        bool edges   = false;
         bool flight  = false;
 
         running |= wm_anim_step(&win->appear, now, &whole);
-        running |= wm_anim_step(&win->focus, now, &bar);
+        running |= wm_anim_step(&win->focus, now, &edges);
         running |= wm_anim_step(&win->minimize, now, &flight);
 
-        whole |= bar;
+        bar |= edges;
 
         running |= wm_anim_step(&win->hover_task, now, &bar);
 
@@ -106,7 +88,9 @@ int wm_animate(uint64_t now) {
 
             running |= wm_anim_step(&win->morph_anim, now, &whole);
 
-            wm_damage_frame(&win->morph_from);
+            const wm_rect_t from = wm_shadow_reach(&win->morph_from);
+
+            wm_damage(&from);
 
             if (!win->morph_anim.duration) {
 
@@ -126,7 +110,7 @@ int wm_animate(uint64_t now) {
 
             const wm_rect_t shadow = wm_window_shadow_rect(win);
             const wm_rect_t entry  = wm_taskbar_entry_rect(win);
-            const wm_rect_t path   = wm_rect_union(&shadow, &entry);
+            const wm_rect_t path   = ui_rect_union(&shadow, &entry);
 
             wm_damage(&path);
         }
@@ -135,10 +119,14 @@ int wm_animate(uint64_t now) {
 
             wm_damage_window(win);
 
+        } else if (edges) {
+
+            wm_damage_window_edges(win);
+
         } else if (buttons) {
 
-            const wm_rect_t close    = wm_window_close_rect(win);
-            const wm_rect_t maximize = wm_window_maximize_rect(win);
+            const wm_rect_t close    = wm_window_button_rect(win, WM_REGION_CLOSE);
+            const wm_rect_t maximize = wm_window_button_rect(win, WM_REGION_MAXIMIZE);
             const wm_rect_t minimize = wm_window_button_rect(win, WM_REGION_MINIMIZE);
 
             wm_damage(&close);
@@ -325,7 +313,7 @@ void wm_ghost_paint(cairo_t* cr, const wm_rect_t* damage, size_t count) {
         bool visible = false;
 
         for (size_t i = 0; i < count && !visible; i++) {
-            visible = wm_rect_intersects(&ghost->rect, &damage[i]);
+            visible = ui_rect_intersects(&ghost->rect, &damage[i]);
         }
 
         if (!visible) {

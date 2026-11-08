@@ -341,6 +341,17 @@ ui_window_t* ui_window_create_ex(ui_connection_t* conn, int width, int height, c
             break;
         }
 
+        if (hdr.type == UI_EV_THEME && hdr.length == sizeof(conn->theme.msg)) {
+
+            if (ui_conn_read(conn, &conn->theme.msg, sizeof(conn->theme.msg)) < 0) {
+                free(win);
+                return NULL;
+            }
+
+            ui_theme_adopt(&conn->theme.msg);
+            continue;
+        }
+
         uint8_t scratch[256];
 
         for (size_t left = hdr.length; left;) {
@@ -536,32 +547,38 @@ int ui_window_commit(ui_window_t* win) {
 
 
     const size_t count = win->damage.count;
+    const size_t record = sizeof(ui_msg_header_t) + sizeof(ui_msg_commit_t);
 
-    ui_msg_commit_t commits[UI_DAMAGE_MAX];
+    uint8_t batch[UI_DAMAGE_MAX * (sizeof(ui_msg_header_t) + sizeof(ui_msg_commit_t))];
 
     for (size_t i = 0; i < count; i++) {
 
-        ui_window_flip(win, &win->damage.rects[i]);
+        const ui_rect_t* rect = &win->damage.rects[i];
 
-        commits[i].window_id = win->id;
-        commits[i].serial    = win->serial;
-        commits[i].x         = (uint16_t)win->damage.rects[i].x;
-        commits[i].y         = (uint16_t)win->damage.rects[i].y;
-        commits[i].width     = (uint16_t)win->damage.rects[i].width;
-        commits[i].height    = (uint16_t)win->damage.rects[i].height;
+        ui_window_flip(win, rect);
+
+        const ui_msg_header_t hdr = {
+            .type   = UI_REQ_COMMIT,
+            .flags  = 0,
+            .length = sizeof(ui_msg_commit_t),
+        };
+
+        const ui_msg_commit_t commit = {
+            .window_id = win->id,
+            .serial    = win->serial,
+            .x         = (uint16_t)rect->x,
+            .y         = (uint16_t)rect->y,
+            .width     = (uint16_t)rect->width,
+            .height    = (uint16_t)rect->height,
+        };
+
+        memcpy(&batch[i * record], &hdr, sizeof(hdr));
+        memcpy(&batch[i * record + sizeof(hdr)], &commit, sizeof(commit));
     }
 
     ui_damage_reset(&win->damage);
 
-
-    for (size_t i = 0; i < count; i++) {
-
-        if (ui_send_msg(win->conn->fd, UI_REQ_COMMIT, &commits[i], sizeof(commits[i])) < 0) {
-            return -1;
-        }
-    }
-
-    return 0;
+    return ui_send_all(win->conn->fd, batch, count * record) < 0 ? -1 : 0;
 }
 
 

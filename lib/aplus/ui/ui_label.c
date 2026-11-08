@@ -60,7 +60,7 @@ ui_widget_t* ui_label_create(ui_view_t* view, const char* text) {
 
 void ui_label_set_text(ui_widget_t* widget, const char* text) {
 
-    if (!widget || widget->kind != UI_WIDGET_LABEL) {
+    if (!ui_widget_is(widget, UI_WIDGET_LABEL)) {
         return;
     }
 
@@ -83,7 +83,7 @@ void ui_label_set_text(ui_widget_t* widget, const char* text) {
 
 const char* ui_label_text(const ui_widget_t* widget) {
 
-    if (!widget || widget->kind != UI_WIDGET_LABEL) {
+    if (!ui_widget_is(widget, UI_WIDGET_LABEL)) {
         return NULL;
     }
 
@@ -93,7 +93,7 @@ const char* ui_label_text(const ui_widget_t* widget) {
 
 void ui_label_set_align(ui_widget_t* widget, ui_align_t align) {
 
-    if (!widget || widget->kind != UI_WIDGET_LABEL) {
+    if (!ui_widget_is(widget, UI_WIDGET_LABEL)) {
         return;
     }
 
@@ -105,7 +105,7 @@ void ui_label_set_align(ui_widget_t* widget, ui_align_t align) {
 
 void ui_label_set_color(ui_widget_t* widget, ui_color_t color) {
 
-    if (!widget || widget->kind != UI_WIDGET_LABEL) {
+    if (!ui_widget_is(widget, UI_WIDGET_LABEL)) {
         return;
     }
 
@@ -118,7 +118,7 @@ void ui_label_set_color(ui_widget_t* widget, ui_color_t color) {
 
 void ui_label_set_font(ui_widget_t* widget, ui_font_weight_t weight, double size) {
 
-    if (!widget || widget->kind != UI_WIDGET_LABEL) {
+    if (!ui_widget_is(widget, UI_WIDGET_LABEL)) {
         return;
     }
 
@@ -132,7 +132,7 @@ void ui_label_set_font(ui_widget_t* widget, ui_font_weight_t weight, double size
 
 void ui_label_set_padding(ui_widget_t* widget, int padding) {
 
-    if (!widget || widget->kind != UI_WIDGET_LABEL) {
+    if (!ui_widget_is(widget, UI_WIDGET_LABEL)) {
         return;
     }
 

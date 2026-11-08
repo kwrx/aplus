@@ -785,6 +785,32 @@ static void input_pointer_moved(const wm_rect_t* old) {
 }
 
 
+static struct {
+
+    bool pending;
+    wm_rect_t from;
+
+} input_motion;
+
+
+static void input_motion_begin(void) {
+
+    if (!input_motion.pending) {
+        input_motion.pending = true;
+        input_motion.from    = wm_cursor_rect();
+    }
+}
+
+
+static void input_motion_flush(void) {
+
+    if (input_motion.pending) {
+        input_motion.pending = false;
+        input_pointer_moved(&input_motion.from);
+    }
+}
+
+
 /**
  * @brief Acts on one decoded input event.
  *
@@ -795,6 +821,8 @@ static void input_handle_event(const event_t ev) {
     switch (ev.ev_type) {
 
         case EV_KEY:
+
+            input_motion_flush();
 
             if (ev.ev_key.vkey >= BTN_MOUSE && ev.ev_key.vkey <= BTN_TASK) {
 
@@ -809,27 +837,28 @@ static void input_handle_event(const event_t ev) {
 
         case EV_REL: {
 
-            const wm_rect_t old = wm_cursor_rect();
+            if (ev.ev_rel.z) {
 
-            if (ev.ev_rel.z && !wm_taskbar_scroll(wm.pointer.x, wm.pointer.y, ev.ev_rel.z)) {
-                input_send_scroll(ev.ev_rel.z);
+                input_motion_flush();
+
+                if (!wm_taskbar_scroll(wm.pointer.x, wm.pointer.y, ev.ev_rel.z)) {
+                    input_send_scroll(ev.ev_rel.z);
+                }
             }
 
             if (!ev.ev_rel.x && !ev.ev_rel.y) {
                 break;
             }
 
-            wm.pointer.x += ev.ev_rel.x;
-            wm.pointer.y -= ev.ev_rel.y;
+            input_motion_begin();
 
-            input_pointer_moved(&old);
+            wm.pointer.x = WM_CLAMP(wm.pointer.x + ev.ev_rel.x, 0, wm.display.width - 1);
+            wm.pointer.y = WM_CLAMP(wm.pointer.y - ev.ev_rel.y, 0, wm.display.height - 1);
 
             break;
         }
 
         case EV_ABS: {
-
-            const wm_rect_t old = wm_cursor_rect();
 
             const int x = ((int)ev.ev_abs.x * (wm.display.width - 1)) / EV_ABS_MAX;
             const int y = ((int)ev.ev_abs.y * (wm.display.height - 1)) / EV_ABS_MAX;
@@ -838,10 +867,10 @@ static void input_handle_event(const event_t ev) {
                 break;
             }
 
+            input_motion_begin();
+
             wm.pointer.x = x;
             wm.pointer.y = y;
-
-            input_pointer_moved(&old);
 
             break;
         }
@@ -882,6 +911,8 @@ int wm_input_dispatch(int fd) {
 
         input_handle_event(ev);
     }
+
+    input_motion_flush();
 
     if (offset) {
 

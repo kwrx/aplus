@@ -47,7 +47,7 @@ static const int ui_icon_sizes[] = {16, 24, 32, 48, 64, 128};
 /**
  * @brief How many icons stay loaded, names that resolved to nothing included.
  */
-#define UI_ICON_CACHE_MAX 32
+#define UI_ICON_CACHE_MAX 64
 
 
 static struct {
@@ -146,6 +146,44 @@ static cairo_surface_t* ui_icon_read(const char* path) {
 }
 
 
+static cairo_surface_t* ui_icon_fit(cairo_surface_t* surface, int size) {
+
+    const int width  = cairo_image_surface_get_width(surface);
+    const int height = cairo_image_surface_get_height(surface);
+
+    if (width <= 0 || height <= 0 || (width == size && height == size)) {
+        return surface;
+    }
+
+
+    const double scale = (double)size / (double)(width > height ? width : height);
+
+    const int fit_width  = (int)fmax(1.0, round(width * scale));
+    const int fit_height = (int)fmax(1.0, round(height * scale));
+
+    cairo_surface_t* fitted = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, fit_width, fit_height);
+
+    if (cairo_surface_status(fitted) != CAIRO_STATUS_SUCCESS) {
+        cairo_surface_destroy(fitted);
+        return surface;
+    }
+
+
+    cairo_t* cr = cairo_create(fitted);
+
+    cairo_scale(cr, (double)fit_width / width, (double)fit_height / height);
+    cairo_set_source_surface(cr, surface, 0.0, 0.0);
+    cairo_pattern_set_filter(cairo_get_source(cr), CAIRO_FILTER_GOOD);
+    cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
+    cairo_paint(cr);
+    cairo_destroy(cr);
+
+    cairo_surface_destroy(surface);
+
+    return fitted;
+}
+
+
 /**
  * @brief Makes room for one more entry, dropping the oldest when the cache is full.
  */
@@ -181,7 +219,14 @@ cairo_surface_t* ui_icon_load(const char* name, int size) {
     for (size_t i = 0; i < ui_icon_cached; i++) {
 
         if (ui_icon_cache[i].size == size && strcmp(ui_icon_cache[i].name, name) == 0) {
-            return ui_icon_cache[i].surface;
+
+            const typeof(ui_icon_cache[0]) hit = ui_icon_cache[i];
+
+            memmove(&ui_icon_cache[i], &ui_icon_cache[i + 1], (ui_icon_cached - i - 1) * sizeof(ui_icon_cache[0]));
+
+            ui_icon_cache[ui_icon_cached - 1] = hit;
+
+            return hit.surface;
         }
     }
 
@@ -189,6 +234,10 @@ cairo_surface_t* ui_icon_load(const char* name, int size) {
     char path[PATH_MAX];
 
     cairo_surface_t* surface = ui_icon_find(name, size, path, sizeof(path)) ? ui_icon_read(path) : NULL;
+
+    if (surface) {
+        surface = ui_icon_fit(surface, size);
+    }
 
     ui_icon_evict();
 
@@ -231,10 +280,17 @@ void ui_draw_icon(cairo_t* cr, ui_rect_t rect, cairo_surface_t* icon) {
     cairo_save(cr);
 
     cairo_translate(cr, x, y);
-    cairo_scale(cr, scale, scale);
+
+    if (scale != 1.0) {
+        cairo_scale(cr, scale, scale);
+    }
 
     cairo_set_source_surface(cr, icon, 0.0, 0.0);
-    cairo_pattern_set_filter(cairo_get_source(cr), CAIRO_FILTER_GOOD);
+
+    if (scale != 1.0) {
+        cairo_pattern_set_filter(cairo_get_source(cr), CAIRO_FILTER_GOOD);
+    }
+
     cairo_paint(cr);
 
     cairo_restore(cr);
