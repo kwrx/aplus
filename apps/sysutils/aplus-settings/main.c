@@ -35,15 +35,18 @@
 
 #include <aplus/ui-anim.h>
 #include <aplus/ui-draw.h>
+#include <aplus/input.h>
 #include <aplus/ulog.h>
 
 #include "settings.h"
 
 
-#define SETTINGS_WINDOW_WIDTH  780
+#define SETTINGS_WINDOW_WIDTH  820
 #define SETTINGS_WINDOW_HEIGHT 580
 
-#define SETTINGS_SIDEBAR      184
+#define SETTINGS_SIDEBAR      224
+#define SETTINGS_NAV_ICON     20
+#define SETTINGS_NAV_SPACING  4
 #define SETTINGS_SIDEBAR_GAP  24
 #define SETTINGS_PAGE_WIDGETS 128
 #define SETTINGS_DRAIN_MAX    64
@@ -59,6 +62,7 @@ static const settings_page_t* const settings_pages[] = {
 #define SETTINGS_PAGES (sizeof(settings_pages) / sizeof(settings_pages[0]))
 
 
+
 settings_t settings;
 
 
@@ -68,6 +72,12 @@ settings_t settings;
 static struct {
 
     ui_widget_t* sidebar;
+    ui_widget_t* nav[SETTINGS_PAGES];
+    ui_widget_t* rules[SETTINGS_PAGES];
+    ui_widget_t* thumb;
+
+    ui_rect_t rect;
+    settings_scroller_t scroller;
 
     size_t page;
     size_t building;
@@ -513,6 +523,10 @@ static void settings_show(size_t page) {
         }
     }
 
+    for (size_t p = 0; p < SETTINGS_PAGES; p++) {
+        ui_button_set_style(settings_state.nav[p], p == page ? UI_BUTTON_STYLE_PRIMARY : UI_BUTTON_STYLE_FLAT);
+    }
+
     if (settings_pages[page]->enter) {
         settings_pages[page]->enter();
     }
@@ -521,23 +535,99 @@ static void settings_show(size_t page) {
 }
 
 
-/**
- * @brief Switches to the page a sidebar row names, keeping one selected whatever is clicked.
- *
- * @param widget The sidebar.
- * @param index The row, or -1 when the selection was cleared.
- * @param user Unused.
- */
-static void settings_on_page(ui_widget_t* widget, int index, void* user) {
+static void settings_on_page(ui_widget_t* widget, void* user) {
+
+    (void)widget;
+
+    const size_t page = (size_t)(intptr_t)user;
+
+    if (page != settings_state.page) {
+        settings_show(page);
+    }
+}
+
+
+static bool settings_on_key(ui_view_t* view, uint16_t vkey, bool down, void* user) {
 
     (void)user;
 
-    if (index < 0 || (size_t)index >= SETTINGS_PAGES) {
-        ui_list_select(widget, (int)settings_state.page);
-        return;
+    if (!down || (vkey != KEY_UP && vkey != KEY_DOWN)) {
+        return false;
     }
 
-    settings_show((size_t)index);
+    const ui_widget_t* focused = ui_view_focused(view);
+
+    bool nav = focused == NULL;
+
+    for (size_t p = 0; p < SETTINGS_PAGES && !nav; p++) {
+        nav = focused == settings_state.nav[p];
+    }
+
+    if (!nav) {
+        return false;
+    }
+
+    if (vkey == KEY_UP && settings_state.page > 0) {
+        settings_show(settings_state.page - 1);
+    } else if (vkey == KEY_DOWN && settings_state.page + 1 < SETTINGS_PAGES) {
+        settings_show(settings_state.page + 1);
+    }
+
+    return true;
+}
+
+
+static int settings_nav_row(void) {
+    return settings_control_height() + 2 * SETTINGS_GAP;
+}
+
+
+static int settings_nav_content(void) {
+    return (int)SETTINGS_PAGES * settings_nav_row() + (int)(SETTINGS_PAGES - 1) * (2 * SETTINGS_NAV_SPACING + 1) + SETTINGS_GAP;
+}
+
+
+static void settings_arrange_sidebar(void) {
+
+    const ui_rect_t card = settings_state.rect;
+    const ui_rect_t view = settings_state.scroller.view;
+
+    const int row   = settings_nav_row();
+    const int right = settings_scroller_scrollable(&settings_state.scroller) ? SETTINGS_SCROLL_TRACK : 0;
+    const int width = card.width - 2 * SETTINGS_GAP - right;
+
+    int top = view.y + SETTINGS_GAP / 2 - settings_state.scroller.offset;
+
+    for (size_t p = 0; p < SETTINGS_PAGES; p++) {
+
+        if (p > 0) {
+
+            top += SETTINGS_NAV_SPACING;
+
+            ui_widget_set_rect(settings_state.rules[p], card.x + SETTINGS_CARD_PADDING, top, card.width - 2 * SETTINGS_CARD_PADDING - right, 1);
+            ui_widget_set_clip(settings_state.rules[p], &view);
+
+            top += 1 + SETTINGS_NAV_SPACING;
+        }
+
+        ui_widget_set_rect(settings_state.nav[p], card.x + SETTINGS_GAP, top, width > 0 ? width : 0, row);
+        ui_widget_set_clip(settings_state.nav[p], &view);
+
+        top += row;
+    }
+}
+
+
+static void settings_place_sidebar(int x, int y, int width, int height) {
+
+    settings_state.rect = (ui_rect_t){x, y, width, height};
+
+    ui_widget_set_rect(settings_state.sidebar, x, y, width, height);
+
+    const ui_rect_t view = {x, y + SETTINGS_GAP / 2, width, height - SETTINGS_GAP};
+
+    settings_scroller_set(&settings_state.scroller, view, x + width - SETTINGS_SCROLL_TRACK - 2, settings_nav_content());
+    settings_arrange_sidebar();
 }
 
 
@@ -563,7 +653,7 @@ static void settings_layout(ui_view_t* view, int width, int height, void* user) 
 
     const int sidebar = SETTINGS_SIDEBAR < inner_width / 3 ? SETTINGS_SIDEBAR : inner_width / 3;
 
-    ui_widget_set_rect(settings_state.sidebar, SETTINGS_MARGIN, SETTINGS_MARGIN, sidebar, inner_height);
+    settings_place_sidebar(SETTINGS_MARGIN, SETTINGS_MARGIN, sidebar, inner_height);
 
     ui_rect_t page = {
         .x      = SETTINGS_MARGIN + sidebar + SETTINGS_SIDEBAR_GAP,
@@ -598,6 +688,17 @@ static void settings_restyle(ui_view_t* view, void* user) {
     (void)view;
     (void)user;
 
+    ui_panel_set_color(settings_state.sidebar, ui_theme()->surface);
+    ui_panel_set_border(settings_state.sidebar, ui_theme()->border, 1.0);
+    ui_panel_set_radius(settings_state.sidebar, ui_theme()->corner_radius);
+
+    for (size_t p = 1; p < SETTINGS_PAGES; p++) {
+        ui_panel_set_color(settings_state.rules[p], ui_theme()->border);
+        ui_panel_set_radius(settings_state.rules[p], 0.0);
+    }
+
+    settings_scroller_set(&settings_state.scroller, settings_state.scroller.view, settings_state.scroller.track_x, settings_state.scroller.content);
+
     for (size_t i = 0; i < SETTINGS_PAGES; i++) {
 
         if (settings_pages[i]->restyle) {
@@ -617,15 +718,36 @@ static void settings_restyle(ui_view_t* view, void* user) {
  */
 static int settings_build(size_t initial) {
 
-    if ((settings_state.sidebar = ui_list_create(settings.view)) == NULL) {
+    if ((settings_state.sidebar = ui_panel_create(settings.view)) == NULL) {
         return -1;
     }
 
     for (size_t i = 0; i < SETTINGS_PAGES; i++) {
 
-        if (ui_list_add_icon(settings_state.sidebar, settings_pages[i]->icon, settings_pages[i]->label, NULL, NULL) < 0) {
+        if ((settings_state.nav[i] = ui_button_create(settings.view, settings_pages[i]->label, settings_on_page, (void*)(intptr_t)i)) == NULL) {
             return -1;
         }
+
+        ui_button_set_icon(settings_state.nav[i], settings_pages[i]->icon);
+        ui_button_set_icon_size(settings_state.nav[i], SETTINGS_NAV_ICON);
+        ui_button_set_align(settings_state.nav[i], UI_ALIGN_LEFT);
+        ui_button_set_style(settings_state.nav[i], UI_BUTTON_STYLE_FLAT);
+    }
+
+    for (size_t p = 1; p < SETTINGS_PAGES; p++) {
+
+        if ((settings_state.rules[p] = ui_panel_create(settings.view)) == NULL) {
+            return -1;
+        }
+    }
+
+    if ((settings_state.thumb = ui_panel_create(settings.view)) == NULL) {
+        return -1;
+    }
+
+    settings_scroller_init(&settings_state.scroller, settings_state.thumb, NULL, settings_arrange_sidebar);
+
+    for (size_t i = 0; i < SETTINGS_PAGES; i++) {
 
         settings_state.building = i;
 
@@ -639,12 +761,9 @@ static int settings_build(size_t initial) {
 
     settings_state.page = initial;
 
-    ui_list_on_select(settings_state.sidebar, settings_on_page, NULL);
-    ui_list_select(settings_state.sidebar, (int)initial);
-
     settings_show(initial);
 
-    ui_view_focus(settings.view, settings_state.sidebar);
+    ui_view_on_key(settings.view, settings_on_key, NULL);
 
     return 0;
 }
@@ -721,12 +840,18 @@ static int settings_timeout(void) {
  */
 static void settings_dispatch(const ui_event_t* event) {
 
-    ui_view_dispatch(settings.view, event);
+    const bool handled = ui_view_dispatch(settings.view, event);
 
     const settings_page_t* page = settings_pages[settings_state.page];
 
+    settings_scroller_pointer(&settings_state.scroller, event);
+
     if (page->pointer && (event->type == UI_EVENT_POINTER || event->type == UI_EVENT_LEAVE)) {
         page->pointer(event);
+    }
+
+    if (event->type == UI_EVENT_SCROLL && !handled && !settings_scroller_wheel(&settings_state.scroller, event) && page->scroll) {
+        page->scroll(event);
     }
 }
 

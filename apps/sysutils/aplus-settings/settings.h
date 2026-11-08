@@ -46,6 +46,7 @@
 #define SETTINGS_TEXT_MAX     128
 #define SETTINGS_UNKNOWN      "Unknown"
 #define SETTINGS_TIMES        "\xC3\x97"
+#define SETTINGS_SCROLL_TRACK 8
 
 
 /**
@@ -86,6 +87,29 @@ typedef struct {
 } settings_header_t;
 
 
+typedef struct {
+
+    ui_widget_t* thumb;
+    ui_widget_t* anchor;
+
+    void (*changed)(void);
+
+    ui_rect_t view;
+    int track_x;
+    int content;
+    int offset;
+
+    int px;
+    int py;
+    uint8_t buttons;
+
+    bool hovered;
+    bool dragging;
+    int grab;
+
+} settings_scroller_t;
+
+
 /**
  * @brief A page: its sidebar row and the hooks the window calls; any hook but build may be NULL.
  *
@@ -104,6 +128,7 @@ typedef struct {
     int (*tick)(uint64_t now, bool visible);
     void (*paint)(cairo_t* cr);
     void (*pointer)(const ui_event_t* event);
+    void (*scroll)(const ui_event_t* event);
 
 } settings_page_t;
 
@@ -160,5 +185,11 @@ void settings_row_set(settings_row_t* row, const char* text);
 void settings_format_size(uint64_t bytes, char* out, size_t size);
 void settings_control_error(char* out, size_t size, bool failed, const ui_msg_ctl_reply_t* reply);
 int settings_write_file(const char* path, const char* text);
+
+void settings_scroller_init(settings_scroller_t* s, ui_widget_t* thumb, ui_widget_t* anchor, void (*changed)(void));
+bool settings_scroller_set(settings_scroller_t* s, ui_rect_t view, int track_x, int content);
+bool settings_scroller_scrollable(const settings_scroller_t* s);
+bool settings_scroller_pointer(settings_scroller_t* s, const ui_event_t* event);
+bool settings_scroller_wheel(settings_scroller_t* s, const ui_event_t* event);
 
 #endif

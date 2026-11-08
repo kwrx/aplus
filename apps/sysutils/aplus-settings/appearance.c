@@ -55,6 +55,9 @@
 #define APPEARANCE_SIZE_MAX     28
 #define APPEARANCE_MONO_DEFAULT 14
 #define APPEARANCE_MINUS        "\xE2\x88\x92"
+#define APPEARANCE_OPACITY_STEP 5.0
+#define APPEARANCE_OPACITY_KEY  "taskbar_opacity"
+#define APPEARANCE_OPACITY      0.9
 
 
 /**
@@ -91,6 +94,7 @@ typedef struct {
  */
 typedef struct {
 
+    ui_widget_t* card;
     ui_widget_t* heading;
     ui_widget_t* smaller;
     ui_widget_t* size;
@@ -129,6 +133,13 @@ static struct {
 
     settings_header_t header;
 
+    ui_rect_t page;
+    ui_rect_t viewport;
+    settings_scroller_t scroller;
+
+    ui_widget_t* scrollbar;
+
+    ui_widget_t* theme_card;
     ui_widget_t* theme_heading;
     ui_widget_t* status;
 
@@ -140,7 +151,15 @@ static struct {
 
     appearance_fonts_t fonts[APPEARANCE_GROUPS];
 
+    ui_widget_t* taskbar_card;
+    ui_widget_t* opacity_heading;
+    ui_widget_t* opacity;
+    ui_widget_t* opacity_level;
+
 } appearance;
+
+
+static void appearance_rearrange(void);
 
 
 /**
@@ -330,6 +349,66 @@ static void appearance_on_size(ui_widget_t* widget, void* user) {
     ui_msg_ctl_option_t option;
 
     appearance_option(&option, "ui", group == APPEARANCE_MONOSPACE ? "font_mono_size" : "font_size", value);
+    appearance_apply(&option, 1);
+}
+
+
+static void appearance_show_opacity(double percent) {
+
+    char text[16];
+
+    snprintf(text, sizeof(text), "%d%%", (int)(percent + 0.5));
+    ui_label_set_text(appearance.opacity_level, text);
+}
+
+
+static void appearance_read_opacity(void) {
+
+    if (ui_slider_dragging(appearance.opacity)) {
+        return;
+    }
+
+    char value[32];
+
+    double opacity = APPEARANCE_OPACITY;
+
+    if (ui_control_get_option("wm", APPEARANCE_OPACITY_KEY, value, sizeof(value)) == 0) {
+
+        char* end = NULL;
+
+        const double parsed = strtod(value, &end);
+
+        if (end != value && parsed >= 0.0 && parsed <= 1.0) {
+            opacity = parsed;
+        }
+    }
+
+    ui_slider_set_value(appearance.opacity, opacity * 100.0);
+    appearance_show_opacity(opacity * 100.0);
+}
+
+
+static void appearance_on_opacity_change(ui_widget_t* widget, double value, void* user) {
+
+    (void)widget;
+    (void)user;
+
+    appearance_show_opacity(value);
+}
+
+
+static void appearance_on_opacity_commit(ui_widget_t* widget, double value, void* user) {
+
+    (void)widget;
+    (void)user;
+
+    char text[16];
+
+    snprintf(text, sizeof(text), "%.2f", value / 100.0);
+
+    ui_msg_ctl_option_t option;
+
+    appearance_option(&option, "wm", APPEARANCE_OPACITY_KEY, text);
     appearance_apply(&option, 1);
 }
 
@@ -627,12 +706,14 @@ static void appearance_scan_fonts(void) {
  */
 static int appearance_build(void) {
 
-    if (settings_header_build(&appearance.header, "Appearance", "The theme every window is drawn with, and the fonts laid over it.") < 0) {
+    if (settings_header_build(&appearance.header, "Appearance", "The theme every window is drawn with, the fonts laid over it, and the taskbar.") < 0) {
         return -1;
     }
 
+    appearance.theme_card    = settings_own(ui_panel_create(settings.view));
     appearance.theme_heading = settings_heading("Theme");
-    if (!appearance.theme_heading) {
+
+    if (!appearance.theme_card || !appearance.theme_heading) {
         return -1;
     }
 
@@ -666,12 +747,13 @@ static int appearance_build(void) {
 
         appearance_fonts_t* group = &appearance.fonts[g];
 
+        group->card    = settings_own(ui_panel_create(settings.view));
         group->heading = settings_heading(appearance_group_names[g]);
         group->smaller = settings_own(ui_button_create(settings.view, APPEARANCE_MINUS, appearance_on_size, (void*)(intptr_t)(g << 8)));
         group->size    = settings_own(ui_label_create(settings.view, ""));
         group->larger  = settings_own(ui_button_create(settings.view, "+", appearance_on_size, (void*)(intptr_t)((g << 8) | 1)));
 
-        if (!group->heading || !group->smaller || !group->size || !group->larger) {
+        if (!group->card || !group->heading || !group->smaller || !group->size || !group->larger) {
             return -1;
         }
 
@@ -686,6 +768,26 @@ static int appearance_build(void) {
             }
         }
     }
+
+
+    appearance.taskbar_card    = settings_own(ui_panel_create(settings.view));
+    appearance.opacity_heading = settings_heading("Taskbar opacity");
+    appearance.opacity         = settings_own(ui_slider_create(settings.view, 0.0, 100.0));
+    appearance.opacity_level   = settings_own(ui_label_create(settings.view, ""));
+    appearance.scrollbar       = settings_own(ui_panel_create(settings.view));
+
+    if (!appearance.taskbar_card || !appearance.opacity_heading || !appearance.opacity || !appearance.opacity_level || !appearance.scrollbar) {
+        return -1;
+    }
+
+    settings_scroller_init(&appearance.scroller, appearance.scrollbar, appearance.theme_card, appearance_rearrange);
+
+    ui_slider_set_step(appearance.opacity, APPEARANCE_OPACITY_STEP);
+    ui_slider_on_change(appearance.opacity, appearance_on_opacity_change, NULL);
+    ui_slider_on_commit(appearance.opacity, appearance_on_opacity_commit, NULL);
+    ui_label_set_align(appearance.opacity_level, UI_ALIGN_RIGHT);
+
+    appearance_read_opacity();
 
 
     if ((appearance.status = settings_own(ui_label_create(settings.view, ""))) == NULL) {
@@ -754,13 +856,51 @@ static int appearance_place_tiles(ui_widget_t* const* tiles, const char* const* 
  *
  * @param page The page's rectangle.
  */
-static void appearance_layout(ui_rect_t page) {
+static void appearance_clip(ui_widget_t* widget) {
+    ui_widget_set_clip(widget, &appearance.viewport);
+}
+
+
+static void appearance_clip_all(void) {
+
+    appearance_clip(appearance.theme_card);
+    appearance_clip(appearance.theme_heading);
+
+    for (size_t i = 0; i < APPEARANCE_VARIANTS; i++) {
+        appearance_clip(appearance.variants[i]);
+    }
+
+    for (size_t i = 0; i < appearance.theme_count; i++) {
+        appearance_clip(appearance.tiles[i]);
+    }
+
+    for (size_t g = 0; g < APPEARANCE_GROUPS; g++) {
+
+        appearance_fonts_t* group = &appearance.fonts[g];
+
+        appearance_clip(group->card);
+        appearance_clip(group->heading);
+        appearance_clip(group->smaller);
+        appearance_clip(group->size);
+        appearance_clip(group->larger);
+
+        for (size_t i = 0; i < group->count; i++) {
+            appearance_clip(group->families[i].tile);
+        }
+    }
+
+    appearance_clip(appearance.taskbar_card);
+    appearance_clip(appearance.opacity_heading);
+    appearance_clip(appearance.opacity);
+    appearance_clip(appearance.opacity_level);
+    appearance_clip(appearance.status);
+}
+
+
+static int appearance_place_theme(int x, int y, int width) {
 
     const int control = settings_control_height();
-    const int right   = page.x + page.width;
-
-    int y = settings_header_place(&appearance.header, page, 0);
-
+    const int right   = x + width;
 
     int toggle = 0;
 
@@ -777,43 +917,150 @@ static void appearance_layout(ui_rect_t page) {
         ui_widget_set_rect(appearance.variants[i], right - (int)(APPEARANCE_VARIANTS - i) * toggle - (int)(APPEARANCE_VARIANTS - 1 - i) * SETTINGS_GAP, y, toggle, control);
     }
 
-    ui_widget_set_rect(appearance.theme_heading, page.x, y, page.width - (int)APPEARANCE_VARIANTS * (toggle + SETTINGS_GAP), control);
+    ui_widget_set_rect(appearance.theme_heading, x, y, width - (int)APPEARANCE_VARIANTS * (toggle + SETTINGS_GAP), control);
 
-    y += control + SETTINGS_GAP;
+
     const char* themes[APPEARANCE_THEMES_MAX];
 
     for (size_t i = 0; i < appearance.theme_count; i++) {
         themes[i] = appearance.themes[i];
     }
 
-    y += appearance_place_tiles(appearance.tiles, themes, appearance.theme_count, page.x, y, page.width) + SETTINGS_SECTION_GAP;
+    const int tiles = appearance_place_tiles(appearance.tiles, themes, appearance.theme_count, x, y + control + SETTINGS_GAP, width);
+
+    return control + (tiles > 0 ? SETTINGS_GAP + tiles : 0);
+}
 
 
-    const int size = settings_text_width("28 px", UI_FONT_REGULAR) + 2 * SETTINGS_GAP;
+static int appearance_place_fonts(appearance_fonts_t* group, int x, int y, int width) {
+
+    const int control = settings_control_height();
+    const int right   = x + width;
+    const int size    = settings_text_width("28 px", UI_FONT_REGULAR) + 2 * SETTINGS_GAP;
+
+    ui_widget_set_rect(group->larger, right - control, y, control, control);
+    ui_widget_set_rect(group->size, right - control - size, y, size, control);
+    ui_widget_set_rect(group->smaller, right - 2 * control - size, y, control, control);
+    ui_widget_set_rect(group->heading, x, y, width - 2 * control - size - SETTINGS_GAP, control);
+
+    ui_widget_t* tiles[APPEARANCE_FAMILIES_MAX];
+    const char* names[APPEARANCE_FAMILIES_MAX];
+
+    for (size_t i = 0; i < group->count; i++) {
+        tiles[i] = group->families[i].tile;
+        names[i] = group->families[i].name;
+    }
+
+    const int placed = appearance_place_tiles(tiles, names, group->count, x, y + control + SETTINGS_GAP, width);
+
+    return control + (placed > 0 ? SETTINGS_GAP + placed : 0);
+}
+
+
+static int appearance_place_taskbar(int x, int y, int width) {
+
+    const int control = settings_control_height();
+    const int right   = x + width;
+    const int level   = settings_text_width("100%", UI_FONT_REGULAR) + SETTINGS_GAP;
+    const int heading = settings_text_width("Taskbar opacity", UI_FONT_BOLD) + SETTINGS_GAP;
+    const int slider  = width - heading - level > 0 ? width - heading - level : 0;
+
+    ui_widget_set_rect(appearance.opacity_heading, x, y, heading, control);
+    ui_widget_set_rect(appearance.opacity, right - level - slider, y + 5, slider, control - 10);
+    ui_widget_set_rect(appearance.opacity_level, right - level, y, level, control);
+
+    return control;
+}
+
+
+static int appearance_card(ui_widget_t* card, int x, int y, int width, int inner) {
+
+    const int total = inner + 2 * SETTINGS_CARD_PADDING;
+
+    ui_widget_set_rect(card, x, y, width, total);
+
+    return total;
+}
+
+
+static int appearance_arrange(void) {
+
+    const ui_rect_t page = appearance.page;
+
+    const int x     = page.x + SETTINGS_CARD_PADDING;
+    const int width = page.width - 2 * SETTINGS_CARD_PADDING;
+
+    int y = appearance.viewport.y - appearance.scroller.offset;
+
+    y += appearance_card(appearance.theme_card, page.x, y, page.width, appearance_place_theme(x, y + SETTINGS_CARD_PADDING, width)) + SETTINGS_MARGIN;
 
     for (size_t g = 0; g < APPEARANCE_GROUPS; g++) {
 
         appearance_fonts_t* group = &appearance.fonts[g];
 
-        ui_widget_set_rect(group->larger, right - control, y, control, control);
-        ui_widget_set_rect(group->size, right - control - size, y, size, control);
-        ui_widget_set_rect(group->smaller, right - 2 * control - size, y, control, control);
-        ui_widget_set_rect(group->heading, page.x, y, page.width - 2 * control - size - SETTINGS_GAP, control);
-
-        ui_widget_t* tiles[APPEARANCE_FAMILIES_MAX];
-        const char* names[APPEARANCE_FAMILIES_MAX];
-
-        for (size_t i = 0; i < group->count; i++) {
-            tiles[i] = group->families[i].tile;
-            names[i] = group->families[i].name;
-        }
-
-        y += control + SETTINGS_GAP;
-        y += appearance_place_tiles(tiles, names, group->count, page.x, y, page.width) + SETTINGS_SECTION_GAP;
+        y += appearance_card(group->card, page.x, y, page.width, appearance_place_fonts(group, x, y + SETTINGS_CARD_PADDING, width)) + SETTINGS_MARGIN;
     }
 
+    y += appearance_card(appearance.taskbar_card, page.x, y, page.width, appearance_place_taskbar(x, y + SETTINGS_CARD_PADDING, width)) + SETTINGS_GAP;
 
-    ui_widget_set_rect(appearance.status, page.x, y, page.width, control);
+    const int line = settings_line_height();
+
+    ui_widget_set_rect(appearance.status, page.x, y, page.width, line);
+
+    return y + line + appearance.scroller.offset - appearance.viewport.y;
+}
+
+
+static void appearance_rearrange(void) {
+
+    appearance_arrange();
+    appearance_clip_all();
+}
+
+
+static void appearance_place(void) {
+
+    const ui_rect_t view = appearance.viewport;
+
+    if (settings_scroller_set(&appearance.scroller, view, view.x + view.width + (SETTINGS_GAP + SETTINGS_MARGIN - SETTINGS_SCROLL_TRACK) / 2, appearance_arrange())) {
+        appearance_arrange();
+    }
+
+    appearance_clip_all();
+}
+
+
+/**
+ * @brief Lays out the header, then the theme, each font group and the taskbar in cards that scroll beneath it.
+ *
+ * @param page The page's rectangle.
+ */
+static void appearance_layout(ui_rect_t page) {
+
+    const int top = settings_header_place(&appearance.header, page, 0);
+
+    appearance.page     = page;
+    appearance.viewport = (ui_rect_t){page.x, top, page.width, page.y + page.height - top};
+
+    appearance_place();
+}
+
+
+static void appearance_pointer(const ui_event_t* event) {
+    settings_scroller_pointer(&appearance.scroller, event);
+}
+
+
+static void appearance_scroll(const ui_event_t* event) {
+    settings_scroller_wheel(&appearance.scroller, event);
+}
+
+
+static void appearance_refresh_scroller(void) {
+
+    settings_scroller_t* scroller = &appearance.scroller;
+
+    settings_scroller_set(scroller, scroller->view, scroller->track_x, scroller->content);
 }
 
 
@@ -854,6 +1101,19 @@ static void appearance_restyle(void) {
 
         ui_label_set_text(group->size, text);
     }
+
+    ui_label_set_color(appearance.opacity_level, ui_theme()->text);
+
+    ui_widget_t* cards[] = {appearance.theme_card, appearance.fonts[APPEARANCE_INTERFACE].card, appearance.fonts[APPEARANCE_MONOSPACE].card, appearance.taskbar_card};
+
+    for (size_t i = 0; i < sizeof(cards) / sizeof(cards[0]); i++) {
+        ui_panel_set_color(cards[i], ui_theme()->surface);
+        ui_panel_set_border(cards[i], ui_theme()->border, 1.0);
+        ui_panel_set_radius(cards[i], ui_theme()->corner_radius);
+    }
+
+    appearance_refresh_scroller();
+    appearance_read_opacity();
 }
 
 
@@ -865,6 +1125,9 @@ static void appearance_enter(void) {
     if (appearance.theme_count > 0) {
         appearance_report("");
     }
+
+    appearance_read_opacity();
+    appearance_refresh_scroller();
 }
 
 
@@ -879,4 +1142,6 @@ const settings_page_t settings_appearance = {
     .layout  = appearance_layout,
     .restyle = appearance_restyle,
     .enter   = appearance_enter,
+    .pointer = appearance_pointer,
+    .scroll  = appearance_scroll,
 };
