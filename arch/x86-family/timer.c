@@ -47,6 +47,7 @@ static uint64_t timer_null_getres(void) {
 
 
 static uint64_t realtime_base_ns = 0;
+static bool realtime_base_ready  = false;
 static uint64_t generic_origin   = 0;
 
 static uint64_t (*__h_generic_getticks)(void) = timer_null_getticks;
@@ -125,10 +126,15 @@ uint64_t arch_timer_generic_getres(void) {
 
 uint64_t arch_timer_realtime_getns(void) {
 
-    if (unlikely(!realtime_base_ns))
+    if (unlikely(!__atomic_load_n(&realtime_base_ready, __ATOMIC_ACQUIRE))) {
         return arch_timer_gettime() * 1000000000ULL;
+    }
 
-    return realtime_base_ns + arch_timer_generic_getns();
+    return __atomic_load_n(&realtime_base_ns, __ATOMIC_RELAXED) + arch_timer_generic_getns();
+}
+
+void arch_timer_realtime_setns(uint64_t ns) {
+    __atomic_store_n(&realtime_base_ns, ns - arch_timer_generic_getns(), __ATOMIC_RELAXED);
 }
 
 
@@ -188,7 +194,8 @@ void timer_init(void) {
     __h_percpu_getres   = tsc_getres;
 
     generic_origin   = __h_generic_getticks();
-    realtime_base_ns = (arch_timer_gettime() * 1000000000ULL) - arch_timer_generic_getns();
+    __atomic_store_n(&realtime_base_ns, (arch_timer_gettime() * 1000000000ULL) - arch_timer_generic_getns(), __ATOMIC_RELAXED);
+    __atomic_store_n(&realtime_base_ready, true, __ATOMIC_RELEASE);
 
 #if DEBUG_LEVEL_INFO
     kprintf("x86-timer: now(%ld) percpu[mHZ(%lld)] generic[mHZ(%lld)]\n", arch_timer_gettime(), arch_timer_percpu_getres() / 1000000ULL, arch_timer_generic_getres() / 1000000ULL);
