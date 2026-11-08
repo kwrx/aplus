@@ -95,8 +95,10 @@ SYSCALL(
         DEBUG_ASSERT(cwd);
 
 
-        char __safe_filename[CONFIG_PATH_MAX] = {0};
-        uio_strncpy_u2s(__safe_filename, filename, CONFIG_PATH_MAX);
+        char __safe_filename[CONFIG_PATH_MAX + 1];
+        if (unlikely(!uio_strncpy_u2s(__safe_filename, filename, CONFIG_PATH_MAX))) {
+            return -ENAMETOOLONG;
+        }
 
         if (__safe_filename[0] == '\0') {
 

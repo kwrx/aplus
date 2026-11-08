@@ -68,7 +68,7 @@ int tmpfs_rename(inode_t* inode, const char* name, inode_t* into, const char* ne
         }
 
         if (d) {
-            strncpy(d->name, newname, CONFIG_MAXNAMLEN);
+            strlcpy(d->name, newname, sizeof(d->name));
             d->parent = into;
         }
     }

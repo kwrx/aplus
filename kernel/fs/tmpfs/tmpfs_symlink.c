@@ -57,7 +57,7 @@ int tmpfs_symlink(inode_t* inode, const char* name, const char* target) {
     i->capacity   = i->st.st_size + 1;
     i->data       = kmalloc(i->capacity, GFP_KERNEL);
 
-    strncpy(i->data, target, i->capacity);
+    strlcpy(i->data, target, i->capacity);
 
     scoped_lock(&((tmpfs_t*)inode->sb->fsinfo)->lock) {
         inode->sb->st.f_bfree -= i->st.st_size;

@@ -33,29 +33,31 @@ size_t strlcat(char* restrict dest, const char* restrict src, size_t n) {
 
     DEBUG_ASSERT(dest);
     DEBUG_ASSERT(src);
-    DEBUG_ASSERT(n > 0);
 
-    size_t i, j;
+    size_t d = 0;
 
-    for (i = 0; i < n && dest[i] != '\0'; i++)
-        ;
+    while (d < n && dest[d] != '\0') {
+        d++;
+    }
 
-    for (j = 0; i < n && src[j] != '\0'; i++, j++)
-        dest[i] = src[j];
+    if (d == n) {
+        return n + strlen(src);
+    }
 
-    dest[i] = '\0';
-
-    return i;
+    return d + strlcpy(dest + d, src, n - d);
 }
 
 
 TEST(libk_strlcat_test, {
     char a[32] = "Hello World!";
     char b[32] = "Hello World!";
+    char c[32] = "Hello World!";
 
-    DEBUG_ASSERT(strlcat(a, "Hello World!", 12) == 12);
+    DEBUG_ASSERT(strlcat(a, "Hello World!", 12) == 24);
     DEBUG_ASSERT(strlcat(b, "Hello World!", 24) == 24);
+    DEBUG_ASSERT(strlcat(c, "Hello World!", 25) == 24);
 
     DEBUG_ASSERT(strcmp(a, "Hello World!") == 0);
-    DEBUG_ASSERT(strcmp(b, "Hello World!Hello World!") == 0);
+    DEBUG_ASSERT(strcmp(b, "Hello World!Hello World") == 0);
+    DEBUG_ASSERT(strcmp(c, "Hello World!Hello World!") == 0);
 });

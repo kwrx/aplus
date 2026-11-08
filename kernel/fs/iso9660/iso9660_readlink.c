@@ -60,7 +60,13 @@ ssize_t iso9660_readlink(inode_t* inode, char* buf, size_t len) {
         return errno = EIO, -1;
 
 
-    strncpy(buf, e->symlink, len);
+    size_t n = strlen(e->symlink);
 
-    return len;
+    if (n > len) {
+        n = len;
+    }
+
+    memcpy(buf, e->symlink, n);
+
+    return n;
 }

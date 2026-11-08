@@ -182,8 +182,10 @@ SYSCALL(
             if (unlikely(!uio_check(filename, R_OK)))
                 return -EFAULT;
 
-            char __safe_path[CONFIG_PATH_MAX];
-            uio_strncpy_u2s(__safe_path, filename, sizeof(__safe_path));
+            char __safe_path[CONFIG_PATH_MAX + 1];
+            if (unlikely(!uio_strncpy_u2s(__safe_path, filename, CONFIG_PATH_MAX))) {
+                return -ENAMETOOLONG;
+            }
 
             inode = utimensat_lookup(dfd, __safe_path, flags);
 

@@ -125,9 +125,9 @@ static inode_t* path_find(inode_t* inode, const char* path, size_t size, bool fo
 
 
     char s[size + 1];
-    memset(s, 0, size + 1);
 
-    strncpy(s, path, size);
+    memcpy(s, path, size);
+    s[size] = '\0';
 
 
     if ((inode = vfs_finddir(inode, s)) == NULL)

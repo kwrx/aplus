@@ -38,19 +38,19 @@ void root_init(void) {
     char rootfs[CONFIG_MAXNAMLEN] = {0};
 
 
-    strncpy(cmd, core->boot.cmdline, sizeof(cmd));
+    strlcpy(cmd, core->boot.cmdline, sizeof(cmd));
 
 
     char* tok = cmd;
 
     for (char* s = strtok_r(cmd, " ", &tok); s; s = strtok_r(NULL, " ", &tok)) {
 
-        if ((strstr(s, "root="))) {
-            strncpy(root, &s[5], CONFIG_MAXNAMLEN);
+        if (strncmp(s, "root=", 5) == 0) {
+            strlcpy(root, &s[5], sizeof(root));
         }
 
-        if ((strstr(s, "rootfs="))) {
-            strncpy(rootfs, &s[7], CONFIG_MAXNAMLEN);
+        if (strncmp(s, "rootfs=", 7) == 0) {
+            strlcpy(rootfs, &s[7], sizeof(rootfs));
         }
 
         // TODO: add other Kernel Arguments

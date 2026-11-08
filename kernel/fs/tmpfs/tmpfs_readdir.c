@@ -70,7 +70,7 @@ static ssize_t __tmpfs_readdir_locked(tmpfs_t* tmpfs, inode_t* inode, struct dir
         e[i].d_reclen = sizeof(struct dirent);
         e[i].d_type   = MODE_2_DIRENT_TYPE(self->st_mode);
 
-        strncpy(e[i].d_name, ".", sizeof(e[i].d_name));
+        strlcpy(e[i].d_name, ".", sizeof(e[i].d_name));
 
         i++;
     }
@@ -82,7 +82,7 @@ static ssize_t __tmpfs_readdir_locked(tmpfs_t* tmpfs, inode_t* inode, struct dir
         e[i].d_reclen = sizeof(struct dirent);
         e[i].d_type   = MODE_2_DIRENT_TYPE(parent->st_mode);
 
-        strncpy(e[i].d_name, "..", sizeof(e[i].d_name));
+        strlcpy(e[i].d_name, "..", sizeof(e[i].d_name));
 
         i++;
     }
@@ -103,7 +103,7 @@ static ssize_t __tmpfs_readdir_locked(tmpfs_t* tmpfs, inode_t* inode, struct dir
         e[i].d_reclen = sizeof(struct dirent);
         e[i].d_type   = MODE_2_DIRENT_TYPE(c->st.st_mode);
 
-        strncpy(e[i].d_name, (*entry)->name, sizeof(e[i].d_name));
+        strlcpy(e[i].d_name, (*entry)->name, sizeof(e[i].d_name));
 
         i++;
     }

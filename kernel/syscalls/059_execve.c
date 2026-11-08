@@ -582,7 +582,9 @@ SYSCALL(
         if (unlikely(!path))
             return -ENOMEM;
 
-        uio_strncpy_u2s(path, filename, CONFIG_PATH_MAX);
+        if (unlikely(!uio_strncpy_u2s(path, filename, CONFIG_PATH_MAX))) {
+            return -ENAMETOOLONG;
+        }
 
 
 

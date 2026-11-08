@@ -375,7 +375,7 @@ static void virtgpu_update(struct virtgpu* gpu) {
     gpu->device->vid.vs.transp.offset = rgba[gpu->device->vid.vs.bits_per_pixel + 7];
 
 
-    strncpy(gpu->device->vid.fs.id, VIRTGPU_ID, 16);
+    strlcpy(gpu->device->vid.fs.id, VIRTGPU_ID, sizeof(gpu->device->vid.fs.id));
 
     gpu->device->vid.fs.smem_start  = gpu->fb_area;
     gpu->device->vid.fs.smem_len    = gpu->device->vid.fb_size;

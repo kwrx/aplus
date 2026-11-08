@@ -74,16 +74,20 @@ SYSCALL(
             return -EFAULT;
 
 
-        char __safe_dirname[CONFIG_PATH_MAX];
-        uio_strncpy_u2s(__safe_dirname, dir_name, CONFIG_PATH_MAX);
+        char __safe_dirname[CONFIG_PATH_MAX + 1];
+        if (unlikely(!uio_strncpy_u2s(__safe_dirname, dir_name, CONFIG_PATH_MAX))) {
+            return -ENAMETOOLONG;
+        }
 
-        char __safe_type[CONFIG_PATH_MAX];
-        uio_strncpy_u2s(__safe_type, type, CONFIG_PATH_MAX);
+        char __safe_type[CONFIG_PATH_MAX + 1];
+        if (unlikely(!uio_strncpy_u2s(__safe_type, type, CONFIG_PATH_MAX))) {
+            return -ENAMETOOLONG;
+        }
 
-        char __safe_devname[CONFIG_PATH_MAX] = {0};
-
-        if (dev_name)
-            uio_strncpy_u2s(__safe_devname, dev_name, CONFIG_PATH_MAX);
+        char __safe_devname[CONFIG_PATH_MAX + 1] = {0};
+        if (dev_name && unlikely(!uio_strncpy_u2s(__safe_devname, dev_name, CONFIG_PATH_MAX))) {
+            return -ENAMETOOLONG;
+        }
 
 
 

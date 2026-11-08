@@ -77,7 +77,7 @@ iso9660_inode_t* iso9660_cache_fetch(cache_t* cache, iso9660_t* iso9660, size_t 
 
             offset += 4;
 
-            if (rr.name[0] == '\0') {
+            if (rr.name[0] == '\0' || rr.length < 4) {
 
                 break;
 
@@ -96,6 +96,10 @@ iso9660_inode_t* iso9660_cache_fetch(cache_t* cache, iso9660_t* iso9660, size_t 
             }
 
             else if (memcmp(rr.name, ISO9660_ROCKRIDGE_ENTRY_NM, 2) == 0) {
+
+                if (rr.length < sizeof(rr.nm) + 4) {
+                    return NULL;
+                }
 
                 if (vfs_read(iso9660->dev, &rr.nm, offset, sizeof(rr.nm)) != sizeof(rr.nm))
                     return NULL;
@@ -119,16 +123,22 @@ iso9660_inode_t* iso9660_cache_fetch(cache_t* cache, iso9660_t* iso9660, size_t 
                     if (vfs_read(iso9660->dev, buf, offset + sizeof(rr.nm), rr.length - sizeof(rr.nm) - 4) != rr.length - sizeof(rr.nm) - 4)
                         return NULL;
 
-                    strlcat(inode.name, buf, ISO9660_MAX_NAME);
+                    strlcat(inode.name, buf, sizeof(inode.name));
                 }
 
             } else if (memcmp(rr.name, ISO9660_ROCKRIDGE_ENTRY_SL, 2) == 0) {
+
+                if (rr.length < sizeof(rr.sl) + 4) {
+                    return NULL;
+                }
 
                 if (vfs_read(iso9660->dev, &rr.sl, offset, sizeof(rr.sl)) != sizeof(rr.sl))
                     return NULL;
 
 
-                for (size_t p = 0; p < rr.length - sizeof(rr.sl) - 4;) {
+                const size_t end = rr.length - sizeof(rr.sl) - 4;
+
+                for (size_t p = 0; p < end;) {
 
                     struct {
 
@@ -141,20 +151,24 @@ iso9660_inode_t* iso9660_cache_fetch(cache_t* cache, iso9660_t* iso9660, size_t 
                     if (vfs_read(iso9660->dev, &sl_component, offset + sizeof(rr.sl) + p, sizeof(sl_component)) != sizeof(sl_component))
                         return NULL;
 
+                    if (p + sizeof(sl_component) + sl_component.length > end) {
+                        return NULL;
+                    }
+
                     p += sizeof(sl_component);
 
 
                     if (sl_component.flags & (1 << 1)) {
 
-                        strlcat(inode.symlink, ".", ISO9660_MAX_SYMLINK);
+                        strlcat(inode.symlink, ".", sizeof(inode.symlink));
 
                     } else if (sl_component.flags & (1 << 2)) {
 
-                        strlcat(inode.symlink, "..", ISO9660_MAX_SYMLINK);
+                        strlcat(inode.symlink, "..", sizeof(inode.symlink));
 
                     } else if (sl_component.flags & (1 << 3)) {
 
-                        strlcat(inode.symlink, "/", ISO9660_MAX_SYMLINK);
+                        strlcat(inode.symlink, "/", sizeof(inode.symlink));
 
                     } else {
 
@@ -165,9 +179,9 @@ iso9660_inode_t* iso9660_cache_fetch(cache_t* cache, iso9660_t* iso9660, size_t 
 
 
                         if (inode.symlink[0] != '\0' && inode.symlink[strlen(inode.symlink) - 1] != '/')
-                            strlcat(inode.symlink, "/", ISO9660_MAX_SYMLINK);
+                            strlcat(inode.symlink, "/", sizeof(inode.symlink));
 
-                        strlcat(inode.symlink, buf, ISO9660_MAX_SYMLINK);
+                        strlcat(inode.symlink, buf, sizeof(inode.symlink));
                     }
 
 
@@ -212,7 +226,7 @@ iso9660_inode_t* iso9660_cache_fetch(cache_t* cache, iso9660_t* iso9660, size_t 
                     }
                 }
 
-                strlcat(inode.name, buf, ISO9660_MAX_NAME);
+                strlcat(inode.name, buf, sizeof(inode.name));
             }
         }
     }

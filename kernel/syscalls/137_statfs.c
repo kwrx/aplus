@@ -77,8 +77,10 @@ SYSCALL(
         });
 
 
-        char __safe_path[CONFIG_PATH_MAX] = {0};
-        uio_strncpy_u2s(__safe_path, path, CONFIG_PATH_MAX);
+        char __safe_path[CONFIG_PATH_MAX + 1];
+        if (unlikely(!uio_strncpy_u2s(__safe_path, path, CONFIG_PATH_MAX))) {
+            return -ENAMETOOLONG;
+        }
 
         if (unlikely(__safe_path[0] == '\0'))
             return -ENOENT;

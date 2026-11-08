@@ -367,13 +367,15 @@ __nonnull(1, 2) static inline void uio_strcpy_u2u(char* dst, const char* src) {
     uio_w8(dst, '\0');
 }
 
-__nonnull(1, 2) static inline void uio_strncpy_u2s(char* dst, const char* src, size_t size) {
+__nonnull(1, 2) static inline bool uio_strncpy_u2s(char* dst, const char* src, size_t size) {
 
     for (; uio_r8(src) && --size; src++, dst++) {
         *dst = uio_r8(src);
     }
 
     *dst = '\0';
+
+    return uio_r8(src) == '\0';
 }
 
 __nonnull(1, 2) static inline void uio_strncpy_s2u(char* dst, const char* src, size_t size) {

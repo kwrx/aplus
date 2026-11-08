@@ -70,8 +70,10 @@ SYSCALL(166, umount, long sys_umount(char* name, int flags) {
     }
 
 
-    char __safe_name[CONFIG_PATH_MAX];
-    uio_strncpy_u2s(__safe_name, name, CONFIG_PATH_MAX);
+    char __safe_name[CONFIG_PATH_MAX + 1];
+    if (unlikely(!uio_strncpy_u2s(__safe_name, name, CONFIG_PATH_MAX))) {
+        return -ENAMETOOLONG;
+    }
 
 
     inode_t* cwd __scoped(vfs_inode_cleanup) = NULL;

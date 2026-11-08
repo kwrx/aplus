@@ -129,7 +129,7 @@ static void builtin_reset(device_t* device) {
     device->vid.vs.transp.offset = rgba[device->vid.vs.bits_per_pixel + 7];
 
 
-    strncpy(device->vid.fs.id, "Builtin Video", 16);
+    strlcpy(device->vid.fs.id, "Builtin Video", sizeof(device->vid.fs.id));
 
     device->vid.fs.smem_start  = device->vid.fb_base;
     device->vid.fs.smem_len    = device->vid.fb_size;

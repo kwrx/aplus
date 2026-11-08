@@ -155,8 +155,7 @@ static ssize_t procfs_service_pid_readdir(inode_t* inode, struct dirent* e, off_
         e[i].d_off  = start + i + 1;                        \
         e[i].d_type = (_type);                              \
                                                             \
-        strncpy(e[i].d_name, (_name), sizeof(e[i].d_name)); \
-        e[i].d_name[sizeof(e[i].d_name) - 1] = '\0';        \
+        strlcpy(e[i].d_name, (_name), sizeof(e[i].d_name)); \
                                                             \
         e[i].d_reclen = sizeof(struct dirent);              \
                                                             \

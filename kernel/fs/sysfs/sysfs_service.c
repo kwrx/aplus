@@ -149,8 +149,7 @@ void sysfs_dirent(struct dirent* e, ino_t ino, unsigned char type, const char* n
     e->d_type   = type;
     e->d_reclen = sizeof(struct dirent);
 
-    strncpy(e->d_name, name, sizeof(e->d_name));
-    e->d_name[sizeof(e->d_name) - 1] = '\0';
+    strlcpy(e->d_name, name, sizeof(e->d_name));
 }
 
 

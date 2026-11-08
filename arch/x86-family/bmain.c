@@ -95,11 +95,11 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
         switch (btags->type) {
 
             case MULTIBOOT_TAG_TYPE_CMDLINE:
-                strncpy(&core->boot.cmdline[0], ((struct multiboot_tag_string*)btags)->string, CONFIG_BUFSIZ);
+                strlcpy(&core->boot.cmdline[0], ((struct multiboot_tag_string*)btags)->string, CONFIG_BUFSIZ);
                 break;
 
             case MULTIBOOT_TAG_TYPE_BOOT_LOADER_NAME:
-                strncpy(&core->boot.bootloader[0], ((struct multiboot_tag_string*)btags)->string, CONFIG_BUFSIZ);
+                strlcpy(&core->boot.bootloader[0], ((struct multiboot_tag_string*)btags)->string, CONFIG_BUFSIZ);
                 break;
 
             case MULTIBOOT_TAG_TYPE_MODULE:
@@ -114,7 +114,7 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
 
                 if (strlen(((struct multiboot_tag_module*)btags)->cmdline) > 0) {
 
-                    strncpy(&core->modules.ko[i].cmdline[0], ((struct multiboot_tag_module*)btags)->cmdline, CONFIG_BUFSIZ);
+                    strlcpy(&core->modules.ko[i].cmdline[0], ((struct multiboot_tag_module*)btags)->cmdline, CONFIG_BUFSIZ);
 
                 } else {
 

@@ -98,7 +98,7 @@ inode_t* iso9660_finddir(inode_t* inode, const char* name) {
                 d->sb     = inode->sb;
                 d->parent = inode;
 
-                strncpy(d->name, child->name, CONFIG_MAXNAMLEN);
+                strlcpy(d->name, child->name, CONFIG_MAXNAMLEN);
 
 
                 d->ops.getattr = iso9660_getattr;

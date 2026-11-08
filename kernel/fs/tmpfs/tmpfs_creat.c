@@ -55,7 +55,7 @@ inode_t* tmpfs_creat(inode_t* inode, const char* name, mode_t mode) {
     shared_ptr_access(current_task->fs, fs, { umask = fs->umask; });
 
 
-    strncpy(d->name, name, CONFIG_MAXNAMLEN);
+    strlcpy(d->name, name, sizeof(d->name));
 
     d->sb     = inode->sb;
     d->parent = inode;

@@ -161,10 +161,14 @@ SYSCALL(
 
 
         char __safe_oldname[CONFIG_PATH_MAX + 1];
-        char __safe_newname[CONFIG_PATH_MAX];
+        char __safe_newname[CONFIG_PATH_MAX + 1];
 
-        uio_strncpy_u2s(__safe_oldname, oldname, sizeof(__safe_oldname));
-        uio_strncpy_u2s(__safe_newname, newname, sizeof(__safe_newname));
+        if (unlikely(!uio_strncpy_u2s(__safe_oldname, oldname, CONFIG_PATH_MAX))) {
+            return -ENAMETOOLONG;
+        }
+        if (unlikely(!uio_strncpy_u2s(__safe_newname, newname, CONFIG_PATH_MAX))) {
+            return -ENAMETOOLONG;
+        }
 
 
 #if DEBUG_LEVEL_TRACE

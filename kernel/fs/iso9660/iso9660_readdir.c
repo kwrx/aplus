@@ -105,7 +105,7 @@ ssize_t iso9660_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t coun
             e[index].d_reclen = sizeof(struct dirent);
             e[index].d_type   = MODE_2_DIRENT_TYPE(child->st.st_mode);
 
-            strncpy(e[index].d_name, child->name, sizeof(e[index].d_name));
+            strlcpy(e[index].d_name, child->name, sizeof(e[index].d_name));
 
 
             if (unlikely(++index >= count))

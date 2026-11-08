@@ -1380,8 +1380,8 @@ void init(const char* args) {
 
             device_t* d = (device_t*)kcalloc(1, sizeof(device_t), GFP_KERNEL);
 
-            strncpy(d->name, "sda", DEVICE_MAXNAMELEN);
-            strncpy(d->description, "SATA disk device", DEVICE_MAXDESCLEN);
+            strlcpy(d->name, "sda", DEVICE_MAXNAMELEN);
+            strlcpy(d->description, "SATA disk device", DEVICE_MAXDESCLEN);
 
             d->name[2] += (index << 4) + i;
 
@@ -1419,8 +1419,8 @@ void init(const char* args) {
 
             device_t* d = (device_t*)kcalloc(1, sizeof(device_t), GFP_KERNEL);
 
-            strncpy(d->name, "scd0", DEVICE_MAXNAMELEN);
-            strncpy(d->description, "SATA CD-ROM device", DEVICE_MAXDESCLEN);
+            strlcpy(d->name, "scd0", DEVICE_MAXNAMELEN);
+            strlcpy(d->description, "SATA CD-ROM device", DEVICE_MAXDESCLEN);
 
             d->name[3] += (index << 4) + i;
 
