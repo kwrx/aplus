@@ -17,6 +17,7 @@ while [[ $# -gt 0 ]]; do
         echo "  -k, --kvm: enable KVM (default: disabled)"
         echo "  -q, --headless: run the VM without a display (default: disabled)"
         echo "  -r, --remote: run the VM remotely using VNC (default: disabled)"
+        echo "  -u, --usb-host: pass a host USB device through, as VID:PID (repeatable, or ARG_USB_HOST=\"VID:PID ...\")"
         exit 0
         ;;
     -j | --cpus)
@@ -41,6 +42,11 @@ while [[ $# -gt 0 ]]; do
         shift
         shift
         ;;
+    -u | --usb-host)
+        ARG_USB_HOST="$ARG_USB_HOST $2"
+        shift
+        shift
+        ;;
     *)
         break
         ;;
@@ -55,6 +61,7 @@ ARG_VIRTIO=${ARG_VIRTIO:-1}
 ARG_KVM=${ARG_KVM:-0}
 ARG_HEADLESS=${ARG_HEADLESS:-0}
 ARG_TRACE=${ARG_TRACE:-}
+ARG_USB_HOST=${ARG_USB_HOST:-}
 
 if [ -z $ARG_ARCH ]; then
     echo "run-qemu: missing ARCH argument"
@@ -133,6 +140,7 @@ x86_64)
 
     # Machine
     flags="-machine q35"
+    flags="-net none"
 
     # UEFI
     flags="$flags -drive if=pflash,format=raw,unit=0,readonly=on,file=$(find_ovmf_code)"
@@ -178,7 +186,7 @@ x86_64)
         flags="$flags -device pcnet,netdev=net0"
     fi
 
-    flags="$flags -netdev user,id=net0,hostfwd=tcp::2222-:22,hostfwd=tcp::8080-:8080"
+    flags="$flags -netdev user,id=net0,hostfwd=tcp::2222-:22,hostfwd=tcp::8000-:8000,hostfwd=tcp::8080-:8080"
 
     # Block
     # if [ $ARG_VIRTIO -eq 1 ]; then
@@ -199,6 +207,14 @@ x86_64)
     flags="$flags -chardev file,id=vc0,path=console.log"
     flags="$flags -device virtio-serial-pci,disable-legacy=on"
     flags="$flags -device virtconsole,chardev=vc0"
+
+    # USB Passthrough
+    if [ ! -z "$ARG_USB_HOST" ]; then
+        flags="$flags -device qemu-xhci,id=xhci"
+        for dev in $ARG_USB_HOST; do
+            flags="$flags -device usb-host,bus=xhci.0,vendorid=0x${dev%%:*},productid=0x${dev##*:}"
+        done
+    fi
 
     ;;
 
