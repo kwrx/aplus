@@ -29,10 +29,16 @@
 #include <aplus/syscall.h>
 #include <aplus/task.h>
 #include <fcntl.h>
-#include <stdint.h>
 #include <sys/stat.h>
+#include <sys/time.h>
 #include <sys/types.h>
+#include <time.h>
 #include <unistd.h>
+
+#include <aplus/hal.h>
+
+
+extern long sys_clock_settime(clockid_t, const struct timespec*);
 
 
 /***
@@ -50,4 +56,32 @@
 
 struct timezone;
 
-SYSCALL(164, settimeofday, long sys_settimeofday(struct timeval* tv, struct timezone* tz) { return -ENOSYS; });
+SYSCALL(
+    164, settimeofday, long sys_settimeofday(struct timeval* user_tv, struct timezone* tz) {
+        if (!user_tv) {
+            return 0;
+        }
+
+        if (unlikely(!uio_check(user_tv, R_OK))) {
+            return -EFAULT;
+        }
+
+        struct timeval tv;
+        uio_memcpy_u2s(&tv, user_tv, sizeof(struct timeval));
+
+        if (unlikely(tv.tv_usec < 0 || tv.tv_usec >= 1000000L)) {
+            return -EINVAL;
+        }
+
+        struct timespec tp = {
+            .tv_sec  = tv.tv_sec,
+            .tv_nsec = tv.tv_usec * 1000L,
+        };
+
+        long e = 0;
+        scoped_uio_kernel() {
+            e = sys_clock_settime(CLOCK_REALTIME, &tp);
+        }
+
+        return e;
+    });

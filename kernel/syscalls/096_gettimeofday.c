@@ -60,7 +60,7 @@ SYSCALL(
             return -EINVAL;
 
         if (!uio_check(user_tv, R_OK | W_OK))
-            return -EINVAL;
+            return -EFAULT;
 
 
         const uint64_t now = arch_timer_realtime_getns();
