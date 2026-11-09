@@ -82,8 +82,11 @@ SYSCALL(
         }
 
 
-        if (unlikely((flags & MAP_TYPE) == MAP_SHARED || (flags & MAP_TYPE) == MAP_SHARED_VALIDATE))
-            return -ENOTSUP;
+        if (unlikely((flags & MAP_TYPE) == MAP_SHARED || (flags & MAP_TYPE) == MAP_SHARED_VALIDATE)) {
+            if ((flags & MAP_ANONYMOUS) || (prot & PROT_WRITE)) {
+                return -ENOTSUP;
+            }
+        }
 
         if (unlikely(flags & (MAP_FIXED | MAP_FIXED_NOREPLACE)))
             return -ENOTSUP;
