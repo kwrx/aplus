@@ -133,9 +133,7 @@
 struct pty;
 
 struct fd_descriptor {
-
     struct file* ref;
-
     bool close_on_exec;
 };
 
@@ -190,20 +188,9 @@ struct sighand {
 };
 
 
-/**
- * @brief The size of a sigset_t in bytes and in words, which the syscalls and the walks need respectively.
- */
-    #define SIGSET_BITS_PER_WORD (8 * sizeof(unsigned long))
-    #define SIGSET_WORDS         (sizeof(sigset_t) / sizeof(unsigned long))
+#define SIGSET_BITS_PER_WORD (8 * sizeof(unsigned long))
+#define SIGSET_WORDS         (sizeof(sigset_t) / sizeof(unsigned long))
 
-
-/**
- * @brief Asks whether a signal is a member of a set.
- *
- * @param set The set to test.
- * @param signo The signal to look for, numbered from 1.
- * @return true if the signal is in the set.
- */
 static inline bool sigset_is_member(const sigset_t* set, int signo) {
 
     DEBUG_ASSERT(set);
@@ -211,19 +198,10 @@ static inline bool sigset_is_member(const sigset_t* set, int signo) {
     if (unlikely(signo < 1 || signo >= _NSIG))
         return false;
 
-
     size_t bit = (size_t)(signo - 1);
-
     return (set->__bits[bit / SIGSET_BITS_PER_WORD] & (1UL << (bit % SIGSET_BITS_PER_WORD))) != 0;
 }
 
-
-/**
- * @brief Adds a signal to a set.
- *
- * @param set The set to change.
- * @param signo The signal to add, numbered from 1.
- */
 static inline void sigset_add(sigset_t* set, int signo) {
 
     DEBUG_ASSERT(set);
@@ -231,19 +209,10 @@ static inline void sigset_add(sigset_t* set, int signo) {
     if (unlikely(signo < 1 || signo >= _NSIG))
         return;
 
-
     size_t bit = (size_t)(signo - 1);
-
     set->__bits[bit / SIGSET_BITS_PER_WORD] |= (1UL << (bit % SIGSET_BITS_PER_WORD));
 }
 
-
-/**
- * @brief Removes a signal from a set.
- *
- * @param set The set to change.
- * @param signo The signal to remove, numbered from 1.
- */
 static inline void sigset_del(sigset_t* set, int signo) {
 
     DEBUG_ASSERT(set);
@@ -251,13 +220,11 @@ static inline void sigset_del(sigset_t* set, int signo) {
     if (unlikely(signo < 1 || signo >= _NSIG))
         return;
 
-
     size_t bit = (size_t)(signo - 1);
-
     set->__bits[bit / SIGSET_BITS_PER_WORD] &= ~(1UL << (bit % SIGSET_BITS_PER_WORD));
 }
 
-
+struct cpu;
 
 typedef struct task {
 
@@ -277,11 +244,11 @@ typedef struct task {
     gid_t sgid;
     gid_t fsgid;
 
+    pid_t sid;
+    pid_t ppid;
+
     size_t ngroups;
     gid_t groups[TASK_NGROUPS_MAX];
-
-    pid_t sid;
-
 
     ssize_t status;
     ssize_t policy;
@@ -292,8 +259,6 @@ typedef struct task {
     cpu_set_t affinity;
 
     int errnum;
-
-
     void* frame;
     void* fpu;
     void* sigfpu;
@@ -301,48 +266,31 @@ typedef struct task {
     void* ustack;
     vmm_address_space_t* address_space;
 
-
-
     struct {
-
         clockid_t clockid;
         struct timespec timeout;
         struct timespec* remaining;
-
         bool expired;
-
     } sleep;
-
 
     struct timespec clock[TASK_CLOCK_MAX];
 
-
     struct {
-
-        pid_t waiter;
-
         volatile uint32_t futex;
-        bool released;
-
+        pid_t waiter;
         pid_t child;
+        bool released;
         bool pending;
-
     } vfork;
-
 
     list(futex_t*, futexes);
 
-    /** @brief Every thread of the group has exited, so wait4() may report and reap this zombie leader. */
     bool group_dead;
-
-    /** @brief A stop, or a continue, that wait4() has not reported yet. */
     bool wait_stopped;
     bool wait_continued;
 
-    /** @brief The status exit_group() asked this thread to report instead of the SIGKILL it was sent. */
     bool exit_group_pending;
     int exit_group_value;
-
 
     shared_ptr(struct fd) fd;
     shared_ptr(struct fs) fs;
@@ -351,25 +299,15 @@ typedef struct task {
 
     queue_t sigqueue;
     queue_t sigpending;
-
-    /** @brief The signals this thread blocks, changed only through sched_sigmask(). */
     sigset_t sigmask;
 
-
     struct {
-
         uintptr_t stack;
-
         uintptr_t thread_area;
         uintptr_t cpu_area;
-
         uintptr_t tid_address;
-
-        /** @brief The alternate signal stack set with sigaltstack(2), or a zero size when there is none. */
         stack_t altstack;
-
     } userspace;
-
 
     struct {
         union {
@@ -393,7 +331,6 @@ typedef struct task {
         int16_t value : 16;
     } exit;
 
-
     struct {
         uint64_t rchar;
         uint64_t wchar;
@@ -404,9 +341,7 @@ typedef struct task {
         uint64_t cancelled_write_bytes;
     } iostat;
 
-
     struct {
-
         long index;
         long param0;
         long param1;
@@ -417,58 +352,40 @@ typedef struct task {
 
         struct timespec deadline;
         bool deadline_valid;
-
         volatile uint32_t deadline_futex;
 
         sigset_t sigmask;
         bool sigmask_valid;
 
-        /** @brief How many bytes the earlier attempts of a restarted transfer already moved. */
         size_t progress;
-
-        /** @brief The first attempt already started what the later ones only wait on, such as a connect(). */
         bool started;
-
-        /** @brief The syscall, numbered from 1, that syscall_interrupt() left for a handler's frame to rewind, or 0. */
         long interrupted;
 
     } syscall;
 
-
     struct rlimit rlimits[RLIM_NLIMITS];
     struct rusage rusage;
-    struct rusage rusage_dead;     /* threads of the group that already exited, kept on the leader */
-    struct rusage rusage_children; /* children this thread waited for, and their own children */
+    struct rusage rusage_dead;
+    struct rusage rusage_children;
 
+    char comm[TASK_COMM_LEN];
+    char cmdline[TASK_CMDLINE_LEN];
+    size_t cmdline_len;
+    uint64_t start_time;
 
     spinlock_t lock;
     spinlock_t sched_lock;
 
+    struct cpu* cpu;
     struct task* next;
-
-    /* Reported by /proc. These are plain storage inside task_t rather than pointers into
-       anything the task owns, because a task stays on the run queue as a ZOMBIE after
-       sys_exit() has already freed its fs, fd, sighand and address_space -- which is
-       exactly when ps comes along to read it. @see sys_exit(). */
-    char comm[TASK_COMM_LEN];
-
-    char cmdline[TASK_CMDLINE_LEN];
-    size_t cmdline_len;
-
-    uint64_t start_time;
-
-    pid_t ppid;
 
 } task_t;
 
 
     #define thread_restart_sched(task) task->flags |= TASK_FLAGS_NEED_RESCHED
-
     #define thread_restart_syscall(task) task->flags |= TASK_FLAGS_NEED_SYSCALL_RESTART
-
-    #define thread_suspend(task) task->status = TASK_STATUS_SLEEP
-
-    #define thread_wake(task) task->status = TASK_STATUS_READY;
+    #define thread_suspend(task) sched_set_status(task, TASK_STATUS_SLEEP)
+    #define thread_wake(task) sched_set_status(task, TASK_STATUS_READY)
 
 
 /**
@@ -536,21 +453,11 @@ static inline void task_rusage_self(const task_t* task, struct rusage* ru) {
 }
 
 
-/**
- * @brief sched_sigqueue() flags: sent by the kernel itself, so no permission check applies.
- */
-    #define SCHED_SIGQUEUE_KERNEL 1
 
-/**
- * @brief sched_sigqueue() flags: kill(-1), which spares init and the caller's own process.
- */
-    #define SCHED_SIGQUEUE_BROADCAST 2
-
-
+#define SCHED_SIGQUEUE_KERNEL 1
+#define SCHED_SIGQUEUE_BROADCAST 2
 
 __BEGIN_DECLS
-
-struct cpu;
 
 void do_unshare(int);
 void do_vfork_release(void);
@@ -558,6 +465,7 @@ pid_t do_fork(struct kclone_args*, size_t);
 
 pid_t sched_nextpid();
 void sched_enqueue(task_t*);
+void sched_set_status(task_t*, ssize_t);
 void sched_bury(struct cpu*, task_t*);
 void sched_exit(void);
 void sched_group_exit(int);

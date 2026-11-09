@@ -104,6 +104,7 @@ typedef struct cpu {
     task_t* sched_idle;
     task_t* sched_dead;
     size_t sched_count;
+    size_t sched_runnable;
 
     uint64_t ticks;
     struct timespec uptime;

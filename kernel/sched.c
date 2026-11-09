@@ -48,6 +48,11 @@ extern long sys_clock_gettime(clockid_t, struct timespec*);
 
 
 
+static inline bool __sched_is_runnable(ssize_t status) {
+    return status == TASK_STATUS_READY || status == TASK_STATUS_RUNNING;
+}
+
+
 static inline void do_futex(void) {
 
     list_each(current_task->futexes, i) {
@@ -141,8 +146,8 @@ static void do_stop(int signo) {
 
         if (!__sigqueue_holds(&current_task->sigqueue, SIGCONT)) {
 
+            sched_set_status(current_task, TASK_STATUS_STOP);
             current_task->exit.value     = (signo << 8) | 0x7F;
-            current_task->status         = TASK_STATUS_STOP;
             current_task->wait_stopped   = true;
             current_task->wait_continued = false;
 
@@ -418,7 +423,7 @@ void schedule(int resched) {
     scoped_lock(&current_cpu->sched_lock) {
 
         if (likely(current_task->status == TASK_STATUS_RUNNING)) {
-            current_task->status = TASK_STATUS_READY;
+            sched_set_status(current_task, TASK_STATUS_READY);
         }
 
         if (likely((current_task->flags & TASK_FLAGS_NO_FRAME) == 0)) {
@@ -426,7 +431,19 @@ void schedule(int resched) {
         }
 
 
-        current_task->status = TASK_STATUS_RUNNING;
+        sched_set_status(current_task, TASK_STATUS_RUNNING);
+
+#if defined(DEBUG)
+        size_t runnable = 0;
+
+        for (task_t* t = current_cpu->sched_queue; t; t = t->next) {
+            if (__sched_is_runnable(t->status)) {
+                runnable++;
+            }
+        }
+
+        DEBUG_ASSERT(runnable == __atomic_load_n(&current_cpu->sched_runnable, __ATOMIC_RELAXED));
+#endif
 
         if (unlikely(current_task->futexes != NULL))
             futex_release_all(current_task);
@@ -440,6 +457,33 @@ void schedule(int resched) {
     arch_vmm_reclaim(current_task->address_space);
 
     do_signals();
+}
+
+
+void sched_set_status(task_t* task, ssize_t status) {
+
+    DEBUG_ASSERT(task);
+
+    bool was = __sched_is_runnable(task->status);
+    bool now = __sched_is_runnable(status);
+
+    task->status = status;
+
+    if (was == now) {
+        return;
+    }
+
+    cpu_t* cpu = __atomic_load_n(&task->cpu, __ATOMIC_RELAXED);
+
+    if (!cpu) {
+        return;
+    }
+
+    if (now) {
+        __atomic_add_fetch(&cpu->sched_runnable, 1, __ATOMIC_RELAXED);
+    } else {
+        __atomic_sub_fetch(&cpu->sched_runnable, 1, __ATOMIC_RELAXED);
+    }
 }
 
 
@@ -472,6 +516,12 @@ static bool __sched_unlink(cpu_t* cpu, task_t* task) {
 
     cpu->sched_count--;
 
+    if (__sched_is_runnable(task->status)) {
+        __atomic_sub_fetch(&cpu->sched_runnable, 1, __ATOMIC_RELAXED);
+    }
+
+    __atomic_store_n(&task->cpu, NULL, __ATOMIC_RELAXED);
+
     return true;
 }
 
@@ -488,12 +538,13 @@ void sched_enqueue(task_t* task) {
             continue;
         }
 
-        if (i->sched_count > min) {
+        size_t load = __atomic_load_n(&i->sched_runnable, __ATOMIC_RELAXED);
+        if (load >= min) {
             continue;
         }
 
         cpu = i;
-        min = i->sched_count;
+        min = load;
     }
 
     DEBUG_ASSERT(cpu);
@@ -503,11 +554,17 @@ void sched_enqueue(task_t* task) {
 
         cpu->sched_queue = task;
         cpu->sched_count++;
+
+        __atomic_store_n(&task->cpu, cpu, __ATOMIC_RELAXED);
+
+        if (__sched_is_runnable(task->status)) {
+            __atomic_add_fetch(&cpu->sched_runnable, 1, __ATOMIC_RELAXED);
+        }
     }
 
 
 #if DEBUG_LEVEL_TRACE
-    kprintf("sched: enqueued task(%d) %s in cpu(%ld) count(%ld)\n", task->tid, task->argv[0], cpu->id, cpu->sched_count);
+    kprintf("sched: enqueued task(%d) %s in cpu(%ld) count(%ld) runnable(%ld)\n", task->tid, task->argv[0], cpu->id, cpu->sched_count, cpu->sched_runnable);
 #endif
 }
 
@@ -767,7 +824,7 @@ int sched_sigqueue(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* info, i
 
                 if ((sig == SIGCONT || sig == SIGKILL) && tmp->status == TASK_STATUS_STOP) {
 
-                    tmp->status = TASK_STATUS_READY;
+                    sched_set_status(tmp, TASK_STATUS_READY);
 
                     if (sig == SIGCONT) {
 
@@ -884,7 +941,7 @@ void sched_exit(void) {
 
     scoped_lock(&current_cpu->sched_lock) {
 
-        self->status = TASK_STATUS_ZOMBIE;
+        sched_set_status(self, TASK_STATUS_ZOMBIE);
 
         if (self->tid != self->pid || (self->flags & TASK_FLAGS_KTHREAD))
             self->flags |= TASK_FLAGS_AUTOREAP;
@@ -1021,7 +1078,7 @@ void sched_group_exit(int value) {
                 t->exit_group_value   = value;
 
                 if (t->status == TASK_STATUS_STOP)
-                    t->status = TASK_STATUS_READY;
+                    sched_set_status(t, TASK_STATUS_READY);
 
 
                 siginfo_t* siginfo = (siginfo_t*)kcalloc(1, sizeof(siginfo_t), GFP_KERNEL);
