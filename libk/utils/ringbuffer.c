@@ -185,13 +185,17 @@ ssize_t ringbuffer_write(ringbuffer_t* rb, const void* buf, size_t size) {
                 if (n > size)
                     n = size;
 
-                for (size_t i = 0; i < n; i++) {
+                size_t first = rb->size - rb->head;
 
-                    rb->buffer[rb->head] = ((uint8_t*)buf)[i];
-
-                    rb->head = (rb->head + 1) % rb->size;
-                    rb->full = (rb->head == rb->tail);
+                if (first > n) {
+                    first = n;
                 }
+
+                memcpy(rb->buffer + rb->head, buf, first);
+                memcpy(rb->buffer, (const uint8_t*)buf + first, n - first);
+
+                rb->head = (rb->head + n) % rb->size;
+                rb->full = (rb->head == rb->tail);
 
                 e = (ssize_t)n;
             }
@@ -234,13 +238,17 @@ ssize_t ringbuffer_write_whole(ringbuffer_t* rb, const void* buf, size_t size) {
 
         } else {
 
-            for (size_t i = 0; i < size; i++) {
+            size_t first = rb->size - rb->head;
 
-                rb->buffer[rb->head] = ((uint8_t*)buf)[i];
-
-                rb->head = (rb->head + 1) % rb->size;
-                rb->full = (rb->head == rb->tail);
+            if (first > size) {
+                first = size;
             }
+
+            memcpy(rb->buffer + rb->head, buf, first);
+            memcpy(rb->buffer, (const uint8_t*)buf + first, size - first);
+
+            rb->head = (rb->head + size) % rb->size;
+            rb->full = (rb->head == rb->tail);
 
             e = (ssize_t)size;
         }
@@ -275,17 +283,25 @@ ssize_t ringbuffer_read(ringbuffer_t* rb, void* buf, size_t size) {
 
             } else {
 
-                size_t i = 0;
+                size_t n = ringbuffer_available(rb);
 
-                for (; i < size && !ringbuffer_is_empty(rb); i++) {
-
-                    ((uint8_t*)buf)[i] = rb->buffer[rb->tail];
-
-                    rb->full = 0;
-                    rb->tail = (rb->tail + 1) % rb->size;
+                if (n > size) {
+                    n = size;
                 }
 
-                e = (ssize_t)i;
+                size_t first = rb->size - rb->tail;
+
+                if (first > n) {
+                    first = n;
+                }
+
+                memcpy(buf, rb->buffer + rb->tail, first);
+                memcpy((uint8_t*)buf + first, rb->buffer, n - first);
+
+                rb->full = 0;
+                rb->tail = (rb->tail + n) % rb->size;
+
+                e = (ssize_t)n;
             }
         }
     }
