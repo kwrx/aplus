@@ -177,6 +177,7 @@ stage_3() {
     packages="$packages ncurses"
     packages="$packages ffmpeg"
     packages="$packages bzip2"
+    packages="$packages tzdata"
 
     if [ $ARG_ONLY_REQUIRED_PACKAGES -eq 0 ]; then
         packages="$packages binutils"
@@ -188,7 +189,7 @@ stage_3() {
         packages="$packages mpfr"
         packages="$packages netsurf-all"
         packages="$packages pkgconf"
-        packages="$packages doom"    
+        packages="$packages doom"
         packages="$packages nesemu"
         packages="$packages readline"
         packages="$packages make"
