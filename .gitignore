@@ -36,6 +36,7 @@
 
 AGENTS.md
 CLAUDE.md
+MEMORY.md
 
 # Generate by Makefile
 /kernel/aplus
