@@ -661,10 +661,7 @@ void wm_window_destroy(wm_window_t* win) {
 
     wm_window_free_backstore(win);
 
-    if (win->morph) {
-        cairo_surface_destroy(win->morph);
-        win->morph = NULL;
-    }
+    wm_window_end_morph(win);
 
     if (win->icon) {
         cairo_surface_destroy(win->icon);
@@ -1032,6 +1029,20 @@ int wm_window_damage_content(wm_window_t* win, int x, int y, int width, int heig
  * @param snapshot_rect Where the picture was on screen.
  * @param from The frame the picture shows.
  */
+void wm_window_end_morph(wm_window_t* win) {
+
+    if (win->morph) {
+        cairo_surface_destroy(win->morph);
+        win->morph = NULL;
+    }
+
+    if (win->layer) {
+        cairo_surface_destroy(win->layer);
+        win->layer = NULL;
+    }
+}
+
+
 static void wm_window_begin_morph(wm_window_t* win, cairo_surface_t* snapshot, const wm_rect_t* snapshot_rect, const wm_rect_t* from) {
 
     if (!snapshot) {
@@ -1187,9 +1198,7 @@ void wm_window_unmaximize_at(wm_window_t* win, int pointer_x, int pointer_y) {
 
     if (win->morph) {
 
-        cairo_surface_destroy(win->morph);
-
-        win->morph = NULL;
+        wm_window_end_morph(win);
 
         ui_anim_set(&win->morph_anim, 1.0);
     }
@@ -1229,9 +1238,7 @@ void wm_window_minimize(wm_window_t* win) {
 
     if (win->morph) {
 
-        cairo_surface_destroy(win->morph);
-
-        win->morph = NULL;
+        wm_window_end_morph(win);
 
         ui_anim_set(&win->morph_anim, 1.0);
     }
@@ -1558,8 +1565,10 @@ void wm_window_paint_still(cairo_t* cr, wm_window_t* win) {
             cairo_clip(cr);
         }
 
-        wm_shadow_paint(cr, &wm.shadow_key, &f, WM_SHADOW_KEY_OFFSET, wm.theme.shadow_key * strength);
-        wm_shadow_paint(cr, &wm.shadow_ambient, &f, 0, wm.theme.shadow_ambient * strength);
+        const int solid = translucent ? -1 : (int)ceil(radius);
+
+        wm_shadow_paint(cr, &wm.shadow_key, &f, WM_SHADOW_KEY_OFFSET, wm.theme.shadow_key * strength, solid);
+        wm_shadow_paint(cr, &wm.shadow_ambient, &f, 0, wm.theme.shadow_ambient * strength, solid);
 
         cairo_restore(cr);
     }
@@ -1644,15 +1653,11 @@ void wm_window_paint_still(cairo_t* cr, wm_window_t* win) {
     if (!win->maximized) {
 
         wm_source(cr, wm.theme.outline, 1.0);
-
-        ui_draw_rounded_rect_d(cr, f.x + 0.5, f.y + 0.5, f.width - 1.0, f.height - 1.0, radius - 0.5);
-        cairo_stroke(cr);
+        wm_stroke_frame(cr, f.x, f.y, f.width, f.height, radius - 0.5);
     }
 
     wm_source_mix(cr, wm.theme.highlight_idle, wm.theme.highlight, focus);
-
-    ui_draw_rounded_rect_d(cr, f.x + 1.5, f.y + 1.5, f.width - 3.0, f.height - 3.0, radius > 1.5 ? radius - 1.5 : 0.0);
-    cairo_stroke(cr);
+    wm_stroke_frame(cr, f.x + 1, f.y + 1, f.width - 2, f.height - 2, radius > 1.5 ? radius - 1.5 : 0.0);
 
     cairo_restore(cr);
 }
@@ -1685,6 +1690,27 @@ static void wm_window_map(cairo_t* cr, const wm_rect_t* from, const wm_rect_t* t
  * @param cr The cairo context.
  * @param win The window.
  */
+static void wm_window_paint_layer(cairo_t* cr, wm_window_t* win, double alpha) {
+
+    if (wm_window_frosted(win) && cairo_get_target(cr) == wm.display.back) {
+
+        const wm_rect_t f = wm_window_frame(win);
+
+        wm_blur_capture(&win->backdrop, &f);
+    }
+
+    wm_rect_t rect;
+
+    if (!(win->layer = wm_window_render(win, win->layer, &rect))) {
+        return;
+    }
+
+    cairo_set_source_surface(cr, win->layer, rect.x, rect.y);
+    cairo_pattern_set_filter(cairo_get_source(cr), CAIRO_FILTER_BILINEAR);
+    cairo_paint_with_alpha(cr, alpha);
+}
+
+
 static void wm_window_paint_morph(cairo_t* cr, wm_window_t* win) {
 
     const double t = ui_anim_value(&win->morph_anim, wm.frame_time);
@@ -1721,13 +1747,8 @@ static void wm_window_paint_morph(cairo_t* cr, wm_window_t* win) {
 
     cairo_save(cr);
 
-    cairo_push_group(cr);
-
     wm_window_map(cr, &to, &now);
-    wm_window_paint_still(cr, win);
-
-    cairo_pop_group_to_source(cr);
-    cairo_paint_with_alpha(cr, t);
+    wm_window_paint_layer(cr, win, t);
 
     cairo_restore(cr);
 }
@@ -1762,16 +1783,11 @@ static void wm_window_paint_minimizing(cairo_t* cr, wm_window_t* win, double t) 
 
     cairo_save(cr);
 
-    cairo_push_group(cr);
-
     cairo_translate(cr, cx, cy);
     cairo_scale(cr, scale, scale);
     cairo_translate(cr, -fx, -fy);
 
-    wm_window_paint_still(cr, win);
-
-    cairo_pop_group_to_source(cr);
-    cairo_paint_with_alpha(cr, 1.0 - t);
+    wm_window_paint_layer(cr, win, 1.0 - t);
 
     cairo_restore(cr);
 }
@@ -1828,16 +1844,11 @@ void wm_window_paint(cairo_t* cr, wm_window_t* win) {
 
     cairo_save(cr);
 
-    cairo_push_group(cr);
-
     cairo_translate(cr, cx, cy);
     cairo_scale(cr, scale, scale);
     cairo_translate(cr, -cx, -cy);
 
-    wm_window_paint_still(cr, win);
-
-    cairo_pop_group_to_source(cr);
-    cairo_paint_with_alpha(cr, shown);
+    wm_window_paint_layer(cr, win, shown);
 
     cairo_restore(cr);
 }
