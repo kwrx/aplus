@@ -156,8 +156,9 @@ static void do_stop(int signo) {
         }
     }
 
-    if (stopped && current_task->tid == current_task->pid)
+    if (stopped && current_task->tid == current_task->pid) {
         __sched_child_changed(ppid, current_task->pid, current_task->uid, CLD_STOPPED, signo);
+    }
 }
 
 
@@ -309,8 +310,9 @@ static inline void do_signals(void) {
     }
 
 
-    while (unlikely(current_task->status == TASK_STATUS_ZOMBIE || current_task->status == TASK_STATUS_STOP || current_task->status == TASK_STATUS_DEAD))
+    while (unlikely(current_task->status == TASK_STATUS_ZOMBIE || current_task->status == TASK_STATUS_STOP || current_task->status == TASK_STATUS_DEAD)) {
         schedule(1);
+    }
 }
 
 
@@ -445,13 +447,15 @@ void schedule(int resched) {
         DEBUG_ASSERT(runnable == __atomic_load_n(&current_cpu->sched_runnable, __ATOMIC_RELAXED));
 #endif
 
-        if (unlikely(current_task->futexes != NULL))
+        if (unlikely(current_task->futexes != NULL)) {
             futex_release_all(current_task);
+        }
 
         arch_task_switch(prev_task, current_task);
 
-        if (unlikely(prev_task != current_task && prev_task->status == TASK_STATUS_ZOMBIE && (prev_task->flags & TASK_FLAGS_AUTOREAP)))
+        if (unlikely(prev_task != current_task && prev_task->status == TASK_STATUS_ZOMBIE && (prev_task->flags & TASK_FLAGS_AUTOREAP))) {
             sched_bury(current_cpu, prev_task);
+        }
     }
 
     arch_vmm_reclaim(current_task->address_space);

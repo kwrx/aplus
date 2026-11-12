@@ -609,8 +609,8 @@ void wm_taskbar_shadow(cairo_t* cr, const wm_rect_t* shape, double strength) {
     ui_draw_rounded_rect_d(cr, work.x, work.y, work.width, work.height, WM_TASKBAR_RADIUS);
     cairo_clip(cr);
 
-    wm_shadow_paint(cr, &wm.shadow_key, shape, WM_SHADOW_KEY_OFFSET, wm.theme.shadow_key * alpha);
-    wm_shadow_paint(cr, &wm.shadow_ambient, shape, 0, wm.theme.shadow_ambient * alpha);
+    wm_shadow_paint(cr, &wm.shadow_key, shape, WM_SHADOW_KEY_OFFSET, wm.theme.shadow_key * alpha, -1);
+    wm_shadow_paint(cr, &wm.shadow_ambient, shape, 0, wm.theme.shadow_ambient * alpha, -1);
 
     cairo_restore(cr);
 }
@@ -3105,6 +3105,80 @@ static bool wm_taskbar_visible(const wm_rect_t* damage, size_t count) {
  * @param damage The damaged rectangles.
  * @param count How many there are.
  */
+static void wm_taskbar_paint_fill(cairo_t* cr, const wm_blur_t* backdrop) {
+
+    if (backdrop) {
+        wm_taskbar_glass(cr, backdrop);
+        return;
+    }
+
+    wm_source(cr, wm.theme.taskbar, 1.0);
+    cairo_fill(cr);
+}
+
+
+static void wm_taskbar_paint_strip(cairo_t* cr, const wm_rect_t* work, wm_rect_t strip, const wm_blur_t* backdrop) {
+
+    const int radius = WM_TASKBAR_RADIUS;
+
+    cairo_rectangle_int_t whole = {strip.x, strip.y, strip.width, strip.height};
+    cairo_rectangle_int_t inner = {work->x, work->y, work->width, work->height};
+
+    cairo_region_t* outside = cairo_region_create_rectangle(&whole);
+
+    cairo_region_subtract_rectangle(outside, &inner);
+
+    const int rects = cairo_region_num_rectangles(outside);
+
+    if (rects > 0) {
+
+        cairo_save(cr);
+
+        for (int i = 0; i < rects; i++) {
+
+            cairo_rectangle_int_t r;
+
+            cairo_region_get_rectangle(outside, i, &r);
+            cairo_rectangle(cr, r.x, r.y, r.width, r.height);
+        }
+
+        wm_taskbar_paint_fill(cr, backdrop);
+
+        cairo_restore(cr);
+    }
+
+    cairo_region_destroy(outside);
+
+
+    for (int i = 0; i < 4; i++) {
+
+        const wm_rect_t corner = {
+            (i & 1) ? work->x + work->width - radius : work->x,
+            (i >> 1) ? work->y + work->height - radius : work->y,
+            radius,
+            radius,
+        };
+
+        const wm_rect_t shown = ui_rect_intersect(&corner, &strip);
+
+        if (ui_rect_empty(&shown)) {
+            continue;
+        }
+
+        cairo_save(cr);
+
+        cairo_rectangle(cr, shown.x, shown.y, shown.width, shown.height);
+        cairo_clip(cr);
+
+        cairo_rectangle(cr, 0, 0, wm.display.width, wm.display.height);
+        ui_draw_rounded_rect_d(cr, work->x, work->y, work->width, work->height, radius);
+        wm_taskbar_paint_fill(cr, backdrop);
+
+        cairo_restore(cr);
+    }
+}
+
+
 void wm_taskbar_paint(cairo_t* cr, const wm_rect_t* damage, size_t count) {
 
     if (!wm_taskbar_visible(damage, count)) {
@@ -3123,34 +3197,27 @@ void wm_taskbar_paint(cairo_t* cr, const wm_rect_t* damage, size_t count) {
     if (wm_taskbar_frosted()) {
 
         for (int i = 0; i < WM_TASKBAR_FRAME_STRIPS; i++) {
-
-            const wm_rect_t strip = wm_taskbar_frame_strip(i);
-
-            cairo_save(cr);
-
-            cairo_rectangle(cr, strip.x, strip.y, strip.width, strip.height);
-            cairo_clip(cr);
-
-            cairo_rectangle(cr, 0, 0, wm.display.width, wm.display.height);
-            ui_draw_rounded_rect_d(cr, work.x, work.y, work.width, work.height, WM_TASKBAR_RADIUS);
-            wm_taskbar_glass(cr, &wm.taskbar.frame[i]);
-
-            cairo_restore(cr);
+            wm_taskbar_paint_strip(cr, &work, wm_taskbar_frame_strip(i), &wm.taskbar.frame[i]);
         }
 
     } else {
 
-        wm_source(cr, wm.theme.taskbar, 1.0);
-        cairo_rectangle(cr, 0, 0, wm.display.width, wm.display.height);
-        ui_draw_rounded_rect_d(cr, work.x, work.y, work.width, work.height, WM_TASKBAR_RADIUS);
-        cairo_fill(cr);
+        const wm_rect_t screen = {0, 0, wm.display.width, wm.display.height};
+
+        wm_taskbar_paint_strip(cr, &work, screen, NULL);
     }
 
     cairo_set_fill_rule(cr, CAIRO_FILL_RULE_WINDING);
 
     cairo_new_path(cr);
-    ui_draw_rounded_rect_d(cr, work.x + 0.5, work.y + 0.5, work.width - 1.0, work.height - 1.0, WM_TASKBAR_RADIUS - 0.5);
-    wm_taskbar_edge(cr);
+
+    cairo_save(cr);
+
+    cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
+    wm_source(cr, wm.theme.taskbar_edge, 1.0);
+    wm_stroke_frame(cr, work.x, work.y, work.width, work.height, WM_TASKBAR_RADIUS - 0.5);
+
+    cairo_restore(cr);
 
     wm_taskbar_paint_session(cr);
     wm_taskbar_paint_volume_panel(cr);
