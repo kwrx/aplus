@@ -779,8 +779,8 @@ static void wm_menu_shadow(cairo_t* cr, const wm_rect_t* shape, double strength)
     ui_draw_rounded_rect_d(cr, work.x, work.y, work.width, work.height, WM_TASKBAR_RADIUS);
     cairo_clip(cr);
 
-    wm_shadow_paint(cr, &wm.shadow_key, shape, WM_SHADOW_KEY_OFFSET, wm.theme.shadow_key * strength);
-    wm_shadow_paint(cr, &wm.shadow_ambient, shape, 0, wm.theme.shadow_ambient * strength);
+    wm_shadow_paint(cr, &wm.shadow_key, shape, WM_SHADOW_KEY_OFFSET, wm.theme.shadow_key * strength, -1);
+    wm_shadow_paint(cr, &wm.shadow_ambient, shape, 0, wm.theme.shadow_ambient * strength, -1);
 
     cairo_restore(cr);
 }

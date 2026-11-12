@@ -30,6 +30,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#if defined(__SSE2__)
+    #include <emmintrin.h>
+#endif
+
 #include <wm.h>
 
 
@@ -182,8 +186,7 @@ static bool wm_blur_outdated(const wm_blur_t* blur, const wm_rect_t* reach) {
         return true;
     }
 
-    return blur->rect.x != reach->x || blur->rect.y != reach->y || cairo_image_surface_get_width(blur->surface) != (reach->width + 1) / 2 ||
-           cairo_image_surface_get_height(blur->surface) != (reach->height + 1) / 2;
+    return blur->rect.x != reach->x || blur->rect.y != reach->y || cairo_image_surface_get_width(blur->surface) != (reach->width + 1) / 2 || cairo_image_surface_get_height(blur->surface) != (reach->height + 1) / 2;
 }
 
 
@@ -288,96 +291,152 @@ static uint32_t* wm_blur_scratch_get(size_t pixels) {
 }
 
 
-static inline uint32_t wm_blur_pack(int r, int g, int b, uint32_t inv) {
-    return 0xFF000000u | ((uint32_t)r * inv >> 20) << 16 | ((uint32_t)g * inv >> 20) << 8 | ((uint32_t)b * inv >> 20);
+#define WM_BLUR_SPAN (2 * WM_BLUR_BOX + 1)
+#define WM_BLUR_DIV  (65536 / WM_BLUR_SPAN + 1)
+
+
+static inline uint8_t wm_blur_divide(uint32_t sum) {
+    return (uint8_t)((sum * WM_BLUR_DIV) >> 16);
 }
 
 
-/**
- * @brief Runs one box blur along a row of RGB24 pixels, in place, its ends held at the first and last pixel.
- *
- * @param pixels The first pixel.
- * @param length How many pixels the row has.
- * @param radius How far either side of a pixel the box reaches.
- * @param line A scratch line of at least `length` pixels.
- */
-static void wm_blur_row(uint32_t* pixels, int length, int radius, uint32_t* line) {
+#if defined(__SSE2__)
 
-    const uint32_t inv = ((1u << 20) + (uint32_t)(2 * radius)) / (uint32_t)(2 * radius + 1);
+static inline __m128i wm_blur_pack(__m128i lo, __m128i hi) {
 
-    memcpy(line, pixels, sizeof(uint32_t) * (size_t)length);
+    const __m128i div = _mm_set1_epi16(WM_BLUR_DIV);
 
-    int r = 0;
-    int g = 0;
-    int b = 0;
+    return _mm_packus_epi16(_mm_mulhi_epu16(lo, div), _mm_mulhi_epu16(hi, div));
+}
 
-    for (int i = -radius; i <= radius; i++) {
+#endif
 
-        const uint32_t p = line[WM_CLAMP(i, 0, length - 1)];
 
-        r += (int)((p >> 16) & 0xFF);
-        g += (int)((p >> 8) & 0xFF);
-        b += (int)(p & 0xFF);
+static size_t wm_blur_row_bulk(const uint8_t* line, uint8_t* out, size_t size) {
+
+#if defined(__SSE2__)
+
+    const __m128i zero = _mm_setzero_si128();
+
+    size_t i = 0;
+
+    for (; i + 16 <= size; i += 16) {
+
+        __m128i lo = _mm_setzero_si128();
+        __m128i hi = _mm_setzero_si128();
+
+        for (int k = 0; k < WM_BLUR_SPAN; k++) {
+
+            const __m128i v = _mm_loadu_si128((const __m128i*)(line + i + 4 * (size_t)k));
+
+            lo = _mm_add_epi16(lo, _mm_unpacklo_epi8(v, zero));
+            hi = _mm_add_epi16(hi, _mm_unpackhi_epi8(v, zero));
+        }
+
+        _mm_storeu_si128((__m128i*)(out + i), wm_blur_pack(lo, hi));
     }
 
-    for (int x = 0; x < length; x++) {
+    return i;
 
-        pixels[x] = wm_blur_pack(r, g, b, inv);
+#else
 
-        const uint32_t in  = line[WM_MIN(x + radius + 1, length - 1)];
-        const uint32_t out = line[WM_MAX(x - radius, 0)];
+    (void)line;
+    (void)out;
+    (void)size;
 
-        r += (int)((in >> 16) & 0xFF) - (int)((out >> 16) & 0xFF);
-        g += (int)((in >> 8) & 0xFF) - (int)((out >> 8) & 0xFF);
-        b += (int)(in & 0xFF) - (int)(out & 0xFF);
+    return 0;
+
+#endif
+}
+
+
+static void wm_blur_row(uint32_t* pixels, int length, uint8_t* line) {
+
+    const size_t size = 4 * (size_t)length;
+
+    for (int i = 0; i < WM_BLUR_BOX; i++) {
+        memcpy(line + 4 * (size_t)i, &pixels[0], 4);
+        memcpy(line + 4 * (size_t)(WM_BLUR_BOX + length + i), &pixels[length - 1], 4);
+    }
+
+    memcpy(line + 4 * (size_t)WM_BLUR_BOX, pixels, size);
+
+    uint8_t* out = (uint8_t*)pixels;
+
+    for (size_t i = wm_blur_row_bulk(line, out, size); i < size; i++) {
+
+        uint32_t sum = 0;
+
+        for (int k = 0; k < WM_BLUR_SPAN; k++) {
+            sum += line[i + 4 * (size_t)k];
+        }
+
+        out[i] = wm_blur_divide(sum);
     }
 }
 
 
-static void wm_blur_columns(uint32_t* data, size_t pitch, int width, int height, int radius, uint32_t* copy, int* sums) {
+static void wm_blur_columns(uint32_t* data, size_t pitch, int width, int height, uint8_t* ring, uint16_t* sums) {
 
-    const uint32_t inv = ((1u << 20) + (uint32_t)(2 * radius)) / (uint32_t)(2 * radius + 1);
+    const int slots   = WM_BLUR_BOX + 1;
+    const size_t size = 4 * (size_t)width;
 
-    int* sr = sums;
-    int* sg = sums + width;
-    int* sb = sums + 2 * width;
+    memset(sums, 0, sizeof(uint16_t) * size);
 
-    for (int y = 0; y < height; y++) {
-        memcpy(copy + (size_t)y * width, data + (size_t)y * pitch, sizeof(uint32_t) * (size_t)width);
-    }
+    for (int k = -WM_BLUR_BOX; k <= WM_BLUR_BOX; k++) {
 
-    memset(sums, 0, sizeof(int) * 3 * (size_t)width);
+        const uint8_t* row = (const uint8_t*)(data + (size_t)WM_CLAMP(k, 0, height - 1) * pitch);
 
-    for (int i = -radius; i <= radius; i++) {
-
-        const uint32_t* row = copy + (size_t)WM_CLAMP(i, 0, height - 1) * width;
-
-        for (int x = 0; x < width; x++) {
-            sr[x] += (int)((row[x] >> 16) & 0xFF);
-            sg[x] += (int)((row[x] >> 8) & 0xFF);
-            sb[x] += (int)(row[x] & 0xFF);
+        for (size_t i = 0; i < size; i++) {
+            sums[i] += row[i];
         }
     }
 
     for (int y = 0; y < height; y++) {
 
-        uint32_t* dst       = data + (size_t)y * pitch;
-        const uint32_t* in  = copy + (size_t)WM_MIN(y + radius + 1, height - 1) * width;
-        const uint32_t* out = copy + (size_t)WM_MAX(y - radius, 0) * width;
+        uint8_t* dst   = (uint8_t*)(data + (size_t)y * pitch);
+        uint8_t* saved = ring + (size_t)(y % slots) * size;
 
-        for (int x = 0; x < width; x++) {
+        memcpy(saved, dst, size);
 
-            dst[x] = wm_blur_pack(sr[x], sg[x], sb[x], inv);
+        const int below    = WM_MIN(y + WM_BLUR_BOX + 1, height - 1);
+        const uint8_t* in  = below > y ? (const uint8_t*)(data + (size_t)below * pitch) : ring + (size_t)(below % slots) * size;
+        const uint8_t* out = ring + (size_t)(WM_MAX(y - WM_BLUR_BOX, 0) % slots) * size;
 
-            sr[x] += (int)((in[x] >> 16) & 0xFF) - (int)((out[x] >> 16) & 0xFF);
-            sg[x] += (int)((in[x] >> 8) & 0xFF) - (int)((out[x] >> 8) & 0xFF);
-            sb[x] += (int)(in[x] & 0xFF) - (int)(out[x] & 0xFF);
+        size_t i = 0;
+
+#if defined(__SSE2__)
+
+        const __m128i zero = _mm_setzero_si128();
+
+        for (; i + 16 <= size; i += 16) {
+
+            __m128i lo = _mm_loadu_si128((const __m128i*)(sums + i));
+            __m128i hi = _mm_loadu_si128((const __m128i*)(sums + i + 8));
+
+            _mm_storeu_si128((__m128i*)(dst + i), wm_blur_pack(lo, hi));
+
+            const __m128i a = _mm_loadu_si128((const __m128i*)(in + i));
+            const __m128i b = _mm_loadu_si128((const __m128i*)(out + i));
+
+            lo = _mm_sub_epi16(_mm_add_epi16(lo, _mm_unpacklo_epi8(a, zero)), _mm_unpacklo_epi8(b, zero));
+            hi = _mm_sub_epi16(_mm_add_epi16(hi, _mm_unpackhi_epi8(a, zero)), _mm_unpackhi_epi8(b, zero));
+
+            _mm_storeu_si128((__m128i*)(sums + i), lo);
+            _mm_storeu_si128((__m128i*)(sums + i + 8), hi);
+        }
+
+#endif
+
+        for (; i < size; i++) {
+            dst[i]  = wm_blur_divide(sums[i]);
+            sums[i] = (uint16_t)(sums[i] + in[i] - out[i]);
         }
     }
 }
 
 
-static bool wm_blur_read(cairo_surface_t* target, const wm_rect_t* reach, int u, int v) {
+static void wm_blur_sample(cairo_surface_t* target, const wm_rect_t* reach, int u, int v) {
 
     cairo_t* cr = cairo_create(target);
 
@@ -389,34 +448,78 @@ static bool wm_blur_read(cairo_surface_t* target, const wm_rect_t* reach, int u,
     cairo_destroy(cr);
 
     cairo_surface_flush(target);
+}
+
+
+static bool wm_blur_smooth(cairo_surface_t* target) {
 
     uint32_t* data     = (uint32_t*)cairo_image_surface_get_data(target);
     const size_t pitch = (size_t)cairo_image_surface_get_stride(target) / sizeof(uint32_t);
     const int width    = cairo_image_surface_get_width(target);
     const int height   = cairo_image_surface_get_height(target);
 
-    uint32_t* scratch = wm_blur_scratch_get((size_t)width * height + 4 * (size_t)WM_MAX(width, height));
+    uint32_t* scratch = wm_blur_scratch_get(2 * (size_t)width + (size_t)width + 2 * WM_BLUR_BOX + (size_t)(WM_BLUR_BOX + 1) * width);
 
     if (!scratch) {
         return false;
     }
 
-    uint32_t* copy = scratch;
-    uint32_t* line = scratch + (size_t)width * height;
-    int* sums      = (int*)(line + WM_MAX(width, height));
+    uint16_t* sums = (uint16_t*)scratch;
+    uint8_t* line  = (uint8_t*)(scratch + 2 * (size_t)width);
+    uint8_t* ring  = (uint8_t*)(scratch + 3 * (size_t)width + 2 * WM_BLUR_BOX);
 
     for (int pass = 0; pass < WM_BLUR_PASSES; pass++) {
 
         for (int y = 0; y < height; y++) {
-            wm_blur_row(data + y * pitch, width, WM_BLUR_BOX, line);
+            wm_blur_row(data + y * pitch, width, line);
         }
 
-        wm_blur_columns(data, pitch, width, height, WM_BLUR_BOX, copy, sums);
+        wm_blur_columns(data, pitch, width, height, ring, sums);
     }
 
     cairo_surface_mark_dirty(target);
 
     return true;
+}
+
+
+static bool wm_blur_read(cairo_surface_t* target, const wm_rect_t* reach, int u, int v) {
+
+    wm_blur_sample(target, reach, u, v);
+
+    return wm_blur_smooth(target);
+}
+
+
+static bool wm_blur_unchanged(wm_blur_t* blur, cairo_surface_t* part, const wm_rect_t* rect) {
+
+    const uint8_t* data = cairo_image_surface_get_data(part);
+    const size_t size   = (size_t)cairo_image_surface_get_stride(part) * (size_t)cairo_image_surface_get_height(part);
+
+    if (blur->input_size == size && !memcmp(&blur->input_rect, rect, sizeof(*rect)) && !memcmp(blur->input, data, size)) {
+        return true;
+    }
+
+    blur->input_size = 0;
+
+    if (size > blur->input_capacity) {
+
+        uint8_t* grown = realloc(blur->input, size);
+
+        if (!grown) {
+            return false;
+        }
+
+        blur->input          = grown;
+        blur->input_capacity = size;
+    }
+
+    memcpy(blur->input, data, size);
+
+    blur->input_size = size;
+    blur->input_rect = *rect;
+
+    return false;
 }
 
 
@@ -443,7 +546,22 @@ static void wm_blur_refresh(wm_blur_t* blur, const wm_rect_t* dirty) {
 
     cairo_surface_t* part = cairo_image_surface_create(CAIRO_FORMAT_RGB24, a1 - a0, b1 - b0);
 
-    if (cairo_surface_status(part) != CAIRO_STATUS_SUCCESS || !wm_blur_read(part, &blur->rect, a0, b0)) {
+    if (cairo_surface_status(part) != CAIRO_STATUS_SUCCESS) {
+        cairo_surface_destroy(part);
+        return;
+    }
+
+    wm_blur_sample(part, &blur->rect, a0, b0);
+
+    const wm_rect_t rect = {u0, v0, u1 - u0, v1 - v0};
+
+    if (wm_blur_unchanged(blur, part, &rect)) {
+        cairo_surface_destroy(part);
+        return;
+    }
+
+    if (!wm_blur_smooth(part)) {
+        blur->input_size = 0;
         cairo_surface_destroy(part);
         return;
     }
@@ -451,10 +569,10 @@ static void wm_blur_refresh(wm_blur_t* blur, const wm_rect_t* dirty) {
 
     cairo_surface_flush(blur->surface);
 
-    const uint32_t* src  = (const uint32_t*)cairo_image_surface_get_data(part);
-    const size_t spitch  = (size_t)cairo_image_surface_get_stride(part) / sizeof(uint32_t);
-    uint32_t* dst        = (uint32_t*)cairo_image_surface_get_data(blur->surface);
-    const size_t dpitch  = (size_t)cairo_image_surface_get_stride(blur->surface) / sizeof(uint32_t);
+    const uint32_t* src = (const uint32_t*)cairo_image_surface_get_data(part);
+    const size_t spitch = (size_t)cairo_image_surface_get_stride(part) / sizeof(uint32_t);
+    uint32_t* dst       = (uint32_t*)cairo_image_surface_get_data(blur->surface);
+    const size_t dpitch = (size_t)cairo_image_surface_get_stride(blur->surface) / sizeof(uint32_t);
 
     for (int v = v0; v < v1; v++) {
         memcpy(dst + v * dpitch + u0, src + (v - b0) * spitch + (u0 - a0), sizeof(uint32_t) * (size_t)(u1 - u0));
@@ -510,7 +628,8 @@ bool wm_blur_capture(wm_blur_t* blur, const wm_rect_t* shape) {
         }
     }
 
-    blur->rect = r;
+    blur->rect       = r;
+    blur->input_size = 0;
 
     cairo_surface_flush(wm.display.back);
 
@@ -562,4 +681,10 @@ void wm_blur_fini(wm_blur_t* blur) {
         cairo_surface_destroy(blur->surface);
         blur->surface = NULL;
     }
+
+    free(blur->input);
+
+    blur->input          = NULL;
+    blur->input_size     = 0;
+    blur->input_capacity = 0;
 }

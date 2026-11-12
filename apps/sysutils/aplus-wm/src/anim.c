@@ -94,11 +94,15 @@ int wm_animate(uint64_t now) {
 
             if (!win->morph_anim.duration) {
 
-                cairo_surface_destroy(win->morph);
+                wm_window_end_morph(win);
 
-                win->morph = NULL;
-                whole      = true;
+                whole = true;
             }
+        }
+
+        if (win->layer && !win->morph && !win->appear.duration && !win->minimize.duration) {
+            cairo_surface_destroy(win->layer);
+            win->layer = NULL;
         }
 
         running |= wm_anim_step(&win->hover_close, now, &buttons);
@@ -226,14 +230,30 @@ int wm_animate(uint64_t now) {
  */
 cairo_surface_t* wm_window_snapshot(wm_window_t* win, wm_rect_t* rect) {
 
+    return wm_window_render(win, NULL, rect);
+}
+
+
+cairo_surface_t* wm_window_render(wm_window_t* win, cairo_surface_t* reuse, wm_rect_t* rect) {
+
     *rect = wm_window_shadow_rect(win);
 
+    if (reuse && (rect->width != cairo_image_surface_get_width(reuse) || rect->height != cairo_image_surface_get_height(reuse))) {
+        cairo_surface_destroy(reuse);
+        reuse = NULL;
+    }
+
     if (rect->width <= 0 || rect->height <= 0) {
+
+        if (reuse) {
+            cairo_surface_destroy(reuse);
+        }
+
         return NULL;
     }
 
 
-    cairo_surface_t* surface = wm_surface_create(CAIRO_FORMAT_ARGB32, rect->width, rect->height);
+    cairo_surface_t* surface = reuse ? reuse : wm_surface_create(CAIRO_FORMAT_ARGB32, rect->width, rect->height);
 
     if (!surface) {
         return NULL;
@@ -241,6 +261,12 @@ cairo_surface_t* wm_window_snapshot(wm_window_t* win, wm_rect_t* rect) {
 
 
     cairo_t* cr = cairo_create(surface);
+
+    if (reuse) {
+        cairo_set_operator(cr, CAIRO_OPERATOR_CLEAR);
+        cairo_paint(cr);
+        cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
+    }
 
     cairo_translate(cr, -rect->x, -rect->y);
 

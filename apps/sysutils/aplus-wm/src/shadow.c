@@ -37,6 +37,8 @@
  */
 #define WM_SHADOW_PASSES 3
 
+#define WM_SHADOW_RUN 2048
+
 
 /**
  * @brief One stretch of a frame's edge along one axis, and the piece of the tile that covers it.
@@ -146,7 +148,7 @@ static void wm_shadow_blur_cols(uint8_t* data, int stride, int width, int height
  * @param height The height of the rectangle.
  * @return The piece, or NULL.
  */
-static cairo_surface_t* wm_shadow_cut(cairo_surface_t* tile, int x, int y, int width, int height) {
+static cairo_surface_t* wm_shadow_cut(cairo_surface_t* tile, int x, int y, int width, int height, bool rows, bool cols) {
 
     cairo_surface_t* piece = wm_surface_create(CAIRO_FORMAT_A8, width, height);
 
@@ -155,13 +157,26 @@ static cairo_surface_t* wm_shadow_cut(cairo_surface_t* tile, int x, int y, int w
     }
 
 
-    cairo_t* cr = cairo_create(piece);
+    const uint8_t* src = cairo_image_surface_get_data(tile);
+    const int pitch    = cairo_image_surface_get_stride(tile);
 
-    cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
-    cairo_set_source_surface(cr, tile, -x, -y);
-    cairo_paint(cr);
+    uint8_t* dst     = cairo_image_surface_get_data(piece);
+    const int stride = cairo_image_surface_get_stride(piece);
 
-    cairo_destroy(cr);
+    cairo_surface_flush(piece);
+
+    for (int v = 0; v < height; v++) {
+
+        const uint8_t* line = src + (size_t)(rows ? y : y + v) * pitch + x;
+
+        if (cols) {
+            memset(dst + (size_t)v * stride, line[0], (size_t)width);
+        } else {
+            memcpy(dst + (size_t)v * stride, line, (size_t)width);
+        }
+    }
+
+    cairo_surface_mark_dirty(piece);
 
     return piece;
 }
@@ -230,7 +245,7 @@ int wm_shadow_init(wm_shadow_t* shadow, int blur, int radius) {
 
 
     const int origin[3] = {0, corner, corner + 1};
-    const int extent[3] = {corner, 1, corner};
+    const int extent[3] = {corner, WM_SHADOW_RUN, corner};
 
     for (int row = 0; row < 3; row++) {
 
@@ -240,7 +255,7 @@ int wm_shadow_init(wm_shadow_t* shadow, int blur, int radius) {
                 continue;
             }
 
-            if (!(shadow->pieces[row][col] = wm_shadow_cut(tile, origin[col], origin[row], extent[col], extent[row]))) {
+            if (!(shadow->pieces[row][col] = wm_shadow_cut(tile, origin[col], origin[row], extent[col], extent[row], row == 1, col == 1))) {
                 cairo_surface_destroy(tile);
                 wm_shadow_fini(shadow);
                 return -1;
@@ -327,10 +342,87 @@ static int wm_shadow_slices(int origin, int length, int corner, wm_slice_t out[3
  * @param offset How far down the shadow falls.
  * @param alpha How dark it is at its darkest.
  */
-void wm_shadow_paint(cairo_t* cr, const wm_shadow_t* shadow, const wm_rect_t* frame, int offset, double alpha) {
+static int wm_shadow_subtract(const wm_rect_t* rect, const wm_rect_t* hole, wm_rect_t out[4]) {
+
+    const wm_rect_t i = ui_rect_intersect(rect, hole);
+
+    if (ui_rect_empty(&i)) {
+        out[0] = *rect;
+        return 1;
+    }
+
+
+    int count = 0;
+
+    if (i.y > rect->y) {
+        out[count++] = (wm_rect_t){rect->x, rect->y, rect->width, i.y - rect->y};
+    }
+
+    if (i.y + i.height < rect->y + rect->height) {
+        out[count++] = (wm_rect_t){rect->x, i.y + i.height, rect->width, rect->y + rect->height - i.y - i.height};
+    }
+
+    if (i.x > rect->x) {
+        out[count++] = (wm_rect_t){rect->x, i.y, i.x - rect->x, i.height};
+    }
+
+    if (i.x + i.width < rect->x + rect->width) {
+        out[count++] = (wm_rect_t){i.x + i.width, i.y, rect->x + rect->width - i.x - i.width, i.height};
+    }
+
+    return count;
+}
+
+
+static void wm_shadow_blit(cairo_t* cr, cairo_pattern_t* pattern, int x, int y, int left, int top, int width, int height) {
+
+    cairo_matrix_t matrix;
+
+    cairo_matrix_init_translate(&matrix, -x, -y);
+    cairo_pattern_set_matrix(pattern, &matrix);
+
+    cairo_save(cr);
+
+    cairo_rectangle(cr, left, top, width, height);
+    cairo_clip(cr);
+
+    cairo_mask(cr, pattern);
+
+    cairo_restore(cr);
+}
+
+
+static void wm_shadow_fill(cairo_t* cr, const wm_shadow_t* shadow, const wm_slice_t* row, const wm_slice_t* col, const wm_rect_t* r) {
+
+    cairo_pattern_t* pattern = shadow->patterns[row->piece][col->piece];
+
+    if (col->piece == 1) {
+
+        for (int x = r->x; x < r->x + r->width; x += WM_SHADOW_RUN) {
+            wm_shadow_blit(cr, pattern, x, row->anchor, x, r->y, WM_MIN(WM_SHADOW_RUN, r->x + r->width - x), r->height);
+        }
+
+    } else if (row->piece == 1) {
+
+        for (int y = r->y; y < r->y + r->height; y += WM_SHADOW_RUN) {
+            wm_shadow_blit(cr, pattern, col->anchor, y, r->x, y, r->width, WM_MIN(WM_SHADOW_RUN, r->y + r->height - y));
+        }
+
+    } else {
+
+        wm_shadow_blit(cr, pattern, col->anchor, row->anchor, r->x, r->y, r->width, r->height);
+    }
+}
+
+
+void wm_shadow_paint(cairo_t* cr, const wm_shadow_t* shadow, const wm_rect_t* frame, int offset, double alpha, int solid) {
 
     if (alpha <= 0.0 || !shadow->pieces[0][0]) {
         return;
+    }
+
+    if (solid >= 0 && !wm_pixel_exact(cr)) {
+        solid = -1;
     }
 
 
@@ -339,6 +431,11 @@ void wm_shadow_paint(cairo_t* cr, const wm_shadow_t* shadow, const wm_rect_t* fr
 
     const int ncols = wm_shadow_slices(frame->x - shadow->blur, frame->width + 2 * shadow->blur, shadow->corner, cols);
     const int nrows = wm_shadow_slices(frame->y - shadow->blur + offset, frame->height + 2 * shadow->blur, shadow->corner, rows);
+
+    const wm_rect_t holes[2] = {
+        {frame->x + solid, frame->y,         frame->width - 2 * solid, frame->height            },
+        {frame->x,         frame->y + solid, frame->width,             frame->height - 2 * solid},
+    };
 
 
     cairo_save(cr);
@@ -354,26 +451,29 @@ void wm_shadow_paint(cairo_t* cr, const wm_shadow_t* shadow, const wm_rect_t* fr
                 continue;
             }
 
-            if (rows[r].len <= 0 || cols[c].len <= 0) {
-                continue;
+
+            wm_rect_t parts[16] = {
+                {cols[c].dst, rows[r].dst, cols[c].len, rows[r].len},
+            };
+
+            int count = ui_rect_empty(&parts[0]) ? 0 : 1;
+
+            if (solid >= 0) {
+
+                wm_rect_t cut[4];
+
+                const int pieces = wm_shadow_subtract(&parts[0], &holes[0], cut);
+
+                count = 0;
+
+                for (int i = 0; i < pieces; i++) {
+                    count += wm_shadow_subtract(&cut[i], &holes[1], &parts[count]);
+                }
             }
 
-
-            cairo_pattern_t* pattern = shadow->patterns[rows[r].piece][cols[c].piece];
-
-            cairo_matrix_t matrix;
-
-            cairo_matrix_init_translate(&matrix, -cols[c].anchor, -rows[r].anchor);
-            cairo_pattern_set_matrix(pattern, &matrix);
-
-            cairo_save(cr);
-
-            cairo_rectangle(cr, cols[c].dst, rows[r].dst, cols[c].len, rows[r].len);
-            cairo_clip(cr);
-
-            cairo_mask(cr, pattern);
-
-            cairo_restore(cr);
+            for (int i = 0; i < count; i++) {
+                wm_shadow_fill(cr, shadow, &rows[r], &cols[c], &parts[i]);
+            }
         }
     }
 

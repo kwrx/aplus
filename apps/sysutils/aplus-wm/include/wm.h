@@ -480,6 +480,11 @@ typedef struct {
     uint64_t seen;
     bool stale;
 
+    uint8_t* input;
+    size_t input_size;
+    size_t input_capacity;
+    wm_rect_t input_rect;
+
 } wm_blur_t;
 
 
@@ -674,6 +679,7 @@ typedef struct wm_window {
     wm_rect_t restore;
 
     cairo_surface_t* morph;
+    cairo_surface_t* layer;
     wm_rect_t morph_rect;
     wm_rect_t morph_from;
     int morph_radius;
@@ -878,6 +884,9 @@ cairo_surface_t* wm_icon_create(const char* name, int size);
 void wm_source(cairo_t* cr, ui_color_t color, double alpha);
 void wm_utf8_sanitize(char* text);
 void wm_source_mix(cairo_t* cr, ui_color_t a, ui_color_t b, double t);
+bool wm_pixel_exact(cairo_t* cr);
+void wm_stroke_frame(cairo_t* cr, int x, int y, int width, int height, double radius);
+void wm_stroke_fini(void);
 
 /**
  * @brief Implemented in display.c.
@@ -907,7 +916,7 @@ void wm_cursor_fini(void);
  */
 int wm_shadow_init(wm_shadow_t* shadow, int blur, int radius);
 void wm_shadow_fini(wm_shadow_t* shadow);
-void wm_shadow_paint(cairo_t* cr, const wm_shadow_t* shadow, const wm_rect_t* frame, int offset, double alpha);
+void wm_shadow_paint(cairo_t* cr, const wm_shadow_t* shadow, const wm_rect_t* frame, int offset, double alpha, int solid);
 
 /**
  * @brief Implemented in anim.c.
@@ -917,6 +926,8 @@ void wm_ghost_create(wm_window_t* win);
 void wm_ghost_paint(cairo_t* cr, const wm_rect_t* damage, size_t count);
 void wm_ghost_fini(void);
 cairo_surface_t* wm_window_snapshot(wm_window_t* win, wm_rect_t* rect);
+cairo_surface_t* wm_window_render(wm_window_t* win, cairo_surface_t* reuse, wm_rect_t* rect);
+void wm_window_end_morph(wm_window_t* win);
 
 /**
  * @brief Implemented in wallpaper.c.
@@ -1103,6 +1114,9 @@ int wm_clipboard_set(const char* mime, const void* data, size_t size);
 /**
  * @brief Implemented in main.c.
  */
+void wm_composite(void);
+int wm_bench_main(int argc, char** argv);
+
 void wm_damage(const wm_rect_t* rect);
 void wm_damage_glass(const wm_rect_t* rect);
 void wm_damage_window(const wm_window_t* win);
