@@ -51,10 +51,8 @@ SYSCALL(
     56, clone,
 #if defined(__x86_64__)
     long sys_clone(unsigned long flags, void* stack, int* parent_tid, int* child_tid, unsigned long tls)
-
 #else
     long sys_clone(unsigned long flags, void* stack, int* parent_tid, unsigned long tls, int* child_tid)
-
 #endif
     {
         if (!(flags & (CLONE_PARENT_SETTID | CLONE_PIDFD)))
@@ -82,7 +80,6 @@ SYSCALL(
 
 
         pid_t pid;
-
         if ((pid = do_fork(&args, sizeof(args))) < 0)
             return -errno;
 
