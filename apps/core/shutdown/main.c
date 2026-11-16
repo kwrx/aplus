@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
         {NULL,       0,           NULL, 0  },
     };
 
-    int sig_to_send = SIGTERM;
+    int sig_to_send = SIGUSR2;
     int delay = 60;
 
     int opt;
