@@ -2,9 +2,9 @@ include $(ROOTDIR)/config.mk
 
 ifeq ($(CONFIG_HAVE_DEBUG),y)
 
-	CFLAGS      += -g3 -Og -fno-omit-frame-pointer -Wall -Werror
-	CXXFLAGS    += -g3 -Og -fno-omit-frame-pointer -Wall -Werror
-	ASFLAGS     += -g3 -Og -fno-omit-frame-pointer -Wall -Werror
+	CFLAGS      += -g3 -Og -Wall -Werror
+	CXXFLAGS    += -g3 -Og -Wall -Werror
+	ASFLAGS     += -g3 -Og -Wall -Werror
 	DEFINES     += DEBUG=1
 
 
@@ -33,8 +33,8 @@ ifeq ($(CONFIG_HAVE_DEBUG),y)
 				pointer-overflow			\
 				builtin
 
-			CFLAGS   	+= -fstack-protector-explicit $(addprefix -fsanitize=,$(SANITIZERS))
-			CXXFLAGS 	+= -fstack-protector-explicit $(addprefix -fsanitize=,$(SANITIZERS))
+			CFLAGS   	+= -fstack-protector-strong $(addprefix -fsanitize=,$(SANITIZERS))
+			CXXFLAGS 	+= -fstack-protector-strong $(addprefix -fsanitize=,$(SANITIZERS))
 
 		endif
 	else
@@ -46,9 +46,9 @@ ifeq ($(CONFIG_HAVE_DEBUG),y)
 
 else
 
-	CFLAGS      += -O$(CONFIG_COMPILER_OPTIMIZATION_LEVEL)
-	CXXFLAGS    += -O$(CONFIG_COMPILER_OPTIMIZATION_LEVEL)
-	ASFLAGS     += -O$(CONFIG_COMPILER_OPTIMIZATION_LEVEL)
+	CFLAGS      += -fno-stack-protector -O$(CONFIG_COMPILER_OPTIMIZATION_LEVEL)
+	CXXFLAGS    += -fno-stack-protector -O$(CONFIG_COMPILER_OPTIMIZATION_LEVEL)
+	ASFLAGS     += -fno-stack-protector -O$(CONFIG_COMPILER_OPTIMIZATION_LEVEL)
 	DEFINES     += NDEBUG=1
 
 	ifeq ($(CONFIG_COMPILER_STRIP_BINARIES),y)
@@ -66,7 +66,6 @@ ifneq (,$(findstring KERNEL=1,$(DEFINES)))
 endif
 
 
-
 #
 # Defines
 #
@@ -74,13 +73,17 @@ CFLAGS	    += $(addprefix -I,$(INCLUDES)) $(addprefix -D,$(DEFINES))
 CXXFLAGS    += $(addprefix -I,$(INCLUDES)) $(addprefix -D,$(DEFINES))
 ASFLAGS     += $(addprefix -I,$(INCLUDES)) $(addprefix -D,$(DEFINES)) -D__ASSEMBLY__
 
+#
+# Hardening
+#
+CFLAGS      += -fno-omit-frame-pointer -fno-strict-aliasing -fno-strict-overflow -ftrivial-auto-var-init=zero
+CXXFLAGS    += -fno-omit-frame-pointer -fno-strict-aliasing -fno-strict-overflow -ftrivial-auto-var-init=zero
 
 #
 # Standard
 #
-CFLAGS	  	+= -D_GNU_SOURCE -std=gnu17 
+CFLAGS	  	+= -D_GNU_SOURCE -std=gnu17
 CXXFLAGS 	+= -D_GNU_SOURCE -std=gnu++17
-
 
 #
 # Extra
