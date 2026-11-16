@@ -91,11 +91,12 @@ __malloc __alloc_size(1) void* kmalloc(size_t size, int gfp) {
 
     DEBUG_ASSERT(memcmp(h->magic, "USED", 4) != 0);
 
+#if defined(DEBUG)
     h->magic[0] = 'U';
     h->magic[1] = 'S';
     h->magic[2] = 'E';
     h->magic[3] = 'D';
-
+#endif
     h->size   = (data_size);
     h->blocks = (size / PML1_PAGESIZE);
 
@@ -108,10 +109,14 @@ __malloc __alloc_size(1, 2) void* kcalloc(size_t n, size_t m, int gfp) {
     DEBUG_ASSERT(n);
     DEBUG_ASSERT(m);
 
-    void* h = kmalloc(n * m, gfp);
+    size_t total;
+    if (__builtin_mul_overflow(n, m, &total)) {
+        return NULL;
+    }
 
+    void* h = kmalloc(total, gfp);
     if (likely(h)) {
-        memset(h, 0, n * m);
+        memset(h, 0, total);
     }
 
     return h;
@@ -128,6 +133,16 @@ __malloc __alloc_size(2) void* krealloc(void* address, size_t size, int gfp) {
 
         if (!size) {
             return kfree(address), NULL;
+        }
+
+        if (size <= SIZE_MAX - sizeof(struct kmalloc_header) - PML1_PAGESIZE) {
+
+            size_t blocks = (size + sizeof(struct kmalloc_header) + PML1_PAGESIZE - 1) / PML1_PAGESIZE;
+
+            if (blocks == PTR_TO_HEADER(address)->blocks) {
+                PTR_TO_HEADER(address)->size = size;
+                return address;
+            }
         }
 
         void* p = kmalloc(size, gfp);
@@ -159,10 +174,12 @@ void kfree(void* address) {
 
     atomic_fetch_sub(&heap_used_memory, PTR_TO_HEADER(address)->blocks);
 
+#if defined(DEBUG)
     PTR_TO_HEADER(address)->magic[0] = 'F';
     PTR_TO_HEADER(address)->magic[1] = 'R';
     PTR_TO_HEADER(address)->magic[2] = 'E';
     PTR_TO_HEADER(address)->magic[3] = 'E';
+#endif
 
     pmm_free_blocks(arch_vmm_v2p((uintptr_t)PTR_TO_HEADER(address), ARCH_VMM_AREA_HEAP), PTR_TO_HEADER(address)->blocks);
 }
