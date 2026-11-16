@@ -34,15 +34,20 @@
 
 static void print_path(const char* prefix, inode_t* inode) {
 
-    char* ppath[CONFIG_PATH_MAX] = {0};
+    const char* ppath[64];
 
-    size_t i = 0;
+    size_t i     = 0;
+    inode_t* tmp = inode;
 
-    for (inode_t* tmp = inode; tmp; tmp = tmp->parent) {
+    for (; tmp && i < sizeof(ppath) / sizeof(ppath[0]); tmp = tmp->parent) {
         ppath[i++] = tmp->name;
     }
 
     kprintf("%s", prefix);
+
+    if (tmp) {
+        kprintf("/...");
+    }
 
     while (i > 0) {
         kprintf("/%s", ppath[--i]);
