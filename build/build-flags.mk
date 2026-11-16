@@ -76,8 +76,8 @@ ASFLAGS     += $(addprefix -I,$(INCLUDES)) $(addprefix -D,$(DEFINES)) -D__ASSEMB
 #
 # Hardening
 #
-CFLAGS      += -fno-omit-frame-pointer -fno-strict-aliasing -fno-strict-overflow -ftrivial-auto-var-init=zero
-CXXFLAGS    += -fno-omit-frame-pointer -fno-strict-aliasing -fno-strict-overflow -ftrivial-auto-var-init=zero
+CFLAGS      += -Wframe-larger-than=32768 -fno-omit-frame-pointer -fno-strict-aliasing -fno-strict-overflow -ftrivial-auto-var-init=zero
+CXXFLAGS    += -Wframe-larger-than=32768 -fno-omit-frame-pointer -fno-strict-aliasing -fno-strict-overflow -ftrivial-auto-var-init=zero
 
 #
 # Standard
