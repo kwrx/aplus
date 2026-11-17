@@ -24,7 +24,7 @@
  */
 
 /**
- * @brief Tests for fcntl() record locks: F_GETLK, F_SETLK, F_SETLKW and the OFD variants, across processes.
+ * @brief Tests for fcntl() record locks (F_GETLK, F_SETLK, F_SETLKW, the OFD variants) and flock(), across processes.
  */
 
 #include <errno.h>
@@ -33,6 +33,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/file.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <time.h>
@@ -428,6 +429,71 @@ static void test_ofd(void) {
 }
 
 
+static void test_flock(void) {
+
+    const int a = open(ON_TMPFS, O_RDONLY | O_CREAT | O_TRUNC, 0644);
+    const int b = open(ON_TMPFS, O_RDONLY);
+
+    CHECK(flock(a, LOCK_EX) == 0, "flock exclusive on a read-only descriptor", "%s", strerror(errno));
+
+    errno = 0;
+    int r = flock(b, LOCK_EX | LOCK_NB);
+    CHECK(r < 0 && errno == EWOULDBLOCK, "flock: another open file conflicts", "%d %s", r, strerror(errno));
+
+    errno = 0;
+    r     = flock(b, LOCK_SH | LOCK_NB);
+    CHECK(r < 0 && errno == EWOULDBLOCK, "flock: shared blocked by exclusive", "%d %s", r, strerror(errno));
+
+    const int c = dup(a);
+    close(c);
+
+    errno = 0;
+    r     = flock(b, LOCK_EX | LOCK_NB);
+    CHECK(r < 0 && errno == EWOULDBLOCK, "flock: closing a dup keeps the lock", "%d %s", r, strerror(errno));
+
+    CHECK(flock(a, LOCK_SH) == 0, "flock: downgrade to shared", "%s", strerror(errno));
+    CHECK(flock(b, LOCK_SH | LOCK_NB) == 0, "flock: two shared locks", "%s", strerror(errno));
+
+    errno = 0;
+    r     = flock(a, LOCK_EX | LOCK_NB);
+    CHECK(r < 0 && errno == EWOULDBLOCK, "flock: upgrade blocked by another shared lock", "%d %s", r, strerror(errno));
+
+    CHECK(flock(b, LOCK_UN) == 0, "flock: unlock", "%s", strerror(errno));
+    CHECK(flock(a, LOCK_EX | LOCK_NB) == 0, "flock: upgrade when alone", "%s", strerror(errno));
+
+    const pid_t pid = fork();
+
+    if (pid == 0) {
+        close(a);
+        close(b);
+        const int d = open(ON_TMPFS, O_RDONLY);
+        _exit(flock(d, LOCK_EX) == 0 ? 0 : 1);
+    }
+
+    struct timespec pause = {0, 300 * 1000000L};
+    nanosleep(&pause, NULL);
+
+    int status = 0;
+    CHECK(waitpid(pid, &status, WNOHANG) == 0, "flock: the waiter blocks", "status %x", status);
+
+    close(a);
+
+    waitpid(pid, &status, 0);
+    CHECK(WIFEXITED(status) && WEXITSTATUS(status) == 0, "flock: closing the last descriptor wakes the waiter", "status %x", status);
+
+    errno = 0;
+    r     = flock(b, LOCK_SH | LOCK_EX);
+    CHECK(r < 0 && errno == EINVAL, "flock: unknown operation", "%d %s", r, strerror(errno));
+
+    errno = 0;
+    r     = flock(-1, LOCK_SH);
+    CHECK(r < 0 && errno == EBADF, "flock: bad descriptor", "%d %s", r, strerror(errno));
+
+    close(b);
+    unlink(ON_TMPFS);
+}
+
+
 /**
  * @brief Runs every test.
  *
@@ -445,6 +511,7 @@ int main(void) {
     test_file(ON_EXT2, "ext2");
     test_errors();
     test_ofd();
+    test_flock();
 
     printf("fcntl-lock-test: %d/%d passed, %d failed\n", total - failures, total, failures);
 

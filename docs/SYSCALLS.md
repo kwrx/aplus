@@ -74,7 +74,7 @@
 - [ ] sys_msgrcv
 - [ ] sys_msgctl
 - [x] sys_fcntl
-- [ ] sys_flock
+- [x] sys_flock
 - [x] sys_fsync
 - [x] sys_fdatasync
 - [x] sys_truncate
