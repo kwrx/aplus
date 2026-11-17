@@ -88,9 +88,16 @@ SYSCALL(
 
             case CLOCK_PROCESS_CPUTIME_ID:
 
-                tp.tv_sec  = current_task->clock[TASK_CLOCK_PROCESS_CPUTIME].tv_sec;
-                tp.tv_nsec = current_task->clock[TASK_CLOCK_PROCESS_CPUTIME].tv_nsec;
+            {
+                uint64_t user;
+                uint64_t system;
+
+                sched_process_cputime(current_task->pid, &user, &system);
+
+                tp.tv_sec  = (time_t)((user + system) / 1000000000ULL);
+                tp.tv_nsec = (long)((user + system) % 1000000000ULL);
                 break;
+            }
 
             default:
                 return -EINVAL;

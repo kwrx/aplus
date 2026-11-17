@@ -89,6 +89,7 @@ typedef struct procfs_task {
 
     uint64_t start_time; /* USER_HZ ticks since boot */
     uint64_t utime;      /* USER_HZ ticks */
+    uint64_t stime;
 
     uint64_t minflt;
     uint64_t majflt;
@@ -149,7 +150,7 @@ size_t procfs_task_fd_list(pid_t pid, int* out, size_t max);
 ssize_t procfs_task_fd_path(pid_t pid, int fd, char* buf, size_t size);
 int procfs_task_mounts(pid_t pid, procfs_buf_t* b);
 
-uint64_t procfs_ticks(const struct timespec* ts);
+uint64_t procfs_ns_ticks(uint64_t ns);
 
 
 int procfs_root_getattr(inode_t* inode, struct stat* st);

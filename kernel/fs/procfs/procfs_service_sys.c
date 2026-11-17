@@ -51,26 +51,25 @@ static int procfs_service_stat_fetch(inode_t* inode, char** buf, size_t* size, v
 
     procfs_buf_t b = procfs_scratch();
 
-    uint64_t busy = 0;
-    uint64_t idle = 0;
+    uint64_t user   = 0;
+    uint64_t system = 0;
+    uint64_t idle   = 0;
 
     cpu_foreach(cpu) {
-
-        uint64_t up = procfs_ticks(&cpu->uptime);
-        uint64_t id = procfs_ticks(&cpu->idle);
-
-        busy += up > id ? up - id : 0;
-        idle += id;
+        user += procfs_ns_ticks(__atomic_load_n(&cpu->user_ns, __ATOMIC_RELAXED));
+        system += procfs_ns_ticks(__atomic_load_n(&cpu->system_ns, __ATOMIC_RELAXED));
+        idle += procfs_ns_ticks(__atomic_load_n(&cpu->idle_ns, __ATOMIC_RELAXED));
     }
 
-    procfs_bprintf(&b, "cpu  %lu 0 0 %lu 0 0 0 0 0 0\n", busy, idle);
+    procfs_bprintf(&b, "cpu  %lu 0 %lu %lu 0 0 0 0 0 0\n", user, system, idle);
 
     cpu_foreach(cpu) {
 
-        uint64_t up = procfs_ticks(&cpu->uptime);
-        uint64_t id = procfs_ticks(&cpu->idle);
+        uint64_t us = procfs_ns_ticks(__atomic_load_n(&cpu->user_ns, __ATOMIC_RELAXED));
+        uint64_t sy = procfs_ns_ticks(__atomic_load_n(&cpu->system_ns, __ATOMIC_RELAXED));
+        uint64_t id = procfs_ns_ticks(__atomic_load_n(&cpu->idle_ns, __ATOMIC_RELAXED));
 
-        procfs_bprintf(&b, "cpu%d %lu 0 0 %lu 0 0 0 0 0 0\n", (int)cpu->id, up > id ? up - id : 0, id);
+        procfs_bprintf(&b, "cpu%d %lu 0 %lu %lu 0 0 0 0 0 0\n", (int)cpu->id, us, sy, id);
     }
 
     procfs_bprintf(&b, "intr 0\n");

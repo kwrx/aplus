@@ -778,6 +778,8 @@ SYSCALL(
 
         current_task->flags &= ~TASK_FLAGS_KERNEL_UIO;
 
+        sched_account(false);
+
         arch_userspace_enter(head.e_entry, layout.stack, (void*)layout.bottom);
 
 

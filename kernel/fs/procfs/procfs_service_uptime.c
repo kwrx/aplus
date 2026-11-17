@@ -57,7 +57,7 @@ static int procfs_service_uptime_fetch(inode_t* inode, char** buf, size_t* size,
     uint64_t idle = 0;
 
     cpu_foreach(cpu) {
-        idle += procfs_ticks(&cpu->idle);
+        idle += procfs_ns_ticks(__atomic_load_n(&cpu->idle_ns, __ATOMIC_RELAXED));
     }
 
     procfs_bprintf(&b, "%lu.%02lu %lu.%02lu\n", ms / 1000, (ms % 1000) / 10, idle / TASK_USER_HZ, ((idle % TASK_USER_HZ) * 100) / TASK_USER_HZ);

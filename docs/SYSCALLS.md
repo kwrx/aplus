@@ -101,7 +101,7 @@
 - [ ] sys_getrlimit
 - [ ] sys_getrusage
 - [x] sys_sysinfo
-- [ ] sys_times
+- [x] sys_times
 - [ ] sys_ptrace
 - [x] sys_getuid
 - [ ] sys_syslog

@@ -68,7 +68,7 @@ int procfs_pid_fetch_stat(inode_t* inode, char** buf, size_t* size, void* arg) {
 
     procfs_bprintf(&b, "%lu 0 %lu 0 ", t.minflt, t.majflt);
 
-    procfs_bprintf(&b, "%lu 0 0 0 ", t.utime);
+    procfs_bprintf(&b, "%lu %lu 0 0 ", t.utime, t.stime);
 
     procfs_bprintf(&b, "%ld %ld %lu 0 %lu ", t.priority, t.priority, (unsigned long)t.threads, t.start_time);
 

@@ -106,8 +106,9 @@ typedef struct cpu {
     size_t sched_runnable;
 
     uint64_t ticks;
-    struct timespec uptime;
-    struct timespec idle;
+    uint64_t user_ns;
+    uint64_t system_ns;
+    uint64_t idle_ns;
 
     spinlock_t global_lock;
     spinlock_t sched_lock;

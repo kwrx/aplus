@@ -104,19 +104,8 @@ void procfs_bprintf(procfs_buf_t* b, const char* fmt, ...) {
 }
 
 
-uint64_t procfs_ticks(const struct timespec* ts) {
-
-    DEBUG_ASSERT(ts);
-
-    if (unlikely(ts->tv_sec < 0))
-        return 0;
-
-    uint64_t ticks = (uint64_t)ts->tv_sec * TASK_USER_HZ;
-
-    if (likely(ts->tv_nsec > 0))
-        ticks += (uint64_t)ts->tv_nsec / (1000000000UL / TASK_USER_HZ);
-
-    return ticks;
+uint64_t procfs_ns_ticks(uint64_t ns) {
+    return ns / (1000000000UL / TASK_USER_HZ);
 }
 
 
@@ -174,7 +163,6 @@ static void __snapshot(task_t* t, cpuid_t cpu, size_t threads, procfs_task_t* o)
         o->cmdline_len = TASK_CMDLINE_LEN;
 
     o->start_time = t->start_time;
-    o->utime      = procfs_ticks(&t->clock[TASK_CLOCK_THREAD_CPUTIME]);
 
     o->minflt = t->rusage.ru_minflt;
     o->majflt = t->rusage.ru_majflt;
@@ -268,6 +256,15 @@ int procfs_task_snapshot(pid_t pid, procfs_task_t* out) {
     }
 
     out->threads = threads;
+
+
+    uint64_t user;
+    uint64_t system;
+
+    sched_process_cputime(out->pid, &user, &system);
+
+    out->utime = procfs_ns_ticks(user);
+    out->stime = procfs_ns_ticks(system);
 
     return 0;
 }

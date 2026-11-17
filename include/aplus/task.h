@@ -95,10 +95,9 @@
     #define TASK_CAPS_NETWORK 4
 
 
-    #define TASK_CLOCK_MAX             3
-    #define TASK_CLOCK_SCHEDULER       0
-    #define TASK_CLOCK_THREAD_CPUTIME  1
-    #define TASK_CLOCK_PROCESS_CPUTIME 2
+    #define TASK_CLOCK_MAX            2
+    #define TASK_CLOCK_THREAD_CPUTIME 0
+    #define TASK_CLOCK_SYSTEM_CPUTIME 1
 
 
     /**
@@ -438,6 +437,14 @@ static inline void task_rusage_add(struct rusage* dst, const struct rusage* src)
 }
 
 
+static inline uint64_t task_clock_ns(const task_t* task, int type) {
+    return (uint64_t)task->clock[type].tv_sec * 1000000000ULL + (uint64_t)task->clock[type].tv_nsec;
+}
+
+static inline uint64_t task_timeval_ns(const struct timeval* tv) {
+    return (uint64_t)tv->tv_sec * 1000000000ULL + (uint64_t)tv->tv_usec * 1000ULL;
+}
+
 /**
  * @brief Gives a thread's own resource usage, with its CPU time taken from its thread clock.
  *
@@ -448,8 +455,14 @@ static inline void task_rusage_self(const task_t* task, struct rusage* ru) {
 
     *ru = task->rusage;
 
-    ru->ru_utime.tv_sec  = task->clock[TASK_CLOCK_THREAD_CPUTIME].tv_sec;
-    ru->ru_utime.tv_usec = task->clock[TASK_CLOCK_THREAD_CPUTIME].tv_nsec / 1000;
+    uint64_t total  = task_clock_ns(task, TASK_CLOCK_THREAD_CPUTIME);
+    uint64_t system = task_clock_ns(task, TASK_CLOCK_SYSTEM_CPUTIME);
+    uint64_t user   = total > system ? total - system : 0;
+
+    ru->ru_utime.tv_sec  = (time_t)(user / 1000000000ULL);
+    ru->ru_utime.tv_usec = (suseconds_t)((user % 1000000000ULL) / 1000ULL);
+    ru->ru_stime.tv_sec  = (time_t)(system / 1000000000ULL);
+    ru->ru_stime.tv_usec = (suseconds_t)((system % 1000000000ULL) / 1000ULL);
 }
 
 
@@ -478,6 +491,8 @@ void sched_raise(int sig, siginfo_t*);
 void sched_sigmask(const sigset_t*);
 void sched_signals(void);
 size_t sched_nprocs(void);
+void sched_account(bool user);
+void sched_process_cputime(pid_t pid, uint64_t* user, uint64_t* system);
 pid_t sched_lastpid(void);
 void sched_dnit(void);
 

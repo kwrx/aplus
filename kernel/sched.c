@@ -383,18 +383,42 @@ static void __sched_next(void) {
 }
 
 
+static inline void __timespec_add_ns(struct timespec* ts, uint64_t ns) {
+
+    ns += (uint64_t)ts->tv_nsec;
+
+    ts->tv_sec += (time_t)(ns / 1000000000ULL);
+    ts->tv_nsec = (long)(ns % 1000000000ULL);
+}
+
+void sched_account(bool user) {
+
+    cpu_t* cpu   = current_cpu;
+    task_t* task = cpu->sched_running;
+
+    DEBUG_ASSERT(task);
+
+    uint64_t now   = arch_timer_percpu_getns();
+    uint64_t delta = likely(cpu->ticks) ? now - cpu->ticks : 0;
+
+    cpu->ticks = now;
+
+    __timespec_add_ns(&task->clock[TASK_CLOCK_THREAD_CPUTIME], delta);
+
+    if (task == cpu->sched_idle) {
+        __atomic_store_n(&cpu->idle_ns, cpu->idle_ns + delta, __ATOMIC_RELAXED);
+    } else if (user) {
+        __atomic_store_n(&cpu->user_ns, cpu->user_ns + delta, __ATOMIC_RELAXED);
+    } else {
+        __timespec_add_ns(&task->clock[TASK_CLOCK_SYSTEM_CPUTIME], delta);
+        __atomic_store_n(&cpu->system_ns, cpu->system_ns + delta, __ATOMIC_RELAXED);
+    }
+}
+
 void schedule(int resched) {
 
     DEBUG_ASSERT(current_cpu);
     DEBUG_ASSERT(current_task);
-
-#define UPDATE_CLOCK(task, type, delta)                                      \
-    {                                                                        \
-        task->clock[type].tv_nsec += delta;                                  \
-        task->clock[type].tv_sec += task->clock[type].tv_nsec / 1000000000L; \
-        task->clock[type].tv_nsec %= 1000000000L;                            \
-    }
-
 
 
     __sched_destroy_dead();
@@ -402,18 +426,7 @@ void schedule(int resched) {
 
     task_t* prev_task = current_task;
 
-
-    uint64_t elapsed = arch_timer_percpu_getns();
-    uint64_t delta   = elapsed - current_cpu->ticks;
-
-
-    UPDATE_CLOCK(current_task, TASK_CLOCK_SCHEDULER, TASK_SCHEDULER_PERIOD_NS);
-    UPDATE_CLOCK(current_task, TASK_CLOCK_THREAD_CPUTIME, delta);
-    UPDATE_CLOCK(current_task, TASK_CLOCK_PROCESS_CPUTIME, delta);
-
-
-    current_cpu->ticks = elapsed;
-
+    sched_account(false);
 
 
     if (!resched) {
@@ -1285,4 +1298,43 @@ size_t sched_nprocs(void) {
     }
 
     return count;
+}
+
+void sched_process_cputime(pid_t pid, uint64_t* user, uint64_t* system) {
+
+    DEBUG_ASSERT(user);
+    DEBUG_ASSERT(system);
+
+    uint64_t total     = 0;
+    uint64_t sys       = 0;
+    uint64_t dead_user = 0;
+    uint64_t dead_sys  = 0;
+
+    cpu_foreach(cpu) {
+
+        scoped_lock(&cpu->sched_lock) {
+
+            for (task_t* t = cpu->sched_queue; t; t = t->next) {
+
+                if (t->pid != pid || t->status == TASK_STATUS_DEAD) {
+                    continue;
+                }
+
+                if (t->tid != t->pid && t->status == TASK_STATUS_ZOMBIE) {
+                    continue;
+                }
+
+                total += task_clock_ns(t, TASK_CLOCK_THREAD_CPUTIME);
+                sys += task_clock_ns(t, TASK_CLOCK_SYSTEM_CPUTIME);
+
+                if (t->tid == t->pid) {
+                    dead_user += task_timeval_ns(&t->rusage_dead.ru_utime);
+                    dead_sys += task_timeval_ns(&t->rusage_dead.ru_stime);
+                }
+            }
+        }
+    }
+
+    *user   = (total > sys ? total - sys : 0) + dead_user;
+    *system = sys + dead_sys;
 }

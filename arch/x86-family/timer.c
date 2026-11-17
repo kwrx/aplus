@@ -54,6 +54,7 @@ static uint64_t (*__h_generic_getticks)(void) = timer_null_getticks;
 static uint64_t (*__h_generic_getres)(void)   = timer_null_getres;
 static uint64_t (*__h_percpu_getticks)(void)  = timer_null_getticks;
 static uint64_t (*__h_percpu_getres)(void)    = timer_null_getres;
+static uint64_t percpu_mult                   = 0;
 
 
 static uint64_t timer_scale(uint64_t ticks, uint64_t scale, uint64_t frequency) {
@@ -94,7 +95,11 @@ uint64_t arch_timer_percpu_getticks(void) {
 }
 
 uint64_t arch_timer_percpu_getns(void) {
+#if defined(__x86_64__)
+    return (uint64_t)(((unsigned __int128)__h_percpu_getticks() * percpu_mult) >> 32);
+#else
     return timer_scale(__h_percpu_getticks(), 1000000000, __h_percpu_getres());
+#endif
 }
 
 uint64_t arch_timer_percpu_getus(void) {
@@ -197,6 +202,7 @@ void timer_init(void) {
 
     __h_percpu_getticks = tsc_getticks;
     __h_percpu_getres   = tsc_getres;
+    percpu_mult         = (1000000000ULL << 32) / tsc_getres();
 
     generic_origin   = __h_generic_getticks();
     __atomic_store_n(&realtime_base_ns, (arch_timer_gettime() * 1000000000ULL) - arch_timer_generic_getns(), __ATOMIC_RELAXED);

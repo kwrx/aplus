@@ -139,10 +139,28 @@ static void x86_irq_dispatch(interrupt_frame_t* frame) {
 }
 
 
+static inline bool x86_intr_returns_to_user(interrupt_frame_t* frame) {
+
+    if (x86_intr_is_user_mode(frame)) {
+        return true;
+    }
+
+#if defined(__x86_64__)
+    extern uint8_t x86_syscall_leave[];
+    return frame->ip == (uintptr_t)x86_syscall_leave;
+#else
+    return false;
+#endif
+}
+
 void* x86_exception_handler(interrupt_frame_t* frame) {
 
     DEBUG_ASSERT((frame));
     current_cpu->frame = frame;
+
+    if (x86_intr_returns_to_user(frame)) {
+        sched_account(true);
+    }
 
     switch (frame->intno) {
 
@@ -180,27 +198,7 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
 
         case X86_INTR_VECTOR_TIMER:
 
-        {
-            current_cpu->uptime.tv_nsec += TASK_SCHEDULER_PERIOD_NS;
-
-            if (unlikely(current_cpu->uptime.tv_nsec >= 1000000000)) {
-                current_cpu->uptime.tv_sec += 1;
-                current_cpu->uptime.tv_nsec -= 1000000000;
-            }
-
-            if (current_task == current_cpu->sched_idle) {
-
-                current_cpu->idle.tv_nsec += TASK_SCHEDULER_PERIOD_NS;
-
-                if (unlikely(current_cpu->idle.tv_nsec >= 1000000000)) {
-                    current_cpu->idle.tv_sec += 1;
-                    current_cpu->idle.tv_nsec -= 1000000000;
-                }
-            }
-
             schedule(0);
-        }
-
             apic_eoi();
             break;
 
@@ -253,6 +251,10 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
         frame->ax = syscall_restart();
     }
 
+
+    if (x86_intr_returns_to_user(frame)) {
+        sched_account(false);
+    }
 
     return frame;
 }

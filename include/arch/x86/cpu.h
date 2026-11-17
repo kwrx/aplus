@@ -582,7 +582,7 @@ static inline unsigned long long x86_rdtsc(void) {
     unsigned long long vl;
     unsigned long long vh;
 
-    __asm__ __volatile__("lfence; rdtsc; lfence;" : "=a"(vl), "=d"(vh));
+    __asm__ __volatile__("lfence; rdtsc" : "=a"(vl), "=d"(vh));
 
     return (vh << 32) | vl;
 }
