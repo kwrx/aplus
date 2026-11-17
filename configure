@@ -168,7 +168,7 @@ stage_3() {
     packages="$packages cairo"
     packages="$packages freetype"
     packages="$packages libpng"
-    packages="$packages libtsm"
+    packages="$packages libghostty-vt"
     packages="$packages libffi"
     packages="$packages mupdf"
     packages="$packages libjpeg-turbo"

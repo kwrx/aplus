@@ -2,13 +2,14 @@ INCLUDES += $(ROOTDIR)/include
 INCLUDES += $(ROOTDIR)/lib/aplus/ui/include
 INCLUDES += $(ROOTDIR)/lib/aplus/ulog/include
 
+CFLAGS += -DGHOSTTY_STATIC
 CFLAGS += -include $(ROOTDIR)/config.h
 CFLAGS += -isystem $(SYSROOT)/usr/include
 CFLAGS += -isystem $(SYSROOT)/usr/include/freetype2
 
 LDFLAGS += -L$(ROOTDIR)/lib/aplus/ui
 LDFLAGS += -L$(ROOTDIR)/lib/aplus/ulog
-LIBS    += ui ulog tsm cairo freetype pixman-1 png z
+LIBS    += ui ulog ghostty-vt cairo freetype pixman-1 png z
 
 RESOURCES += $(SYSROOT)/usr/share/applications/aplus-terminal.desktop
 RESOURCES += $(SYSROOT)/etc/init.d/01-aplus-terminal.sh

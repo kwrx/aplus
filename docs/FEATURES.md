@@ -164,6 +164,6 @@
 - [x] LibreSSL
 - [x] cURL
 - [x] Expat
-- [x] libtsm
+- [x] libghostty-vt
 - [x] NetSurf
 - [x] MuPDF

@@ -27,7 +27,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <getopt.h>
-#include <libtsm.h>
+#include <ghostty/vt.h>
 #include <math.h>
 #include <poll.h>
 #include <pty.h>
@@ -88,15 +88,9 @@
 #define ATERM_TITLE        "Console"
 #define ATERM_TITLE_SUFFIX " - " ATERM_TITLE
 
-/**
- * @brief The colour codes libtsm stamps a cell with when it uses the default foreground and background.
- */
-#define ATERM_CODE_FOREGROUND 16
-#define ATERM_CODE_BACKGROUND 17
-
 
 /**
- * @brief The sixteen ANSI colours, normal then bright, drawn instead of libtsm's own.
+ * @brief The sixteen ANSI colours, normal then bright, drawn instead of libghostty-vt's own.
  */
 static const uint8_t aterm_palette[16][3] = {
     {0x24, 0x1F, 0x31},
@@ -130,6 +124,27 @@ typedef struct {
 } aterm_font_t;
 
 
+typedef struct {
+
+    int x;
+    int y;
+
+    bool visible;
+
+    GhosttyCursorStyle style;
+
+} aterm_cursor_t;
+
+
+typedef struct {
+
+    GhosttyRenderStateColors colors;
+
+    aterm_cursor_t cursor;
+
+} aterm_frame_t;
+
+
 static struct {
 
     int masterfd;
@@ -139,13 +154,24 @@ static struct {
 
     int sigchld[2];
 
-    struct tsm_screen* con;
-    struct tsm_vte* vte;
+    GhosttyTerminal term;
+    GhosttyRenderState render;
+    GhosttyRenderStateRowIterator rows_iter;
+    GhosttyRenderStateRowCells cells;
+    GhosttyKeyEncoder key_encoder;
+    GhosttyKeyEvent key_event;
+
+    struct {
+        uint8_t* data;
+        size_t size;
+        size_t capacity;
+    } reply;
 
     ui_connection_t* conn;
     ui_window_t* win;
 
-    tsm_age_t age;
+    bool redraw;
+    aterm_cursor_t cursor;
 
     unsigned int cols;
     unsigned int rows;
@@ -572,44 +598,66 @@ static unsigned long aterm_glyph_index(aterm_font_t* font, uint32_t codepoint) {
 }
 
 
-/**
- * @brief Resolves one of a cell's colours, putting the theme's and the palette's in place of libtsm's own.
- *
- * @param code The colour code libtsm gave the cell.
- * @param r The red component it resolved the code to.
- * @param g The green component it resolved the code to.
- * @param b The blue component it resolved the code to.
- * @return The colour to draw with.
- */
-static ui_color_t aterm_color(int8_t code, uint8_t r, uint8_t g, uint8_t b) {
+static GhosttyColorRgb aterm_rgb(ui_color_t color) {
 
-    if (code == ATERM_CODE_BACKGROUND) {
-        return ui_theme_dark()->surface_sunken;
+    return (GhosttyColorRgb){
+        .r = (uint8_t)lround(color.r * 255.0),
+        .g = (uint8_t)lround(color.g * 255.0),
+        .b = (uint8_t)lround(color.b * 255.0),
+    };
+}
+
+
+static void aterm_set_source(cairo_t* cr, GhosttyColorRgb color) {
+    cairo_set_source_rgb(cr, color.r / 255.0, color.g / 255.0, color.b / 255.0);
+}
+
+
+static void aterm_apply_colors(void) {
+
+    const GhosttyColorRgb fg = aterm_rgb(ui_theme_dark()->text);
+    const GhosttyColorRgb bg = aterm_rgb(ui_theme_dark()->surface_sunken);
+
+    if (ghostty_terminal_set(context.term, GHOSTTY_TERMINAL_OPT_COLOR_FOREGROUND, &fg) != GHOSTTY_SUCCESS) {
+        ulog_warnf("cannot set the default foreground");
     }
 
-    if (code == ATERM_CODE_FOREGROUND) {
-        return ui_theme_dark()->text;
+    if (ghostty_terminal_set(context.term, GHOSTTY_TERMINAL_OPT_COLOR_BACKGROUND, &bg) != GHOSTTY_SUCCESS) {
+        ulog_warnf("cannot set the default background");
     }
 
-    if (code >= 0 && code < 16) {
-        return ui_rgb(aterm_palette[code][0], aterm_palette[code][1], aterm_palette[code][2]);
+    context.redraw = true;
+}
+
+
+static void aterm_apply_palette(void) {
+
+    GhosttyColorRgb palette[256];
+
+    if (ghostty_terminal_get(context.term, GHOSTTY_TERMINAL_DATA_COLOR_PALETTE_DEFAULT, &palette) != GHOSTTY_SUCCESS) {
+        ulog_warnf("cannot read the default palette");
+        return;
     }
 
-    return ui_rgb(r, g, b);
+    for (size_t i = 0; i < 16; i++) {
+        palette[i] = (GhosttyColorRgb){.r = aterm_palette[i][0], .g = aterm_palette[i][1], .b = aterm_palette[i][2]};
+    }
+
+    if (ghostty_terminal_set(context.term, GHOSTTY_TERMINAL_OPT_COLOR_PALETTE, &palette) != GHOSTTY_SUCCESS) {
+        ulog_warnf("cannot set the palette");
+    }
 }
 
 
 /**
  * @brief Paints the whole surface the default background, padding included.
  */
-static void aterm_clear(void) {
-
-    const ui_color_t bg = ui_theme_dark()->surface_sunken;
+static void aterm_clear(GhosttyColorRgb bg) {
 
     cairo_save(context.cr);
 
     cairo_set_operator(context.cr, CAIRO_OPERATOR_SOURCE);
-    cairo_set_source_rgb(context.cr, bg.r, bg.g, bg.b);
+    aterm_set_source(context.cr, bg);
     cairo_paint(context.cr);
 
     cairo_restore(context.cr);
@@ -621,64 +669,104 @@ static void aterm_clear(void) {
 /**
  * @brief Draws one cell: its background, the glyph standing in it, and the underline under that.
  *
- * Clipped to the cell, because only the cells libtsm reports as changed are repainted and a
+ * Clipped to the cell, because only the rows libghostty-vt reports as changed are repainted and a
  * glyph reaching past its own advance would otherwise leave a piece of itself in a neighbour
  * that is never drawn again.
  */
-static int fb_draw_cb(struct tsm_screen* con, uint64_t id, const uint32_t* ch, size_t len, uint32_t width, uint32_t posx, uint32_t posy, const struct tsm_screen_attr* attr, tsm_age_t age, void* data) {
+static void aterm_draw_cell(const aterm_frame_t* frame, int col, int row) {
 
-    (void)id;
-    (void)width;
-    (void)data;
+    GhosttyCell raw      = 0;
+    GhosttyCellWide wide = GHOSTTY_CELL_WIDE_NARROW;
 
-    assert(con);
-    assert(attr);
-    assert(len < 2);
+    if (ghostty_render_state_row_cells_get(context.cells, GHOSTTY_RENDER_STATE_ROW_CELLS_DATA_RAW, &raw) == GHOSTTY_SUCCESS) {
+        ghostty_cell_get(raw, GHOSTTY_CELL_DATA_WIDE, &wide);
+    }
 
-
-    if (age && context.age && age <= context.age) {
-        return 0;
+    if (wide == GHOSTTY_CELL_WIDE_SPACER_TAIL) {
+        return;
     }
 
 
-    const int x = ATERM_PADDING + (int)posx * context.font.width;
-    const int y = ATERM_PADDING + (int)posy * context.font.height;
+    const int x = ATERM_PADDING + col * context.font.width;
+    const int y = ATERM_PADDING + row * context.font.height;
 
-    if (x + context.font.width > (int)aterm_window_width() || y + context.font.height > (int)aterm_window_height()) {
-        return 0;
+    const int window_width  = (int)aterm_window_width();
+    const int window_height = (int)aterm_window_height();
+
+    int width = wide == GHOSTTY_CELL_WIDE_WIDE ? 2 * context.font.width : context.font.width;
+
+    if (x + width > window_width) {
+        width = context.font.width;
+    }
+
+    if (x + width > window_width || y + context.font.height > window_height) {
+        return;
     }
 
 
-    const ui_color_t front = aterm_color(attr->fccode, attr->fr, attr->fg, attr->fb);
-    const ui_color_t back  = aterm_color(attr->bccode, attr->br, attr->bg, attr->bb);
+    GhosttyStyle style;
+    ghostty_style_default(&style);
+    ghostty_render_state_row_cells_get(context.cells, GHOSTTY_RENDER_STATE_ROW_CELLS_DATA_STYLE, &style);
 
-    const double fr = attr->inverse ? back.r : front.r;
-    const double fg = attr->inverse ? back.g : front.g;
-    const double fb = attr->inverse ? back.b : front.b;
+    GhosttyColorRgb front = frame->colors.foreground;
+    GhosttyColorRgb back  = frame->colors.background;
+    GhosttyColorRgb color;
 
-    const double br = attr->inverse ? front.r : back.r;
-    const double bg = attr->inverse ? front.g : back.g;
-    const double bb = attr->inverse ? front.b : back.b;
+    if (ghostty_render_state_row_cells_get(context.cells, GHOSTTY_RENDER_STATE_ROW_CELLS_DATA_FG_COLOR, &color) == GHOSTTY_SUCCESS) {
+        front = color;
+    }
+
+    if (ghostty_render_state_row_cells_get(context.cells, GHOSTTY_RENDER_STATE_ROW_CELLS_DATA_BG_COLOR, &color) == GHOSTTY_SUCCESS) {
+        back = color;
+    }
+
+    if (style.flags & GHOSTTY_STYLE_FLAG_INVERSE) {
+        color = front;
+        front = back;
+        back  = color;
+    }
+
+
+    const aterm_cursor_t* cursor = &frame->cursor;
+
+    const bool on_cursor = cursor->visible && cursor->x == col && cursor->y == row;
+
+    if (on_cursor && cursor->style == GHOSTTY_CURSOR_STYLE_BLOCK) {
+
+        if (frame->colors.cursor_has_value) {
+            back  = frame->colors.cursor;
+            front = frame->colors.background;
+        } else {
+            color = front;
+            front = back;
+            back  = color;
+        }
+    }
 
 
     cairo_t* cr = context.cr;
 
     cairo_save(cr);
 
-    cairo_rectangle(cr, x, y, context.font.width, context.font.height);
+    cairo_rectangle(cr, x, y, width, context.font.height);
     cairo_clip(cr);
 
-    cairo_set_source_rgb(cr, br, bg, bb);
+    aterm_set_source(cr, back);
     cairo_paint(cr);
 
-    cairo_set_source_rgb(cr, fr, fg, fb);
+    aterm_set_source(cr, front);
 
 
-    aterm_font_t* font = attr->bold ? &context.font.bold : &context.font.regular;
+    uint32_t codepoints[4];
+    GhosttyCodepointBuffer graphemes = {.ptr = codepoints, .cap = 4, .len = 0};
 
-    const uint32_t codepoint = len ? *ch : 0;
+    const GhosttyResult result = ghostty_render_state_row_cells_get(context.cells, GHOSTTY_RENDER_STATE_ROW_CELLS_DATA_GRAPHEMES_BUF, &graphemes);
 
-    if (codepoint > ' ') {
+    const uint32_t codepoint = (result == GHOSTTY_SUCCESS || result == GHOSTTY_OUT_OF_SPACE) && graphemes.len > 0 ? codepoints[0] : 0;
+
+    if (codepoint > ' ' && !(style.flags & GHOSTTY_STYLE_FLAG_INVISIBLE)) {
+
+        aterm_font_t* font = (style.flags & GHOSTTY_STYLE_FLAG_BOLD) ? &context.font.bold : &context.font.regular;
 
         const unsigned long index = aterm_glyph_index(font, codepoint);
 
@@ -691,18 +779,59 @@ static int fb_draw_cb(struct tsm_screen* con, uint64_t id, const uint32_t* ch, s
         }
     }
 
-    if (attr->underline) {
-
-        cairo_rectangle(cr, x, y + context.font.baseline + 1, context.font.width, 1);
+    if (GHOSTTY_STYLE_UNDERLINE(style) != 0) {
+        cairo_rectangle(cr, x, y + context.font.baseline + 1, width, 1);
         cairo_fill(cr);
+    }
+
+    if (style.flags & GHOSTTY_STYLE_FLAG_STRIKETHROUGH) {
+        cairo_rectangle(cr, x, y + context.font.height / 2, width, 1);
+        cairo_fill(cr);
+    }
+
+
+    if (on_cursor && cursor->style != GHOSTTY_CURSOR_STYLE_BLOCK) {
+
+        if (frame->colors.cursor_has_value) {
+            aterm_set_source(cr, frame->colors.cursor);
+        }
+
+        switch (cursor->style) {
+
+            case GHOSTTY_CURSOR_STYLE_BAR:
+                cairo_rectangle(cr, x, y, 2, context.font.height);
+                cairo_fill(cr);
+                break;
+
+            case GHOSTTY_CURSOR_STYLE_UNDERLINE:
+                cairo_rectangle(cr, x, y + context.font.height - 2, width, 2);
+                cairo_fill(cr);
+                break;
+
+            default:
+                cairo_set_line_width(cr, 1.0);
+                cairo_rectangle(cr, x + 0.5, y + 0.5, width - 1, context.font.height - 1);
+                cairo_stroke(cr);
+                break;
+        }
     }
 
     cairo_restore(cr);
 
 
-    aterm_window_damage(x, y, context.font.width, context.font.height);
+    aterm_window_damage(x, y, width, context.font.height);
+}
 
-    return 0;
+
+static void aterm_draw_row(const aterm_frame_t* frame, int row) {
+
+    if (ghostty_render_state_row_get(context.rows_iter, GHOSTTY_RENDER_STATE_ROW_DATA_CELLS, &context.cells) != GHOSTTY_SUCCESS) {
+        return;
+    }
+
+    for (int col = 0; ghostty_render_state_row_cells_next(context.cells); col++) {
+        aterm_draw_cell(frame, col, row);
+    }
 }
 
 
@@ -754,13 +883,11 @@ static void aterm_fit(unsigned int width, unsigned int height) {
         context.rows = 1;
     }
 
-    int resized = tsm_screen_resize(context.con, context.cols, context.rows);
-
-    if (resized < 0) {
-        ulog_warnf("cannot resize the screen to %ux%u: %s", context.cols, context.rows, strerror(-resized));
+    if (ghostty_terminal_resize(context.term, (uint16_t)context.cols, (uint16_t)context.rows, (uint32_t)context.font.width, (uint32_t)context.font.height) != GHOSTTY_SUCCESS) {
+        ulog_warnf("cannot resize the screen to %ux%u", context.cols, context.rows);
     }
 
-    context.age = 0;
+    context.redraw = true;
 }
 
 
@@ -796,18 +923,83 @@ static int aterm_fb_resize(void) {
 }
 
 
+static bool aterm_paint_locked(void) {
+
+    if (ghostty_render_state_update(context.render, context.term) != GHOSTTY_SUCCESS) {
+        ulog_errorf("cannot update the render state");
+        return false;
+    }
+
+
+    GhosttyRenderStateDirty dirty = GHOSTTY_RENDER_STATE_DIRTY_FULL;
+    ghostty_render_state_get(context.render, GHOSTTY_RENDER_STATE_DATA_DIRTY, &dirty);
+
+    aterm_frame_t frame = {
+        .colors = GHOSTTY_INIT_SIZED(GhosttyRenderStateColors),
+        .cursor = {.x = -1, .y = -1},
+    };
+
+    if (ghostty_render_state_get(context.render, GHOSTTY_RENDER_STATE_DATA_COLORS, &frame.colors) != GHOSTTY_SUCCESS) {
+        ulog_errorf("cannot read the render state colours");
+        return false;
+    }
+
+    GhosttyRenderStateCursor cursor = GHOSTTY_INIT_SIZED(GhosttyRenderStateCursor);
+
+    if (ghostty_render_state_get(context.render, GHOSTTY_RENDER_STATE_DATA_CURSOR, &cursor) == GHOSTTY_SUCCESS && cursor.visible && cursor.viewport_has_value) {
+        frame.cursor.x       = cursor.wide_tail && cursor.viewport_x > 0 ? cursor.viewport_x - 1 : cursor.viewport_x;
+        frame.cursor.y       = cursor.viewport_y;
+        frame.cursor.visible = true;
+        frame.cursor.style   = cursor.visual_style;
+    }
+
+    const bool cursor_moved = frame.cursor.x != context.cursor.x || frame.cursor.y != context.cursor.y || frame.cursor.visible != context.cursor.visible || frame.cursor.style != context.cursor.style;
+
+    const bool full = context.redraw || dirty == GHOSTTY_RENDER_STATE_DIRTY_FULL;
+
+    if (!full && dirty == GHOSTTY_RENDER_STATE_DIRTY_FALSE && !cursor_moved) {
+        return false;
+    }
+
+
+    if (full) {
+        aterm_clear(frame.colors.background);
+    }
+
+    if (ghostty_render_state_get(context.render, GHOSTTY_RENDER_STATE_DATA_ROW_ITERATOR, &context.rows_iter) != GHOSTTY_SUCCESS) {
+        ulog_errorf("cannot read the render state rows");
+        return false;
+    }
+
+    for (int row = 0; ghostty_render_state_row_iterator_next(context.rows_iter); row++) {
+
+        bool row_dirty = false;
+        ghostty_render_state_row_get(context.rows_iter, GHOSTTY_RENDER_STATE_ROW_DATA_DIRTY, &row_dirty);
+
+        if (full || row_dirty || (cursor_moved && (row == context.cursor.y || row == frame.cursor.y))) {
+            aterm_draw_row(&frame, row);
+        }
+    }
+
+    ghostty_render_state_clean(context.render);
+
+    context.cursor = frame.cursor;
+    context.redraw = false;
+
+    return true;
+}
+
+
 /**
- * @brief Draws the screen with context.lock held, which guards the whole of libtsm rather than the drawing alone.
+ * @brief Draws the screen with context.lock held, which guards the whole of libghostty-vt rather than the drawing alone.
  *
  * Never held across a write() to the pty master, which can block when the shell is slow to read.
  */
-static void tsm_draw_locked(void) {
+static void aterm_draw_locked(void) {
 
-    if (!context.age) {
-        aterm_clear();
+    if (!aterm_paint_locked()) {
+        return;
     }
-
-    context.age = tsm_screen_draw(context.con, fb_draw_cb, NULL);
 
     while (aterm_window_commit() < 0) {
 
@@ -821,20 +1013,71 @@ static void tsm_draw_locked(void) {
             return;
         }
 
-        aterm_clear();
+        context.redraw = true;
 
-        context.age = tsm_screen_draw(context.con, fb_draw_cb, NULL);
+        aterm_paint_locked();
     }
 }
 
 
-static void tsm_update_screen() {
+static void aterm_write(const void* data, size_t size) {
+
+    if (context.masterfd <= 0) {
+        return;
+    }
+
+    const uint8_t* bytes = data;
+
+    while (size > 0) {
+
+        const ssize_t written = write(context.masterfd, bytes, size);
+
+        if (written < 0) {
+
+            if (errno == EINTR) {
+                continue;
+            }
+
+            ulog_errorf("write(): %s", strerror(errno));
+            return;
+        }
+
+        bytes += written;
+        size -= (size_t)written;
+    }
+}
+
+
+static void aterm_reply_flush(void) {
 
     pthread_mutex_lock(&context.lock);
 
-    tsm_draw_locked();
+    uint8_t* data = context.reply.data;
+    size_t size   = context.reply.size;
+
+    context.reply.data     = NULL;
+    context.reply.size     = 0;
+    context.reply.capacity = 0;
 
     pthread_mutex_unlock(&context.lock);
+
+
+    if (data) {
+        aterm_write(data, size);
+        free(data);
+    }
+}
+
+
+static void aterm_update_screen(void) {
+
+    pthread_mutex_lock(&context.lock);
+
+    aterm_draw_locked();
+
+    pthread_mutex_unlock(&context.lock);
+
+    aterm_reply_flush();
 }
 
 
@@ -844,7 +1087,7 @@ static void tsm_update_screen() {
  * @param width The window width in pixels.
  * @param height The window height in pixels.
  */
-static void tsm_resize(unsigned int width, unsigned int height) {
+static void aterm_resize(unsigned int width, unsigned int height) {
 
     if (!context.windowed) {
         return;
@@ -867,11 +1110,12 @@ static void tsm_resize(unsigned int width, unsigned int height) {
 
     aterm_fit(width, height);
 
-    tsm_draw_locked();
+    aterm_draw_locked();
 
     pthread_mutex_unlock(&context.lock);
 
 
+    aterm_reply_flush();
     aterm_pty_winsize(width, height);
 }
 
@@ -886,6 +1130,8 @@ static void aterm_restyle(void) {
 
     pthread_mutex_lock(&context.lock);
 
+    aterm_apply_colors();
+
     const int changed = aterm_font_init();
 
     if (changed <= 0) {
@@ -893,6 +1139,8 @@ static void aterm_restyle(void) {
         if (changed < 0) {
             ulog_warnf("keeping the faces in use: %s", strerror(errno));
         }
+
+        aterm_draw_locked();
 
         pthread_mutex_unlock(&context.lock);
         return;
@@ -903,11 +1151,12 @@ static void aterm_restyle(void) {
 
     aterm_fit(width, height);
 
-    tsm_draw_locked();
+    aterm_draw_locked();
 
     pthread_mutex_unlock(&context.lock);
 
 
+    aterm_reply_flush();
     aterm_pty_winsize(width, height);
 }
 
@@ -916,11 +1165,14 @@ static void aterm_restyle(void) {
  * @brief Names the window after a title the shell sets, followed by the terminal's own name.
  * @param title The UTF-8 title; an empty one names the window after the terminal alone.
  */
-static void aterm_set_title(const char* title) {
+static void aterm_set_title(const char* title, size_t len) {
+
+    if (!context.windowed) {
+        return;
+    }
 
     char buf[UI_TITLE_MAX];
 
-    size_t len = strlen(title);
     size_t max = sizeof(buf) - sizeof(ATERM_TITLE_SUFFIX);
 
     if (len > max) {
@@ -940,84 +1192,135 @@ static void aterm_set_title(const char* title) {
 }
 
 
-/**
- * @brief Sends the bytes a key produced to the shell, which echoes back whatever should appear.
- *
- * @param out The pty master to write to.
- * @param ascii The bytes.
- * @param size How many there are.
- */
-static void tsm_handle_input(int out, const char* ascii, size_t size) {
+static GhosttyKey aterm_ghostty_key(uint16_t key) {
 
-    assert(ascii);
+    switch (KTYP(key)) {
 
-    if (size == 0) {
-        return;
+        case KT_CUR:
+
+            switch (key) {
+                case K_UP:
+                    return GHOSTTY_KEY_ARROW_UP;
+                case K_DOWN:
+                    return GHOSTTY_KEY_ARROW_DOWN;
+                case K_RIGHT:
+                    return GHOSTTY_KEY_ARROW_RIGHT;
+                case K_LEFT:
+                    return GHOSTTY_KEY_ARROW_LEFT;
+            }
+
+            break;
+
+        case KT_FN:
+
+            if (KVAL(key) < 12) {
+                return (GhosttyKey)(GHOSTTY_KEY_F1 + KVAL(key));
+            }
+
+            switch (key) {
+                case K_FIND:
+                    return GHOSTTY_KEY_HOME;
+                case K_SELECT:
+                    return GHOSTTY_KEY_END;
+                case K_INSERT:
+                    return GHOSTTY_KEY_INSERT;
+                case K_REMOVE:
+                    return GHOSTTY_KEY_DELETE;
+                case K_PGUP:
+                    return GHOSTTY_KEY_PAGE_UP;
+                case K_PGDN:
+                    return GHOSTTY_KEY_PAGE_DOWN;
+            }
+
+            break;
     }
 
-    if (write(out, ascii, size) != (ssize_t)size) {
-        ulog_errorf("write(): %s", strerror(errno));
+    return GHOSTTY_KEY_UNIDENTIFIED;
+}
+
+
+static GhosttyMods aterm_ghostty_mods(uint8_t modifiers) {
+
+    GhosttyMods mods = 0;
+
+    if (modifiers & ((1 << KG_SHIFT) | (1 << KG_SHIFTL) | (1 << KG_SHIFTR))) {
+        mods |= GHOSTTY_MODS_SHIFT;
     }
+
+    if (modifiers & ((1 << KG_CTRL) | (1 << KG_CTRLL) | (1 << KG_CTRLR))) {
+        mods |= GHOSTTY_MODS_CTRL;
+    }
+
+    if (modifiers & (1 << KG_ALT)) {
+        mods |= GHOSTTY_MODS_ALT;
+    }
+
+    return mods;
+}
+
+
+static size_t aterm_encode_key(uint16_t key, char* out, size_t size) {
+
+    if (key == K_ENTER || key == K_PENTER) {
+        out[0] = '\n';
+        return 1;
+    }
+
+    const GhosttyKey ghostty_key = aterm_ghostty_key(key);
+
+    if (ghostty_key == GHOSTTY_KEY_UNIDENTIFIED) {
+        return 0;
+    }
+
+
+    size_t written = 0;
+
+    pthread_mutex_lock(&context.lock);
+
+    ghostty_key_encoder_set_from_terminal(context.key_encoder, context.term);
+
+    ghostty_key_event_set_action(context.key_event, GHOSTTY_KEY_ACTION_PRESS);
+    ghostty_key_event_set_key(context.key_event, ghostty_key);
+    ghostty_key_event_set_mods(context.key_event, aterm_ghostty_mods(ui_keymap_modifiers(context.keymap)));
+
+    const GhosttyResult result = ghostty_key_encoder_encode(context.key_encoder, context.key_event, (uint8_t*)out, size, &written);
+
+    pthread_mutex_unlock(&context.lock);
+
+    return result == GHOSTTY_SUCCESS ? written : 0;
 }
 
 
 /**
  * @brief Sends what a key event stands for to the shell.
  *
- * @param out The pty master to write to.
  * @param keysym The key code the display server reported.
  * @param down Whether the key went down or came up.
  */
-static void tsm_handle_key(int out, vkey_t keysym, uint8_t down) {
+static void aterm_handle_key(vkey_t keysym, uint8_t down) {
 
     const uint16_t key = ui_keymap_lookup(context.keymap, keysym);
 
-    char produced[8];
+    char produced[32];
 
-    const size_t size = ui_keymap_translate(context.keymap, keysym, down, produced, sizeof(produced));
+    size_t size = ui_keymap_translate(context.keymap, keysym, down, produced, sizeof(produced));
 
-    if (size > 0) {
-        tsm_handle_input(out, produced, size);
+    if (size == 0 && down) {
+        size = aterm_encode_key(key, produced, sizeof(produced));
+    }
+
+    if (size == 0) {
         return;
     }
 
-    if (!down) {
-        return;
-    }
 
-    switch (KTYP(key)) {
+    const GhosttyTerminalScrollViewport bottom = {.tag = GHOSTTY_TERMINAL_SCROLL_VIEWPORT_BOTTOM};
 
-        case KT_SPEC:
+    pthread_mutex_lock(&context.lock);
+    ghostty_terminal_scroll_viewport(context.term, bottom);
+    pthread_mutex_unlock(&context.lock);
 
-            if (key == K_ENTER) {
-                tsm_handle_input(out, "\n", 1);
-            }
-
-            break;
-
-        case KT_CUR:
-
-            switch (key) {
-
-                case K_UP:
-                    tsm_handle_input(out, "\e[A", 3);
-                    break;
-
-                case K_DOWN:
-                    tsm_handle_input(out, "\e[B", 3);
-                    break;
-
-                case K_RIGHT:
-                    tsm_handle_input(out, "\e[C", 3);
-                    break;
-
-                case K_LEFT:
-                    tsm_handle_input(out, "\e[D", 3);
-                    break;
-            }
-
-            break;
-    }
+    aterm_write(produced, size);
 }
 
 
@@ -1156,21 +1459,13 @@ static void* thr_ui_handler(void* arg) {
                     break;
                 }
 
-                pthread_mutex_lock(&context.lock);
-
-                if (tsm_vte_handle_keyboard(context.vte, ev.key.vkey, 0, 0, 0)) {
-                    tsm_screen_sb_reset(context.con);
-                }
-
-                pthread_mutex_unlock(&context.lock);
-
-                tsm_handle_key(context.masterfd, ev.key.vkey, ev.key.down);
-                tsm_update_screen();
+                aterm_handle_key(ev.key.vkey, ev.key.down);
+                aterm_update_screen();
 
                 break;
 
             case UI_EVENT_CONFIGURE:
-                tsm_resize(ev.configure.width, ev.configure.height);
+                aterm_resize(ev.configure.width, ev.configure.height);
                 break;
 
             case UI_EVENT_THEME:
@@ -1220,14 +1515,8 @@ static void* thr_kbd_handler(void* arg) {
 
                 switch(ev.ev_type) {
                     case EV_KEY:
-                        pthread_mutex_lock(&context.lock);
-                        if(tsm_vte_handle_keyboard(context.vte, ev.ev_key.vkey, 0, 0, 0)) {
-                            tsm_screen_sb_reset(context.con);
-                        }
-                        pthread_mutex_unlock(&context.lock);
-
-                        tsm_handle_key(context.masterfd, ev.ev_key.vkey, ev.ev_key.down);
-                        tsm_update_screen();
+                        aterm_handle_key(ev.ev_key.vkey, ev.ev_key.down);
+                        aterm_update_screen();
                         break;
 
                     default:
@@ -1243,54 +1532,47 @@ static void* thr_kbd_handler(void* arg) {
 }
 
 
-static void tsm_write_cb(struct tsm_vte* vte, const char* u8, size_t len, void* data) {
+static void aterm_on_write_pty(GhosttyTerminal terminal, void* userdata, const uint8_t* data, size_t len) {
 
-    (void)vte;
-    (void)data;
-    (void)u8;
-    (void)len;
+    (void)terminal;
+    (void)userdata;
 
+    if (context.reply.size + len > context.reply.capacity) {
+
+        size_t capacity = context.reply.capacity ? context.reply.capacity : 64;
+
+        while (capacity < context.reply.size + len) {
+            capacity *= 2;
+        }
+
+        uint8_t* grown = realloc(context.reply.data, capacity);
+
+        if (!grown) {
+            ulog_warnf("dropping a %zu byte reply to the shell", len);
+            return;
+        }
+
+        context.reply.data     = grown;
+        context.reply.capacity = capacity;
+    }
+
+    memcpy(context.reply.data + context.reply.size, data, len);
+
+    context.reply.size += len;
 }
 
 
-static void tsm_osc_cb(struct tsm_vte* vte, const char* u8, size_t len, void* data) {
+static void aterm_on_title_changed(GhosttyTerminal terminal, void* userdata) {
 
-    (void)vte;
-    (void)len;
-    (void)data;
+    (void)userdata;
 
-    char* end;
-    long osc_type = strtol(u8, &end, 10);
+    GhosttyString title = {0};
 
-    if (end == u8 || (*end != ';' && *end != '\0')) {
-        ulog_warnf("tsm_osc_cb() malformed osc received: %s", u8);
+    if (ghostty_terminal_get(terminal, GHOSTTY_TERMINAL_DATA_TITLE, &title) != GHOSTTY_SUCCESS) {
         return;
     }
 
-    const char* osc_data = *end == ';' ? end + 1 : NULL;
-
-    switch (osc_type) {
-        case 0:
-        case 2:
-            if (osc_data) {
-                aterm_set_title(osc_data);
-            }
-            break;
-        case 1:
-        case 7:
-            break;
-        default:
-            ulog_debugf("tsm_osc_cb() unknown osc type received: %ld", osc_type);
-            break;
-    }
-}
-
-
-static void tsm_bell_cb(struct tsm_vte* vte, void* data) {
-
-    (void)vte;
-    (void)data;
-
+    aterm_set_title((const char*)title.ptr, title.len);
 }
 
 
@@ -1390,39 +1672,46 @@ int main(int argc, char** argv) {
     }
 
 
-    //* 3. TSM initialization
-    if (tsm_screen_new(&context.con, NULL, NULL) < 0) {
-        ulog_errorf("tsm_screen_new() failed");
+    //* 3. Terminal initialization
+    if (ghostty_terminal_new(NULL, &context.term, (uint16_t)context.cols, (uint16_t)context.rows) != GHOSTTY_SUCCESS) {
+        ulog_errorf("ghostty_terminal_new() failed");
         exit(1);
     }
 
-    assert(context.con);
-
-
-    if (tsm_vte_new(&context.vte, context.con, tsm_write_cb, NULL, NULL, NULL) < 0) {
-        ulog_errorf("tsm_vte_new() failed");
+    if (ghostty_terminal_resize(context.term, (uint16_t)context.cols, (uint16_t)context.rows, (uint32_t)context.font.width, (uint32_t)context.font.height) != GHOSTTY_SUCCESS) {
+        ulog_errorf("cannot resize the screen to %ux%u", context.cols, context.rows);
         exit(1);
     }
 
-    assert(context.vte);
-
-    tsm_vte_set_osc_cb(context.vte, tsm_osc_cb, NULL);
-    tsm_vte_set_bell_cb(context.vte, tsm_bell_cb, NULL);
-
-
-    int resized = tsm_screen_resize(context.con, context.cols, context.rows);
-
-    if (resized < 0) {
-        ulog_errorf("cannot resize the screen to %ux%u: %s", context.cols, context.rows, strerror(-resized));
+    if (ghostty_render_state_new(NULL, &context.render) != GHOSTTY_SUCCESS || ghostty_render_state_row_iterator_new(NULL, &context.rows_iter) != GHOSTTY_SUCCESS ||
+        ghostty_render_state_row_cells_new(NULL, &context.cells) != GHOSTTY_SUCCESS) {
+        ulog_errorf("cannot create the render state");
         exit(1);
     }
+
+    if (ghostty_key_encoder_new(NULL, &context.key_encoder) != GHOSTTY_SUCCESS || ghostty_key_event_new(NULL, &context.key_event) != GHOSTTY_SUCCESS) {
+        ulog_errorf("cannot create the key encoder");
+        exit(1);
+    }
+
+    ghostty_terminal_set(context.term, GHOSTTY_TERMINAL_OPT_WRITE_PTY, (const void*)aterm_on_write_pty);
+    ghostty_terminal_set(context.term, GHOSTTY_TERMINAL_OPT_TITLE_CHANGED, (const void*)aterm_on_title_changed);
+
+    aterm_apply_palette();
+    aterm_apply_colors();
 
 
     // Set Line Mode LNM
-    tsm_vte_input(context.vte, "\e[20h", 5);
+    const GhosttyTerminalModeConfig lnm = {.mode = GHOSTTY_MODE_LINEFEED, .value = true};
+
+    if (ghostty_terminal_set(context.term, GHOSTTY_TERMINAL_OPT_MODE_DEFAULT, &lnm) != GHOSTTY_SUCCESS) {
+        ulog_warnf("cannot set the line feed mode");
+    }
+
+    context.cursor = (aterm_cursor_t){.x = -1, .y = -1};
 
     // Draw first frame
-    tsm_update_screen();
+    aterm_update_screen();
 
 
 
@@ -1618,7 +1907,7 @@ int main(int argc, char** argv) {
 
         if (ready == 0) {
 
-            tsm_update_screen();
+            aterm_update_screen();
             pending = false;
 
             continue;
@@ -1631,13 +1920,15 @@ int main(int argc, char** argv) {
             if (size > 0) {
 
                 pthread_mutex_lock(&context.lock);
-                tsm_vte_input(context.vte, buf, size);
+                ghostty_terminal_vt_write(context.term, (const uint8_t*)buf, (size_t)size);
                 pthread_mutex_unlock(&context.lock);
+
+                aterm_reply_flush();
 
                 pending = size == (ssize_t)sizeof(buf);
 
                 if (!pending) {
-                    tsm_update_screen();
+                    aterm_update_screen();
                 }
             }
         }
