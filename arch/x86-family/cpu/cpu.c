@@ -49,6 +49,11 @@ extern uint8_t bootstrap_tss;
 
 __percpu void arch_cpu_init(cpuid_t index) {
 
+#if defined(__x86_64__)
+    core->cpu.cores[index].self = &core->cpu.cores[index];
+    x86_wrmsr(X86_MSR_GSBASE, (uint64_t)&core->cpu.cores[index]);
+#endif
+
     __builtin_cpu_init();
 
 
@@ -437,13 +442,6 @@ __percpu void arch_cpu_init(cpuid_t index) {
 
     if (cpu_has(index, X86_FEATURE_RDTSCP))
         x86_wrmsr(X86_MSR_TSC_AUX, index);
-
-#if defined(__x86_64__)
-
-    x86_wrmsr(X86_MSR_GSBASE, (uint64_t)&core->cpu.cores[index]);
-
-#endif
-
 
 #if defined(__x86_64__)
 

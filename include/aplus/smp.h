@@ -42,8 +42,7 @@
     #define SMP_CPU_FLAGS_SLEEP     (1 << 3)
 
 
-    #define current_cpu (smp_get_current_cpu())
-    #define current_task (smp_get_current_cpu())->sched_running
+    #define current_task (current_cpu)->sched_running
 
 
 
@@ -116,7 +115,29 @@ typedef struct cpu {
     char model_name[64];
     char vendor_name[64];
 
+    struct cpu* self;
+
 } cpu_t;
+
+
+    #if defined(__x86_64__)
+
+static inline cpu_t* __smp_this_cpu(void) {
+
+    cpu_t* cpu;
+
+    __asm__("movq %%gs:%c1, %0" : "=r"(cpu) : "i"(__builtin_offsetof(cpu_t, self)));
+
+    return cpu;
+}
+
+        #define current_cpu (__smp_this_cpu())
+
+    #else
+
+        #define current_cpu (smp_get_current_cpu())
+
+    #endif
 
 
 

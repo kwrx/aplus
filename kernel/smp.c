@@ -49,7 +49,7 @@ __returns_nonnull cpu_t* smp_get_current_cpu(void) {
 
 __returns_nonnull int* smp_get_current_errno(void) {
 
-    cpu_t* cpu = smp_get_current_cpu();
+    cpu_t* cpu = current_cpu;
 
     return likely(cpu->sched_running) ? &cpu->sched_running->errnum : &cpu->errnum;
 }
@@ -105,7 +105,7 @@ void smp_dnit(void) {
 
     for (size_t i = 0; i < SMP_CPU_MAX; i++) {
 
-        if (i == smp_get_current_cpu()->id)
+        if (i == current_cpu->id)
             continue;
 
         if ((core->cpu.cores[i].flags & SMP_CPU_FLAGS_AVAILABLE) == 0)
