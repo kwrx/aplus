@@ -575,6 +575,7 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
             uio_memcpy_u2s(&pty->ios, arg, sizeof(struct termios));
 
             if (!(pty->ios.c_lflag & ICANON)) {
+                pty_input_discard(pty, true);
                 scoped_lock(&pty->input.lock) pty->eof.pending = false;
             }
 
