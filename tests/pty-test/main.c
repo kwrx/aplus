@@ -360,6 +360,63 @@ static void test_flush(int master, int slave) {
 }
 
 
+static void test_canon_to_raw(int master, int slave) {
+
+    struct termios saved;
+
+    if (tcgetattr(slave, &saved) < 0) {
+        CHECK(0, "canon-raw-setup", "tcgetattr() failed: %s", strerror(errno));
+        return;
+    }
+
+    struct termios ios = saved;
+
+    ios.c_lflag |= ICANON;
+    ios.c_lflag &= ~(ECHO | ECHONL);
+
+    if (tcsetattr(slave, TCSANOW, &ios) < 0) {
+        CHECK(0, "canon-raw-setup", "tcsetattr() failed: %s", strerror(errno));
+        return;
+    }
+
+
+    char buf[16];
+    ssize_t got;
+
+    if (write(master, "\x1b[6;1R", 6) == 6) {
+
+        CHECK(readable(slave, 0) == 0, "canon-raw-pending", "%s", "a partial canonical line is readable");
+
+        ios.c_lflag &= ~ICANON;
+        ios.c_cc[VMIN]  = 1;
+        ios.c_cc[VTIME] = 0;
+
+        if (tcsetattr(slave, TCSANOW, &ios) == 0) {
+
+            memset(buf, 0, sizeof(buf));
+            got = 0;
+
+            while (got < 6 && readable(slave, 0) == 1) {
+
+                const ssize_t e = read(slave, buf + got, sizeof(buf) - (size_t)got);
+
+                if (e <= 0) {
+                    break;
+                }
+
+                got += e;
+            }
+
+            CHECK(got == 6 && memcmp(buf, "\x1b[6;1R", 6) == 0, "canon-raw-released", "read %zd bytes instead of the pending line", got);
+        }
+    }
+
+    tcsetattr(slave, TCSANOW, &saved);
+    drain(master);
+    drain(slave);
+}
+
+
 int main(int argc, char** argv) {
 
     (void)argc;
@@ -432,6 +489,7 @@ int main(int argc, char** argv) {
         test_eof(master[0], slave[0]);
         test_werase(master[0], slave[0]);
         test_flush(master[0], slave[0]);
+        test_canon_to_raw(master[0], slave[0]);
     }
 
 
