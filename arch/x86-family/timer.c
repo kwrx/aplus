@@ -81,6 +81,11 @@ void arch_timer_delay(uint64_t us) {
 
 
 uint64_t arch_timer_gettime(void) {
+
+    if (likely(__atomic_load_n(&realtime_base_ready, __ATOMIC_ACQUIRE))) {
+        return arch_timer_realtime_getns() / 1000000000ULL;
+    }
+
     return rtc_gettime();
 }
 
@@ -127,7 +132,7 @@ uint64_t arch_timer_generic_getres(void) {
 uint64_t arch_timer_realtime_getns(void) {
 
     if (unlikely(!__atomic_load_n(&realtime_base_ready, __ATOMIC_ACQUIRE))) {
-        return arch_timer_gettime() * 1000000000ULL;
+        return rtc_gettime() * 1000000000ULL;
     }
 
     return __atomic_load_n(&realtime_base_ns, __ATOMIC_RELAXED) + arch_timer_generic_getns();
