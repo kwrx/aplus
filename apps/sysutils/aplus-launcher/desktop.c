@@ -185,6 +185,10 @@ static bool launcher_desktop_read(const char* path, launcher_entry_t* out) {
 
             launcher_desktop_store(out->icon, sizeof(out->icon), value);
 
+        } else if ((value = launcher_desktop_value(text, "Terminal")) != NULL) {
+
+            out->terminal = strcmp(value, "true") == 0;
+
         } else if ((value = launcher_desktop_value(text, "NoDisplay")) != NULL) {
 
             hidden = strcmp(value, "true") == 0;

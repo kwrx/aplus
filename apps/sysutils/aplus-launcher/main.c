@@ -30,6 +30,7 @@
  * the application as its child and reaps it as usual.
  */
 
+#include <ctype.h>
 #include <errno.h>
 #include <getopt.h>
 #include <stdbool.h>
@@ -845,6 +846,39 @@ static void launcher_teardown(void) {
 }
 
 
+static bool launcher_graphical(const char* command) {
+
+    while (isspace((unsigned char)*command)) {
+        command++;
+    }
+
+    if (strpbrk(command, ";|&<>`\n") != NULL) {
+        return false;
+    }
+
+    const size_t length = strcspn(command, " \t");
+
+    if (length == 0) {
+        return false;
+    }
+
+    if (length == strlen(LAUNCHER_OPENER) && strncmp(command, LAUNCHER_OPENER, length) == 0) {
+        return true;
+    }
+
+    for (size_t i = 0; i < launcher.count; i++) {
+
+        const launcher_entry_t* entry = &launcher.entries[i];
+
+        if (!entry->terminal && strcspn(entry->exec, " \t") == length && strncmp(entry->exec, command, length) == 0) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
 /**
  * @brief Runs what the list has selected, replacing this process with it.
  *
@@ -902,6 +936,8 @@ static void launcher_run(void) {
         source = ((const launcher_entry_t*)row)->path;
     }
 
+    const bool windowed = shell && launcher_graphical(source);
+
 
     char command[PATH_MAX];
 
@@ -915,7 +951,11 @@ static void launcher_run(void) {
         close(fd);
     }
 
-    if (shell) {
+    if (windowed) {
+
+        execl(LAUNCHER_SHELL, LAUNCHER_SHELL, "-c", command, NULL);
+
+    } else if (shell) {
 
         char session[sizeof(command) + sizeof(LAUNCHER_SESSION)];
 
@@ -1270,6 +1310,7 @@ static void launcher_usage(void) {
            "Search the installed applications and run one.\n\n"
            "   -a, --all                   list every application before anything is typed\n"
            "   -d, --drawer                slide out of the taskbar's rail instead of opening in the middle\n"
+           "   -w, --warm                  load the assistant's prompt into the model, cache it and exit\n"
            "       --help                  show this help\n");
 
     exit(0);
@@ -1284,14 +1325,17 @@ int main(int argc, char** argv) {
     static struct option long_options[] = {
         {"all",    no_argument, NULL, 'a'},
         {"drawer", no_argument, NULL, 'd'},
+        {"warm",   no_argument, NULL, 'w'},
         {"help",   no_argument, NULL, 'h'},
         {NULL,     0,           NULL, 0  }
     };
 
 
+    bool warm = false;
+
     int c, idx;
 
-    while ((c = getopt_long(argc, argv, "adh", long_options, &idx)) != -1) {
+    while ((c = getopt_long(argc, argv, "adwh", long_options, &idx)) != -1) {
 
         switch (c) {
 
@@ -1300,6 +1344,9 @@ int main(int argc, char** argv) {
                 break;
             case 'd':
                 launcher.drawer = true;
+                break;
+            case 'w':
+                warm = true;
                 break;
             case 'h':
             case '?':
@@ -1312,6 +1359,37 @@ int main(int argc, char** argv) {
 
 
     launcher.count = launcher_scan(LAUNCHER_APPLICATIONS, &launcher.entries);
+
+    if (warm) {
+
+#if defined(CONFIG_HAVE_AI)
+
+        char error[LAUNCHER_AI_ERROR_MAX];
+
+        const int status = launcher_ai_warm(launcher.entries, launcher.count, error, sizeof(error));
+
+        if (status < 0) {
+            ulog_errorf("cannot warm the assistant: %s", error);
+        }
+
+        free(launcher.entries);
+
+        return status < 0 ? 1 : 0;
+
+#else
+
+        ulog_errorf("built without the assistant");
+
+        free(launcher.entries);
+
+        return 1;
+
+#endif
+    }
+
+#if defined(CONFIG_HAVE_AI)
+    launcher_ai_prepare(launcher.entries, launcher.count);
+#endif
 
     launcher.conn = ui_connect(NULL, LAUNCHER_CONNECT_MS);
 

@@ -26,6 +26,8 @@
 
 #include <stddef.h>
 
+#include "desktop.h"
+
 
 /**
  * @brief How much of an answer, of a command and of a complaint is kept.
@@ -58,6 +60,10 @@ typedef struct {
  * @return 0 on success, -1 when the library could not be initialised.
  */
 int launcher_ai_init(void);
+
+void launcher_ai_prepare(const launcher_entry_t* entries, size_t count);
+
+int launcher_ai_warm(const launcher_entry_t* entries, size_t count, char* error, size_t max);
 
 /**
  * @brief Asks the model a question, blocking until it answers, fails or runs out of time; safe on any thread after launcher_ai_init().

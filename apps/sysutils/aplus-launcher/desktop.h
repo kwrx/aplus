@@ -25,6 +25,7 @@
 #define _APLUS_LAUNCHER_DESKTOP_H
 
 #include <limits.h>
+#include <stdbool.h>
 #include <stddef.h>
 
 
@@ -50,6 +51,8 @@ typedef struct {
     char exec[LAUNCHER_FIELD_MAX];
 
     char icon[LAUNCHER_FIELD_MAX];
+
+    bool terminal;
 
 } launcher_entry_t;
 

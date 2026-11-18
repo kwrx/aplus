@@ -30,15 +30,21 @@
  * be told apart afterwards.
  */
 
+#include <dirent.h>
+#include <pthread.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 #include "ai.h"
 
 #if defined(CONFIG_HAVE_AI)
 
+    #include <aplus/ui-control.h>
     #include <curl/curl.h>
 
     #include "json.h"
@@ -47,13 +53,13 @@
     /**
      * @brief How long a request, and the connecting part of it, may take before it is given up on, in seconds.
      */
-    #define LAUNCHER_AI_TIMEOUT         20
+    #define LAUNCHER_AI_TIMEOUT         60
     #define LAUNCHER_AI_TIMEOUT_CONNECT 10
 
     /**
      * @brief How big a request may get, and how much of a response is read before it is refused.
      */
-    #define LAUNCHER_AI_REQUEST_MAX  (8 * 1024)
+    #define LAUNCHER_AI_REQUEST_MAX  (24 * 1024)
     #define LAUNCHER_AI_RESPONSE_MAX (64 * 1024)
 
     /**
@@ -61,23 +67,442 @@
      */
     #define LAUNCHER_AI_AGENT "aplus-launcher"
 
+    #define LAUNCHER_AI_APPS_MAX   (4 * 1024)
+    #define LAUNCHER_AI_PROMPT_MAX (12 * 1024)
+
+    #define LAUNCHER_AI_TEMPERATURE "0.2"
+    #define LAUNCHER_AI_TOKENS      "256"
+    #define LAUNCHER_AI_WARM_TOKENS "1"
+    #define LAUNCHER_AI_WARM_PROMPT "hi"
+
+    #define LAUNCHER_AI_THEME_SUFFIX ".conf"
+
+    #define LAUNCHER_AI_CACHE_DIR  "/var/run/.wm"
+    #define LAUNCHER_AI_CACHE_PATH LAUNCHER_AI_CACHE_DIR "/launcher-ai.prompt"
+
+    #define LAUNCHER_AI_BUILD_STACK (64 * 1024)
+
+    #define LAUNCHER_AI_WARM_ATTEMPTS 12
+    #define LAUNCHER_AI_WARM_DELAY    5
+
 
 /**
  * @brief What the model is told it is, which is what turns a question into a command it can run.
  */
 
-static const char launcher_ai_system[] = "You are the assistant built into the launcher of aplus, a small Unix-like desktop system with a BusyBox-like userland. "
-                                         "Answer with one JSON object and nothing else, shaped {\"answer\": \"...\", \"command\": \"...\"}. "
-                                         "Always write the answer in English, whatever language the question is asked in. "
-                                         "Be as concise as possible: one short sentence, two at most, of plain text with no markup and no code fences. "
-                                         "Do not greet, restate the question, explain the command or add caveats. "
-                                         "Make the command a single POSIX shell command line that carries out what was asked, and leave the command out altogether when no one command does. ";
+static const char launcher_ai_system[] = "You are the assistant of the aplus launcher. aplus is a small Unix-like OS. It is NOT Linux, macOS or Windows.\n"
+                                         "Reply with one JSON object: {\"answer\": \"...\", \"command\": \"...\"}\n"
+                                         "answer: one short sentence, always in English, even when the user writes in another language.\n"
+                                         "command: one shell command line that does what was asked, using only the programs listed below, or \"\" when nothing should run.\n"
+                                         "\n"
+                                         "Rules:\n"
+                                         "- To open a website, a URL, a file or a folder, use aplus-xopen. Websites open in the NetSurf browser. Always give a full https:// URL.\n"
+                                         "- These do not exist on aplus: sudo, apt, systemctl, xdg-open, open, start, firefox, chrome, nautilus, gedit, notepad, wget, ifconfig, ip, ssh (use dbclient).\n"
+                                         "- Never ask a question back. When the request is vague, pick the most likely meaning.\n"
+                                         "- Questions, greetings and thanks get an answer and an empty command.\n"
+                                         "- Never delete or overwrite files unless the user asked for it.\n"
+                                         "\n"
+                                         "Desktop programs:\n";
+
+static const char launcher_ai_footer[] = "The user's files are under $HOME.\n";
+
+
+static const struct {
+
+    const char* program;
+    const char* line;
+
+} launcher_ai_programs[] = {
+
+    {"aplus-xopen",      "aplus-xopen URL|FILE|DIR = open a web page, a file or a folder with its default app"                                },
+    {"netsurf-fb",       "netsurf-fb [URL] = web browser"                                                                                     },
+    {"aplus-explorer",   "aplus-explorer [DIR] = file manager"                                                                                },
+    {"aplus-editor",     "aplus-editor [FILE] = text editor"                                                                                  },
+    {"aplus-viewer",     "aplus-viewer FILE = PDF and image viewer"                                                                           },
+    {"aplus-player",     "aplus-player [FILE] = music and audio player"                                                                       },
+    {"aplus-terminal",   "aplus-terminal = terminal"                                                                                          },
+    {"aplus-calculator", "aplus-calculator = calculator"                                                                                      },
+    {"aplus-settings",   "aplus-settings [appearance|wallpaper|network|audio|software|about] = settings; network shows the IP address"       },
+    {"aplus-wmctl",      "aplus-wmctl set wm.variant dark|light = dark or light mode"                                                         },
+    {"aplus-wmctl",      "aplus-wmctl set-theme NAME = colour theme"                                                                          },
+    {"aplus-wmctl",      "aplus-wmctl screenshot = take a screenshot"                                                                         },
+    {"pkg",              "pkg search|info|install|remove|list|update|upgrade [NAME] = software packages"                                      },
+    {"shutdown",         "shutdown -P = power off; shutdown -r = reboot"                                                                      },
+};
+
+
+static const char* const launcher_ai_tools[] = {
+
+    "ls", "cat", "cp", "mv", "rm", "mkdir", "touch", "find", "grep", "sed", "awk", "sort",
+    "uniq", "wc", "head", "tail", "less", "du", "df", "free", "ps", "top", "kill", "killall",
+    "uname", "uptime", "date", "which", "man", "tar", "gzip", "unzip", "xz", "curl", "nc", "nslookup",
+    "netstat", "lspci", "lsusb", "python3", "lua", "gcc", "make", "git", "vi", "nano", "sqlite3", "ffmpeg",
+    "dbclient",
+};
+
+
+static const char* const launcher_ai_paths[] = {
+    "/usr/bin",
+    "/bin",
+    "/usr/sbin",
+    "/sbin",
+};
+
+
+static const struct {
+
+    const char* user;
+    const char* reply;
+
+} launcher_ai_examples[] = {
+
+    {"open youtube",                   "{\"answer\": \"Opening YouTube in the browser.\", \"command\": \"aplus-xopen https://www.youtube.com\"}"              },
+    {"cerca gatti su google",          "{\"answer\": \"Searching Google for cats.\", \"command\": \"aplus-xopen 'https://www.google.com/search?q=gatti'\"}"   },
+    {"show my files",                  "{\"answer\": \"Opening your home folder.\", \"command\": \"aplus-explorer \\\"$HOME\\\"\"}"                           },
+    {"switch to dark mode",            "{\"answer\": \"Switching to dark mode.\", \"command\": \"aplus-wmctl set wm.variant dark\"}"                          },
+    {"how much memory is free?",       "{\"answer\": \"This shows used and free memory.\", \"command\": \"free\"}"                                            },
+    {"install sqlite",                 "{\"answer\": \"Installing the sqlite package.\", \"command\": \"pkg install sqlite\"}"                                },
+    {"update everything",              "{\"answer\": \"Updating the package index and upgrading every package.\", \"command\": \"pkg update && pkg upgrade\"}"},
+    {"play some music",                "{\"answer\": \"Opening the music player.\", \"command\": \"aplus-player\"}"                                           },
+    {"python hello world",             "{\"answer\": \"This prints Hello, world! with Python.\", \"command\": \"python3 -c 'print(\\\"Hello, world!\\\")'\"}" },
+    {"what is the capital of France?", "{\"answer\": \"Paris.\", \"command\": \"\"}"                                                                          },
+    {"ciao",                           "{\"answer\": \"Hi! Ask me to open, find or run something.\", \"command\": \"\"}"                                      },
+};
+
+
+static const char launcher_ai_schema[] = "{\"type\":\"json_schema\",\"json_schema\":{\"name\":\"reply\",\"strict\":true,\"schema\":{\"type\":\"object\","
+                                         "\"properties\":{\"answer\":{\"type\":\"string\"},\"command\":{\"type\":\"string\"}},"
+                                         "\"required\":[\"answer\",\"command\"],\"additionalProperties\":false}}}";
+
+
+static pthread_mutex_t launcher_ai_lock = PTHREAD_MUTEX_INITIALIZER;
+
+static pthread_once_t launcher_ai_once = PTHREAD_ONCE_INIT;
+
+static int launcher_ai_ready = -1;
+
+static bool launcher_ai_built;
+static bool launcher_ai_cached;
+static bool launcher_ai_saved;
+
+static uint64_t launcher_ai_key;
+
+static char launcher_ai_apps[LAUNCHER_AI_APPS_MAX];
+static char launcher_ai_prompt[LAUNCHER_AI_PROMPT_MAX];
+
+
+typedef struct {
+
+    char* data;
+    size_t size;
+    size_t max;
+    bool full;
+
+} launcher_ai_text_t;
+
+
+static void launcher_ai_put(launcher_ai_text_t* text, const char* raw) {
+
+    const size_t length = strlen(raw);
+
+    if (text->full || text->size + length + 1 > text->max) {
+
+        text->full = true;
+        return;
+    }
+
+    memcpy(text->data + text->size, raw, length + 1);
+
+    text->size += length;
+}
+
+
+static void launcher_ai_put_escaped(launcher_ai_text_t* text, const char* raw) {
+
+    if (text->full) {
+        return;
+    }
+
+    const size_t room   = text->max - text->size;
+    const size_t length = json_escape(text->data + text->size, room, raw);
+
+    if (length + 1 >= room) {
+
+        text->full = true;
+        return;
+    }
+
+    text->size += length;
+}
+
+
+static void launcher_ai_put_message(launcher_ai_text_t* text, const char* role, const char* content) {
+
+    launcher_ai_put(text, ",{\"role\":\"");
+    launcher_ai_put(text, role);
+    launcher_ai_put(text, "\",\"content\":\"");
+    launcher_ai_put_escaped(text, content);
+    launcher_ai_put(text, "\"}");
+}
+
+
+static uint64_t launcher_ai_hash(uint64_t hash, const void* data, size_t size) {
+
+    const unsigned char* bytes = data;
+
+    for (size_t i = 0; i < size; i++) {
+
+        hash ^= bytes[i];
+        hash *= 0x100000001b3ULL;
+    }
+
+    return hash;
+}
+
+
+static uint64_t launcher_ai_hash_text(uint64_t hash, const char* text) {
+
+    return launcher_ai_hash(hash, text, strlen(text) + 1);
+}
+
+
+static uint64_t launcher_ai_hash_dir(uint64_t hash, const char* path) {
+
+    struct stat st;
+
+    if (stat(path, &st) < 0) {
+        memset(&st, 0, sizeof(st));
+    }
+
+    const int64_t stamp[2] = {(int64_t)st.st_ino, (int64_t)st.st_mtime};
+
+    hash = launcher_ai_hash_text(hash, path);
+
+    return launcher_ai_hash(hash, stamp, sizeof(stamp));
+}
+
+
+static uint64_t launcher_ai_fingerprint(void) {
+
+    uint64_t hash = 0xcbf29ce484222325ULL;
+
+    hash = launcher_ai_hash_text(hash, CONFIG_AI_PROVIDER_URL);
+    hash = launcher_ai_hash_text(hash, CONFIG_AI_API_MODEL);
+    hash = launcher_ai_hash_text(hash, launcher_ai_system);
+    hash = launcher_ai_hash_text(hash, launcher_ai_footer);
+    hash = launcher_ai_hash_text(hash, launcher_ai_schema);
+    hash = launcher_ai_hash_text(hash, launcher_ai_apps);
+
+    for (size_t i = 0; i < sizeof(launcher_ai_programs) / sizeof(launcher_ai_programs[0]); i++) {
+        hash = launcher_ai_hash_text(hash, launcher_ai_programs[i].line);
+    }
+
+    for (size_t i = 0; i < sizeof(launcher_ai_tools) / sizeof(launcher_ai_tools[0]); i++) {
+        hash = launcher_ai_hash_text(hash, launcher_ai_tools[i]);
+    }
+
+    for (size_t i = 0; i < sizeof(launcher_ai_examples) / sizeof(launcher_ai_examples[0]); i++) {
+
+        hash = launcher_ai_hash_text(hash, launcher_ai_examples[i].user);
+        hash = launcher_ai_hash_text(hash, launcher_ai_examples[i].reply);
+    }
+
+    for (size_t i = 0; i < sizeof(launcher_ai_paths) / sizeof(launcher_ai_paths[0]); i++) {
+        hash = launcher_ai_hash_dir(hash, launcher_ai_paths[i]);
+    }
+
+    return launcher_ai_hash_dir(hash, UI_THEME_DIR);
+}
+
+
+static bool launcher_ai_installed(const char* program) {
+
+    char path[PATH_MAX];
+
+    for (size_t i = 0; i < sizeof(launcher_ai_paths) / sizeof(launcher_ai_paths[0]); i++) {
+
+        snprintf(path, sizeof(path), "%s/%s", launcher_ai_paths[i], program);
+
+        if (access(path, X_OK) == 0) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+static void launcher_ai_themes(launcher_ai_text_t* text) {
+
+    DIR* dir = opendir(UI_THEME_DIR);
+
+    if (!dir) {
+        return;
+    }
+
+    const size_t suffix = strlen(LAUNCHER_AI_THEME_SUFFIX);
+
+    bool first = true;
+
+    struct dirent* it;
+
+    while ((it = readdir(dir)) != NULL) {
+
+        const size_t length = strlen(it->d_name);
+
+        if (length <= suffix || strcmp(it->d_name + length - suffix, LAUNCHER_AI_THEME_SUFFIX) != 0) {
+            continue;
+        }
+
+        char name[LAUNCHER_FIELD_MAX];
+
+        snprintf(name, sizeof(name), "%s%.*s", first ? "\nColour themes: " : ", ", (int)(length - suffix), it->d_name);
+
+        launcher_ai_put(text, name);
+
+        first = false;
+    }
+
+    closedir(dir);
+
+    if (!first) {
+        launcher_ai_put(text, "\n");
+    }
+}
+
+
+static void launcher_ai_compose(void) {
+
+    launcher_ai_text_t text = {.data = launcher_ai_prompt, .size = 0, .max = sizeof(launcher_ai_prompt)};
+
+    launcher_ai_prompt[0] = '\0';
+
+    launcher_ai_put(&text, launcher_ai_system);
+
+    for (size_t i = 0; i < sizeof(launcher_ai_programs) / sizeof(launcher_ai_programs[0]); i++) {
+
+        if (!launcher_ai_installed(launcher_ai_programs[i].program)) {
+            continue;
+        }
+
+        launcher_ai_put(&text, launcher_ai_programs[i].line);
+        launcher_ai_put(&text, "\n");
+    }
+
+    launcher_ai_put(&text, "\nShell is dash. Tools:");
+
+    for (size_t i = 0; i < sizeof(launcher_ai_tools) / sizeof(launcher_ai_tools[0]); i++) {
+
+        if (!launcher_ai_installed(launcher_ai_tools[i])) {
+            continue;
+        }
+
+        launcher_ai_put(&text, " ");
+        launcher_ai_put(&text, launcher_ai_tools[i]);
+
+        if (strcmp(launcher_ai_tools[i], "dbclient") == 0) {
+            launcher_ai_put(&text, " (ssh client)");
+        }
+    }
+
+    launcher_ai_put(&text, ".\n");
+    launcher_ai_put(&text, launcher_ai_footer);
+    launcher_ai_put(&text, launcher_ai_apps);
+
+    launcher_ai_themes(&text);
+}
+
+
+static bool launcher_ai_load(uint64_t key) {
+
+    FILE* file = fopen(LAUNCHER_AI_CACHE_PATH, "r");
+
+    if (!file) {
+        return false;
+    }
+
+    unsigned long long stored = 0;
+
+    bool hit = fscanf(file, "%16llx", &stored) == 1 && fgetc(file) == '\n' && stored == key;
+
+    if (hit) {
+
+        const size_t got = fread(launcher_ai_prompt, 1, sizeof(launcher_ai_prompt) - 1, file);
+
+        launcher_ai_prompt[got] = '\0';
+
+        hit = got > 0 && !ferror(file);
+    }
+
+    fclose(file);
+
+    return hit;
+}
+
+
+static void launcher_ai_save(void) {
+
+    pthread_mutex_lock(&launcher_ai_lock);
+
+    const bool skip = launcher_ai_cached || launcher_ai_saved;
+
+    launcher_ai_saved = true;
+
+    pthread_mutex_unlock(&launcher_ai_lock);
+
+    if (skip) {
+        return;
+    }
+
+    char temporary[PATH_MAX];
+
+    snprintf(temporary, sizeof(temporary), "%s.%d", LAUNCHER_AI_CACHE_PATH, (int)getpid());
+
+    mkdir(LAUNCHER_AI_CACHE_DIR, 0755);
+
+    FILE* file = fopen(temporary, "w");
+
+    if (!file) {
+        return;
+    }
+
+    const bool written = fprintf(file, "%016llx\n", (unsigned long long)launcher_ai_key) > 0 && fputs(launcher_ai_prompt, file) >= 0;
+
+    if (fclose(file) == 0 && written && rename(temporary, LAUNCHER_AI_CACHE_PATH) == 0) {
+        return;
+    }
+
+    unlink(temporary);
+}
+
+
+static bool launcher_ai_build(void) {
+
+    pthread_mutex_lock(&launcher_ai_lock);
+
+    if (!launcher_ai_built) {
+
+        launcher_ai_key    = launcher_ai_fingerprint();
+        launcher_ai_cached = launcher_ai_load(launcher_ai_key);
+
+        if (!launcher_ai_cached) {
+            launcher_ai_compose();
+        }
+
+        launcher_ai_built = true;
+    }
+
+    const bool cached = launcher_ai_cached;
+
+    pthread_mutex_unlock(&launcher_ai_lock);
+
+    return cached;
+}
 
 
 /**
  * @brief The response as it arrives, into a buffer that was sized once rather than grown.
  */
-
 typedef struct {
 
     char* data;
@@ -115,28 +540,39 @@ static size_t launcher_ai_collect(char* ptr, size_t size, size_t count, void* us
 }
 
 
-/**
- * @brief Writes the request body, with everything that came from a person escaped into it.
- *
- * @param out Receives the body.
- * @param max The size of that buffer.
- * @param prompt What to ask.
- * @return How long the body is.
- */
+static size_t launcher_ai_request(char* out, size_t max, const char* prompt, const char* tokens, bool structured) {
 
-static size_t launcher_ai_request(char* out, size_t max, const char* prompt) {
+    launcher_ai_text_t text = {.data = out, .size = 0, .max = max};
 
-    char system[sizeof(launcher_ai_system) * 2];
-    char model[256];
-    char user[LAUNCHER_AI_REQUEST_MAX / 2];
+    out[0] = '\0';
 
-    json_escape(system, sizeof(system), launcher_ai_system);
-    json_escape(model, sizeof(model), CONFIG_AI_API_MODEL);
-    json_escape(user, sizeof(user), prompt);
+    launcher_ai_put(&text, "{\"model\":\"");
+    launcher_ai_put_escaped(&text, CONFIG_AI_API_MODEL);
+    launcher_ai_put(&text, "\",\"temperature\":" LAUNCHER_AI_TEMPERATURE ",\"max_tokens\":");
+    launcher_ai_put(&text, tokens);
+    launcher_ai_put(&text, ",");
 
-    const int len = snprintf(out, max, "{\"model\":\"%s\",\"messages\":[{\"role\":\"system\",\"content\":\"%s\"},{\"role\":\"user\",\"content\":\"%s\"}]}", model, system, user);
+    if (structured) {
 
-    return len > 0 ? (size_t)len : 0;
+        launcher_ai_put(&text, "\"thinking_budget_tokens\":0,\"response_format\":");
+        launcher_ai_put(&text, launcher_ai_schema);
+        launcher_ai_put(&text, ",");
+    }
+
+    launcher_ai_put(&text, "\"messages\":[{\"role\":\"system\",\"content\":\"");
+    launcher_ai_put_escaped(&text, launcher_ai_prompt);
+    launcher_ai_put(&text, "\"}");
+
+    for (size_t i = 0; i < sizeof(launcher_ai_examples) / sizeof(launcher_ai_examples[0]); i++) {
+
+        launcher_ai_put_message(&text, "user", launcher_ai_examples[i].user);
+        launcher_ai_put_message(&text, "assistant", launcher_ai_examples[i].reply);
+    }
+
+    launcher_ai_put_message(&text, "user", prompt);
+    launcher_ai_put(&text, "]}");
+
+    return text.full ? 0 : text.size;
 }
 
 
@@ -188,7 +624,6 @@ static void launcher_ai_split(const char* content, launcher_ai_reply_t* out) {
     const char* command = json_member(object, "command");
 
     if (!answer && !command) {
-
         strncpy(out->answer, content, sizeof(out->answer) - 1);
         return;
     }
@@ -236,20 +671,214 @@ static int launcher_ai_parse(const char* json, long status, launcher_ai_reply_t*
 }
 
 
+static void launcher_ai_global(void) {
+
+    launcher_ai_ready = curl_global_init(CURL_GLOBAL_DEFAULT) == CURLE_OK ? 0 : -1;
+}
+
+
 int launcher_ai_init(void) {
 
-    static bool ready = false;
+    pthread_once(&launcher_ai_once, launcher_ai_global);
 
-    if (!ready) {
+    return launcher_ai_ready;
+}
 
-        if (curl_global_init(CURL_GLOBAL_DEFAULT) != CURLE_OK) {
-            return -1;
+
+static CURLcode launcher_ai_post(const char* prompt, const char* tokens, launcher_ai_body_t* body, long* status) {
+
+    *status = 0;
+
+    char* request = malloc(LAUNCHER_AI_REQUEST_MAX);
+
+    CURL* curl = curl_easy_init();
+
+    if (!request || !curl) {
+
+        free(request);
+
+        if (curl) {
+            curl_easy_cleanup(curl);
         }
 
-        ready = true;
+        return CURLE_OUT_OF_MEMORY;
     }
 
-    return 0;
+
+    const size_t len = launcher_ai_request(request, LAUNCHER_AI_REQUEST_MAX, prompt, tokens, true);
+
+    if (len == 0) {
+
+        free(request);
+        curl_easy_cleanup(curl);
+
+        return CURLE_FILESIZE_EXCEEDED;
+    }
+
+    char auth[512];
+
+    snprintf(auth, sizeof(auth), "Authorization: Bearer %s", CONFIG_AI_API_KEY);
+
+    struct curl_slist* headers = NULL;
+
+    headers = curl_slist_append(headers, auth);
+    headers = curl_slist_append(headers, "Content-Type: application/json");
+
+    curl_easy_setopt(curl, CURLOPT_URL, CONFIG_AI_PROVIDER_URL);
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, request);
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, (long)len);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, launcher_ai_collect);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, body);
+    curl_easy_setopt(curl, CURLOPT_TIMEOUT, (long)LAUNCHER_AI_TIMEOUT);
+    curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, (long)LAUNCHER_AI_TIMEOUT_CONNECT);
+    curl_easy_setopt(curl, CURLOPT_USERAGENT, LAUNCHER_AI_AGENT);
+    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+    curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1L);
+
+    CURLcode code = curl_easy_perform(curl);
+
+    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, status);
+
+    if (code == CURLE_OK && (*status == 400 || *status == 422)) {
+
+        body->size    = 0;
+        body->data[0] = '\0';
+
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, (long)launcher_ai_request(request, LAUNCHER_AI_REQUEST_MAX, prompt, tokens, false));
+
+        code = curl_easy_perform(curl);
+
+        curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, status);
+    }
+
+    curl_slist_free_all(headers);
+    curl_easy_cleanup(curl);
+
+    free(request);
+
+    return code;
+}
+
+
+static void launcher_ai_list(const launcher_entry_t* entries, size_t count) {
+
+    launcher_ai_text_t text = {.data = launcher_ai_apps, .size = 0, .max = sizeof(launcher_ai_apps)};
+
+    launcher_ai_apps[0] = '\0';
+
+    if (count > 0) {
+        launcher_ai_put(&text, "\nInstalled applications (name = command):\n");
+    }
+
+    for (size_t i = 0; i < count && !text.full; i++) {
+
+        char line[4 * LAUNCHER_FIELD_MAX];
+
+        if (entries[i].comment[0]) {
+            snprintf(line, sizeof(line), "%s = %s (%s)\n", entries[i].name, entries[i].exec, entries[i].comment);
+        } else {
+            snprintf(line, sizeof(line), "%s = %s\n", entries[i].name, entries[i].exec);
+        }
+
+        launcher_ai_put(&text, line);
+    }
+}
+
+
+static void* launcher_ai_background(void* arg) {
+
+    (void)arg;
+
+    launcher_ai_build();
+
+    return NULL;
+}
+
+
+void launcher_ai_prepare(const launcher_entry_t* entries, size_t count) {
+
+    launcher_ai_list(entries, count);
+
+
+    pthread_attr_t attr;
+    pthread_t thread;
+
+    pthread_attr_init(&attr);
+    pthread_attr_setstacksize(&attr, LAUNCHER_AI_BUILD_STACK);
+    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+
+    pthread_create(&thread, &attr, launcher_ai_background, NULL);
+
+    pthread_attr_destroy(&attr);
+}
+
+
+int launcher_ai_warm(const launcher_entry_t* entries, size_t count, char* error, size_t max) {
+
+    error[0] = '\0';
+
+    if (!*CONFIG_AI_PROVIDER_URL || !*CONFIG_AI_API_KEY) {
+
+        snprintf(error, max, "no provider or API key configured");
+        return -1;
+    }
+
+    if (launcher_ai_init() < 0) {
+
+        snprintf(error, max, "cannot initialise the HTTPS library");
+        return -1;
+    }
+
+    launcher_ai_list(entries, count);
+    launcher_ai_build();
+
+
+    launcher_ai_body_t body = {.data = malloc(LAUNCHER_AI_RESPONSE_MAX), .size = 0};
+
+    if (!body.data) {
+
+        snprintf(error, max, "out of memory");
+        return -1;
+    }
+
+    int result = -1;
+
+    for (int attempt = 0; attempt < LAUNCHER_AI_WARM_ATTEMPTS; attempt++) {
+
+        if (attempt > 0) {
+            sleep(LAUNCHER_AI_WARM_DELAY);
+        }
+
+        body.size    = 0;
+        body.data[0] = '\0';
+
+        long status = 0;
+
+        const CURLcode code = launcher_ai_post(LAUNCHER_AI_WARM_PROMPT, LAUNCHER_AI_WARM_TOKENS, &body, &status);
+
+        if (code == CURLE_OK && status == 200) {
+
+            launcher_ai_save();
+
+            result = 0;
+            break;
+        }
+
+        if (code == CURLE_OK) {
+            snprintf(error, max, "%s answered %ld", CONFIG_AI_PROVIDER_URL, status);
+        } else {
+            snprintf(error, max, "%s: %s", CONFIG_AI_PROVIDER_URL, curl_easy_strerror(code));
+        }
+
+        if (code == CURLE_OK && status < 500 && status != 429) {
+            break;
+        }
+    }
+
+    free(body.data);
+
+    return result;
 }
 
 
@@ -275,59 +904,23 @@ int launcher_ai_ask(const char* prompt, launcher_ai_reply_t* out) {
         return -1;
     }
 
+    launcher_ai_build();
 
-    char* request = malloc(LAUNCHER_AI_REQUEST_MAX);
 
     launcher_ai_body_t body = {.data = malloc(LAUNCHER_AI_RESPONSE_MAX), .size = 0};
 
-    CURL* curl = curl_easy_init();
-
-    if (!request || !body.data || !curl) {
+    if (!body.data) {
 
         snprintf(out->error, sizeof(out->error), "Out of memory.");
-
-        free(request);
-        free(body.data);
-
-        if (curl) {
-            curl_easy_cleanup(curl);
-        }
-
         return -1;
     }
 
     body.data[0] = '\0';
 
 
-    const size_t len = launcher_ai_request(request, LAUNCHER_AI_REQUEST_MAX, prompt);
-
-    char auth[512];
-
-    snprintf(auth, sizeof(auth), "Authorization: Bearer %s", CONFIG_AI_API_KEY);
-
-    struct curl_slist* headers = NULL;
-
-    headers = curl_slist_append(headers, auth);
-    headers = curl_slist_append(headers, "Content-Type: application/json");
-
-    curl_easy_setopt(curl, CURLOPT_URL, CONFIG_AI_PROVIDER_URL);
-    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, request);
-    curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, (long)len);
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, launcher_ai_collect);
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &body);
-    curl_easy_setopt(curl, CURLOPT_TIMEOUT, (long)LAUNCHER_AI_TIMEOUT);
-    curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, (long)LAUNCHER_AI_TIMEOUT_CONNECT);
-    curl_easy_setopt(curl, CURLOPT_USERAGENT, LAUNCHER_AI_AGENT);
-    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-    curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1L);
-
-    const CURLcode code = curl_easy_perform(curl);
-
     long status = 0;
 
-    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &status);
-
+    const CURLcode code = launcher_ai_post(prompt, LAUNCHER_AI_TOKENS, &body, &status);
 
     int result = 0;
 
@@ -339,12 +932,12 @@ int launcher_ai_ask(const char* prompt, launcher_ai_reply_t* out) {
     } else if (launcher_ai_parse(body.data, status, out) < 0) {
 
         result = -1;
+
+    } else if (status == 200) {
+
+        launcher_ai_save();
     }
 
-    curl_slist_free_all(headers);
-    curl_easy_cleanup(curl);
-
-    free(request);
     free(body.data);
 
     return result;

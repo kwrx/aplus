@@ -16,6 +16,11 @@ include $(ROOTDIR)/build/cross.mk
 
 ifeq ($(CONFIG_HAVE_AI),y)
 	LIBS += curl ssl crypto z
+	RESOURCES += $(SYSROOT)/etc/init.d/03-aplus-launcher.sh
 endif
+
+$(SYSROOT)/etc/init.d/03-aplus-launcher.sh: assets/etc/init.d/03-aplus-launcher.sh
+	$(QUIET)echo "    INSTALL $(shell realpath --relative-base=$(ROOTDIR) $@)"
+	$(QUIET)install -m 755 $< $@
 
 include $(ROOTDIR)/build/build-binary.mk
