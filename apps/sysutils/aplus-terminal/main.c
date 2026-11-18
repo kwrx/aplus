@@ -203,9 +203,19 @@ static struct {
     } fb;
 
     struct {
-        int fd;
-        pthread_t thr;
-    } kbd;
+        struct {
+            int fd;
+            pthread_t thr;
+        } kbd;
+        struct {
+            int fd;
+            pthread_t thr;
+        } rel;
+        struct {
+            int fd;
+            pthread_t thr;
+        } abs;
+    } input;
 
     bool windowed;
 
@@ -346,16 +356,25 @@ int aterm_window_commit(void) {
     if (context.windowed) {
         return ui_window_commit(context.win);
     } else {
+        
         struct fb_rect damage;
         damage.x = 0;
         damage.y = 0;
         damage.width = (uint32_t)aterm_window_width();
         damage.height = (uint32_t)aterm_window_height();
+
         if (ioctl(context.fb.fd, FBIO_FLUSH, &damage) < 0) {
+            ulog_warnf("ioctl(FBIO_FLUSH): %s", strerror(errno));
             return -1;
         }
+
         uint32_t crtc = 0;
-        return ioctl(context.fb.fd, FBIO_WAITFORVSYNC, &crtc);
+        if (ioctl(context.fb.fd, FBIO_WAITFORVSYNC, &crtc) < 0) {
+            ulog_warnf("ioctl(FBIO_WAITFORVSYNC): %s", strerror(errno));
+            return -1;
+        }
+
+        return 0;
     }
 }
 
@@ -1072,9 +1091,7 @@ static void aterm_reply_flush(void) {
 static void aterm_update_screen(void) {
 
     pthread_mutex_lock(&context.lock);
-
     aterm_draw_locked();
-
     pthread_mutex_unlock(&context.lock);
 
     aterm_reply_flush();
@@ -1117,6 +1134,19 @@ static void aterm_resize(unsigned int width, unsigned int height) {
 
     aterm_reply_flush();
     aterm_pty_winsize(width, height);
+}
+
+
+static void aterm_scroll(int16_t dy) {
+
+    GhosttyTerminalScrollViewport v;
+    v.tag = GHOSTTY_TERMINAL_SCROLL_VIEWPORT_DELTA;
+    v.value.delta = dy;
+
+    pthread_mutex_lock(&context.lock);
+    ghostty_terminal_scroll_viewport(context.term, v);
+    pthread_mutex_unlock(&context.lock);
+
 }
 
 
@@ -1299,10 +1329,13 @@ static size_t aterm_encode_key(uint16_t key, char* out, size_t size) {
  */
 static void aterm_handle_key(vkey_t keysym, uint8_t down) {
 
+    if (!keysym && !down) {
+        return;
+    }
+
     const uint16_t key = ui_keymap_lookup(context.keymap, keysym);
 
     char produced[32];
-
     size_t size = ui_keymap_translate(context.keymap, keysym, down, produced, sizeof(produced));
 
     if (size == 0 && down) {
@@ -1454,14 +1487,13 @@ static void* thr_ui_handler(void* arg) {
         switch (ev.type) {
 
             case UI_EVENT_KEY:
-
-                if (!ev.key.down && !ev.key.vkey) {
-                    break;
-                }
-
                 aterm_handle_key(ev.key.vkey, ev.key.down);
                 aterm_update_screen();
+                break;
 
+            case UI_EVENT_SCROLL:
+                aterm_scroll(-ev.scroll.dy);
+                aterm_update_screen();
                 break;
 
             case UI_EVENT_CONFIGURE:
@@ -1489,7 +1521,7 @@ static void* thr_ui_handler(void* arg) {
 }
 
 
-static void* thr_kbd_handler(void* arg) {
+static void* thr_input_handler(void* arg) {
 
     (void)arg;
 
@@ -1499,7 +1531,7 @@ static void* thr_kbd_handler(void* arg) {
 
         do {
 
-            ssize_t e = read(context.kbd.fd, &ev, sizeof(ev));
+            ssize_t e = read((int)(intptr_t)arg, &ev, sizeof(ev));
 
             if (e < 0) {
 
@@ -1507,16 +1539,31 @@ static void* thr_kbd_handler(void* arg) {
                     continue;
                 }
 
-                ulog_errorf("cannot read from the keyboard: %s", strerror(errno));
+                ulog_errorf("cannot read from the input[%d]: %s", (int)(intptr_t)arg, strerror(errno));
                 exit(1);
             }
 
             else if(e > 0) {
 
                 switch(ev.ev_type) {
+
                     case EV_KEY:
                         aterm_handle_key(ev.ev_key.vkey, ev.ev_key.down);
                         aterm_update_screen();
+                        break;
+
+                    case EV_REL:
+                        if (ev.ev_rel.z) {
+                            aterm_scroll(-ev.ev_rel.z);
+                            aterm_update_screen();
+                        }
+                        break;
+
+                    case EV_ABS:
+                        if (ev.ev_abs.z) {
+                            aterm_scroll(-ev.ev_abs.z);
+                            aterm_update_screen();
+                        }
                         break;
 
                     default:
@@ -1528,7 +1575,6 @@ static void* thr_kbd_handler(void* arg) {
 
     } while(true);
 
-    return NULL;
 }
 
 
@@ -1702,7 +1748,10 @@ int main(int argc, char** argv) {
 
 
     // Set Line Mode LNM
-    const GhosttyTerminalModeConfig lnm = {.mode = GHOSTTY_MODE_LINEFEED, .value = true};
+    const GhosttyTerminalModeConfig lnm = {
+        .mode = GHOSTTY_MODE_LINEFEED, 
+        .value = true
+    };
 
     if (ghostty_terminal_set(context.term, GHOSTTY_TERMINAL_OPT_MODE_DEFAULT, &lnm) != GHOSTTY_SUCCESS) {
         ulog_warnf("cannot set the line feed mode");
@@ -1741,17 +1790,42 @@ int main(int argc, char** argv) {
     //* 4. Input initialization
     if (!context.windowed) {
 
-        context.kbd.fd = open("/dev/kbd", O_RDONLY);
-        if (context.kbd.fd < 0) {
+        int thr_e;
+
+        context.input.kbd.fd = open("/dev/kbd", O_RDONLY);
+        if (context.input.kbd.fd < 0) {
             ulog_errorf("cannot open the keyboard: %s", strerror(errno));
             exit(1);
         }
 
-        int thr_e = pthread_create(&context.kbd.thr, NULL, thr_kbd_handler, NULL);
+        thr_e = pthread_create(&context.input.kbd.thr, NULL, thr_input_handler, (void*)(intptr_t) context.input.kbd.fd);
         if (thr_e != 0) {
             ulog_errorf("pthread_create() failed: %s", strerror(errno));
             exit(1);
         }
+
+        context.input.rel.fd = open("/dev/mouse", O_RDONLY);
+        if (context.input.rel.fd < 0) {
+            ulog_warnf("cannot open the mouse: %s", strerror(errno));
+        } else {
+            thr_e = pthread_create(&context.input.rel.thr, NULL, thr_input_handler, (void*)(intptr_t) context.input.rel.fd);
+            if (thr_e != 0) {
+                ulog_errorf("pthread_create() failed: %s", strerror(errno));
+                exit(1);
+            }
+        }
+
+        context.input.abs.fd = open("/dev/tablet", O_RDONLY);
+        if (context.input.abs.fd < 0) {
+            ulog_warnf("cannot open the tablet: %s", strerror(errno));
+        } else {
+            thr_e = pthread_create(&context.input.abs.thr, NULL, thr_input_handler, (void*)(intptr_t) context.input.abs.fd);
+            if (thr_e != 0) {
+                ulog_errorf("pthread_create() failed: %s", strerror(errno));
+                exit(1);
+            }
+        }
+
     }
 
     //* Load Keymap
@@ -1803,7 +1877,13 @@ int main(int argc, char** argv) {
             close(ui_connection_fd(context.conn));
         } else {
             close(context.fb.fd);
-            close(context.kbd.fd);
+            close(context.input.kbd.fd);
+            if (context.input.rel.fd) {
+                close(context.input.rel.fd);
+            }
+            if (context.input.abs.fd) {
+                close(context.input.abs.fd);
+            }
         }
         close(context.masterfd);
 

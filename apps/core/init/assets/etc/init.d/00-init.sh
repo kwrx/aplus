@@ -1,12 +1,12 @@
 #!/bin/sh
 
 die() {
-    echo "init.d: $*" >&2
+    printf '\033[1;30m%s\033[0m \033[1;36minit.d[%d]:\033[0m \033[1;31mERROR:\033[1;37m %s\033[0m\n' "$(date +%Y-%m-%dT%H:%M:%S%z)" "$$" "$*" >&2
     exit 1
 }
 
 log() {
-    echo "init.d: $*"
+    printf '\033[1;30m%s\033[0m \033[1;36minit.d[%d]:\033[0m \033[1;32mINFO:\033[1;37m %s\033[0m\n' "$(date +%Y-%m-%dT%H:%M:%S%z)" "$$" "$*"
 }
 
 if [ "$(basename "$0")" = "00-init.sh" ]; then

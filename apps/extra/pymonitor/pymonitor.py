@@ -77,6 +77,21 @@ CSP = "default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'
 
 log = logging.getLogger("pymonitor")
 
+
+class ColorFormatter(logging.Formatter):
+    LEVEL_COLORS = {
+        logging.CRITICAL: "\033[1;31m",
+        logging.ERROR: "\033[1;31m",
+        logging.WARNING: "\033[1;33m",
+        logging.INFO: "\033[1;32m",
+        logging.DEBUG: "\033[1;35m",
+    }
+
+    def format(self, record):
+        record.levelcolor = self.LEVEL_COLORS.get(record.levelno, "")
+        return super().format(record) + "\033[0m"
+
+
 ## @brief HTTP status for each errno an explorer request can fail with.
 ERRNO_STATUS = {
     errno.ENOENT: HTTPStatus.NOT_FOUND,
@@ -3950,7 +3965,9 @@ def main():
     parser.add_argument("--verbose", action="store_true", help="log every request")
     args = parser.parse_args()
 
-    logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO, format="%(asctime)s %(name)s[%(process)d]: %(levelname)s: %(message)s", datefmt="%Y-%m-%dT%H:%M:%S%z")
+    handler = logging.StreamHandler()
+    handler.setFormatter(ColorFormatter("\033[1;30m%(asctime)s\033[0m \033[1;36m%(name)s[%(process)d]:\033[0m %(levelcolor)s%(levelname)s:\033[1;37m %(message)s", datefmt="%Y-%m-%dT%H:%M:%S%z"))
+    logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO, handlers=[handler])
 
     sampler = Sampler(clamp(args.interval, 0.2, 60.0))
     sampler.start()

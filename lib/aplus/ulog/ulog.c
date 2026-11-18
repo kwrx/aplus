@@ -105,6 +105,13 @@ int ulogf(const ulog_level_t level, const char* fmt, ...) {
         [ULOG_DEBUG]   = "DEBUG",
     };
 
+    static const char* const colors[] = {
+        [ULOG_ERROR]   = "\033[1;31m",
+        [ULOG_WARNING] = "\033[1;33m",
+        [ULOG_INFO]    = "\033[1;32m",
+        [ULOG_DEBUG]   = "\033[1;35m",
+    };
+
     time_t now = time(NULL);
     struct tm tm;
     if (!localtime_r(&now, &tm) && !gmtime_r(&now, &tm)) {
@@ -119,7 +126,7 @@ int ulogf(const ulog_level_t level, const char* fmt, ...) {
     flockfile(output);
 
     int count = -1;
-    int prefix = fprintf(output, "%s %s[%d]: %s: ", when, appname, (int)getpid(), names[level]);
+    int prefix = fprintf(output, "\033[1;30m%s\033[0m \033[1;36m%s[%d]:\033[0m %s%s:\033[1;37m ", when, appname, (int)getpid(), colors[level], names[level]);
 
     if (prefix >= 0) {
         va_list ap;
@@ -132,6 +139,7 @@ int ulogf(const ulog_level_t level, const char* fmt, ...) {
         }
     }
 
+    fprintf(output, "\033[0m");
     funlockfile(output);
 
     errno = saved_errno;
