@@ -98,7 +98,7 @@ int tmpfs_link(inode_t* inode, inode_t* target, const char* name) {
 
         tmpfs_inode_t* ti = (tmpfs_inode_t*)cache_get(&inode->sb->cache, target->ino);
 
-        if (!S_ISREG(ti->st.st_mode) && !S_ISLNK(ti->st.st_mode)) {
+        if (!S_ISREG(ti->st.st_mode) && !S_ISLNK(ti->st.st_mode) && !S_ISSOCK(ti->st.st_mode) && !S_ISFIFO(ti->st.st_mode)) {
             e = EPERM;
             break;
         }

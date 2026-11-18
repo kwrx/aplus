@@ -45,7 +45,7 @@ inode_t* ext2_creat(inode_t* parent, const char* name, mode_t mode) {
     if (unlikely(parent->sb->flags & MS_RDONLY))
         return errno = EROFS, NULL;
 
-    if (unlikely(!S_ISREG(mode) && !S_ISDIR(mode)))
+    if (unlikely(!S_ISREG(mode) && !S_ISDIR(mode) && !S_ISSOCK(mode)))
         return errno = EOPNOTSUPP, NULL;
 
     size_t name_len = strlen(name);

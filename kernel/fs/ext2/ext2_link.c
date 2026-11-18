@@ -67,7 +67,7 @@ int ext2_link(inode_t* parent, inode_t* target, const char* name) {
     int result              = -1;
 
     scoped_lock(&ext2->lock) {
-        if (!S_ISREG(node->i_mode) && !S_ISLNK(node->i_mode)) {
+        if (!S_ISREG(node->i_mode) && !S_ISLNK(node->i_mode) && !S_ISSOCK(node->i_mode) && !S_ISFIFO(node->i_mode)) {
             errno = EPERM;
             break;
         }
