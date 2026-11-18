@@ -28,6 +28,7 @@
  * aplus-xopen ends up with the application itself as its child and reaps it as usual.
  */
 
+#include <ctype.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
@@ -83,6 +84,12 @@
 #define XOPEN_NES_EMULATOR "nesemu"
 
 #define XOPEN_AUDIO_PLAYER "aplus-player"
+
+#define XOPEN_BROWSER "netsurf-fb"
+
+#define XOPEN_BROWSER_ENV "BROWSER"
+
+#define XOPEN_FILE_SCHEME "file://"
 
 /**
  * @brief How much of a file with no known extension is read to tell text from binary.
@@ -530,11 +537,71 @@ static int xopen_desktop(const char* path) {
 }
 
 
+static bool xopen_is_url(const char* text) {
+
+    if (!isalpha((unsigned char)text[0])) {
+        return false;
+    }
+
+    const char* cursor = text + 1;
+
+    while (isalnum((unsigned char)*cursor) || *cursor == '+' || *cursor == '-' || *cursor == '.') {
+        cursor++;
+    }
+
+    if (*cursor != ':') {
+        return false;
+    }
+
+    return strncmp(cursor, "://", 3) == 0 || strncasecmp(text, "about:", 6) == 0;
+}
+
+
+static bool xopen_is_bare_host(const char* text) {
+
+    return strncasecmp(text, "www.", 4) == 0 && text[4] != '\0' && strpbrk(text, " \t") == NULL;
+}
+
+
+static const char* xopen_file_url(const char* url) {
+
+    if (strncasecmp(url, XOPEN_FILE_SCHEME, strlen(XOPEN_FILE_SCHEME)) != 0) {
+        return NULL;
+    }
+
+    const char* path = url + strlen(XOPEN_FILE_SCHEME);
+
+    if (strncasecmp(path, "localhost/", 10) == 0) {
+        path += 9;
+    }
+
+    return *path == '/' ? path : NULL;
+}
+
+
+static int xopen_browse(const char* url) {
+
+    const char* browser = getenv(XOPEN_BROWSER_ENV);
+
+    if (!browser || *browser == '\0' || *browser == ':') {
+        browser = XOPEN_BROWSER;
+    }
+
+    char program[XOPEN_EXEC_MAX];
+
+    snprintf(program, sizeof(program), "%.*s", (int)strcspn(browser, ":"), browser);
+
+    char* argv[] = {program, (char*)url, NULL};
+
+    return xopen_run(argv);
+}
+
+
 int main(int argc, char** argv) {
 
     if (argc != 2 || argv[1][0] == '\0') {
 
-        fprintf(stderr, "usage: %s <path>\n", XOPEN_NAME);
+        fprintf(stderr, "usage: %s <path|url>\n", XOPEN_NAME);
 
         return XOPEN_USAGE;
     }
@@ -542,9 +609,29 @@ int main(int argc, char** argv) {
 
     const char* path = argv[1];
 
+    if (xopen_is_url(path)) {
+
+        const char* local = xopen_file_url(path);
+
+        if (!local) {
+            return xopen_browse(path);
+        }
+
+        path = local;
+    }
+
     struct stat st;
 
     if (stat(path, &st) < 0) {
+
+        if (xopen_is_bare_host(path)) {
+
+            char https[XOPEN_EXEC_MAX];
+
+            snprintf(https, sizeof(https), "https://%s", path);
+
+            return xopen_browse(https);
+        }
 
         ulog_errorf("%s: %s", path, strerror(errno));
 
