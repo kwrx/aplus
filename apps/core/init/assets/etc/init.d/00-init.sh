@@ -63,12 +63,12 @@ start_service() {
         remove_pid_file
     fi
 
-    command -v "$EXEC_NAME" >/dev/null 2>&1 ||
+    EXEC_PATH=$(command -v "$EXEC_NAME" 2>/dev/null) ||
         die "'$EXEC_NAME' not found; cannot start $EXEC_DESC"
 
     log "starting $EXEC_DESC..."
 
-    "$EXEC_NAME" $EXEC_ARGS &
+    "$EXEC_PATH" $EXEC_ARGS &
     PID=$!
 
     if ! echo "$PID" > "$PID_FILE"; then

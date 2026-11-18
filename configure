@@ -159,7 +159,7 @@ stage_3() {
     packages="$packages bash"
     packages="$packages dash"
     packages="$packages sqlite"
-    packages="$packages dropbear"
+    packages="$packages openssh"
     packages="$packages xz"
     packages="$packages zlib"
     packages="$packages curl"
