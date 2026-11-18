@@ -25,14 +25,22 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/errno.h>
+#include <aplus/hal.h>
+#include <aplus/memory.h>
+#include <aplus/poll.h>
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
 #include <aplus/task.h>
+#include <aplus/unix.h>
+#include <aplus/vfs.h>
 #include <fcntl.h>
 #include <stdint.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/uio.h>
 #include <unistd.h>
+
+#include <aplus/network.h>
 
 
 /***
@@ -51,4 +59,140 @@
 
 struct user_msghdr;
 
-SYSCALL(47, recvmsg, long sys_recvmsg(int fd, struct user_msghdr* msg, unsigned flags) { return -ENOSYS; });
+
+#define RECVMSG_WAITALL 0x0100
+
+
+static long __recvmsg_inet(struct file* file, struct socket_msghdr* msg, struct socket_msghdr* umsg, const struct iovec* iov, size_t total, unsigned flags, bool nonblock) {
+
+    if (total == 0) {
+        return 0;
+    }
+
+    const size_t n = total < SOCKET_MSG_BOUNCE ? total : SOCKET_MSG_BOUNCE;
+
+    uint8_t* kbuf = kmalloc(n, GFP_KERNEL);
+
+    if (unlikely(!kbuf)) {
+        return -ENOMEM;
+    }
+
+
+    uint64_t addr[SOCKADDR_MAX / sizeof(uint64_t)];
+    socklen_t addrlen = sizeof(addr);
+
+    const bool named = msg->name != NULL;
+
+    const size_t before = (flags & RECVMSG_WAITALL) ? current_task->syscall.progress : 0;
+
+    long e = socket_recv(file->inode, kbuf, n, (int)flags, named ? (struct sockaddr*)addr : NULL, named ? &addrlen : NULL, nonblock);
+
+    const size_t after = e >= 0 ? (size_t)e : ((flags & RECVMSG_WAITALL) ? current_task->syscall.progress : before);
+
+    if (after > before && after <= n) {
+        socket_iov_scatter(iov, msg->iovlen, before, kbuf + before, after - before);
+    }
+
+    kfree(kbuf);
+
+
+    if (e >= 0) {
+
+        if (named) {
+
+            const uint32_t room = msg->namelen;
+            const uint32_t copy = room < addrlen ? room : addrlen;
+
+            if (copy && uio_check(msg->name, W_OK) && uio_check((uint8_t*)msg->name + copy - 1, W_OK)) {
+                uio_memcpy_s2u(msg->name, addr, copy);
+            }
+
+            uio_w32(&umsg->namelen, addrlen);
+        }
+
+        uio_w64(&umsg->controllen, 0);
+        uio_w32(&umsg->flags, 0);
+    }
+
+    return e;
+}
+
+
+SYSCALL(
+    47, recvmsg, long sys_recvmsg(int fd, struct user_msghdr* uptr, unsigned flags) {
+
+        struct socket_msghdr* umsg = (struct socket_msghdr*)uptr;
+
+        struct socket_msghdr msg;
+        struct iovec fast[SOCKET_MSG_FASTIOV];
+        struct iovec* iov = NULL;
+        size_t total      = 0;
+
+        long e = socket_msg_import(umsg, &msg, fast, &iov, &total, true);
+
+        if (unlikely(e < 0)) {
+            return e;
+        }
+
+
+        int fdflags       = 0;
+        struct file* file = fd < 0 ? NULL : fd_get((unsigned int)fd, &fdflags);
+
+        if (unlikely(!file)) {
+
+            if (iov != fast) {
+                kfree(iov);
+            }
+
+            return -EBADF;
+        }
+
+        const bool nonblock = !!(fdflags & O_NONBLOCK);
+
+
+        struct unix_sock* us = unix_sock_from_fd(fd);
+
+        if (us) {
+
+            volatile uint32_t* word = poll_event_word(file->inode);
+            uint32_t seq            = word ? *word : 0;
+
+            size_t controllen = msg.control ? msg.controllen : 0;
+            int msgflags      = 0;
+
+            e = unix_recvmsg(us, iov, msg.iovlen, total, msg.control, &controllen, &msgflags, (int)flags);
+
+            if (e == -EAGAIN && !nonblock && !(flags & UNIX_MSG_DONTWAIT)) {
+                e = poll_wait_event(word, seq, socket_timeout(file->inode, false));
+            }
+
+            if (e >= 0) {
+
+                if (msg.name) {
+                    uio_w32(&umsg->namelen, 0);
+                }
+
+                uio_w64(&umsg->controllen, controllen);
+                uio_w32(&umsg->flags, msgflags);
+            }
+
+            unix_sock_put(us);
+
+        } else if (unlikely(socket_from_inode(file->inode) < 0)) {
+
+            e = -ENOTSOCK;
+
+        } else {
+
+            e = __recvmsg_inet(file, &msg, umsg, iov, total, flags, nonblock);
+        }
+
+
+        fd_put(file);
+
+        if (iov != fast) {
+            kfree(iov);
+        }
+
+        return e;
+    });

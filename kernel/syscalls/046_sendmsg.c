@@ -25,14 +25,22 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/errno.h>
+#include <aplus/hal.h>
+#include <aplus/memory.h>
+#include <aplus/poll.h>
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
 #include <aplus/task.h>
+#include <aplus/unix.h>
+#include <aplus/vfs.h>
 #include <fcntl.h>
 #include <stdint.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/uio.h>
 #include <unistd.h>
+
+#include <aplus/network.h>
 
 
 /***
@@ -51,4 +59,167 @@
 
 struct user_msghdr;
 
-SYSCALL(46, sendmsg, long sys_sendmsg(int fd, struct user_msghdr* msg, unsigned flags) { return -ENOSYS; });
+
+static long __sendmsg_inet(struct file* file, const struct socket_msghdr* msg, const struct iovec* iov, size_t total, const void* control, unsigned flags, bool nonblock) {
+
+    size_t off = 0;
+
+    while (msg->controllen - off >= sizeof(struct unix_cmsghdr)) {
+
+        const struct unix_cmsghdr* cmsg = (const struct unix_cmsghdr*)((const uint8_t*)control + off);
+
+        if (unlikely(cmsg->len < sizeof(struct unix_cmsghdr) || cmsg->len > msg->controllen - off)) {
+            return -EINVAL;
+        }
+
+        if (unlikely(cmsg->level == UNIX_SOL_SOCKET && (cmsg->type == UNIX_SCM_RIGHTS || cmsg->type == UNIX_SCM_CREDENTIALS))) {
+            return -EINVAL;
+        }
+
+        off += UNIX_CMSG_ALIGN(cmsg->len);
+
+        if (off > msg->controllen) {
+            break;
+        }
+    }
+
+
+    uint64_t addr[SOCKADDR_MAX / sizeof(uint64_t)];
+
+    const bool named = msg->name && msg->namelen;
+
+    if (named) {
+
+        if (unlikely(msg->namelen > SOCKADDR_MAX)) {
+            return -EINVAL;
+        }
+
+        if (unlikely(!uio_check(msg->name, R_OK) || !uio_check((const uint8_t*)msg->name + msg->namelen - 1, R_OK))) {
+            return -EFAULT;
+        }
+
+        uio_memcpy_u2s(addr, msg->name, msg->namelen);
+    }
+
+
+    if (total == 0) {
+        return 0;
+    }
+
+    const size_t n = total < SOCKET_MSG_BOUNCE ? total : SOCKET_MSG_BOUNCE;
+
+    void* kbuf = kmalloc(n, GFP_KERNEL);
+
+    if (unlikely(!kbuf)) {
+        return -ENOMEM;
+    }
+
+    socket_iov_gather(kbuf, iov, msg->iovlen, n);
+
+    long e = socket_sendto(file->inode, kbuf, n, (int)flags, named ? (struct sockaddr*)addr : NULL, named ? msg->namelen : 0, nonblock);
+
+    kfree(kbuf);
+
+    return e;
+}
+
+
+static long __sendmsg(int fd, const struct socket_msghdr* msg, const struct iovec* iov, size_t total, const void* control, unsigned flags) {
+
+    int fdflags       = 0;
+    struct file* file = fd < 0 ? NULL : fd_get((unsigned int)fd, &fdflags);
+
+    if (unlikely(!file)) {
+        return -EBADF;
+    }
+
+    const bool nonblock = !!(fdflags & O_NONBLOCK);
+
+    long e;
+
+    struct unix_sock* us = unix_sock_from_fd(fd);
+
+    if (us) {
+
+        if (unlikely(msg->name && msg->namelen)) {
+
+            e = -EISCONN;
+
+        } else {
+
+            volatile uint32_t* word = poll_event_word(file->inode);
+            uint32_t seq            = word ? *word : 0;
+
+            e = unix_sendmsg(us, iov, msg->iovlen, total, control, msg->controllen);
+
+            if (e == -EAGAIN && !nonblock && !(flags & UNIX_MSG_DONTWAIT)) {
+                e = poll_wait_event(word, seq, socket_timeout(file->inode, true));
+            }
+        }
+
+        unix_sock_put(us);
+
+    } else if (unlikely(socket_from_inode(file->inode) < 0)) {
+
+        e = -ENOTSOCK;
+
+    } else {
+
+        e = __sendmsg_inet(file, msg, iov, total, control, flags, nonblock);
+    }
+
+    fd_put(file);
+
+    return e;
+}
+
+
+SYSCALL(
+    46, sendmsg, long sys_sendmsg(int fd, struct user_msghdr* umsg, unsigned flags) {
+
+        struct socket_msghdr msg;
+        struct iovec fast[SOCKET_MSG_FASTIOV];
+        struct iovec* iov = NULL;
+        size_t total      = 0;
+
+        long e = socket_msg_import(umsg, &msg, fast, &iov, &total, false);
+
+        if (unlikely(e < 0)) {
+            return e;
+        }
+
+
+        void* control = NULL;
+
+        if (!msg.control) {
+
+            msg.controllen = 0;
+
+        } else if (msg.controllen > UNIX_SCM_CONTROL_MAX) {
+
+            e = -ENOBUFS;
+
+        } else if (msg.controllen > 0) {
+
+            if (unlikely(!(control = kmalloc(msg.controllen, GFP_KERNEL)))) {
+                e = -ENOMEM;
+            } else {
+                uio_memcpy_u2s(control, msg.control, msg.controllen);
+            }
+        }
+
+
+        if (e == 0) {
+            e = __sendmsg(fd, &msg, iov, total, control, flags);
+        }
+
+        if (control) {
+            kfree(control);
+        }
+
+        if (iov != fast) {
+            kfree(iov);
+        }
+
+        return e;
+    });

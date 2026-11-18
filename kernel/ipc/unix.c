@@ -37,6 +37,8 @@
 #include <aplus/unix.h>
 #include <aplus/vfs.h>
 
+#include <aplus/network.h>
+
 
 #define SOCKFS_FSID      0xDEADB0CE
 #define SOCKFS_FIRST_INO 0xFFFFFFFFE000000
@@ -55,7 +57,97 @@ static struct superblock sockfs_superblock = {
 static _Atomic ino64_t __sockfs_next_ino = SOCKFS_FIRST_INO + 1;
 
 
+struct unix_binding {
+    struct unix_binding* next;
+    struct superblock* sb;
+    ino_t ino;
+    struct unix_sock* sock;
+};
+
+static struct unix_binding* __unix_bindings = NULL;
+static spinlock_t __unix_bindings_lock      = SPINLOCK_INIT;
+
+
 static void __unix_put(struct unix_sock* sock);
+static struct unix_sock* __unix_get(struct unix_sock* sock);
+static void __unix_rights_drain(struct unix_sock* sock);
+
+
+static long __unix_bind_register(inode_t* node, struct unix_sock* sock) {
+
+    struct unix_binding* b = kcalloc(1, sizeof(*b), GFP_KERNEL);
+
+    if (unlikely(!b))
+        return -ENOMEM;
+
+    b->sb   = node->sb;
+    b->ino  = node->ino;
+    b->sock = sock;
+
+    struct unix_binding* stale = NULL;
+
+    scoped_lock(&__unix_bindings_lock) {
+
+        for (struct unix_binding** i = &__unix_bindings; *i; i = &(*i)->next) {
+
+            if ((*i)->sb == b->sb && (*i)->ino == b->ino) {
+                stale = *i;
+                *i    = stale->next;
+                break;
+            }
+        }
+
+        b->next         = __unix_bindings;
+        __unix_bindings = b;
+    }
+
+    if (stale) {
+        kfree(stale);
+    }
+
+    return 0;
+}
+
+
+static void __unix_bind_unregister(struct unix_sock* sock) {
+
+    struct unix_binding* found = NULL;
+
+    scoped_lock(&__unix_bindings_lock) {
+
+        for (struct unix_binding** i = &__unix_bindings; *i; i = &(*i)->next) {
+
+            if ((*i)->sock == sock) {
+                found = *i;
+                *i    = found->next;
+                break;
+            }
+        }
+    }
+
+    if (found) {
+        kfree(found);
+    }
+}
+
+
+static struct unix_sock* __unix_bind_find(inode_t* node) {
+
+    struct unix_sock* sock = NULL;
+
+    scoped_lock(&__unix_bindings_lock) {
+
+        for (struct unix_binding* i = __unix_bindings; i; i = i->next) {
+
+            if (i->sb == node->sb && i->ino == node->ino) {
+                sock = __unix_get(i->sock);
+                break;
+            }
+        }
+    }
+
+    return sock;
+}
 
 
 static void __unix_wake(struct unix_sock* sock) {
@@ -102,6 +194,8 @@ static void __unix_put(struct unix_sock* sock) {
     if (atomic_fetch_sub(&sock->refcount, 1) != 1)
         return;
 
+
+    __unix_rights_drain(sock);
 
     ringbuffer_destroy(&sock->rx);
 
@@ -151,10 +245,133 @@ static struct unix_sock* __unix_alloc(int type) {
 
     atomic_store(&sock->refcount, 1);
     spinlock_init(&sock->lock);
+    spinlock_init(&sock->rx_lock);
 
     __unix_cred_set(sock);
 
     return sock;
+}
+
+
+static void __unix_rights_drop(struct unix_rights* rights) {
+
+    for (size_t i = 0; i < rights->count; i++) {
+
+        if (rights->files[i]) {
+            fd_remove(rights->files[i], true);
+        }
+    }
+
+    kfree(rights);
+}
+
+
+static void __unix_rights_drain(struct unix_sock* sock) {
+
+    struct unix_rights* rights = NULL;
+
+    scoped_lock(&sock->rx_lock) {
+
+        rights = sock->rights;
+
+        sock->rights      = NULL;
+        sock->rights_last = NULL;
+    }
+
+    while (rights) {
+
+        struct unix_rights* next = rights->next;
+
+        __unix_rights_drop(rights);
+
+        rights = next;
+    }
+}
+
+
+static ssize_t __unix_rx_read(struct unix_sock* sock, void* buf, size_t size, struct unix_rights** rights) {
+
+    ssize_t e = -EIO;
+
+    *rights = NULL;
+
+    scoped_lock(&sock->rx_lock) {
+
+        struct unix_rights* r = sock->rights;
+
+        if (r && r->pos - sock->rx_tail < size) {
+
+            const uint64_t end = r->pos + r->len - sock->rx_tail;
+
+            if (size > end) {
+                size = (size_t)end;
+            }
+        }
+
+        e = ringbuffer_read(&sock->rx, buf, size);
+
+        if (e <= 0) {
+            break;
+        }
+
+        sock->rx_tail += (uint64_t)e;
+
+        if (r && r->pos < sock->rx_tail) {
+
+            sock->rights = r->next;
+
+            if (!sock->rights) {
+                sock->rights_last = NULL;
+            }
+
+            r->next = NULL;
+            *rights = r;
+        }
+    }
+
+    return e;
+}
+
+
+static ssize_t __unix_rx_write(struct unix_sock* peer, const void* buf, size_t size, struct unix_rights** rights) {
+
+    ssize_t e = -EPIPE;
+
+    scoped_lock(&peer->rx_lock) {
+
+        if (unlikely(peer->state == UNIX_SOCK_CLOSED)) {
+            break;
+        }
+
+        e = ringbuffer_write(&peer->rx, buf, size);
+
+        if (e <= 0) {
+            break;
+        }
+
+        if (rights && *rights) {
+
+            struct unix_rights* r = *rights;
+
+            r->pos  = peer->rx_head;
+            r->len  = (size_t)e;
+            r->next = NULL;
+
+            if (peer->rights_last) {
+                peer->rights_last->next = r;
+            } else {
+                peer->rights = r;
+            }
+
+            peer->rights_last = r;
+
+            *rights = NULL;
+        }
+
+        peer->rx_head += (uint64_t)e;
+    }
+
+    return e;
 }
 
 
@@ -183,7 +400,13 @@ static ssize_t sockfs_read(inode_t* inode, void* buf, off_t offset, size_t size)
         return 0;
 
 
-    ssize_t e = ringbuffer_read(&sock->rx, buf, size);
+    struct unix_rights* rights;
+
+    ssize_t e = __unix_rx_read(sock, buf, size, &rights);
+
+    if (rights) {
+        __unix_rights_drop(rights);
+    }
 
     if (e == -EAGAIN && __unix_recv_done(sock))
         return 0;
@@ -220,7 +443,7 @@ static ssize_t sockfs_write(inode_t* inode, const void* buf, off_t offset, size_
         return -EPIPE;
 
 
-    ssize_t e = ringbuffer_write(&sock->peer->rx, buf, size);
+    ssize_t e = __unix_rx_write(sock->peer, buf, size, NULL);
 
     if (e > 0)
         __unix_wake(sock->peer);
@@ -303,16 +526,14 @@ static int sockfs_close(inode_t* inode) {
     }
 
 
+    __unix_bind_unregister(sock);
+
     if (bound) {
-
-        scoped_lock(&bound->lock) {
-            if (bound->userdata == sock)
-                bound->userdata = NULL;
-        }
-
         vfs_inode_put(bound);
     }
 
+
+    __unix_rights_drain(sock);
 
     __unix_wake(sock);
     __unix_wake(peer);
@@ -396,6 +617,31 @@ static inode_t* __sockfs_inode(struct unix_sock* sock) {
 }
 
 
+static long __unix_fd_install(struct file* ref, bool cloexec) {
+
+    long fd         = -EMFILE;
+    const int limit = fd_limit();
+
+    shared_ptr_access(current_task->fd, fds, {
+        scoped_lock(&current_task->lock) {
+            for (int i = 0; i < limit; i++) {
+
+                if (fds->descriptors[i].ref)
+                    continue;
+
+                fds->descriptors[i].ref           = ref;
+                fds->descriptors[i].close_on_exec = cloexec;
+
+                fd = i;
+                break;
+            }
+        }
+    });
+
+    return fd;
+}
+
+
 static long __unix_install(struct unix_sock* sock, int flags) {
 
     inode_t* inode = __sockfs_inode(sock);
@@ -417,24 +663,7 @@ static long __unix_install(struct unix_sock* sock, int flags) {
     }
 
 
-    long fd          = -EMFILE;
-    const int limit = fd_limit();
-
-    shared_ptr_access(current_task->fd, fds, {
-        scoped_lock(&current_task->lock) {
-            for (int i = 0; i < limit; i++) {
-
-                if (fds->descriptors[i].ref)
-                    continue;
-
-                fds->descriptors[i].ref           = ref;
-                fds->descriptors[i].close_on_exec = !!(flags & O_CLOEXEC);
-
-                fd = i;
-                break;
-            }
-        }
-    });
+    long fd = __unix_fd_install(ref, !!(flags & O_CLOEXEC));
 
 
     if (unlikely(fd < 0)) {
@@ -697,6 +926,9 @@ long unix_bind(struct unix_sock* sock, const void* addr, uint32_t len) {
         return -errno;
 
 
+    if ((e = __unix_bind_register(node, sock)) < 0)
+        return e;
+
     e = -EINVAL;
 
     scoped_lock(&sock->lock) {
@@ -704,14 +936,14 @@ long unix_bind(struct unix_sock* sock, const void* addr, uint32_t len) {
         if (unlikely(sock->state != UNIX_SOCK_UNBOUND))
             break;
 
-        scoped_lock(&node->lock) {
-            node->userdata = sock;
-        }
-
         sock->bound = vfs_inode_get(node);
         sock->state = UNIX_SOCK_BOUND;
 
         e = 0;
+    }
+
+    if (unlikely(e < 0)) {
+        __unix_bind_unregister(sock);
     }
 
     return e;
@@ -798,11 +1030,7 @@ long unix_connect(struct unix_sock* sock, const void* addr, uint32_t len) {
         return -ECONNREFUSED;
 
 
-    struct unix_sock* listener = NULL;
-
-    scoped_lock(&node->lock) {
-        listener = __unix_get((struct unix_sock*)node->userdata);
-    }
+    struct unix_sock* listener = __unix_bind_find(node);
 
     if (unlikely(!listener))
         return -ECONNREFUSED;
@@ -1059,4 +1287,284 @@ long unix_getsockopt(struct unix_sock* sock, int level, int optname, void* optva
     uio_w32(optlen, copy);
 
     return 0;
+}
+
+
+static long __unix_rights_import(const void* control, size_t controllen, struct unix_rights** out) {
+
+    *out = NULL;
+
+    size_t count = 0;
+    size_t off   = 0;
+
+    while (controllen - off >= sizeof(struct unix_cmsghdr)) {
+
+        const struct unix_cmsghdr* cmsg = (const struct unix_cmsghdr*)((const uint8_t*)control + off);
+
+        if (unlikely(cmsg->len < sizeof(struct unix_cmsghdr) || cmsg->len > controllen - off)) {
+            return -EINVAL;
+        }
+
+        if (cmsg->level == UNIX_SOL_SOCKET) {
+
+            if (cmsg->type == UNIX_SCM_RIGHTS) {
+                count += (cmsg->len - sizeof(struct unix_cmsghdr)) / sizeof(int);
+            } else if (cmsg->type != UNIX_SCM_CREDENTIALS) {
+                return -EINVAL;
+            }
+        }
+
+        off += UNIX_CMSG_ALIGN(cmsg->len);
+
+        if (off > controllen) {
+            break;
+        }
+    }
+
+    if (count == 0) {
+        return 0;
+    }
+
+    if (unlikely(count > UNIX_SCM_MAX_FD)) {
+        return -EINVAL;
+    }
+
+
+    struct unix_rights* rights = kcalloc(1, sizeof(struct unix_rights) + count * sizeof(struct file*), GFP_KERNEL);
+
+    if (unlikely(!rights)) {
+        return -ENOMEM;
+    }
+
+
+    off = 0;
+
+    while (controllen - off >= sizeof(struct unix_cmsghdr)) {
+
+        const struct unix_cmsghdr* cmsg = (const struct unix_cmsghdr*)((const uint8_t*)control + off);
+
+        if (cmsg->level == UNIX_SOL_SOCKET && cmsg->type == UNIX_SCM_RIGHTS) {
+
+            const size_t n      = (cmsg->len - sizeof(struct unix_cmsghdr)) / sizeof(int);
+            const uint8_t* data = (const uint8_t*)(cmsg + 1);
+
+            for (size_t i = 0; i < n; i++) {
+
+                int fd;
+                memcpy(&fd, data + i * sizeof(int), sizeof(int));
+
+                struct file* file = fd < 0 ? NULL : fd_get((unsigned int)fd, NULL);
+
+                if (unlikely(!file)) {
+                    __unix_rights_drop(rights);
+                    return -EBADF;
+                }
+
+                rights->files[rights->count++] = file;
+            }
+        }
+
+        off += UNIX_CMSG_ALIGN(cmsg->len);
+
+        if (off > controllen) {
+            break;
+        }
+    }
+
+    *out = rights;
+
+    return 0;
+}
+
+
+static void __unix_rights_export(struct unix_rights* rights, void* control, size_t room, size_t* used, int* msgflags, bool cloexec) {
+
+    size_t fit = room >= UNIX_CMSG_LEN(sizeof(int)) ? (room - UNIX_CMSG_LEN(0)) / sizeof(int) : 0;
+
+    if (fit > rights->count) {
+        fit = rights->count;
+    }
+
+
+    int fds[UNIX_SCM_MAX_FD];
+    size_t installed = 0;
+
+    for (size_t i = 0; i < fit; i++) {
+
+        long fd = __unix_fd_install(rights->files[i], cloexec);
+
+        if (fd < 0) {
+            break;
+        }
+
+        fds[installed++] = (int)fd;
+        rights->files[i] = NULL;
+    }
+
+    if (installed < rights->count) {
+        *msgflags |= UNIX_MSG_CTRUNC;
+    }
+
+    __unix_rights_drop(rights);
+
+
+    if (installed == 0) {
+        return;
+    }
+
+    struct unix_cmsghdr cmsg = {
+        .len   = UNIX_CMSG_LEN(installed * sizeof(int)),
+        .level = UNIX_SOL_SOCKET,
+        .type  = UNIX_SCM_RIGHTS,
+    };
+
+    uio_memcpy_s2u(control, &cmsg, sizeof(cmsg));
+    uio_memcpy_s2u((uint8_t*)control + sizeof(cmsg), fds, installed * sizeof(int));
+
+    *used = UNIX_CMSG_SPACE(installed * sizeof(int)) < room ? UNIX_CMSG_SPACE(installed * sizeof(int)) : room;
+}
+
+
+long unix_sendmsg(struct unix_sock* sock, const struct iovec* iov, size_t iovcnt, size_t total, const void* control, size_t controllen) {
+
+    DEBUG_ASSERT(sock);
+
+
+    struct unix_rights* rights = NULL;
+
+    long e = __unix_rights_import(control, controllen, &rights);
+
+    if (unlikely(e < 0)) {
+        return e;
+    }
+
+
+    struct unix_sock* peer = NULL;
+
+    scoped_lock(&sock->lock) {
+        peer = __unix_get(sock->peer);
+    }
+
+
+    if (unlikely(sock->state != UNIX_SOCK_CONNECTED)) {
+
+        e = -ENOTCONN;
+
+    } else if (unlikely(sock->shutdown_flags & UNIX_SHUT_WR) || unlikely(__unix_send_done(sock)) || unlikely(!peer)) {
+
+        e = -EPIPE;
+
+    } else if (total == 0) {
+
+        e = 0;
+
+    } else {
+
+        size_t n = ringbuffer_writeable(&peer->rx);
+
+        if (n > total) {
+            n = total;
+        }
+
+        void* kbuf = n ? kmalloc(n, GFP_KERNEL) : NULL;
+
+        if (n == 0) {
+
+            e = -EAGAIN;
+
+        } else if (unlikely(!kbuf)) {
+
+            e = -ENOMEM;
+
+        } else {
+
+            socket_iov_gather(kbuf, iov, iovcnt, n);
+
+            e = __unix_rx_write(peer, kbuf, n, &rights);
+
+            kfree(kbuf);
+
+            if (e > 0) {
+                __unix_wake(peer);
+            }
+        }
+    }
+
+
+    if (rights) {
+        __unix_rights_drop(rights);
+    }
+
+    __unix_put(peer);
+
+    return e;
+}
+
+
+long unix_recvmsg(struct unix_sock* sock, const struct iovec* iov, size_t iovcnt, size_t total, void* control, size_t* controllen, int* msgflags, int flags) {
+
+    DEBUG_ASSERT(sock);
+    DEBUG_ASSERT(controllen);
+    DEBUG_ASSERT(msgflags);
+
+
+    const size_t room = *controllen;
+
+    *controllen = 0;
+    *msgflags   = 0;
+
+
+    if (unlikely(sock->state == UNIX_SOCK_LISTENING)) {
+        return -EINVAL;
+    }
+
+    if (unlikely(sock->state != UNIX_SOCK_CONNECTED)) {
+        return -ENOTCONN;
+    }
+
+    if (unlikely(total == 0 || (sock->shutdown_flags & UNIX_SHUT_RD))) {
+        return 0;
+    }
+
+
+    size_t n = ringbuffer_available(&sock->rx);
+
+    if (n == 0) {
+        return __unix_recv_done(sock) ? 0 : -EAGAIN;
+    }
+
+    if (n > total) {
+        n = total;
+    }
+
+
+    void* kbuf = kmalloc(n, GFP_KERNEL);
+
+    if (unlikely(!kbuf)) {
+        return -ENOMEM;
+    }
+
+
+    struct unix_rights* rights;
+
+    ssize_t e = __unix_rx_read(sock, kbuf, n, &rights);
+
+    if (e > 0) {
+
+        socket_iov_scatter(iov, iovcnt, 0, kbuf, (size_t)e);
+        __unix_wake(sock->peer);
+
+    } else if (e == -EAGAIN && __unix_recv_done(sock)) {
+
+        e = 0;
+    }
+
+    kfree(kbuf);
+
+
+    if (rights) {
+        __unix_rights_export(rights, control, room, controllen, msgflags, !!(flags & UNIX_MSG_CMSG_CLOEXEC));
+    }
+
+    return e;
 }

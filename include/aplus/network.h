@@ -96,6 +96,31 @@ void socket_unlinger(int socket);
 long socket_sockopt_translate(int* level, int* optname);
 
 
+struct socket_msghdr {
+
+    void* name;
+    uint32_t namelen;
+    uint32_t pad0;
+
+    struct iovec* iov;
+    uint64_t iovlen;
+
+    void* control;
+    uint64_t controllen;
+
+    int32_t flags;
+    uint32_t pad1;
+};
+
+    #define SOCKET_MSG_IOV_MAX 1024
+    #define SOCKET_MSG_FASTIOV 8
+    #define SOCKET_MSG_BOUNCE  (128 * 1024)
+
+long socket_msg_import(const void* umsg, struct socket_msghdr* msg, struct iovec* fast, struct iovec** iov, size_t* total, bool recv);
+void socket_iov_gather(void* dst, const struct iovec* iov, size_t iovcnt, size_t size);
+void socket_iov_scatter(const struct iovec* iov, size_t iovcnt, size_t skip, const void* src, size_t size);
+
+
 void network_init(void);
 
 void ethif_input(struct netif* netif);

@@ -47,8 +47,8 @@
 - [x] sys_accept
 - [x] sys_sendto
 - [x] sys_recvfrom
-- [ ] sys_sendmsg
-- [ ] sys_recvmsg
+- [x] sys_sendmsg
+- [x] sys_recvmsg
 - [x] sys_shutdown
 - [x] sys_bind
 - [x] sys_listen

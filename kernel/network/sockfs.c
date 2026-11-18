@@ -25,11 +25,13 @@
 
 #include <fcntl.h>
 #include <poll.h>
+#include <limits.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/time.h>
+#include <sys/uio.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
@@ -884,4 +886,141 @@ int socket_install(int socket, int flags) {
     }
 
     return fd;
+}
+
+
+static bool __socket_user_range(const void* p, size_t size, int mode) {
+
+    if (size == 0) {
+        return true;
+    }
+
+    return p && uio_check(p, mode) && uio_check((const uint8_t*)p + size - 1, mode);
+}
+
+
+long socket_msg_import(const void* umsg, struct socket_msghdr* msg, struct iovec* fast, struct iovec** iov, size_t* total, bool recv) {
+
+    DEBUG_ASSERT(msg);
+    DEBUG_ASSERT(fast);
+    DEBUG_ASSERT(iov);
+    DEBUG_ASSERT(total);
+
+
+    const int mode = recv ? (R_OK | W_OK) : R_OK;
+
+    if (unlikely(!umsg || !__socket_user_range(umsg, sizeof(*msg), mode))) {
+        return -EFAULT;
+    }
+
+    uio_memcpy_u2s(msg, umsg, sizeof(*msg));
+
+
+    if (unlikely(msg->iovlen > SOCKET_MSG_IOV_MAX)) {
+        return -EMSGSIZE;
+    }
+
+    if (unlikely(!__socket_user_range(msg->iov, msg->iovlen * sizeof(struct iovec), R_OK))) {
+        return -EFAULT;
+    }
+
+    if (unlikely(msg->control && !__socket_user_range(msg->control, msg->controllen, mode))) {
+        return -EFAULT;
+    }
+
+
+    struct iovec* v = fast;
+
+    if (msg->iovlen > SOCKET_MSG_FASTIOV) {
+
+        v = kmalloc(msg->iovlen * sizeof(struct iovec), GFP_KERNEL);
+
+        if (unlikely(!v)) {
+            return -ENOMEM;
+        }
+    }
+
+    if (msg->iovlen > 0) {
+
+        uio_lock(msg->iov, msg->iovlen * sizeof(struct iovec));
+        memcpy(v, msg->iov, msg->iovlen * sizeof(struct iovec));
+        uio_unlock(msg->iov, msg->iovlen * sizeof(struct iovec));
+    }
+
+
+    size_t sum = 0;
+    long e     = 0;
+
+    for (size_t i = 0; i < msg->iovlen; i++) {
+
+        if (unlikely(v[i].iov_len > (size_t)SSIZE_MAX - sum)) {
+            e = -EINVAL;
+            break;
+        }
+
+        if (unlikely(!__socket_user_range(v[i].iov_base, v[i].iov_len, mode))) {
+            e = -EFAULT;
+            break;
+        }
+
+        sum += v[i].iov_len;
+    }
+
+    if (unlikely(e < 0)) {
+
+        if (v != fast) {
+            kfree(v);
+        }
+
+        return e;
+    }
+
+    *iov   = v;
+    *total = sum;
+
+    return 0;
+}
+
+
+void socket_iov_gather(void* dst, const struct iovec* iov, size_t iovcnt, size_t size) {
+
+    for (size_t i = 0; i < iovcnt && size > 0; i++) {
+
+        const size_t n = iov[i].iov_len < size ? iov[i].iov_len : size;
+
+        if (n == 0) {
+            continue;
+        }
+
+        uio_lock(iov[i].iov_base, n);
+        memcpy(dst, iov[i].iov_base, n);
+        uio_unlock(iov[i].iov_base, n);
+
+        dst = (uint8_t*)dst + n;
+        size -= n;
+    }
+}
+
+
+void socket_iov_scatter(const struct iovec* iov, size_t iovcnt, size_t skip, const void* src, size_t size) {
+
+    for (size_t i = 0; i < iovcnt && size > 0; i++) {
+
+        if (skip >= iov[i].iov_len) {
+            skip -= iov[i].iov_len;
+            continue;
+        }
+
+        uint8_t* base  = (uint8_t*)iov[i].iov_base + skip;
+        const size_t n = iov[i].iov_len - skip < size ? iov[i].iov_len - skip : size;
+
+        skip = 0;
+
+        uio_lock(base, n);
+        memcpy(base, src, n);
+        uio_unlock(base, n);
+
+        src = (const uint8_t*)src + n;
+        size -= n;
+    }
 }

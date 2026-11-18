@@ -27,6 +27,7 @@
 #ifndef __ASSEMBLY__
 
     #include <stdint.h>
+    #include <sys/uio.h>
 
     #include <aplus.h>
     #include <aplus/ipc.h>
@@ -91,6 +92,40 @@ struct sockaddr_un_k {
     #define UNIX_SOCK_BACKLOG 128
 
 
+    #define UNIX_SCM_RIGHTS      1
+    #define UNIX_SCM_CREDENTIALS 2
+    #define UNIX_SCM_MAX_FD      253
+    #define UNIX_SCM_CONTROL_MAX 4096
+
+    #define UNIX_MSG_CTRUNC       0x0008
+    #define UNIX_MSG_DONTWAIT     0x0040
+    #define UNIX_MSG_CMSG_CLOEXEC 0x40000000
+
+
+struct unix_cmsghdr {
+
+    uint64_t len;
+    int32_t level;
+    int32_t type;
+};
+
+    #define UNIX_CMSG_ALIGN(n) (((n) + sizeof(uint64_t) - 1) & ~(sizeof(uint64_t) - 1))
+    #define UNIX_CMSG_LEN(n)   (sizeof(struct unix_cmsghdr) + (n))
+    #define UNIX_CMSG_SPACE(n) (sizeof(struct unix_cmsghdr) + UNIX_CMSG_ALIGN(n))
+
+
+struct unix_rights {
+
+    struct unix_rights* next;
+
+    uint64_t pos;
+    size_t len;
+
+    size_t count;
+    struct file* files[];
+};
+
+
 /**
  * @brief One endpoint of a local socket; a connected pair is two of these pointing at each other.
  *
@@ -117,6 +152,14 @@ struct unix_sock {
     inode_t* bound;
 
     int shutdown_flags;
+
+    uint64_t rx_head;
+    uint64_t rx_tail;
+
+    struct unix_rights* rights;
+    struct unix_rights* rights_last;
+
+    spinlock_t rx_lock;
 
     struct {
         int32_t pid;
@@ -168,6 +211,9 @@ long unix_getpeername(struct unix_sock* sock, void* addr, uint32_t* len);
  * @brief Reads an option of a local socket, of which only SO_PEERCRED exists.
  */
 long unix_getsockopt(struct unix_sock* sock, int level, int optname, void* optval, uint32_t* optlen);
+
+long unix_sendmsg(struct unix_sock* sock, const struct iovec* iov, size_t iovcnt, size_t total, const void* control, size_t controllen);
+long unix_recvmsg(struct unix_sock* sock, const struct iovec* iov, size_t iovcnt, size_t total, void* control, size_t* controllen, int* msgflags, int flags);
 
 __END_DECLS
 
