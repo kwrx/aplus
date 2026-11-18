@@ -157,7 +157,7 @@
 - [ ] sys_modify_ldt
 - [ ] sys_pivot_root
 - [ ] sys_sysctl
-- [ ] sys_prctl
+- [x] sys_prctl
 - [x] sys_arch_prctl
 - [ ] sys_adjtimex
 - [ ] sys_setrlimit
@@ -243,7 +243,7 @@
 - [ ] sys_inotify_rm_watch
 - [ ] sys_migrate_pages
 - [x] sys_openat
-- [ ] sys_mkdirat
+- [x] sys_mkdirat
 - [ ] sys_mknodat
 - [x] sys_fchownat
 - [ ] sys_futimesat

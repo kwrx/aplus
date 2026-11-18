@@ -89,6 +89,8 @@
  */
     #define TASK_FLAGS_KTHREAD 128
 
+    #define TASK_FLAGS_UNDUMPABLE 256
+
 
     #define TASK_CAPS_SYSTEM  255
     #define TASK_CAPS_IO      2

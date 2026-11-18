@@ -776,7 +776,7 @@ SYSCALL(
 #endif
 
 
-        current_task->flags &= ~TASK_FLAGS_KERNEL_UIO;
+        current_task->flags &= ~(TASK_FLAGS_KERNEL_UIO | TASK_FLAGS_UNDUMPABLE);
 
         sched_account(false);
 
