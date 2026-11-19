@@ -36,6 +36,7 @@
 #include <unistd.h>
 
 #include <aplus/network.h>
+#include <aplus/unix.h>
 
 
 /***
@@ -56,6 +57,18 @@
 
 SYSCALL(
     54, setsockopt, long sys_setsockopt(int fd, int level, int optname, char* optval, int optlen) {
+
+        struct unix_sock* us;
+
+        if ((us = unix_sock_from_fd(fd)) != NULL) {
+
+            long e = optlen < 0 ? -EINVAL : unix_setsockopt(us, level, optname, optval, (uint32_t)optlen);
+
+            unix_sock_put(us);
+
+            return e;
+        }
+
 
         int socket = socket_from_fd(fd);
 

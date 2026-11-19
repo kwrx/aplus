@@ -84,8 +84,20 @@ struct sockaddr_un_k {
     /**
      * @brief The SO_PEERCRED option, with Linux's values for its level and name.
      */
-    #define UNIX_SOL_SOCKET  1
-    #define UNIX_SO_PEERCRED 17
+    #define UNIX_SOL_SOCKET    1
+    #define UNIX_SO_REUSEADDR  2
+    #define UNIX_SO_TYPE       3
+    #define UNIX_SO_ERROR      4
+    #define UNIX_SO_SNDBUF     7
+    #define UNIX_SO_RCVBUF     8
+    #define UNIX_SO_KEEPALIVE  9
+    #define UNIX_SO_PASSCRED   16
+    #define UNIX_SO_PEERCRED   17
+    #define UNIX_SO_ACCEPTCONN 30
+    #define UNIX_SO_PROTOCOL   38
+    #define UNIX_SO_DOMAIN     39
+
+    #define UNIX_AF_UNIX 1
 
 
     #define UNIX_SOCK_BUFSIZ  CONFIG_PIPESIZ
@@ -150,6 +162,7 @@ struct unix_sock {
     inode_events_t ev;
 
     inode_t* bound;
+    char path[UNIX_PATH_MAX];
 
     int shutdown_flags;
 
@@ -207,10 +220,8 @@ void unix_sock_wait(struct unix_sock* sock, uint32_t seq);
 long unix_getsockname(struct unix_sock* sock, void* addr, uint32_t* len);
 long unix_getpeername(struct unix_sock* sock, void* addr, uint32_t* len);
 
-/**
- * @brief Reads an option of a local socket, of which only SO_PEERCRED exists.
- */
 long unix_getsockopt(struct unix_sock* sock, int level, int optname, void* optval, uint32_t* optlen);
+long unix_setsockopt(struct unix_sock* sock, int level, int optname, const void* optval, uint32_t optlen);
 
 long unix_sendmsg(struct unix_sock* sock, const struct iovec* iov, size_t iovcnt, size_t total, const void* control, size_t controllen);
 long unix_recvmsg(struct unix_sock* sock, const struct iovec* iov, size_t iovcnt, size_t total, void* control, size_t* controllen, int* msgflags, int flags);

@@ -617,31 +617,6 @@ static inode_t* __sockfs_inode(struct unix_sock* sock) {
 }
 
 
-static long __unix_fd_install(struct file* ref, bool cloexec) {
-
-    long fd         = -EMFILE;
-    const int limit = fd_limit();
-
-    shared_ptr_access(current_task->fd, fds, {
-        scoped_lock(&current_task->lock) {
-            for (int i = 0; i < limit; i++) {
-
-                if (fds->descriptors[i].ref)
-                    continue;
-
-                fds->descriptors[i].ref           = ref;
-                fds->descriptors[i].close_on_exec = cloexec;
-
-                fd = i;
-                break;
-            }
-        }
-    });
-
-    return fd;
-}
-
-
 static long __unix_install(struct unix_sock* sock, int flags) {
 
     inode_t* inode = __sockfs_inode(sock);
@@ -663,7 +638,7 @@ static long __unix_install(struct unix_sock* sock, int flags) {
     }
 
 
-    long fd = __unix_fd_install(ref, !!(flags & O_CLOEXEC));
+    long fd = fd_install(ref, !!(flags & O_CLOEXEC));
 
 
     if (unlikely(fd < 0)) {
@@ -709,10 +684,8 @@ static void __unix_bound_name(struct unix_sock* sock, char* out, size_t size) {
 
     scoped_lock(&sock->lock) {
 
-        if (sock->bound) {
-            strncpy(out, sock->bound->name, size - 1);
-            out[size - 1] = '\0';
-        }
+        strncpy(out, sock->path, size - 1);
+        out[size - 1] = '\0';
     }
 }
 
@@ -939,6 +912,8 @@ long unix_bind(struct unix_sock* sock, const void* addr, uint32_t len) {
         sock->bound = vfs_inode_get(node);
         sock->state = UNIX_SOCK_BOUND;
 
+        strncpy(sock->path, path, sizeof(sock->path) - 1);
+
         e = 0;
     }
 
@@ -1061,6 +1036,8 @@ long unix_connect(struct unix_sock* sock, const void* addr, uint32_t len) {
             server->state = UNIX_SOCK_CONNECTED;
             sock->state   = UNIX_SOCK_CONNECTED;
 
+            memcpy(server->path, listener->path, sizeof(server->path));
+
             listener->backlog[listener->backlog_len++] = server;
             server = NULL;
 
@@ -1137,7 +1114,7 @@ long unix_accept(struct unix_sock* sock, void* addr, uint32_t* len, int flags) {
 
     if (addr && len) {
 
-        char name[CONFIG_MAXNAMLEN];
+        char name[UNIX_PATH_MAX];
         __unix_bound_name(sock, name, sizeof(name));
 
         long e;
@@ -1212,7 +1189,7 @@ long unix_getsockname(struct unix_sock* sock, void* addr, uint32_t* len) {
 
     DEBUG_ASSERT(sock);
 
-    char name[CONFIG_MAXNAMLEN];
+    char name[UNIX_PATH_MAX];
     __unix_bound_name(sock, name, sizeof(name));
 
     return __unix_addr_out(name, addr, len);
@@ -1233,7 +1210,7 @@ long unix_getpeername(struct unix_sock* sock, void* addr, uint32_t* len) {
         peer = __unix_get(sock->peer);
     }
 
-    char name[CONFIG_MAXNAMLEN];
+    char name[UNIX_PATH_MAX];
     __unix_bound_name(peer, name, sizeof(name));
 
     __unix_put(peer);
@@ -1242,49 +1219,133 @@ long unix_getpeername(struct unix_sock* sock, void* addr, uint32_t* len) {
 }
 
 
+static long __unix_sockopt_out(void* optval, uint32_t* optlen, const void* value, uint32_t size) {
+
+    uint32_t copy = uio_r32(optlen);
+
+    if (copy > size) {
+        copy = size;
+    }
+
+    if (unlikely(copy && !uio_check(optval, W_OK))) {
+        return -EFAULT;
+    }
+
+    if (copy) {
+        uio_memcpy_s2u(optval, value, copy);
+    }
+
+    uio_w32(optlen, copy);
+
+    return 0;
+}
+
+
 long unix_getsockopt(struct unix_sock* sock, int level, int optname, void* optval, uint32_t* optlen) {
 
     DEBUG_ASSERT(sock);
 
-    if (unlikely(level != UNIX_SOL_SOCKET || optname != UNIX_SO_PEERCRED))
+    if (unlikely(level != UNIX_SOL_SOCKET)) {
         return -ENOPROTOOPT;
-
-    if (unlikely(!optval || !optlen))
-        return -EFAULT;
-
-    if (unlikely(!uio_check(optlen, R_OK | W_OK)))
-        return -EFAULT;
-
-    if (unlikely(sock->state != UNIX_SOCK_CONNECTED))
-        return -ENOTCONN;
-
-
-    struct unix_sock* peer = NULL;
-
-    scoped_lock(&sock->lock) {
-        peer = __unix_get(sock->peer);
     }
 
-    if (unlikely(!peer))
-        return -ENOTCONN;
-
-    typeof(peer->cred) cred = peer->cred;
-
-    __unix_put(peer);
-
-
-    uint32_t copy = uio_r32(optlen);
-
-    if (copy > sizeof(cred))
-        copy = sizeof(cred);
-
-    if (unlikely(copy && !uio_check(optval, W_OK)))
+    if (unlikely(!optval || !optlen)) {
         return -EFAULT;
+    }
 
-    if (copy)
-        uio_memcpy_s2u(optval, &cred, copy);
+    if (unlikely(!uio_check(optlen, R_OK | W_OK))) {
+        return -EFAULT;
+    }
 
-    uio_w32(optlen, copy);
+
+    int value = 0;
+
+    switch (optname) {
+
+        case UNIX_SO_TYPE:
+            value = sock->type;
+            break;
+
+        case UNIX_SO_DOMAIN:
+            value = UNIX_AF_UNIX;
+            break;
+
+        case UNIX_SO_PROTOCOL:
+        case UNIX_SO_ERROR:
+        case UNIX_SO_REUSEADDR:
+        case UNIX_SO_KEEPALIVE:
+        case UNIX_SO_PASSCRED:
+            value = 0;
+            break;
+
+        case UNIX_SO_SNDBUF:
+        case UNIX_SO_RCVBUF:
+            value = UNIX_SOCK_BUFSIZ;
+            break;
+
+        case UNIX_SO_ACCEPTCONN:
+            value = sock->state == UNIX_SOCK_LISTENING;
+            break;
+
+        case UNIX_SO_PEERCRED: {
+
+            if (unlikely(sock->state != UNIX_SOCK_CONNECTED)) {
+                return -ENOTCONN;
+            }
+
+            struct unix_sock* peer = NULL;
+
+            scoped_lock(&sock->lock) {
+                peer = __unix_get(sock->peer);
+            }
+
+            if (unlikely(!peer)) {
+                return -ENOTCONN;
+            }
+
+            typeof(peer->cred) cred = peer->cred;
+
+            __unix_put(peer);
+
+            return __unix_sockopt_out(optval, optlen, &cred, sizeof(cred));
+        }
+
+        default:
+            return -ENOPROTOOPT;
+    }
+
+    return __unix_sockopt_out(optval, optlen, &value, sizeof(value));
+}
+
+
+long unix_setsockopt(struct unix_sock* sock, int level, int optname, const void* optval, uint32_t optlen) {
+
+    DEBUG_ASSERT(sock);
+
+    if (unlikely(level != UNIX_SOL_SOCKET)) {
+        return -ENOPROTOOPT;
+    }
+
+    switch (optname) {
+
+        case UNIX_SO_REUSEADDR:
+        case UNIX_SO_KEEPALIVE:
+        case UNIX_SO_PASSCRED:
+        case UNIX_SO_SNDBUF:
+        case UNIX_SO_RCVBUF:
+            break;
+
+        default:
+            return -ENOPROTOOPT;
+    }
+
+    if (unlikely(optlen < sizeof(int))) {
+        return -EINVAL;
+    }
+
+    if (unlikely(!optval || !uio_check(optval, R_OK))) {
+        return -EFAULT;
+    }
 
     return 0;
 }
@@ -1391,7 +1452,7 @@ static void __unix_rights_export(struct unix_rights* rights, void* control, size
 
     for (size_t i = 0; i < fit; i++) {
 
-        long fd = __unix_fd_install(rights->files[i], cloexec);
+        long fd = fd_install(rights->files[i], cloexec);
 
         if (fd < 0) {
             break;
