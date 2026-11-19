@@ -34,9 +34,11 @@
 #include <netinet/in.h>
 #include <pthread.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/ioctl.h>
 #include <sys/socket.h>
+#include <sys/stat.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -3276,6 +3278,31 @@ void wm_taskbar_paint(cairo_t* cr, const wm_rect_t* damage, size_t count) {
  *
  * @param fd The read end returned by wm_taskbar_open().
  */
+static bool wm_taskbar_zone_changed(void) {
+
+    static struct stat zone;
+
+    struct stat st;
+
+    if (getenv("TZ") || stat("/etc/localtime", &st) < 0) {
+        return false;
+    }
+
+    if (st.st_dev == zone.st_dev && st.st_ino == zone.st_ino && st.st_size == zone.st_size && st.st_mtime == zone.st_mtime) {
+        return false;
+    }
+
+    zone = st;
+
+    setenv("TZ", ":/etc/localtime", 1);
+    tzset();
+    unsetenv("TZ");
+    tzset();
+
+    return true;
+}
+
+
 void wm_taskbar_tick(int fd) {
 
     char ticks[16];
@@ -3289,7 +3316,7 @@ void wm_taskbar_tick(int fd) {
 
     const long minute = (long)(time(NULL) / 60);
 
-    if (minute != wm.taskbar.minute) {
+    if (wm_taskbar_zone_changed() || minute != wm.taskbar.minute) {
 
         wm.taskbar.minute = minute;
 
