@@ -1638,8 +1638,7 @@ static int viewer_run(void) {
     while (!ui_view_closed(viewer.view)) {
 
         const int timeout = ui_view_timeout(viewer.view);
-
-        const int painted = ui_view_present(viewer.view);
+        const int painted = ui_view_paint(viewer.view);
 
         if (painted < 0) {
             return -1;
@@ -1656,7 +1655,6 @@ static int viewer_run(void) {
 
 
         ui_event_t event;
-
         const int e = ui_next_event(viewer.conn, &event, timeout);
 
         if (e < 0) {

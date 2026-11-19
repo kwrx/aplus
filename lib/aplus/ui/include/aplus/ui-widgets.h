@@ -268,6 +268,7 @@ bool ui_view_needs_paint(ui_view_t* view);
  * @return 1 if a frame went out, 0 if nothing needed painting, -1 on error.
  */
 int ui_view_present(ui_view_t* view);
+int ui_view_paint(ui_view_t* view);
 
 /**
  * @brief Advances whatever is animating and reports how long the loop may block for.

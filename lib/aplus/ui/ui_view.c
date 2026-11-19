@@ -741,7 +741,7 @@ int ui_view_timeout(ui_view_t* view) {
 }
 
 
-int ui_view_present(ui_view_t* view) {
+int ui_view_paint(ui_view_t* view) {
 
     if (!view || !view->cr) {
         errno = EINVAL;
@@ -834,11 +834,19 @@ int ui_view_present(ui_view_t* view) {
         ui_window_damage(view->window, area.rects[i].x, area.rects[i].y, area.rects[i].width, area.rects[i].height);
     }
 
-    if (ui_window_commit(view->window) < 0) {
-        return -1;
+    return 1;
+}
+
+
+int ui_view_present(ui_view_t* view) {
+
+    const int painted = ui_view_paint(view);
+
+    if (painted <= 0) {
+        return painted;
     }
 
-    return 1;
+    return ui_window_commit(view->window) < 0 ? -1 : 1;
 }
 
 

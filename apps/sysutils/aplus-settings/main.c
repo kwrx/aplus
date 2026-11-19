@@ -780,26 +780,22 @@ static int settings_paint(void) {
 
     settings.repaint = false;
 
-    if (!page->paint) {
-        return 0;
-    }
+    if (page->paint) {
 
-    cairo_surface_t* surface =
-        cairo_image_surface_create_for_data((unsigned char*)ui_window_pixels(settings.window), CAIRO_FORMAT_RGB24, ui_window_width(settings.window), ui_window_height(settings.window), (int)ui_window_stride(settings.window));
+        cairo_surface_t* surface = cairo_image_surface_create_for_data((unsigned char*)ui_window_pixels(settings.window), CAIRO_FORMAT_RGB24, ui_window_width(settings.window), ui_window_height(settings.window), (int)ui_window_stride(settings.window));
 
-    if (cairo_surface_status(surface) != CAIRO_STATUS_SUCCESS) {
+        if (cairo_surface_status(surface) == CAIRO_STATUS_SUCCESS) {
+
+            cairo_t* cr = cairo_create(surface);
+
+            page->paint(cr);
+
+            cairo_destroy(cr);
+            cairo_surface_flush(surface);
+        }
+
         cairo_surface_destroy(surface);
-        return 0;
     }
-
-    cairo_t* cr = cairo_create(surface);
-
-    page->paint(cr);
-
-    cairo_destroy(cr);
-
-    cairo_surface_flush(surface);
-    cairo_surface_destroy(surface);
 
     return ui_window_commit(settings.window) < 0 ? -1 : 0;
 }
@@ -866,7 +862,7 @@ static int settings_run(void) {
     while (!ui_view_closed(settings.view)) {
 
         const int timeout = settings_timeout();
-        const int painted = ui_view_present(settings.view);
+        const int painted = ui_view_paint(settings.view);
 
         if (painted < 0) {
             return -1;
