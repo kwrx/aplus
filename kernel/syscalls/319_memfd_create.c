@@ -86,24 +86,7 @@ SYSCALL(
         }
 
 
-        int fd          = -EMFILE;
-        const int limit = fd_limit();
-
-        shared_ptr_access(current_task->fd, fds, {
-            scoped_lock(&current_task->lock) {
-                for (int i = 0; i < limit; i++) {
-                    if (fds->descriptors[i].ref) {
-                        continue;
-                    }
-
-                    fds->descriptors[i].ref           = ref;
-                    fds->descriptors[i].close_on_exec = !!(flags & MFD_CLOEXEC);
-
-                    fd = i;
-                    break;
-                }
-            }
-        });
+        long fd = fd_install(ref, !!(flags & MFD_CLOEXEC));
 
 
         if (unlikely(fd < 0)) {

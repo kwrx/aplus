@@ -201,7 +201,7 @@
 - [ ] sys_io_submit
 - [ ] sys_io_cancel
 - [ ] sys_lookup_dcookie
-- [ ] sys_epoll_create
+- [x] sys_epoll_create
 - [ ] sys_remap_file_pages
 - [x] sys_getdents64
 - [x] sys_set_tid_address
@@ -218,8 +218,8 @@
 - [x] sys_clock_getres
 - [x] sys_clock_nanosleep
 - [x] sys_exit_group
-- [ ] sys_epoll_wait
-- [ ] sys_epoll_ctl
+- [x] sys_epoll_wait
+- [x] sys_epoll_ctl
 - [x] sys_tgkill
 - [ ] sys_utimes
 - [ ] sys_mbind
@@ -266,17 +266,17 @@
 - [ ] sys_vmsplice
 - [ ] sys_move_pages
 - [x] sys_utimensat
-- [ ] sys_epoll_pwait
+- [x] sys_epoll_pwait
 - [ ] sys_signalfd
 - [ ] sys_timerfd_create
-- [ ] sys_eventfd
+- [x] sys_eventfd
 - [ ] sys_fallocate
 - [ ] sys_timerfd_settime
 - [ ] sys_timerfd_gettime
 - [x] sys_accept4
 - [ ] sys_signalfd4
-- [ ] sys_eventfd2
-- [ ] sys_epoll_create1
+- [x] sys_eventfd2
+- [x] sys_epoll_create1
 - [x] sys_dup3
 - [x] sys_pipe2
 - [ ] sys_inotify_init1
@@ -304,7 +304,7 @@
 - [x] sys_renameat2
 - [ ] sys_seccomp
 - [x] sys_getrandom
-- [ ] sys_memfd_create
+- [x] sys_memfd_create
 - [ ] sys_kexec_file_load
 - [ ] sys_bpf
 - [ ] sys_userfaultfd

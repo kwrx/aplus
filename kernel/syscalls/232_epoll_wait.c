@@ -28,6 +28,8 @@
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
 #include <aplus/task.h>
+#include <aplus/poll.h>
+#include <aplus/epoll.h>
 #include <fcntl.h>
 #include <stdint.h>
 #include <sys/stat.h>
@@ -53,4 +55,12 @@
 
 struct epoll_event;
 
-SYSCALL(232, epoll_wait, long sys_epoll_wait(int epfd, struct epoll_event* events, int maxevents, int timeout) { return -ENOSYS; });
+SYSCALL(
+    232, epoll_wait, long sys_epoll_wait(int epfd, struct epoll_event* events, int maxevents, int timeout) {
+        DEBUG_ASSERT(current_task);
+
+        uint64_t timeout_ns = timeout < 0 ? POLL_TIMEOUT_FOREVER : (uint64_t)timeout * 1000000ULL;
+
+        return poll_finish(epoll_wait_fd(epfd, events, maxevents, timeout_ns));
+    });
+

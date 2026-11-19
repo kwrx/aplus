@@ -28,6 +28,8 @@
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
 #include <aplus/task.h>
+#include <aplus/poll.h>
+#include <aplus/epoll.h>
 #include <fcntl.h>
 #include <stdint.h>
 #include <sys/stat.h>
@@ -50,4 +52,18 @@
 
 struct epoll_event;
 
-SYSCALL(281, epoll_pwait, long sys_epoll_pwait(int epfd, struct epoll_event* events, int maxevents, int timeout, const sigset_t* sigmask, size_t sigsetsize) { return -ENOSYS; });
+SYSCALL(
+    281, epoll_pwait, long sys_epoll_pwait(int epfd, struct epoll_event* events, int maxevents, int timeout, const sigset_t* sigmask, size_t sigsetsize) {
+        DEBUG_ASSERT(current_task);
+
+        uint64_t timeout_ns = timeout < 0 ? POLL_TIMEOUT_FOREVER : (uint64_t)timeout * 1000000ULL;
+
+        int err;
+
+        if ((err = poll_sigmask_install(sigmask, sigsetsize)) < 0) {
+            return poll_finish(err);
+        }
+
+        return poll_finish(epoll_wait_fd(epfd, events, maxevents, timeout_ns));
+    });
+

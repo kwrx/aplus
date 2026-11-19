@@ -199,6 +199,8 @@ struct file {
     int flags;
     atomic_int refcount;
 
+    uint64_t gen;
+
     spinlock_t lock;
 };
 
@@ -313,6 +315,8 @@ static inline void vfs_inode_cleanup(inode_t** inode) {
 inode_t* pipefs_inode(void);
 int pipefs_create_pair(inode_t**, inode_t**, size_t);
 inode_t* memfd_inode(const char*);
+inode_t* eventfd_inode(uint64_t, bool);
+long eventfd_create_fd(unsigned int, int);
 inode_t* fifofs_open(inode_t*, int);
 inode_t* vfs_mkfifo(inode_t*, size_t, int);
 
@@ -336,6 +340,7 @@ void fd_init(void);
 void fd_ref(struct file*);
 void fd_remove(struct file*, bool);
 struct file* fd_append(inode_t*, off_t, int);
+long fd_install(struct file*, bool);
 struct file* fd_get(unsigned int, int*);
 void fd_put(struct file*);
 int fd_flags(struct file*);

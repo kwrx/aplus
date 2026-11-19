@@ -25,6 +25,7 @@
 
 #include <fcntl.h>
 #include <poll.h>
+#include <stdatomic.h>
 #include <stdint.h>
 #include <string.h>
 #include <sys/stat.h>
@@ -43,7 +44,8 @@
 static struct file* filetable = NULL;
 static spinlock_t filetable_lock;
 
-static unsigned int lowestfree = 0;
+static unsigned int lowestfree  = 0;
+static _Atomic uint64_t nextgen = 1;
 
 
 
@@ -77,6 +79,7 @@ struct file* fd_append(inode_t* inode, off_t position, int flags) {
             filetable[i].inode    = inode;
             filetable[i].position = position;
             filetable[i].flags    = flags & FILE_STATUS_FLAGS;
+            filetable[i].gen      = atomic_fetch_add(&nextgen, 1);
 
             spinlock_init(&filetable[i].lock);
             break;
@@ -91,6 +94,35 @@ struct file* fd_append(inode_t* inode, off_t position, int flags) {
     vfs_inode_get(inode);
 
     return &filetable[i];
+}
+
+
+long fd_install(struct file* ref, bool cloexec) {
+
+    DEBUG_ASSERT(ref);
+    DEBUG_ASSERT(current_task);
+
+    long fd         = -EMFILE;
+    const int limit = fd_limit();
+
+    shared_ptr_access(current_task->fd, fds, {
+        scoped_lock(&current_task->lock) {
+            for (int i = 0; i < limit; i++) {
+
+                if (fds->descriptors[i].ref) {
+                    continue;
+                }
+
+                fds->descriptors[i].ref           = ref;
+                fds->descriptors[i].close_on_exec = cloexec;
+
+                fd = i;
+                break;
+            }
+        }
+    });
+
+    return fd;
 }
 
 

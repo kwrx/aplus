@@ -28,6 +28,7 @@
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
 #include <aplus/task.h>
+#include <aplus/epoll.h>
 #include <fcntl.h>
 #include <stdint.h>
 #include <sys/stat.h>
@@ -52,4 +53,10 @@
 
 struct epoll_event;
 
-SYSCALL(233, epoll_ctl, long sys_epoll_ctl(int epfd, int op, int fd, struct epoll_event* event) { return -ENOSYS; });
+SYSCALL(
+    233, epoll_ctl, long sys_epoll_ctl(int epfd, int op, int fd, struct epoll_event* event) {
+        DEBUG_ASSERT(current_task);
+
+        return epoll_ctl_fd(epfd, op, fd, event);
+    });
+
