@@ -76,6 +76,10 @@ void root_init(void) {
     if ((e = sys_mount(root, "/root", rootfs, 0, NULL)) < 0)
         kpanicf("root: PANIC! mount %s in %s failed: errno(%s)\n", "/root", root, strerror(-e));
 
+    if ((e = sys_mkdir("/dev/shm", 01777)) < 0 || (e = sys_chmod("/dev/shm", 01777)) < 0) {
+        kprintf("root: mkdir /dev/shm failed: errno(%s)\n", strerror(-e));
+    }
+
     if ((e = sys_mount("/dev", "/root/dev", "bind", 0, NULL)) < 0)
         kpanicf("root: PANIC! mount %s in %s failed: errno(%s)\n", "/root/dev", "/dev", strerror(-e));
 

@@ -74,35 +74,31 @@ ssize_t tmpfs_write(inode_t* inode, const void* buf, off_t pos, size_t len) {
                 return -ENOSPC;
 
 
-            if ((size_t)pos + len > i->capacity) {
+            ssize_t e = -ENOMEM;
 
-                size_t capacity = (size_t)pos + len;
-                capacity += capacity / 2;
-
-                void* data = krealloc(i->data, capacity, GFP_USER);
-
-                if (unlikely(!data)) {
-
-                    scoped_lock(&tmpfs->lock) {
-                        inode->sb->st.f_bfree += grow;
-                        inode->sb->st.f_bavail += grow;
-                    }
-
-                    return -ENOMEM;
-                }
-
-                i->data     = data;
-                i->capacity = capacity;
+            if (i->obj || (i->obj = vmobj_create(0))) {
+                e = vmobj_write(i->obj, buf, pos, len);
             }
 
-            if ((size_t)pos > (size_t)i->st.st_size)
-                memset((void*)((uintptr_t)i->data + (uintptr_t)i->st.st_size), 0, (size_t)pos - (size_t)i->st.st_size);
+            if (unlikely(e < 0)) {
+
+                scoped_lock(&tmpfs->lock) {
+                    inode->sb->st.f_bfree += grow;
+                    inode->sb->st.f_bavail += grow;
+                }
+
+                return e;
+            }
 
             i->st.st_size = pos + len;
+
+            return e;
         }
 
 
-        memcpy((void*)((uintptr_t)i->data + (uintptr_t)pos), buf, len);
+        DEBUG_ASSERT(i->obj);
+
+        return vmobj_write(i->obj, buf, pos, len);
     }
 
     return len;

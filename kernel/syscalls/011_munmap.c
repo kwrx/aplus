@@ -35,6 +35,7 @@
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
 #include <aplus/vfs.h>
+#include <aplus/vmobj.h>
 
 
 
@@ -121,6 +122,10 @@ SYSCALL(
 
                 if (m[i].start >= start && m[i].end <= end) {
 
+                    if (m[i].obj) {
+                        arch_vmm_release_vmobj(current_task->address_space, m[i].obj);
+                    }
+
                     memset(&m[i], 0, sizeof(mmap_mapping_t));
 
                 } else if (j >= 0) {
@@ -129,6 +134,11 @@ SYSCALL(
                     m[j].end    = m[i].end;
                     m[j].fd     = m[i].fd;
                     m[j].offset = m[i].offset + (end - m[i].start);
+                    m[j].obj    = m[i].obj;
+
+                    if (m[j].obj) {
+                        vmobj_map_get(m[j].obj);
+                    }
 
                     m[i].end = start;
 

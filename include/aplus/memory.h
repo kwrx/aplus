@@ -108,12 +108,16 @@
 
 
 
+struct vmobj;
+
 typedef struct {
 
     uintptr_t start;
     uintptr_t end;
     uintptr_t fd;
     uintptr_t offset;
+
+    struct vmobj* obj;
 
 } mmap_mapping_t;
 
@@ -143,6 +147,7 @@ typedef struct {
 
     #define VMM_TLB_BATCH_FRAMES 0
     #define VMM_TLB_BATCH_SHM    1
+    #define VMM_TLB_BATCH_VMOBJ  2
 
 
 /**

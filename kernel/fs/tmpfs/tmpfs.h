@@ -28,6 +28,7 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/vfs.h>
+#include <aplus/vmobj.h>
 
 #include <aplus/utils/cache.h>
 #include <aplus/utils/list.h>
@@ -56,6 +57,8 @@ typedef struct {
     size_t capacity;
     void* data;
 
+    struct vmobj* obj;
+
     size_t inodes;
     spinlock_t lock;
 
@@ -71,6 +74,7 @@ int tmpfs_truncate(inode_t*, off_t);
 ssize_t tmpfs_read(inode_t*, void*, off_t, size_t);
 ssize_t tmpfs_write(inode_t*, const void*, off_t, size_t);
 ssize_t tmpfs_readlink(inode_t*, char*, size_t);
+struct vmobj* tmpfs_mmap(inode_t*);
 
 inode_t* tmpfs_creat(inode_t*, const char*, mode_t);
 inode_t* tmpfs_finddir(inode_t*, const char*);

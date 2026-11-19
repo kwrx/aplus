@@ -57,25 +57,21 @@ static int tmpfs_truncate_grow(inode_t* inode, tmpfs_inode_t* i, off_t len) {
         return errno = ENOSPC, -1;
 
 
-    if ((size_t)len > i->capacity) {
+    int e = -ENOMEM;
 
-        void* data = krealloc(i->data, (size_t)len, GFP_USER);
-
-        if (unlikely(!data)) {
-
-            scoped_lock(&tmpfs->lock) {
-                inode->sb->st.f_bfree += grow;
-                inode->sb->st.f_bavail += grow;
-            }
-
-            return errno = ENOMEM, -1;
-        }
-
-        i->data     = data;
-        i->capacity = (size_t)len;
+    if (i->obj || (i->obj = vmobj_create(0))) {
+        e = vmobj_resize(i->obj, (size_t)len);
     }
 
-    memset((void*)((uintptr_t)i->data + (uintptr_t)i->st.st_size), 0, grow);
+    if (unlikely(e < 0)) {
+
+        scoped_lock(&tmpfs->lock) {
+            inode->sb->st.f_bfree += grow;
+            inode->sb->st.f_bavail += grow;
+        }
+
+        return errno = -e, -1;
+    }
 
     i->st.st_size = len;
 
@@ -106,16 +102,12 @@ int tmpfs_truncate(inode_t* inode, off_t len) {
             return tmpfs_truncate_grow(inode, i, len);
 
 
-        void* data = krealloc(i->data, CONFIG_BUFSIZ + len, GFP_KERNEL);
-
-        if (unlikely(!data))
+        if (i->obj && vmobj_resize(i->obj, (size_t)len) < 0) {
             return errno = ENOMEM, -1;
-
+        }
 
         size_t freed = i->st.st_size - len;
 
-        i->data       = data;
-        i->capacity   = CONFIG_BUFSIZ + len;
         i->st.st_size = len;
 
         tmpfs_t* tmpfs = (tmpfs_t*)inode->sb->fsinfo;

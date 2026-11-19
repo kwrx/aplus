@@ -53,16 +53,12 @@ ssize_t tmpfs_read(inode_t* inode, void* buf, off_t pos, size_t len) {
 
     scoped_lock(&i->lock) {
 
-        if (!i->data || pos >= i->st.st_size) {
+        if (!i->obj) {
             return 0;
         }
 
-        if ((size_t)pos + len > (size_t)i->st.st_size) {
-            len = i->st.st_size - pos;
-        }
-
-        memcpy(buf, (void*)((uintptr_t)i->data + (uintptr_t)pos), len);
+        return vmobj_read(i->obj, buf, pos, len);
     }
 
-    return len;
+    return 0;
 }

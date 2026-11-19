@@ -88,6 +88,7 @@ inode_t* tmpfs_creat(inode_t* inode, const char* name, mode_t mode) {
         d->ops.truncate = tmpfs_truncate;
         d->ops.read     = tmpfs_read;
         d->ops.write    = tmpfs_write;
+        d->ops.mmap     = tmpfs_mmap;
     }
 
 
@@ -126,6 +127,7 @@ inode_t* tmpfs_creat(inode_t* inode, const char* name, mode_t mode) {
 
         i->capacity   = 0;
         i->data       = NULL;
+        i->obj        = NULL;
         i->inodes     = 1;
         i->st.st_mode = mode & ~umask;
 

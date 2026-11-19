@@ -34,6 +34,7 @@
 #include <aplus/memory.h>
 #include <aplus/shm.h>
 #include <aplus/smp.h>
+#include <aplus/vmobj.h>
 
 #include <arch/x86/asm.h>
 #include <arch/x86/cpu.h>
@@ -162,6 +163,11 @@ static void __tlb_free_batches(vmm_tlb_batch_t* batch) {
                 continue;
             }
 
+            if (batch->kind == VMM_TLB_BATCH_VMOBJ) {
+                vmobj_map_put((vmobj_t*)e);
+                continue;
+            }
+
             switch (e & 3) {
 #if defined(__x86_64__)
                 case 2:
@@ -265,6 +271,28 @@ void arch_vmm_release_shm(vmm_address_space_t* space, int id) {
         return;
 
     batches->entries[batches->count++] = (uintptr_t)id;
+
+    __tlb_defer(space, batches, gen);
+}
+
+
+void arch_vmm_release_vmobj(vmm_address_space_t* space, struct vmobj* obj) {
+
+    const uint64_t gen = atomic_load(&space->tlb.gen);
+
+    if (__tlb_passed(space, gen, true)) {
+        vmobj_map_put(obj);
+        return;
+    }
+
+
+    vmm_tlb_batch_t* batches = NULL;
+
+    if (unlikely(!__tlb_new_batch(&batches, VMM_TLB_BATCH_VMOBJ))) {
+        return;
+    }
+
+    batches->entries[batches->count++] = (uintptr_t)obj;
 
     __tlb_defer(space, batches, gen);
 }

@@ -834,6 +834,18 @@ int vfs_truncate(inode_t* inode, off_t len) {
 }
 
 
+struct vmobj* vfs_mmap(inode_t* inode) {
+
+    DEBUG_ASSERT(inode);
+
+    if (inode->ops.mmap) {
+        scoped_lock(&inode->lock) return inode->ops.mmap(inode);
+    }
+
+    return errno = ENODEV, NULL;
+}
+
+
 int vfs_fsync(inode_t* inode, int datasync) {
 
     DEBUG_ASSERT(inode);

@@ -89,6 +89,8 @@
 
 typedef struct inode inode_t;
 
+struct vmobj;
+
 
 struct inode_ops {
 
@@ -127,6 +129,8 @@ struct inode_ops {
     int (*link)(inode_t*, inode_t*, const char*);
 
     void (*release)(inode_t*);
+
+    struct vmobj* (*mmap)(inode_t*);
 };
 
 
@@ -259,6 +263,7 @@ int vfs_listxattr(inode_t*, char*, size_t);
 int vfs_removexattr(inode_t*, const char*);
 
 int vfs_truncate(inode_t*, off_t);
+struct vmobj* vfs_mmap(inode_t*);
 int vfs_fsync(inode_t*, int);
 
 void vfs_locks_init(void);
@@ -307,6 +312,7 @@ static inline void vfs_inode_cleanup(inode_t** inode) {
 // kernel/fs/pipefs.c
 inode_t* pipefs_inode(void);
 int pipefs_create_pair(inode_t**, inode_t**, size_t);
+inode_t* memfd_inode(const char*);
 inode_t* fifofs_open(inode_t*, int);
 inode_t* vfs_mkfifo(inode_t*, size_t, int);
 

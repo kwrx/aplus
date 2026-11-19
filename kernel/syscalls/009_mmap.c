@@ -22,6 +22,7 @@
  */
 
 #include <fcntl.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <sys/mman.h>
 #include <sys/types.h>
@@ -35,6 +36,7 @@
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
 #include <aplus/vfs.h>
+#include <aplus/vmobj.h>
 
 
 
@@ -61,6 +63,24 @@ SYSCALL(
         DEBUG_ASSERT(current_task->address_space->mmap.heap_end);
 
 
+        const bool shared = (flags & MAP_TYPE) == MAP_SHARED || (flags & MAP_TYPE) == MAP_SHARED_VALIDATE;
+
+        vmobj_t* obj = NULL;
+
+
+        if (unlikely(flags & (MAP_FIXED | MAP_FIXED_NOREPLACE))) {
+            return -ENOTSUP;
+        }
+
+        if (unlikely(flags & MAP_GROWSDOWN)) {
+            return -ENOTSUP;
+        }
+
+        if (unlikely(shared && (flags & MAP_HUGETLB))) {
+            return -EINVAL;
+        }
+
+
         if (!(flags & MAP_ANONYMOUS)) {
 
             int fdflags       = 0;
@@ -69,31 +89,31 @@ SYSCALL(
             if (unlikely(!file))
                 return -EBADF;
 
+            if (unlikely(fdflags & O_PATH)) {
+                fd_put(file);
+                return -EBADF;
+            }
+
+            if (unlikely((fdflags & O_ACCMODE) != O_RDONLY && (fdflags & O_ACCMODE) != O_RDWR)) {
+                fd_put(file);
+                return -EACCES;
+            }
+
+            if (unlikely(shared && (prot & PROT_WRITE) && (fdflags & O_ACCMODE) != O_RDWR)) {
+                fd_put(file);
+                return -EACCES;
+            }
+
+            if (shared) {
+                obj = vfs_mmap(file->inode);
+            }
+
             fd_put(file);
 
-            if (unlikely(fdflags & O_PATH))
-                return -EBADF;
-
-            if (unlikely((fdflags & O_ACCMODE) != O_RDONLY && (fdflags & O_ACCMODE) != O_RDWR))
-                return -EACCES;
-
-            if (unlikely(((flags & MAP_TYPE) == MAP_SHARED || (flags & MAP_TYPE) == MAP_SHARED_VALIDATE) && (prot & PROT_WRITE) && (fdflags & O_ACCMODE) != O_RDWR))
-                return -EACCES;
-        }
-
-
-        if (unlikely((flags & MAP_TYPE) == MAP_SHARED || (flags & MAP_TYPE) == MAP_SHARED_VALIDATE)) {
-            if ((flags & MAP_ANONYMOUS) || (prot & PROT_WRITE)) {
-                return -ENOTSUP;
+            if (unlikely(shared && !obj && (prot & PROT_WRITE))) {
+                return -ENODEV;
             }
         }
-
-        if (unlikely(flags & (MAP_FIXED | MAP_FIXED_NOREPLACE)))
-            return -ENOTSUP;
-
-        if (unlikely(flags & MAP_GROWSDOWN))
-            return -ENOTSUP;
-
 
         // Silenty ignored
         DEBUG_ASSERT(!(flags & MAP_SYNC));
@@ -102,15 +122,13 @@ SYSCALL(
         DEBUG_ASSERT(!(flags & MAP_NONBLOCK));
 
 
-        if (unlikely(flags == 0))
-            return -EINVAL;
+        if (unlikely(flags == 0 || len == 0 || (!(flags & MAP_PRIVATE) && !shared))) {
+            if (obj) {
+                vmobj_put(obj);
+            }
 
-        if (unlikely(len == 0))
             return -EINVAL;
-
-
-        if (unlikely(!(flags & MAP_PRIVATE) && !(flags & MAP_SHARED) && !(flags & MAP_SHARED_VALIDATE)))
-            return -EINVAL;
+        }
 
 
         uintptr_t pagesize = arch_vmm_getpagesize();
@@ -155,19 +173,36 @@ SYSCALL(
         }
 
 
-        if (unlikely(addr & (pagesize - 1)))
-            return -EINVAL;
+        if (unlikely((addr & (pagesize - 1)) || (offset & (pagesize - 1)) || offset < 0)) {
+            if (obj) {
+                vmobj_put(obj);
+            }
 
-        if (unlikely(offset & (pagesize - 1)))
             return -EINVAL;
+        }
 
 
         if (unlikely(len & (pagesize - 1))) {
 
-            if (unlikely(len + pagesize < len))
+            if (unlikely(len + pagesize < len)) {
+                if (obj) {
+                    vmobj_put(obj);
+                }
+
                 return -ENOMEM;
+            }
 
             len = (len & ~(pagesize - 1)) + pagesize;
+        }
+
+
+        if (shared && (flags & MAP_ANONYMOUS)) {
+
+            offset = 0;
+
+            if (unlikely(!(obj = vmobj_create(len)))) {
+                return -ENOMEM;
+            }
         }
 
 
@@ -181,6 +216,11 @@ SYSCALL(
             if (unlikely(!cursor)) {
 
                 spinlock_unlock(&current_task->address_space->lock);
+
+                if (obj) {
+                    vmobj_put(obj);
+                }
+
                 return -ENOMEM;
             }
 
@@ -207,8 +247,33 @@ SYSCALL(
         spinlock_unlock(&current_task->address_space->lock);
 
 
-        if (i == CONFIG_MMAP_MAX)
+        if (i == CONFIG_MMAP_MAX) {
+            if (obj) {
+                vmobj_put(obj);
+            }
+
             return -ENOMEM;
+        }
+
+
+        if (obj) {
+
+            long e = vmobj_map(obj, current_task->address_space, start, len, offset, arch_flags);
+
+            vmobj_put(obj);
+
+            scoped_lock(&current_task->address_space->lock) {
+
+                if (likely(e == 0)) {
+                    current_task->address_space->mmap.mappings[i].obj = obj;
+                } else {
+                    memset(&current_task->address_space->mmap.mappings[i], 0, sizeof(mmap_mapping_t));
+                    vmm_mmap_update_top(current_task->address_space);
+                }
+            }
+
+            return e == 0 ? (long)start : e;
+        }
 
 
 

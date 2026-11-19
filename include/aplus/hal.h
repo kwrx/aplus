@@ -239,6 +239,7 @@ void arch_vmm_free_address_space(vmm_address_space_t* space);
 
 void arch_vmm_reclaim(vmm_address_space_t* space) __nonnull(1);
 void arch_vmm_release_shm(vmm_address_space_t* space, int id) __nonnull(1);
+void arch_vmm_release_vmobj(vmm_address_space_t* space, struct vmobj* obj) __nonnull(1, 2);
 
 
 

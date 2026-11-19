@@ -28,6 +28,7 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/memory.h>
+#include <aplus/vmobj.h>
 
 
 
@@ -91,4 +92,36 @@ void vmm_mmap_update_top(vmm_address_space_t* space) {
     }
 
     space->mmap.heap_end = top;
+}
+
+
+void vmm_mmap_clone(vmm_address_space_t* dest) {
+
+    DEBUG_ASSERT(dest);
+
+    for (size_t i = 0; i < CONFIG_MMAP_MAX; i++) {
+
+        if (dest->mmap.mappings[i].start && dest->mmap.mappings[i].obj) {
+            vmobj_map_get(dest->mmap.mappings[i].obj);
+        }
+    }
+}
+
+
+void vmm_mmap_release(vmm_address_space_t* space) {
+
+    DEBUG_ASSERT(space);
+
+    for (size_t i = 0; i < CONFIG_MMAP_MAX; i++) {
+
+        vmobj_t* obj = space->mmap.mappings[i].obj;
+
+        if (!obj) {
+            continue;
+        }
+
+        space->mmap.mappings[i].obj = NULL;
+
+        vmobj_map_put(obj);
+    }
 }

@@ -46,6 +46,7 @@ tmpfs_inode_t* tmpfs_cache_fetch(cache_t* cache, tmpfs_t* tmpfs, ino_t ino) {
 
     i->capacity = 0;
     i->data     = NULL;
+    i->obj      = NULL;
     i->inodes   = 0;
 
     spinlock_init(&i->lock);
@@ -87,6 +88,10 @@ void tmpfs_cache_release(cache_t* cache, tmpfs_t* tmpfs, ino_t ino, tmpfs_inode_
 
     if (inode->data) {
         kfree(inode->data);
+    }
+
+    if (inode->obj) {
+        vmobj_put(inode->obj);
     }
 
     kfree(inode);

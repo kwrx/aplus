@@ -35,6 +35,7 @@
 #include <aplus/shm.h>
 #include <aplus/smp.h>
 #include <aplus/task.h>
+#include <aplus/vmobj.h>
 
 #include <arch/x86/asm.h>
 #include <arch/x86/cpu.h>
@@ -289,7 +290,12 @@ __returns_nonnull vmm_address_space_t* arch_vmm_create_address_space(vmm_address
         dest->brk.start = parent->brk.start;
         dest->brk.end   = parent->brk.end;
 
-        memcpy(&dest->mmap.mappings, &parent->mmap.mappings, sizeof(mmap_mapping_t) * CONFIG_MMAP_MAX);
+        scoped_lock(&parent->lock) {
+
+            memcpy(&dest->mmap.mappings, &parent->mmap.mappings, sizeof(mmap_mapping_t) * CONFIG_MMAP_MAX);
+
+            vmm_mmap_clone(dest);
+        }
 
         shm_address_space_clone(parent, dest);
 
@@ -330,6 +336,8 @@ void arch_vmm_free_address_space(vmm_address_space_t* space) {
 
 
     shm_address_space_release(space);
+
+    vmm_mmap_release(space);
 
 
     vmm_address_space_t* kspace = &core->bsp.address_space;
