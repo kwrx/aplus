@@ -41,6 +41,7 @@
 
     int rtc_init(void);
     uint64_t rtc_gettime(void);
+    void rtc_settime(uint64_t);
 
     int hpet_init(void);
     uint64_t hpet_getticks(void);

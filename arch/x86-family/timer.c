@@ -145,6 +145,7 @@ uint64_t arch_timer_realtime_getns(void) {
 
 void arch_timer_realtime_setns(uint64_t ns) {
     __atomic_store_n(&realtime_base_ns, ns - arch_timer_generic_getns(), __ATOMIC_RELAXED);
+    rtc_settime(ns / 1000000000ULL);
 }
 
 
