@@ -177,11 +177,12 @@ stage_3() {
     packages="$packages ncurses"
     packages="$packages ffmpeg"
     packages="$packages bzip2"
+    packages="$packages expat"
+    packages="$packages fontconfig"
     packages="$packages tzdata"
 
     if [ $ARG_ONLY_REQUIRED_PACKAGES -eq 0 ]; then
         packages="$packages binutils"
-        packages="$packages expat"
         packages="$packages gcc"
         packages="$packages gmp"
         packages="$packages isl"
@@ -352,7 +353,7 @@ required dd
 required find
 required awk
 required grub-mkstandalone
-required fc-scan
+required fc-cache
 required gzip
 required tar
 required truncate

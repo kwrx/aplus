@@ -149,7 +149,7 @@ Some packages are **required** for the build system; `./configure` checks for al
 * `git`, `make`, `autoconf`, `automake` (or `build-essential` on Ubuntu/Debian)
 * `gcc`, `ld` to compile sources and link objects
 * `python3`, with `pip` and `venv`: `./configure` creates a `.venv` and installs [requirements.txt](/requirements.txt) into it
-* `mke2fs`, `mkfs.vfat`, `mcopy`, `mmd`, `sgdisk`, `grub-mkstandalone`, `fakeroot`, `dd`, `truncate`, `fc-scan` to generate the hdd image — `grub-mkstandalone` also needs its `x86_64-efi` modules, packaged apart on some distributions (`grub-efi-amd64-bin` on Ubuntu/Debian)
+* `mke2fs`, `mkfs.vfat`, `mcopy`, `mmd`, `sgdisk`, `grub-mkstandalone`, `fakeroot`, `dd`, `truncate`, `fc-cache` to generate the hdd image — `grub-mkstandalone` also needs its `x86_64-efi` modules, packaged apart on some distributions (`grub-efi-amd64-bin` on Ubuntu/Debian)
 * `tar`, `gzip`, `zip`, `find`, `awk`, `od` for the remaining build steps, and `xz` for the archives made by `./makew dist`
 * `qemu-system-x86_64` with UEFI firmware (`ovmf` or `edk2-ovmf`) to run it
 

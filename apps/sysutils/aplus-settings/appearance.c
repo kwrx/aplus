@@ -34,10 +34,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <strings.h>
 
-#include <ft2build.h>
-#include FT_FREETYPE_H
+#include <fontconfig/fontconfig.h>
 
 #include <aplus/ulog.h>
 
@@ -49,7 +47,6 @@
 #define APPEARANCE_COLUMNS      4
 #define APPEARANCE_FAMILY_MAX   64
 #define APPEARANCE_FONT_DIR     "/usr/share/fonts/ttf"
-#define APPEARANCE_FONT_INDEX   "/etc/fonts/fonts.conf"
 #define APPEARANCE_THEME_SUFFIX ".conf"
 #define APPEARANCE_SIZE_MIN     9
 #define APPEARANCE_SIZE_MAX     28
@@ -518,143 +515,51 @@ static void appearance_add_font(appearance_fonts_t* group, const char* family, c
 }
 
 
-static FT_Byte* appearance_read_file(const char* path, size_t* size) {
+static void appearance_scan_fontconfig(void) {
 
-    FILE* fp = fopen(path, "rb");
-
-    if (!fp) {
-        return NULL;
-    }
-
-    FT_Byte* data = NULL;
-    long length   = 0;
-
-    if (fseek(fp, 0, SEEK_END) == 0 && (length = ftell(fp)) > 0 && fseek(fp, 0, SEEK_SET) == 0 && (data = malloc((size_t)length))) {
-
-        if (fread(data, 1, (size_t)length, fp) != (size_t)length) {
-            free(data);
-            data = NULL;
-        }
-    }
-
-    fclose(fp);
-
-    *size = (size_t)length;
-
-    return data;
-}
-
-
-static bool appearance_scan_index(void) {
-
-    FILE* fp = fopen(APPEARANCE_FONT_INDEX, "r");
-
-    if (!fp) {
-        return false;
-    }
-
-    bool found = false;
-
-    char line[1024];
-
-    while (fgets(line, sizeof(line), fp)) {
-
-        line[strcspn(line, "\r\n")] = '\0';
-
-        char* family  = strchr(line, ':');
-        char* spacing = strrchr(line, ':');
-
-        if (!family || spacing == family) {
-            continue;
-        }
-
-        *spacing++ = '\0';
-
-        char* style = strrchr(line, ':');
-
-        if (style == family) {
-            continue;
-        }
-
-        *family++ = '\0';
-        *style++  = '\0';
-
-        if (!family[0] || strncmp(line, APPEARANCE_FONT_DIR "/", sizeof(APPEARANCE_FONT_DIR)) != 0) {
-            continue;
-        }
-
-        const bool mono = atoi(spacing) >= 100 || strstr(family, "Mono");
-
-        appearance_add_font(&appearance.fonts[mono ? APPEARANCE_MONOSPACE : APPEARANCE_INTERFACE], family, style, line);
-
-        found = true;
-    }
-
-    fclose(fp);
-
-    return found;
-}
-
-
-static void appearance_scan_dir(void) {
-
-    FT_Library library;
-
-    if (FT_Init_FreeType(&library) != 0) {
+    if (!FcInit()) {
         return;
     }
 
-    DIR* dir = opendir(APPEARANCE_FONT_DIR);
+    FcPattern* pattern   = FcPatternCreate();
+    FcObjectSet* objects = FcObjectSetBuild(FC_FILE, FC_FAMILY, FC_STYLE, FC_SPACING, NULL);
+    FcFontSet* set       = pattern && objects ? FcFontList(NULL, pattern, objects) : NULL;
 
-    if (!dir) {
-        FT_Done_FreeType(library);
-        return;
+    for (int i = 0; set && i < set->nfont; i++) {
+
+        FcChar8* file;
+        FcChar8* family;
+        FcChar8* style;
+
+        int spacing = FC_PROPORTIONAL;
+
+        if (FcPatternGetString(set->fonts[i], FC_FILE, 0, &file) != FcResultMatch || FcPatternGetString(set->fonts[i], FC_FAMILY, 0, &family) != FcResultMatch ||
+            FcPatternGetString(set->fonts[i], FC_STYLE, 0, &style) != FcResultMatch) {
+            continue;
+        }
+
+        if (strncmp((const char*)file, APPEARANCE_FONT_DIR "/", sizeof(APPEARANCE_FONT_DIR)) != 0) {
+            continue;
+        }
+
+        FcPatternGetInteger(set->fonts[i], FC_SPACING, 0, &spacing);
+
+        const bool mono = spacing >= FC_MONO || strstr((const char*)family, "Mono");
+
+        appearance_add_font(&appearance.fonts[mono ? APPEARANCE_MONOSPACE : APPEARANCE_INTERFACE], (const char*)family, (const char*)style, (const char*)file);
     }
 
-    struct dirent* ent;
-
-    while ((ent = readdir(dir))) {
-
-        const char* dot = strrchr(ent->d_name, '.');
-
-        if (ent->d_name[0] == '.' || !dot || (strcasecmp(dot, ".ttf") != 0 && strcasecmp(dot, ".otf") != 0)) {
-            continue;
-        }
-
-        char path[UI_THEME_PATH_MAX];
-
-        if ((size_t)snprintf(path, sizeof(path), "%s/%s", APPEARANCE_FONT_DIR, ent->d_name) >= sizeof(path)) {
-            continue;
-        }
-
-        size_t size;
-        FT_Byte* data = appearance_read_file(path, &size);
-
-        if (!data) {
-            continue;
-        }
-
-        FT_Face face;
-
-        if (FT_New_Memory_Face(library, data, (FT_Long)size, 0, &face) != 0) {
-            free(data);
-            continue;
-        }
-
-        if (face->family_name && face->style_name) {
-
-            const bool mono = FT_IS_FIXED_WIDTH(face) || strstr(face->family_name, "Mono");
-
-            appearance_add_font(&appearance.fonts[mono ? APPEARANCE_MONOSPACE : APPEARANCE_INTERFACE], face->family_name, face->style_name, path);
-        }
-
-        FT_Done_Face(face);
-        free(data);
+    if (set) {
+        FcFontSetDestroy(set);
     }
 
-    closedir(dir);
+    if (objects) {
+        FcObjectSetDestroy(objects);
+    }
 
-    FT_Done_FreeType(library);
+    if (pattern) {
+        FcPatternDestroy(pattern);
+    }
 }
 
 
@@ -663,9 +568,7 @@ static void appearance_scan_dir(void) {
  */
 static void appearance_scan_fonts(void) {
 
-    if (!appearance_scan_index()) {
-        appearance_scan_dir();
-    }
+    appearance_scan_fontconfig();
 
     for (size_t g = 0; g < APPEARANCE_GROUPS; g++) {
 

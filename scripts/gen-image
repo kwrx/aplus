@@ -58,7 +58,7 @@ if [ -z "$OUTPUT" ]; then
     exit 1
 fi
 
-for command in cp dd fakeroot find gzip grub-mkstandalone mcopy mke2fs mmd mkfs.vfat mv sgdisk truncate; do
+for command in cp dd fakeroot fc-cache find gzip grub-mkstandalone mcopy mke2fs mmd mkfs.vfat mv sgdisk truncate; do
     if ! command -v "$command" >/dev/null 2>&1; then
         echo "gen-image: missing required command: $command" >&2
         exit 1
@@ -121,6 +121,11 @@ done < <(find "$STAGING_ROOT/usr/lib/modules" -type f -name "*.ko" -print0)
 
 echo "    GZIP    boot/aplus"
 gzip -f "$STAGING_ROOT/boot/aplus"
+
+if [ -f "$STAGING_ROOT/etc/fonts/fonts.conf" ]; then
+    echo "    GEN     var/cache/fontconfig"
+    fc-cache -s -f -y "$STAGING_ROOT" >/dev/null
+fi
 
 if [ "$LIVE_MODE" -eq 1 ]; then
     echo "    GZIP    boot/ramdisk.img"
