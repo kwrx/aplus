@@ -137,6 +137,7 @@ extern const settings_page_t settings_appearance;
 extern const settings_page_t settings_wallpaper;
 extern const settings_page_t settings_network;
 extern const settings_page_t settings_audio;
+extern const settings_page_t settings_datetime;
 extern const settings_page_t settings_software;
 extern const settings_page_t settings_about;
 
