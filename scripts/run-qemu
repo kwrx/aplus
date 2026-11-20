@@ -140,7 +140,7 @@ x86_64)
 
     # Machine
     flags="-machine q35"
-    flags="-net none"
+    flags="$flags -net none"
 
     # UEFI
     flags="$flags -drive if=pflash,format=raw,unit=0,readonly=on,file=$(find_ovmf_code)"
