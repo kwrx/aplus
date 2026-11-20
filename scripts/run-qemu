@@ -165,7 +165,7 @@ x86_64)
     flags="$flags -smp $ARG_CPUS,sockets=1,cores=$ARG_CPUS,threads=1"
 
     # Memory
-    flags="$flags -m 2G"
+    flags="$flags -m 4G"
 
     # Clock
     flags="$flags -rtc clock=host"
