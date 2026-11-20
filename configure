@@ -169,7 +169,6 @@ stage_3() {
     packages="$packages freetype"
     packages="$packages libpng"
     packages="$packages libghostty-vt"
-    packages="$packages libffi"
     packages="$packages mupdf"
     packages="$packages libjpeg-turbo"
     packages="$packages libwebp"
@@ -201,6 +200,15 @@ stage_3() {
         packages="$packages util-linux"
         packages="$packages Python"
         packages="$packages bochs"
+        packages="$packages libffi"
+        packages="$packages pcre2"
+        packages="$packages libxml2"
+        packages="$packages glib"
+        packages="$packages icu"
+        packages="$packages harfbuzz"
+        packages="$packages libpsl"
+        packages="$packages libxslt"
+        packages="$packages aplus-odyssey"
     fi
 
     die python ./scripts/get-pkg.py --repo $REPO_PACKAGES --repo-version $REPO_PACKAGES_VERSION --prefix $CONFIG_SYSTEM_PATH_SYSROOT --db $CONFIG_SYSTEM_PATH_SYSROOT/var/lib/pkg/pkg.db -i $packages
