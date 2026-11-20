@@ -142,7 +142,6 @@ typedef uint32_t pcidev_t;
     #define PCI_MSIX_INTR_BASE   66
 
     #define PCI_PIRQ_ROUTE(i) ((i) < 4 ? (0x60 + (i)) : (0x68 + ((i) - 4)))
-    #define PCI_PIRQ_LINKS    (8)
     #define PCI_PIRQ_DISABLED (0x80)
     #define PCI_PIRQ_IRQ_MASK (0x0F)
 
@@ -269,6 +268,7 @@ uintptr_t pci_find_capabilities(pcidev_t);
 uintptr_t pci_bar_size(pcidev_t, int, size_t);
 void pci_memcpy(pcidev_t, void*, uintptr_t, size_t);
 uintptr_t pci_map_bar(pcidev_t device, int field, uintptr_t* size);
+uintptr_t pci_map_mmio(uintptr_t base, uintptr_t length);
 
 /* MSI */
 int pci_find_msi(pcidev_t, pci_msi_t*);

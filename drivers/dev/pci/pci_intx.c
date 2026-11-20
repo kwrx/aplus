@@ -139,29 +139,111 @@ static void pci_intx_interrupt_handler(void* frame, irq_t irq) {
 }
 
 
-static pcidev_t pci_intx_find_router(void) {
+#define PCI_INTX_ICH9_RCBA        0xF0
+#define PCI_INTX_ICH9_RCBA_ENABLE 0x01
+#define PCI_INTX_ICH9_RCBA_MASK   0xFFFFC000
+#define PCI_INTX_ICH9_DIR_BASE    0x3140
+#define PCI_INTX_ICH9_DIR_SIZE    0x12
+
+enum {
+    PCI_INTX_ROUTER_PIIX,
+    PCI_INTX_ROUTER_ICH9,
+};
+
+typedef struct {
+    pcidev_t device;
+    int type;
+    volatile uint16_t* dir;
+} pci_intx_router_t;
+
+
+static const uint16_t pci_intx_ich9_dir[] = {
+    0x3150, 0x314C, 0x3148, 0x3146, 0x3144, 0x3142, 0x3140,
+};
+
+
+static bool pci_intx_find_router(pci_intx_router_t* router) {
 
     for (uint8_t slot = 0; slot < 32; slot++) {
 
         pcidev_t device = pci_box_device(0, slot, 0);
 
-        if (pci_read(device, PCI_VENDOR_ID, 2) != 0x8086)
+        if (pci_read(device, PCI_VENDOR_ID, 2) != 0x8086) {
             continue;
+        }
 
-        if ((((pci_read(device, PCI_CLASS, 1) << 8) | pci_read(device, PCI_SUBCLASS, 1))) == PCI_TYPE_ISA)
-            return device;
+        if ((((pci_read(device, PCI_CLASS, 1) << 8) | pci_read(device, PCI_SUBCLASS, 1))) != PCI_TYPE_ISA) {
+            continue;
+        }
+
+        uint16_t id = pci_read(device, PCI_DEVICE_ID, 2);
+
+        router->device = device;
+        router->dir    = NULL;
+
+        if (id == 0x122E || id == 0x7000 || id == 0x7110) {
+            router->type = PCI_INTX_ROUTER_PIIX;
+            return true;
+        }
+
+        if (id >= 0x2910 && id <= 0x291F) {
+
+            router->type = PCI_INTX_ROUTER_ICH9;
+
+            uint32_t rcba = pci_read(device, PCI_INTX_ICH9_RCBA, 4);
+
+            if (rcba & PCI_INTX_ICH9_RCBA_ENABLE) {
+                uintptr_t dir = pci_map_mmio((rcba & PCI_INTX_ICH9_RCBA_MASK) + PCI_INTX_ICH9_DIR_BASE, PCI_INTX_ICH9_DIR_SIZE);
+                if (dir) {
+                    router->dir = (volatile uint16_t*)dir;
+                }
+            }
+
+            return true;
+        }
+
+#if DEBUG_LEVEL_WARN
+        kprintf("pci-intx: WARN! unknown interrupt router %04x:%04x, keeping the firmware interrupt lines\n", 0x8086, id);
+#endif
+
+        return false;
     }
 
-    return PCI_NONE;
+    return false;
+}
+
+
+static uint8_t pci_intx_router_link(pci_intx_router_t* router, uint8_t slot, uint8_t pin) {
+
+    if (router->type == PCI_INTX_ROUTER_PIIX) {
+        return (uint8_t)((slot + pin - 2) & 3);
+    }
+
+    if (slot < 25) {
+        return (uint8_t)(4 + ((slot + pin - 1) & 3));
+    }
+
+    if (slot == 30) {
+        return (uint8_t)(4 + pin - 1);
+    }
+
+    if (router->dir == NULL) {
+        return (uint8_t)(pin - 1);
+    }
+
+    uint16_t dir = router->dir[(pci_intx_ich9_dir[slot - 25] - PCI_INTX_ICH9_DIR_BASE) / sizeof(uint16_t)];
+
+    return (uint8_t)((dir >> ((pin - 1) * 4)) & 7);
 }
 
 
 void pci_intx_fixup_irqs(void) {
 
-    pcidev_t router = pci_intx_find_router();
+    pci_intx_router_t router;
 
-    if (router == PCI_NONE)
+    if (!pci_intx_find_router(&router)) {
         return;
+    }
 
 
     for (uint8_t slot = 0; slot < 32; slot++) {
@@ -183,8 +265,8 @@ void pci_intx_fixup_irqs(void) {
             pci_intx_mask(device);
 
 
-            uint8_t link  = (uint8_t)((slot + pin - 1) & (PCI_PIRQ_LINKS - 1));
-            uint8_t route = pci_read(router, PCI_PIRQ_ROUTE(link), 1);
+            uint8_t link  = pci_intx_router_link(&router, slot, pin);
+            uint8_t route = pci_read(router.device, PCI_PIRQ_ROUTE(link), 1);
 
             if (route & PCI_PIRQ_DISABLED)
                 continue;

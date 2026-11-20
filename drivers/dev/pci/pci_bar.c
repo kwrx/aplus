@@ -91,16 +91,9 @@ static bool pci_bar_probe(pcidev_t device, int field, uintptr_t* base, uintptr_t
 }
 
 
-uintptr_t pci_map_bar(pcidev_t device, int field, uintptr_t* size) {
+uintptr_t pci_map_mmio(uintptr_t base, uintptr_t length) {
 
-    DEBUG_ASSERT(device);
-    DEBUG_ASSERT(field >= PCI_BAR0 && field <= PCI_BAR5);
-
-    uintptr_t base;
-    uintptr_t length;
-
-    if (!pci_bar_probe(device, field, &base, &length))
-        return 0;
+    DEBUG_ASSERT(length);
 
     uintptr_t phys = base & ~((uintptr_t)PML1_PAGESIZE - 1);
     uintptr_t span = (base + length + PML1_PAGESIZE - 1 - phys) & ~((uintptr_t)PML1_PAGESIZE - 1);
@@ -137,12 +130,35 @@ uintptr_t pci_map_bar(pcidev_t device, int field, uintptr_t* size) {
         }
     }
 
-    if (size)
+    return virt + (base - phys);
+}
+
+
+uintptr_t pci_map_bar(pcidev_t device, int field, uintptr_t* size) {
+
+    DEBUG_ASSERT(device);
+    DEBUG_ASSERT(field >= PCI_BAR0 && field <= PCI_BAR5);
+
+    uintptr_t base;
+    uintptr_t length;
+
+    if (!pci_bar_probe(device, field, &base, &length)) {
+        return 0;
+    }
+
+    uintptr_t virt = pci_map_mmio(base, length);
+
+    if (!virt) {
+        return 0;
+    }
+
+    if (size) {
         *size = length;
+    }
 
 #if DEBUG_LEVEL_TRACE
-    kprintf("pci: mapped device(%d) field(%d) from %p:%x to %p:%x\n", device, field, base, length, virt + (base - phys), length);
+    kprintf("pci: mapped device(%d) field(%d) from %p:%x to %p:%x\n", device, field, base, length, virt, length);
 #endif
 
-    return virt + (base - phys);
+    return virt;
 }
