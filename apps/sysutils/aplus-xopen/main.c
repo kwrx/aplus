@@ -85,7 +85,7 @@
 
 #define XOPEN_AUDIO_PLAYER "aplus-player"
 
-#define XOPEN_BROWSER "netsurf-fb"
+#define XOPEN_BROWSER "odyssey"
 
 #define XOPEN_BROWSER_ENV "BROWSER"
 
@@ -136,7 +136,6 @@ typedef enum {
 typedef struct {
 
     char exec[XOPEN_EXEC_MAX];
-
     bool terminal;
 
 } xopen_desktop_t;
