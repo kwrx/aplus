@@ -287,6 +287,7 @@
 #define WM_MENU_ICON       16
 #define WM_MENU_ROW_RADIUS 6
 #define WM_MENU_FONT_STEP  1.0
+#define WM_MENU_BLUR_TINT  0.85
 
 /**
  * @brief Frosted glass, for a client's menu and a UI_WINDOW_BLUR window: what lies under it, blurred this far in this many

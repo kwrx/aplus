@@ -89,7 +89,7 @@ static wm_menu_palette_t wm_menu_palette(void) {
     ui_color_t fill = wm_theme_role(client->surface);
     ui_color_t fade = wm_theme_role(client->background);
 
-    fill.a = WM_BLUR_TINT;
+    fill.a = WM_MENU_BLUR_TINT;
     fade.a = client->disabled_fade;
 
     return (wm_menu_palette_t){
