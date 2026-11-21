@@ -41,6 +41,22 @@
 extern long sys_newfstatat(int dfd, const char* filename, struct stat* statbuf, int flag);
 
 
+static bool __faccessat_in_group(gid_t gid) {
+
+    if (current_task->gid == gid) {
+        return true;
+    }
+
+    for (size_t i = 0; i < current_task->ngroups; i++) {
+        if (current_task->groups[i] == gid) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
 /***
  * Name:        faccessat
  * Description: check user's permissions for a file
@@ -63,6 +79,10 @@ SYSCALL(
         if (unlikely(!uio_check(filename, R_OK)))
             return -EFAULT;
 
+        if (unlikely(mode & ~(R_OK | W_OK | X_OK))) {
+            return -EINVAL;
+        }
+
 
         int e;
 
@@ -76,17 +96,26 @@ SYSCALL(
 
 
 
+        if (current_task->uid == 0) {
+
+            if ((mode & X_OK) && !S_ISDIR(st.st_mode) && !(st.st_mode & (S_IXUSR | S_IXGRP | S_IXOTH))) {
+                return -EACCES;
+            }
+
+            return 0;
+        }
+
+
+        mode_t have = st.st_mode & S_IRWXO;
+
         if (st.st_uid == current_task->uid) {
-            if (!((mode & R_OK ? st.st_mode & S_IRUSR : 1) && (mode & W_OK ? st.st_mode & S_IWUSR : 1) && (mode & X_OK ? st.st_mode & S_IXUSR : 1)))
-                return -EACCES;
+            have = (st.st_mode & S_IRWXU) >> 6;
+        } else if (__faccessat_in_group(st.st_gid)) {
+            have = (st.st_mode & S_IRWXG) >> 3;
+        }
 
-        } else if (st.st_gid == current_task->gid) {
-            if (!((mode & R_OK ? st.st_mode & S_IRGRP : 1) && (mode & W_OK ? st.st_mode & S_IWGRP : 1) && (mode & X_OK ? st.st_mode & S_IXGRP : 1)))
-                return -EACCES;
-
-        } else {
-            if (!((mode & R_OK ? st.st_mode & S_IROTH : 1) && (mode & W_OK ? st.st_mode & S_IWOTH : 1) && (mode & X_OK ? st.st_mode & S_IXOTH : 1)))
-                return -EACCES;
+        if ((have & mode) != mode) {
+            return -EACCES;
         }
 
         return 0;

@@ -93,6 +93,14 @@ struct execve_layout {
 };
 
 
+struct execve_creds {
+
+    uid_t euid;
+    gid_t egid;
+    bool secure;
+};
+
+
 static inline void __execve_kfree(void* p) {
 
     void** q = (void**)p;
@@ -264,7 +272,7 @@ static long __execve_load(inode_t* inode, const Elf_Ehdr* head, const Elf_Phdr* 
 }
 
 
-static long __execve_stack(const char* strings, size_t size, size_t argc, size_t envc, const Elf_Ehdr* head, uintptr_t phdr_addr, struct execve_layout* layout) {
+static long __execve_stack(const char* strings, size_t size, size_t argc, size_t envc, const Elf_Ehdr* head, uintptr_t phdr_addr, const struct execve_creds* creds, struct execve_layout* layout) {
 
     const uint64_t entropy[2] = {arch_random(), arch_random()};
 
@@ -320,8 +328,9 @@ static long __execve_stack(const char* strings, size_t size, size_t argc, size_t
     AUX_ENT(AT_CLKTCK, arch_timer_generic_getres());
     AUX_ENT(AT_UID, current_task->uid);
     AUX_ENT(AT_GID, current_task->gid);
-    AUX_ENT(AT_EUID, current_task->euid);
-    AUX_ENT(AT_EGID, current_task->egid);
+    AUX_ENT(AT_EUID, creds->euid);
+    AUX_ENT(AT_EGID, creds->egid);
+    AUX_ENT(AT_SECURE, creds->secure);
     AUX_ENT(AT_ENTRY, head->e_entry);
     AUX_ENT(AT_FLAGS, 0);
     AUX_ENT(AT_NULL, 0);
@@ -343,7 +352,7 @@ static void __execve_rollback(vmm_address_space_t* old) {
 }
 
 
-static long __execve_open(const char* path, inode_t** inode) {
+static long __execve_open(const char* path, inode_t** inode, struct stat* out) {
 
     inode_t* cwd __scoped(vfs_inode_cleanup) = NULL;
 
@@ -372,13 +381,20 @@ static long __execve_open(const char* path, inode_t** inode) {
     if (unlikely(st.st_size == 0))
         return -ENOEXEC;
 
+    if (unlikely(file->sb && (file->sb->st.f_flag & ST_NOEXEC))) {
+        return -EACCES;
+    }
+
 
     mode_t exec = S_IXOTH;
 
-    if (st.st_uid == current_task->uid)
+    if (current_task->fsuid == 0) {
+        exec = S_IXUSR | S_IXGRP | S_IXOTH;
+    } else if (st.st_uid == current_task->fsuid) {
         exec = S_IXUSR;
-    else if (st.st_gid == current_task->gid)
+    } else if (task_in_group(current_task, st.st_gid)) {
         exec = S_IXGRP;
+    }
 
     if (unlikely(!(st.st_mode & exec)))
         return -EACCES;
@@ -390,7 +406,29 @@ static long __execve_open(const char* path, inode_t** inode) {
     *inode = file;
     file   = NULL;
 
+    *out = st;
+
     return 0;
+}
+
+
+static void __execve_creds(inode_t* inode, const struct stat* st, struct execve_creds* creds) {
+
+    creds->euid = current_task->euid;
+    creds->egid = current_task->egid;
+
+    if (!inode->sb || !(inode->sb->st.f_flag & ST_NOSUID)) {
+
+        if (st->st_mode & S_ISUID) {
+            creds->euid = st->st_uid;
+        }
+
+        if ((st->st_mode & (S_ISGID | S_IXGRP)) == (S_ISGID | S_IXGRP)) {
+            creds->egid = st->st_gid;
+        }
+    }
+
+    creds->secure = creds->euid != current_task->uid || creds->egid != current_task->gid;
 }
 
 
@@ -620,11 +658,12 @@ SYSCALL(
 
         inode_t* inode __scoped(vfs_inode_cleanup) = NULL;
 
-        Elf_Ehdr head = {0};
+        Elf_Ehdr head  = {0};
+        struct stat st = {0};
 
         for (int depth = 0;; depth++) {
 
-            if ((e = __execve_open(path, &inode)) < 0)
+            if ((e = __execve_open(path, &inode, &st)) < 0)
                 return e;
 
             memset(&head, 0, sizeof(head));
@@ -697,9 +736,14 @@ SYSCALL(
         DEBUG_ASSERT(new_space->brk.start < new_space->brk.end);
 
 
+        struct execve_creds creds = {0};
+
+        __execve_creds(inode, &st, &creds);
+
+
         struct execve_layout layout = {0};
 
-        if ((e = __execve_stack(strings, argsz + envsz, argc, envc, &head, phdr_addr, &layout)) < 0) {
+        if ((e = __execve_stack(strings, argsz + envsz, argc, envc, &head, phdr_addr, &creds, &layout)) < 0) {
             __execve_rollback(current_space);
             return e;
         }
@@ -743,8 +787,8 @@ SYSCALL(
         __execve_name(strings, argc);
 
 
-        current_task->suid = current_task->fsuid = current_task->euid;
-        current_task->sgid = current_task->fsgid = current_task->egid;
+        current_task->euid = current_task->suid = current_task->fsuid = creds.euid;
+        current_task->egid = current_task->sgid = current_task->fsgid = creds.egid;
 
 
         current_task->userspace.stack = layout.stack;
@@ -777,6 +821,10 @@ SYSCALL(
 
 
         current_task->flags &= ~(TASK_FLAGS_KERNEL_UIO | TASK_FLAGS_UNDUMPABLE);
+
+        if (creds.secure) {
+            current_task->flags |= TASK_FLAGS_UNDUMPABLE;
+        }
 
         sched_account(false);
 
