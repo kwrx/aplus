@@ -22,6 +22,7 @@
  */
 
 #include <stdint.h>
+#include <sys/mount.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
@@ -80,7 +81,7 @@ void root_init(void) {
         kprintf("root: mkdir /dev/shm failed: errno(%s)\n", strerror(-e));
     }
 
-    if ((e = sys_mount("/dev", "/root/dev", "bind", 0, NULL)) < 0)
+    if ((e = sys_mount("/dev", "/root/dev", "bind", MS_NOSUID, NULL)) < 0)
         kpanicf("root: PANIC! mount %s in %s failed: errno(%s)\n", "/root/dev", "/dev", strerror(-e));
 
     if ((e = sys_chroot("/root")) < 0)

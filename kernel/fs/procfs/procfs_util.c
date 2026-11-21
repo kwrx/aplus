@@ -519,19 +519,20 @@ ssize_t procfs_task_fd_path(pid_t pid, int fd, char* buf, size_t size) {
 static const struct {
 
     int flag;
+    int stflag;
     const char* name;
 
 } procfs_mount_options[] = {
-    {MS_SYNCHRONOUS, "sync"      },
-    {MS_DIRSYNC,     "dirsync"   },
-    {MS_MANDLOCK,    "mand"      },
-    {MS_LAZYTIME,    "lazytime"  },
-    {MS_NOSUID,      "nosuid"    },
-    {MS_NODEV,       "nodev"     },
-    {MS_NOEXEC,      "noexec"    },
-    {MS_NOATIME,     "noatime"   },
-    {MS_NODIRATIME,  "nodiratime"},
-    {MS_RELATIME,    "relatime"  },
+    {MS_SYNCHRONOUS, ST_SYNCHRONOUS, "sync"      },
+    {MS_DIRSYNC,     0,              "dirsync"   },
+    {MS_MANDLOCK,    ST_MANDLOCK,    "mand"      },
+    {MS_LAZYTIME,    0,              "lazytime"  },
+    {MS_NOSUID,      ST_NOSUID,      "nosuid"    },
+    {MS_NODEV,       ST_NODEV,       "nodev"     },
+    {MS_NOEXEC,      ST_NOEXEC,      "noexec"    },
+    {MS_NOATIME,     ST_NOATIME,     "noatime"   },
+    {MS_NODIRATIME,  ST_NODIRATIME,  "nodiratime"},
+    {MS_RELATIME,    ST_RELATIME,    "relatime"  },
 };
 
 
@@ -591,8 +592,9 @@ static void __task_mounts_line(const mount_t* m, void* arg) {
 
     for (size_t i = 0; i < sizeof(procfs_mount_options) / sizeof(procfs_mount_options[0]); i++) {
 
-        if (m->flags & procfs_mount_options[i].flag)
+        if ((m->flags & procfs_mount_options[i].flag) || (m->sb->st.f_flag & procfs_mount_options[i].stflag)) {
             procfs_bprintf(ctx->b, ",%s", procfs_mount_options[i].name);
+        }
     }
 
     procfs_bputs(ctx->b, " 0 0\n", 5);

@@ -31,6 +31,7 @@
 #include <aplus/network.h>
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
+#include <sys/mount.h>
 
 
 __noreturn void idle_main(void* arg) {
@@ -64,7 +65,7 @@ void kmain(void) {
     // Mount fake root
     {
 
-        int e = sys_mount(NULL, "/", "tmpfs", 0, NULL);
+        int e = sys_mount(NULL, "/", "tmpfs", MS_NOSUID, NULL);
         if (e < 0) {
             kpanicf("mount: could not mount fake root: errno(%s)", strerror(-e));
         }

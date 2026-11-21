@@ -24,6 +24,7 @@
 
 #include <stdint.h>
 #include <string.h>
+#include <sys/mount.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
@@ -77,6 +78,22 @@ int bindfs_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
     dir->sb->ino    = dir->ino;
 
     memcpy(&dir->sb->st, &dev->sb->st, sizeof(struct statvfs));
+
+#define __(a, b)                 \
+    if (flags & a) {             \
+        dir->sb->st.f_flag |= b; \
+    }
+
+    __(MS_MANDLOCK, ST_MANDLOCK);
+    __(MS_NOATIME, ST_NOATIME);
+    __(MS_NODEV, ST_NODEV);
+    __(MS_NODIRATIME, ST_NODIRATIME);
+    __(MS_NOEXEC, ST_NOEXEC);
+    __(MS_NOSUID, ST_NOSUID);
+    __(MS_RDONLY, ST_RDONLY);
+    __(MS_SYNCHRONOUS, ST_SYNCHRONOUS);
+
+#undef __
 
 
     dir->sb->ops.getattr  = bindfs_getattr;
