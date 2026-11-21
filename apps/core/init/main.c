@@ -256,7 +256,19 @@ static void init_fstab() {
                             continue;              \
                         }
 
-                    has("defaults", MS_NOATIME | MS_SHARED | MS_NOSUID);
+                    #define clr(str, flag)         \
+                        if (strcmp(k, str) == 0) { \
+                            flags &= ~(flag);      \
+                            continue;              \
+                        }
+
+                    has("defaults", MS_NOATIME | MS_SHARED);
+                    clr("suid", MS_NOSUID);
+                    clr("dev", MS_NODEV);
+                    clr("exec", MS_NOEXEC);
+                    clr("rw", MS_RDONLY);
+                    clr("atime", MS_NOATIME);
+                    clr("async", MS_SYNCHRONOUS);
                     has("noatime", MS_NOATIME);
                     has("nodev", MS_NODEV);
                     has("nodiratime", MS_NODIRATIME);
