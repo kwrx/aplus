@@ -75,7 +75,7 @@
 #define MEMP_NUM_TCPIP_MSG_INPKT (8 << NUM_SHIFT)
 #define MEMP_NUM_NETDB           (1 << NUM_SHIFT)
 #define MEMP_NUM_LOCALHOSTLIST   (1 << NUM_SHIFT)
-#define PBUF_POOL_SIZE           (16 << NUM_SHIFT)
+#define PBUF_POOL_SIZE           (64 << NUM_SHIFT)
 
 // * ARP Options *
 #define LWIP_ARP                      1
@@ -147,6 +147,7 @@
 
 // * TCP Options *
 #define LWIP_TCP                   1
+#define TCP_MSS                    1460
 #define TCP_WND                    ((4 << NUM_SHIFT) * TCP_MSS)
 #define TCP_MAXRTX                 12
 #define TCP_SYNMAXRTX              6
@@ -159,6 +160,7 @@
 #define LWIP_TCP_TIMESTAMPS        0 // FIXME
 #define LWIP_WND_SCALE             1 // FIXME
 #define TCP_RCV_SCALE              NUM_SHIFT
+#define TCP_OOSEQ_MAX_PBUFS        64
 
 // * PBUF Options *
 #define LWIP_PBUF_REF_T u16_t
