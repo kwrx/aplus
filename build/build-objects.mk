@@ -11,6 +11,9 @@ install: $(TARGET)
 	$(QUIET)echo "    INSTALL $(TARGET) -> $(INSTALLED)"
 	$(QUIET)mkdir -p $(DESTDIR)
 	$(QUIET)install -C $(TARGET) $(INSTALLED)
+ifneq ($(INSTALL_MODE),)
+	$(QUIET)chmod $(INSTALL_MODE) $(INSTALLED)
+endif
 
 clean:
 	$(QUIET)echo "    CLEAN   $(TARGET)"
