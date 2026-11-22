@@ -143,7 +143,7 @@ void usb_hid_sink_open(struct usb_hid_sink* sink, const char* path) {
         return;
     }
 
-    device_mkdev(&sink->device, 0666);
+    device_mkdev(&sink->device, 0660, DEVICE_GID_INPUT);
 
     sink->inode = sink->device.inode;
     sink->devid = (sink->device.major << 16) | (sink->device.minor & 0xFFFF);

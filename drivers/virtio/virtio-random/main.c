@@ -188,7 +188,7 @@ void init(const char* args) {
     if (device.userdata == NULL)
         return;
 
-    device_mkdev(&device, 0644);
+    device_mkdev(&device, 0600, DEVICE_GID_ROOT);
 }
 
 void dnit(void) {

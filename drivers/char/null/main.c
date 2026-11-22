@@ -74,7 +74,7 @@ device_t device = {
 
 
 void init(const char* args) {
-    device_mkdev(&device, 0666);
+    device_mkdev(&device, 0666, DEVICE_GID_ROOT);
 }
 
 

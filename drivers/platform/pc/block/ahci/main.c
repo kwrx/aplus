@@ -1405,7 +1405,7 @@ void init(const char* args) {
             ahci->ports[i] = (struct ahci_port){ahci, i, d};
             d->userdata    = &ahci->ports[i];
 
-            device_mkdev(d, 0660);
+            device_mkdev(d, 0660, DEVICE_GID_DISK);
         }
 
 
@@ -1444,7 +1444,7 @@ void init(const char* args) {
             ahci->ports[i] = (struct ahci_port){ahci, i, d};
             d->userdata    = &ahci->ports[i];
 
-            device_mkdev(d, 0660);
+            device_mkdev(d, 0660, DEVICE_GID_DISK);
         }
     }
 }

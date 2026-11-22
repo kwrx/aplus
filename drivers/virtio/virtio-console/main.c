@@ -320,7 +320,7 @@ void init(const char* args) {
     if (device.userdata == NULL)
         return;
 
-    device_mkdev(&device, 0644);
+    device_mkdev(&device, 0620, DEVICE_GID_TTY);
 }
 
 void dnit(void) {

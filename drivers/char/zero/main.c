@@ -88,7 +88,7 @@ static ssize_t zero_write(device_t* device, const void* buf, size_t size) {
 
 
 void init(const char* args) {
-    device_mkdev(&device, 0666);
+    device_mkdev(&device, 0666, DEVICE_GID_ROOT);
 }
 
 

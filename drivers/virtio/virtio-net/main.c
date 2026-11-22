@@ -549,7 +549,7 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
     virtnet_set_link(vn, virtnet_link_up(vn));
 
-    device_mkdev(&vn->device, 0666);
+    device_mkdev(&vn->device, 0600, DEVICE_GID_ROOT);
 
     vn->running = true;
 

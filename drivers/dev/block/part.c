@@ -68,7 +68,7 @@ static bool detect_mbr_partition_table(device_t* device) {
 }
 
 
-static void device_mkpart(device_t* device, inode_t* inode, void (*mkdev)(device_t*, mode_t), size_t index, size_t first, size_t end) {
+static void device_mkpart(device_t* device, inode_t* inode, void (*mkdev)(device_t*, mode_t, gid_t), size_t index, size_t first, size_t end) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->blk.blksize);
@@ -105,21 +105,12 @@ static void device_mkpart(device_t* device, inode_t* inode, void (*mkdev)(device
     d->userdata = device->userdata;
 
 
-    mode_t mode;
-
-    struct stat st = {0};
-    if (vfs_getattr(inode, &st) < 0) {
-        mode = 0666;
-    } else {
-        mode = st.st_mode;
-    }
-
-    mkdev(d, mode & 0777);
+    mkdev(d, device->mode, device->gid);
 }
 
 
 
-void block_parse_partitions(device_t* device, inode_t* inode, void (*mkdev)(device_t*, mode_t)) {
+void block_parse_partitions(device_t* device, inode_t* inode, void (*mkdev)(device_t*, mode_t, gid_t)) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->blk.blksize);

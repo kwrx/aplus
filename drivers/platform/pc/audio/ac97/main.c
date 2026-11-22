@@ -842,7 +842,7 @@ void init(void) {
         sc->dsp.snd.drain     = ac97_drain;
         sc->dsp.snd.flush     = ac97_flush;
 
-        device_mkdev(&sc->dsp, 0666);
+        device_mkdev(&sc->dsp, 0660, DEVICE_GID_AUDIO);
 
 
         sc->mixer.type     = DEVICE_TYPE_MIXER;
@@ -856,7 +856,7 @@ void init(void) {
         sc->mixer.mix.get        = ac97_mixer_get;
         sc->mixer.mix.set        = ac97_mixer_set;
 
-        device_mkdev(&sc->mixer, 0666);
+        device_mkdev(&sc->mixer, 0660, DEVICE_GID_AUDIO);
     }
 }
 

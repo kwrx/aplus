@@ -105,7 +105,7 @@ SYSCALL(
         }
 
 
-        inode_t* r __scoped(vfs_inode_cleanup) = path_lookup(base, __safe_pathname, O_CREAT | O_EXCL, S_IFDIR | (mode & 0777));
+        inode_t* r __scoped(vfs_inode_cleanup) = path_lookup(base, __safe_pathname, O_CREAT | O_EXCL, S_IFDIR | (mode & 01777));
 
         if (r == NULL) {
             return -errno;

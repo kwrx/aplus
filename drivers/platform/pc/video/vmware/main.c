@@ -257,7 +257,7 @@ void init(const char* args) {
     if (!device.iobase)
         return;
 
-    device_mkdev(&device, 0644);
+    device_mkdev(&device, 0660, DEVICE_GID_VIDEO);
 }
 
 

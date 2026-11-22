@@ -706,7 +706,7 @@ static void pci_find(pcidev_t pcidev, uint16_t vid, uint16_t did, void* arg) {
 
     num_devices++;
 
-    device_mkdev(device, 0644);
+    device_mkdev(device, 0660, DEVICE_GID_VIDEO);
 
 }
 

@@ -191,7 +191,7 @@ void init(const char* args) {
         kprintf("block/ram: added %s (%d blocks, %d bytes)\n", d->name, d->blk.blkcount, RAMDISK_BLK2BYTES(d->blk.blkcount));
 #endif
 
-        device_mkdev(d, 0660);
+        device_mkdev(d, 0660, DEVICE_GID_DISK);
     }
 }
 

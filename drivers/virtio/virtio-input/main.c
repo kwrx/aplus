@@ -457,7 +457,7 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
     devices[num_devices++] = vi;
 
-    device_mkdev(chr, 0666);
+    device_mkdev(chr, 0660, DEVICE_GID_INPUT);
 
 
     if (virtinput_fill(vi) < 0) {

@@ -567,7 +567,7 @@ void init(const char* args) {
         netif_set_up(&eth->device.net.interface);
 
 
-        device_mkdev(&eth->device, 0666);
+        device_mkdev(&eth->device, 0600, DEVICE_GID_ROOT);
 
         devices[i]     = eth;
         devices[i + 1] = NULL;

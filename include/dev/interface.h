@@ -56,6 +56,13 @@
     #define DEVICE_TYPE_AUDIO   5
     #define DEVICE_TYPE_MIXER   6
 
+    #define DEVICE_GID_ROOT  0
+    #define DEVICE_GID_TTY   5
+    #define DEVICE_GID_DISK  6
+    #define DEVICE_GID_AUDIO 18
+    #define DEVICE_GID_INPUT 23
+    #define DEVICE_GID_VIDEO 27
+
     #define DEVICE_MAXNAMELEN 32
     #define DEVICE_MAXDESCLEN 256
 
@@ -85,6 +92,10 @@ typedef struct device {
 
 
     inode_t* inode;
+
+    mode_t mode;
+    uid_t uid;
+    gid_t gid;
 
 
     union {
@@ -227,7 +238,7 @@ typedef struct device {
 
 __BEGIN_DECLS
 
-void device_mkdev(device_t*, mode_t);
+void device_mkdev(device_t*, mode_t, gid_t);
 void device_shutdown(device_t*);
 void device_reset(device_t*);
 void device_error(device_t*, const char*);

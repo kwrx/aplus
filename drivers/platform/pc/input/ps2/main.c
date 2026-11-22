@@ -489,7 +489,7 @@ void init(const char* args) {
 
     __keyboard_present = true;
 
-    device_mkdev(&keyboard, 0666);
+    device_mkdev(&keyboard, 0660, DEVICE_GID_INPUT);
 
 
     ps2_flush();
@@ -501,7 +501,7 @@ void init(const char* args) {
 
         __mouse_present = true;
 
-        device_mkdev(&mouse, 0666);
+        device_mkdev(&mouse, 0660, DEVICE_GID_INPUT);
 
     } else {
 

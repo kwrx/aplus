@@ -155,7 +155,7 @@ void init(const char* args) {
     device.vid.fb_base = core->framebuffer.address;
     device.vid.fb_size = core->framebuffer.pitch * core->framebuffer.height;
 
-    device_mkdev(&device, 0644);
+    device_mkdev(&device, 0660, DEVICE_GID_VIDEO);
 }
 
 

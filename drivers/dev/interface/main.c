@@ -225,28 +225,64 @@ static int device_getattr(inode_t* inode, struct stat* st) {
         return errno = EBUSY, -1;
 
 
+    int e;
+
     switch (device->type) {
 
         case DEVICE_TYPE_CHAR:
-            return char_getattr(device, st);
+            e = char_getattr(device, st);
+            break;
 
         case DEVICE_TYPE_BLOCK:
-            return block_getattr(device, st);
+            e = block_getattr(device, st);
+            break;
 
         case DEVICE_TYPE_AUDIO:
-            return audio_getattr(device, st);
+            e = audio_getattr(device, st);
+            break;
 
         case DEVICE_TYPE_MIXER:
-            return mixer_getattr(device, st);
+            e = mixer_getattr(device, st);
+            break;
 
         case DEVICE_TYPE_VIDEO:
-            return video_getattr(device, st);
+            e = video_getattr(device, st);
+            break;
 
         case DEVICE_TYPE_NETWORK:
-            return network_getattr(device, st);
+            e = network_getattr(device, st);
+            break;
+
+        default:
+            kpanicf("device::getattr: unknown device type %d for /dev/%s\n", device->type, inode->name);
     }
 
-    kpanicf("device::getattr: unknown device type %d for /dev/%s\n", device->type, inode->name);
+    if (e < 0) {
+        return e;
+    }
+
+    st->st_mode = (st->st_mode & S_IFMT) | (device->mode & 07777);
+    st->st_uid  = device->uid;
+    st->st_gid  = device->gid;
+
+    return 0;
+}
+
+
+static int device_setattr(inode_t* inode, struct stat* st) {
+
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(inode->userdata);
+    DEBUG_ASSERT(st);
+
+
+    device_t* device = (device_t*)inode->userdata;
+
+    device->mode = st->st_mode & 07777;
+    device->uid  = st->st_uid;
+    device->gid  = st->st_gid;
+
+    return 0;
 }
 
 
@@ -332,13 +368,17 @@ static int device_close(inode_t* inode) {
 
 
 
-void device_mkdev(device_t* device, mode_t mode) {
+void device_mkdev(device_t* device, mode_t mode, gid_t gid) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->name);
 
 
     device->status = DEVICE_STATUS_LOADING;
+
+    device->mode = mode & 07777;
+    device->uid  = 0;
+    device->gid  = gid;
 
 
     spinlock_init(&device->lock);
@@ -442,6 +482,7 @@ void device_mkdev(device_t* device, mode_t mode) {
     i->userdata = (void*)device;
 
     i->ops.getattr = device_getattr;
+    i->ops.setattr = device_setattr;
     i->ops.write   = device_write;
     i->ops.read    = device_read;
     i->ops.ioctl   = device_ioctl;

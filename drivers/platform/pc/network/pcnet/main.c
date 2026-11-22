@@ -529,7 +529,7 @@ void init(const char* args) {
 
 
 
-        device_mkdev(&eth->device, 0666);
+        device_mkdev(&eth->device, 0600, DEVICE_GID_ROOT);
 
         devices[i]     = eth;
         devices[i + 1] = NULL;
