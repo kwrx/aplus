@@ -218,7 +218,7 @@ void init(const char* args) {
 
     int fd;
 
-    if ((fd = sys_open("/dev/pts", O_CREAT | O_EXCL | O_WRONLY, S_IFDIR | 0666)) < 0) {
+    if ((fd = sys_open("/dev/pts", O_CREAT | O_EXCL | O_WRONLY, S_IFDIR | 0755)) < 0) {
         kpanicf("ptmx: failed to create /dev/pts: %s", strerror(-fd));
     }
 

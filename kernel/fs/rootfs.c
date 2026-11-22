@@ -44,7 +44,7 @@ static int rootfs_getattr(inode_t* inode, struct stat* st) {
 
     st->st_dev     = 0;
     st->st_ino     = 1;
-    st->st_mode    = S_IFDIR | 0666;
+    st->st_mode    = S_IFDIR | 0755;
     st->st_nlink   = 1;
     st->st_uid     = 0;
     st->st_gid     = 0;

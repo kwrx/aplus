@@ -47,14 +47,16 @@ int tmpfs_getattr(inode_t* inode, struct stat* st) {
 
     if (inode == inode->sb->root) {
 
+        tmpfs_t* tmpfs = (tmpfs_t*)inode->sb->fsinfo;
+
         memset(st, 0, sizeof(struct stat));
 
         st->st_ino     = inode->ino;
-        st->st_mode    = S_IFDIR | 0755;
+        st->st_mode    = tmpfs->root_mode;
         st->st_dev     = makedev(0, 34);
         st->st_nlink   = 2;
-        st->st_uid     = 0;
-        st->st_gid     = 0;
+        st->st_uid     = tmpfs->root_uid;
+        st->st_gid     = tmpfs->root_gid;
         st->st_rdev    = 0;
         st->st_size    = 0;
         st->st_blksize = 0;

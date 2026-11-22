@@ -105,6 +105,12 @@ SYSCALL(
         if (!S_ISDIR(st.st_mode))
             return -ENOTDIR;
 
+        long e = attr_search(r);
+
+        if (e < 0) {
+            return e;
+        }
+
 
         fs_chdir(r, false);
 

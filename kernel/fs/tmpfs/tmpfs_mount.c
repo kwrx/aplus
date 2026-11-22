@@ -76,7 +76,10 @@ int tmpfs_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
 
     dir->sb->fsinfo = (void*)kcalloc(1, sizeof(tmpfs_t), GFP_USER);
 
-    ((tmpfs_t*)dir->sb->fsinfo)->next_ino = 1;
+    ((tmpfs_t*)dir->sb->fsinfo)->next_ino  = 1;
+    ((tmpfs_t*)dir->sb->fsinfo)->root_mode = S_IFDIR | 01777;
+    ((tmpfs_t*)dir->sb->fsinfo)->root_uid  = 0;
+    ((tmpfs_t*)dir->sb->fsinfo)->root_gid  = 0;
     spinlock_init(&((tmpfs_t*)dir->sb->fsinfo)->lock);
 
 

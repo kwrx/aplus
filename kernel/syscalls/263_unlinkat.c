@@ -135,26 +135,10 @@ SYSCALL(
 
 
 
-        if (current_task->fsuid != 0) {
+        long e = attr_may_delete(r->parent, st.st_uid);
 
-            if (st.st_uid == current_task->fsuid) {
-
-                if (!(st.st_mode & S_IWUSR)) {
-                    return -EACCES;
-                }
-
-            } else if (task_in_group(current_task, st.st_gid)) {
-
-                if (!(st.st_mode & S_IWGRP)) {
-                    return -EACCES;
-                }
-
-            } else {
-
-                if (!(st.st_mode & S_IWOTH)) {
-                    return -EACCES;
-                }
-            }
+        if (e < 0) {
+            return e;
         }
 
 

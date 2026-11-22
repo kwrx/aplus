@@ -363,6 +363,9 @@ inode_t* path_lookup_created(inode_t*, const char*, int, mode_t, bool*);
 
 
 // kernel/fs/attr.c
+long attr_access(inode_t*, int);
+long attr_search(inode_t*);
+long attr_may_delete(inode_t*, uid_t);
 long attr_chmod(inode_t*, mode_t);
 long attr_chown(inode_t*, uid_t, gid_t);
 

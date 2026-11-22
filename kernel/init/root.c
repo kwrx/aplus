@@ -71,7 +71,7 @@ void root_init(void) {
 
     int e;
 
-    if ((e = sys_mkdir("/root", 0644)) < 0)
+    if ((e = sys_mkdir("/root", 0755)) < 0)
         kpanicf("root: PANIC! mkdir() failed: errno(%s)\n", strerror(-e));
 
     if ((e = sys_mount(root, "/root", rootfs, 0, NULL)) < 0)

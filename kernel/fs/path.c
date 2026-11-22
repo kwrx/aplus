@@ -46,7 +46,7 @@ static inode_t* __path_lookup(inode_t* cwd, const char* path, int flags, mode_t 
 
 
 static inline bool __path_failed_on_its_own(void) {
-    return errno == ELOOP || errno == ENAMETOOLONG || errno == ENOMEM;
+    return errno == ELOOP || errno == ENAMETOOLONG || errno == ENOMEM || errno == EACCES;
 }
 
 
@@ -192,7 +192,13 @@ static inode_t* __path_lookup(inode_t* cwd, const char* path, int flags, mode_t 
             break;
 
 
-        inode_t* found = path_find(c, path, strcspn(path, "/"), true, links, depth);
+        inode_t* found = NULL;
+
+        if (attr_search(c) < 0) {
+            errno = EACCES;
+        } else {
+            found = path_find(c, path, strcspn(path, "/"), true, links, depth);
+        }
 
         vfs_inode_put(c);
 
@@ -210,10 +216,14 @@ static inode_t* __path_lookup(inode_t* cwd, const char* path, int flags, mode_t 
 
     inode_t* r;
 
-    if (last > 0)
-        r = path_find(c, path, last, !(flags & O_NOFOLLOW), links, depth);
-    else
+    if (last == 0) {
         r = vfs_inode_get(c);
+    } else if (attr_search(c) < 0) {
+        r     = NULL;
+        errno = EACCES;
+    } else {
+        r = path_find(c, path, last, !(flags & O_NOFOLLOW), links, depth);
+    }
 
 
     if (unlikely(!r)) {
@@ -224,15 +234,24 @@ static inode_t* __path_lookup(inode_t* cwd, const char* path, int flags, mode_t 
                 mode |= S_IFREG;
             }
 
-            char name[last + 1];
+            long e = attr_access(c, W_OK | X_OK);
 
-            memcpy(name, path, last);
-            name[last] = '\0';
+            if (e < 0) {
 
-            r = vfs_creat(c, name, mode);
+                errno = -e;
 
-            if (r && created)
-                *created = true;
+            } else {
+
+                char name[last + 1];
+
+                memcpy(name, path, last);
+                name[last] = '\0';
+
+                r = vfs_creat(c, name, mode);
+
+                if (r && created)
+                    *created = true;
+            }
 
         } else {
             errno = (__path_failed_on_its_own() ? errno : ENOENT);

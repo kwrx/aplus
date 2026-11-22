@@ -43,6 +43,10 @@ typedef struct {
     ino_t next_ino;
     uint64_t next_seq;
     spinlock_t lock;
+
+    mode_t root_mode;
+    uid_t root_uid;
+    gid_t root_gid;
 } tmpfs_t;
 
 typedef struct {

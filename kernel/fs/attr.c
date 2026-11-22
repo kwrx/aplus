@@ -27,6 +27,7 @@
 #include <stdint.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <unistd.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
@@ -35,6 +36,95 @@
 #include <aplus/smp.h>
 #include <aplus/task.h>
 #include <aplus/vfs.h>
+
+
+long attr_access(inode_t* inode, int mask) {
+
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(current_task);
+
+    if (current_task->fsuid == 0) {
+        return 0;
+    }
+
+
+    struct stat st = {0};
+
+    if (vfs_getattr(inode, &st) < 0) {
+        return -EACCES;
+    }
+
+
+    mode_t have = st.st_mode & S_IRWXO;
+
+    if (st.st_uid == current_task->fsuid) {
+        have = (st.st_mode & S_IRWXU) >> 6;
+    } else if (task_in_group(current_task, st.st_gid)) {
+        have = (st.st_mode & S_IRWXG) >> 3;
+    }
+
+    mode_t want = 0;
+
+    if (mask & R_OK) {
+        want |= S_IROTH;
+    }
+
+    if (mask & W_OK) {
+        want |= S_IWOTH;
+    }
+
+    if (mask & X_OK) {
+        want |= S_IXOTH;
+    }
+
+    if ((have & want) != want) {
+        return -EACCES;
+    }
+
+    return 0;
+}
+
+
+long attr_search(inode_t* dir) {
+
+    DEBUG_ASSERT(dir);
+
+    if (!dir->ops.getattr) {
+        return 0;
+    }
+
+    return attr_access(dir, X_OK);
+}
+
+
+long attr_may_delete(inode_t* dir, uid_t owner) {
+
+    DEBUG_ASSERT(dir);
+    DEBUG_ASSERT(current_task);
+
+    long e = attr_access(dir, W_OK | X_OK);
+
+    if (e < 0) {
+        return e;
+    }
+
+    if (current_task->fsuid == 0 || current_task->fsuid == owner) {
+        return 0;
+    }
+
+
+    struct stat st = {0};
+
+    if (vfs_getattr(dir, &st) < 0) {
+        return -EACCES;
+    }
+
+    if ((st.st_mode & S_ISVTX) && st.st_uid != current_task->fsuid) {
+        return -EPERM;
+    }
+
+    return 0;
+}
 
 
 long attr_chmod(inode_t* inode, mode_t mode) {

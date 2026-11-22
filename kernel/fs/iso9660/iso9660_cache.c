@@ -238,7 +238,7 @@ iso9660_inode_t* iso9660_cache_fetch(cache_t* cache, iso9660_t* iso9660, size_t 
         inode.st.st_gid   = 0;
         inode.st.st_nlink = 0;
         inode.st.st_ino   = ++iso9660->next_ino;
-        inode.st.st_mode  = ((inode.record.file_flags & (1 << 1)) ? S_IFDIR : S_IFREG) | 0444;
+        inode.st.st_mode  = ((inode.record.file_flags & (1 << 1)) ? (S_IFDIR | 0555) : (S_IFREG | 0444));
     }
 
 

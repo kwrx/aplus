@@ -258,6 +258,12 @@ SYSCALL(
         if (vfs_getattr(source, &st) < 0)
             return (errno == ENOSYS) ? -EACCES : -errno;
 
+        long e = attr_may_delete(dir, st.st_uid);
+
+        if (e < 0) {
+            return e;
+        }
+
         const bool directory = S_ISDIR(st.st_mode);
 
         if (directory && renameat2_beneath(into, source))
@@ -281,6 +287,10 @@ SYSCALL(
 
             if (vfs_getattr(target, &st) < 0)
                 return (errno == ENOSYS) ? -EACCES : -errno;
+
+            if ((e = attr_may_delete(into, st.st_uid)) < 0) {
+                return e;
+            }
 
             if (directory && !S_ISDIR(st.st_mode))
                 return -ENOTDIR;

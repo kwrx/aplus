@@ -575,7 +575,7 @@ void init(const char* args) {
     memset(&devices, 0, sizeof(devices));
 
     int e;
-    if ((e = sys_mkdir("/dev", S_IFDIR | 0666)) < 0) {
+    if ((e = sys_mkdir("/dev", S_IFDIR | 0755)) < 0) {
         kpanicf("dev: could not create /dev directory: errno(%s)\n", strerror(-e));
     }
 }

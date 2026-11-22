@@ -43,6 +43,7 @@
 #include <sys/times.h>
 #include <sys/wait.h>
 #include <sys/reboot.h>
+#include <sys/stat.h>
 #include <termios.h>
 
 #include <aplus/fb.h>
@@ -234,6 +235,7 @@ static void init_fstab() {
             default: {
 
                 int flags = 0;
+                long mode = -1;
 
                 char dev[128];
                 char dir[128];
@@ -262,6 +264,20 @@ static void init_fstab() {
                             continue;              \
                         }
 
+                    if (strncmp(k, "mode=", 5) == 0) {
+
+                        char* end = NULL;
+                        long m    = strtol(k + 5, &end, 8);
+
+                        if (end == k + 5 || *end != '\0' || m < 0 || m > 07777) {
+                            ulog_errorf("fstab: %s: invalid %s", dir, k);
+                        } else {
+                            mode = m;
+                        }
+
+                        continue;
+                    }
+
                     has("defaults", MS_NOATIME | MS_SHARED);
                     clr("suid", MS_NOSUID);
                     clr("dev", MS_NODEV);
@@ -287,8 +303,11 @@ static void init_fstab() {
                 }
 
 
-                if (mount(dev, dir, fs, flags, NULL) < 0)
+                if (mount(dev, dir, fs, flags, NULL) < 0) {
                     ulog_errorf("fstab: mount(%s, %s): %s", dev, dir, strerror(errno));
+                } else if (mode >= 0 && chmod(dir, (mode_t)mode) < 0) {
+                    ulog_errorf("fstab: chmod(%s, %04lo): %s", dir, mode, strerror(errno));
+                }
 
 
             } break;
@@ -385,6 +404,7 @@ int main(int argc, char** argv, char** envp) {
 #endif
 
     setsid();
+    umask(022);
     tcsetpgrp(STDIN_FILENO, getpgrp());
 
     init_environment();

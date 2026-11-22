@@ -44,7 +44,22 @@ int tmpfs_setattr(inode_t* inode, struct stat* st) {
     DEBUG_ASSERT(st);
 
 
+    if (inode == inode->sb->root) {
+
+        tmpfs_t* tmpfs = (tmpfs_t*)inode->sb->fsinfo;
+
+        tmpfs->root_mode = S_IFDIR | (st->st_mode & 07777);
+        tmpfs->root_uid  = st->st_uid;
+        tmpfs->root_gid  = st->st_gid;
+
+        return 0;
+    }
+
+
     tmpfs_inode_t* i = cache_get(&inode->sb->cache, inode->ino);
+
+    if (unlikely(!i))
+        return -ENOENT;
 
     i->st.st_mode = st->st_mode;
     i->st.st_uid  = st->st_uid;

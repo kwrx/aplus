@@ -66,6 +66,13 @@ SYSCALL(
             return -ENOTDIR;
         }
 
+        long e = attr_search(file->inode);
+
+        if (e < 0) {
+            fd_put(file);
+            return e;
+        }
+
 
         fs_chdir(file->inode, false);
         fd_put(file);

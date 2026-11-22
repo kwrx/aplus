@@ -114,6 +114,11 @@ SYSCALL(
         if (!S_ISREG(st.st_mode))
             return -EINVAL;
 
+        long a = attr_access(r, W_OK);
+
+        if (a < 0)
+            return a;
+
 
         int e = vfs_truncate(r, length);
 
