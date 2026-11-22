@@ -415,7 +415,7 @@ static ssize_t pty_process_input(pty_t* pty, const char* buf, size_t size) {
 #if DEBUG_LEVEL_TRACE
                 kprintf("pty_input_process(): VEOL or newline\n");
 #endif
-                pty_input_append(pty, '\n', pty->ios.c_lflag & ECHONL);
+                pty_input_append(pty, '\n', pty->ios.c_lflag & (ECHO | ECHONL));
                 pty_input_discard(pty, true);
 
             }
