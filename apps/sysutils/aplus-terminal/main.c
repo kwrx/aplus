@@ -64,9 +64,21 @@
     #define CONFIG_ATERM_FONT_BOLD_PATH "/usr/share/fonts/ttf/JetBrainsMono-Bold.ttf"
 #endif
 
+#if !defined(CONFIG_ATERM_FONT_ITALIC_PATH)
+    #define CONFIG_ATERM_FONT_ITALIC_PATH "/usr/share/fonts/ttf/JetBrainsMono-Italic.ttf"
+#endif
+
+#if !defined(CONFIG_ATERM_FONT_BOLD_ITALIC_PATH)
+    #define CONFIG_ATERM_FONT_BOLD_ITALIC_PATH "/usr/share/fonts/ttf/JetBrainsMono-BoldItalic.ttf"
+#endif
+
 #if !defined(CONFIG_ATERM_FONT_SIZE)
     #define CONFIG_ATERM_FONT_SIZE 14
 #endif
+
+#define ATERM_FONT_SLANT      0.2
+#define ATERM_FONT_SLANTS_MAX 8
+#define ATERM_FONT_PATH_MAX   1024
 
 #if !defined(CONFIG_DEFAULT_SHELL)
     #define CONFIG_DEFAULT_SHELL "/bin/bash"
@@ -86,6 +98,7 @@
  * @brief The space between the window's edge and the character cells.
  */
 #define ATERM_PADDING 10
+#define ATERM_DIALOG_ALPHA 0.85
 
 /**
  * @brief The window's name, and the suffix put after any title the shell sets.
@@ -194,6 +207,8 @@ static struct {
 
         aterm_font_t regular;
         aterm_font_t bold;
+        aterm_font_t italic;
+        aterm_font_t bold_italic;
 
         int width;
         int height;
@@ -224,6 +239,7 @@ static struct {
 
     bool windowed;
     bool login;
+    bool dialog;
 
     struct timespec spawned;
 
@@ -237,6 +253,8 @@ static void show_usage(int argc, char** argv) {
            "   -w, --working-dir           set current working directory\n"
            "   -f, --framebuffer           use framebuffer instead of window\n"
            "   -l, --login                 run getty and respawn it when the session ends\n"
+           "   -g, --geometry COLSxROWS    set the initial size in cells (default 80x25)\n"
+           "   -d, --dialog                open a centered, frameless and frosted window that ESC closes\n"
            "   -h, --help                  show this help\n"
            "   -v, --version               print version info and exit\n");
 
@@ -465,6 +483,121 @@ static cairo_font_face_t* aterm_font_face(const char* path, const char* fallback
 }
 
 
+static int aterm_font_italic_path(const char* path, char* out, size_t max) {
+
+    const char* base = strrchr(path, '/');
+
+    base = base ? base + 1 : path;
+
+    const char* dot  = strrchr(base, '.');
+    const char* dash = strrchr(base, '-');
+
+    if (!dot || !dash || dash > dot) {
+        return -1;
+    }
+
+    const char* style  = dash + 1;
+    const size_t chars = (size_t)(dot - style);
+
+    size_t keep        = chars;
+    const char* suffix = chars <= 2 ? "I" : "Italic";
+
+    if (chars == 7 && strncmp(style, "Regular", 7) == 0) {
+        keep = 0;
+    }
+
+    const int length = snprintf(out, max, "%.*s%.*s%s%s", (int)(style - path), path, (int)keep, style, suffix, dot);
+
+    return length > 0 && (size_t)length < max ? 0 : -1;
+}
+
+
+static cairo_font_face_t* aterm_font_italic_face(const char* themed, const char* configured) {
+
+    if (!themed) {
+        return ui_font_face(configured);
+    }
+
+    char path[ATERM_FONT_PATH_MAX];
+
+    if (aterm_font_italic_path(themed, path, sizeof(path)) < 0 || access(path, R_OK) < 0) {
+        return NULL;
+    }
+
+    return ui_font_face(path);
+}
+
+
+static cairo_scaled_font_t* aterm_font_slanted(cairo_font_face_t* face, double size) {
+
+    static struct {
+        cairo_font_face_t* face;
+        double size;
+        cairo_scaled_font_t* scaled;
+    } slants[ATERM_FONT_SLANTS_MAX];
+
+    static size_t used;
+
+    for (size_t i = 0; i < used; i++) {
+
+        if (slants[i].face == face && slants[i].size == size) {
+            return slants[i].scaled;
+        }
+    }
+
+    cairo_matrix_t matrix;
+    cairo_matrix_t ctm;
+
+    cairo_matrix_init(&matrix, size, 0.0, -size * ATERM_FONT_SLANT, size, 0.0, 0.0);
+    cairo_matrix_init_identity(&ctm);
+
+    cairo_font_options_t* options = cairo_font_options_create();
+
+    cairo_scaled_font_t* scaled = cairo_scaled_font_create(face, &matrix, &ctm, options);
+
+    cairo_font_options_destroy(options);
+
+    if (cairo_scaled_font_status(scaled) != CAIRO_STATUS_SUCCESS) {
+        cairo_scaled_font_destroy(scaled);
+        return NULL;
+    }
+
+    const size_t slot = used < ATERM_FONT_SLANTS_MAX ? used++ : ATERM_FONT_SLANTS_MAX - 1;
+
+    if (slants[slot].scaled) {
+        cairo_scaled_font_destroy(slants[slot].scaled);
+    }
+
+    slants[slot].face   = face;
+    slants[slot].size   = size;
+    slants[slot].scaled = scaled;
+
+    return scaled;
+}
+
+
+static cairo_scaled_font_t* aterm_font_italic(const char* themed, const char* configured, cairo_font_face_t* upright, double size) {
+
+    cairo_font_face_t* face = aterm_font_italic_face(themed, configured);
+
+    cairo_scaled_font_t* scaled = face ? ui_font_scaled(face, size) : NULL;
+
+    return scaled ? scaled : aterm_font_slanted(upright, size);
+}
+
+
+static void aterm_font_set(aterm_font_t* font, cairo_scaled_font_t* scaled) {
+
+    if (font->scaled) {
+        cairo_scaled_font_destroy(font->scaled);
+    }
+
+    font->scaled = cairo_scaled_font_reference(scaled);
+
+    memset(font->glyphs, 0xFF, sizeof(font->glyphs));
+}
+
+
 /**
  * @brief Loads the theme's monospaced faces at its size and takes the cell size from their metrics, keeping the faces in use on failure.
  *
@@ -490,32 +623,32 @@ static int aterm_font_init(void) {
     }
 
 
-    cairo_scaled_font_t* regular_scaled = ui_font_scaled(regular, size);
-    cairo_scaled_font_t* bold_scaled    = ui_font_scaled(bold, size);
+    cairo_scaled_font_t* regular_scaled     = ui_font_scaled(regular, size);
+    cairo_scaled_font_t* bold_scaled        = ui_font_scaled(bold, size);
+    cairo_scaled_font_t* italic_scaled      = aterm_font_italic(theme->font_mono, CONFIG_ATERM_FONT_ITALIC_PATH, regular, size);
+    cairo_scaled_font_t* bold_italic_scaled = aterm_font_italic(theme->font_mono_bold, CONFIG_ATERM_FONT_BOLD_ITALIC_PATH, bold, size);
 
     if (!regular_scaled || !bold_scaled) {
         errno = ENOMEM;
         return -1;
     }
 
-    if (regular_scaled == context.font.regular.scaled && bold_scaled == context.font.bold.scaled) {
+    if (!italic_scaled) {
+        italic_scaled = regular_scaled;
+    }
+
+    if (!bold_italic_scaled) {
+        bold_italic_scaled = bold_scaled;
+    }
+
+    if (regular_scaled == context.font.regular.scaled && bold_scaled == context.font.bold.scaled && italic_scaled == context.font.italic.scaled && bold_italic_scaled == context.font.bold_italic.scaled) {
         return 0;
     }
 
-    if (context.font.regular.scaled) {
-        cairo_scaled_font_destroy(context.font.regular.scaled);
-    }
-
-    if (context.font.bold.scaled) {
-        cairo_scaled_font_destroy(context.font.bold.scaled);
-    }
-
-    context.font.regular.scaled = cairo_scaled_font_reference(regular_scaled);
-    context.font.bold.scaled    = cairo_scaled_font_reference(bold_scaled);
-
-
-    memset(context.font.regular.glyphs, 0xFF, sizeof(context.font.regular.glyphs));
-    memset(context.font.bold.glyphs, 0xFF, sizeof(context.font.bold.glyphs));
+    aterm_font_set(&context.font.regular, regular_scaled);
+    aterm_font_set(&context.font.bold, bold_scaled);
+    aterm_font_set(&context.font.italic, italic_scaled);
+    aterm_font_set(&context.font.bold_italic, bold_italic_scaled);
 
 
     cairo_font_extents_t extents;
@@ -641,10 +774,28 @@ static void aterm_set_source(cairo_t* cr, GhosttyColorRgb color) {
 }
 
 
+static void aterm_set_back(cairo_t* cr, GhosttyColorRgb color, GhosttyColorRgb base) {
+
+    if (context.dialog && color.r == base.r && color.g == base.g && color.b == base.b) {
+        cairo_set_source_rgba(cr, color.r / 255.0, color.g / 255.0, color.b / 255.0, ATERM_DIALOG_ALPHA);
+    } else {
+        aterm_set_source(cr, color);
+    }
+}
+
+
 static void aterm_apply_colors(void) {
 
     const GhosttyColorRgb fg = aterm_rgb(ui_theme_dark()->text);
-    const GhosttyColorRgb bg = aterm_rgb(ui_theme_dark()->surface_sunken);
+    GhosttyColorRgb bg = aterm_rgb(ui_theme_dark()->surface_sunken);
+
+    if (context.dialog) {
+
+        ui_color_t well = ui_theme_dark()->surface_sunken;
+        well.a          = 0.5;
+
+        bg = aterm_rgb(ui_color_blend(ui_theme_dark()->background, well));
+    }
 
     if (ghostty_terminal_set(context.term, GHOSTTY_TERMINAL_OPT_COLOR_FOREGROUND, &fg) != GHOSTTY_SUCCESS) {
         ulog_warnf("cannot set the default foreground");
@@ -685,8 +836,29 @@ static void aterm_clear(GhosttyColorRgb bg) {
     cairo_save(context.cr);
 
     cairo_set_operator(context.cr, CAIRO_OPERATOR_SOURCE);
-    aterm_set_source(context.cr, bg);
+    aterm_set_back(context.cr, bg, bg);
     cairo_paint(context.cr);
+
+    if (context.dialog) {
+
+        ui_color_t edge = ui_theme_dark()->border;
+
+        const double w = aterm_window_width();
+        const double h = aterm_window_height();
+        const double k = UI_WINDOW_RADIUS;
+
+        cairo_new_sub_path(context.cr);
+        cairo_arc(context.cr, w - k, k, k - 0.5, -M_PI / 2, 0);
+        cairo_arc(context.cr, w - k, h - k, k - 0.5, 0, M_PI / 2);
+        cairo_arc(context.cr, k, h - k, k - 0.5, M_PI / 2, M_PI);
+        cairo_arc(context.cr, k, k, k - 0.5, M_PI, 3 * M_PI / 2);
+        cairo_close_path(context.cr);
+
+        cairo_set_operator(context.cr, CAIRO_OPERATOR_OVER);
+        cairo_set_source_rgba(context.cr, edge.r, edge.g, edge.b, edge.a * 2.0 > 1.0 ? 1.0 : edge.a * 2.0);
+        cairo_set_line_width(context.cr, 1.0);
+        cairo_stroke(context.cr);
+    }
 
     cairo_restore(context.cr);
 
@@ -754,6 +926,12 @@ static void aterm_draw_cell(const aterm_frame_t* frame, int col, int row) {
         back  = color;
     }
 
+    if (style.flags & GHOSTTY_STYLE_FLAG_FAINT) {
+        front.r = (uint8_t)((front.r + back.r) / 2);
+        front.g = (uint8_t)((front.g + back.g) / 2);
+        front.b = (uint8_t)((front.b + back.b) / 2);
+    }
+
 
     const aterm_cursor_t* cursor = &frame->cursor;
 
@@ -779,8 +957,10 @@ static void aterm_draw_cell(const aterm_frame_t* frame, int col, int row) {
     cairo_rectangle(cr, x, y, width, context.font.height);
     cairo_clip(cr);
 
-    aterm_set_source(cr, back);
+    cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
+    aterm_set_back(cr, back, frame->colors.background);
     cairo_paint(cr);
+    cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
 
     aterm_set_source(cr, front);
 
@@ -794,7 +974,10 @@ static void aterm_draw_cell(const aterm_frame_t* frame, int col, int row) {
 
     if (codepoint > ' ' && !(style.flags & GHOSTTY_STYLE_FLAG_INVISIBLE)) {
 
-        aterm_font_t* font = (style.flags & GHOSTTY_STYLE_FLAG_BOLD) ? &context.font.bold : &context.font.regular;
+        const bool bold   = style.flags & GHOSTTY_STYLE_FLAG_BOLD;
+        const bool italic = style.flags & GHOSTTY_STYLE_FLAG_ITALIC;
+
+        aterm_font_t* font = italic ? (bold ? &context.font.bold_italic : &context.font.italic) : (bold ? &context.font.bold : &context.font.regular);
 
         const unsigned long index = aterm_glyph_index(font, codepoint);
 
@@ -1331,6 +1514,24 @@ static size_t aterm_encode_key(uint16_t key, char* out, size_t size) {
 
 
 /**
+ * @brief Hangs up on the shell's process group and ends the terminal, which closes its window.
+ */
+__attribute__((noreturn)) static void aterm_quit(void) {
+
+    if (context.child > 0) {
+
+        if (kill(-context.child, SIGHUP) == 0) {
+            usleep(150000);
+        } else if (errno != ESRCH) {
+            ulog_warnf("cannot hang up the session: %s", strerror(errno));
+        }
+    }
+
+    exit(0);
+}
+
+
+/**
  * @brief Sends what a key event stands for to the shell.
  *
  * @param keysym The key code the display server reported.
@@ -1340,6 +1541,10 @@ static void aterm_handle_key(vkey_t keysym, uint8_t down) {
 
     if (!keysym && !down) {
         return;
+    }
+
+    if (context.dialog && down && keysym == KEY_ESC) {
+        aterm_quit();
     }
 
     const uint16_t key = ui_keymap_lookup(context.keymap, keysym);
@@ -1363,24 +1568,6 @@ static void aterm_handle_key(vkey_t keysym, uint8_t down) {
     pthread_mutex_unlock(&context.lock);
 
     aterm_write(produced, size);
-}
-
-
-/**
- * @brief Hangs up on the shell's process group and ends the terminal, which closes its window.
- */
-__attribute__((noreturn)) static void aterm_quit(void) {
-
-    if (context.child > 0) {
-
-        if (kill(-context.child, SIGHUP) == 0) {
-            usleep(150000);
-        } else if (errno != ESRCH) {
-            ulog_warnf("cannot hang up the session: %s", strerror(errno));
-        }
-    }
-
-    exit(0);
 }
 
 
@@ -1761,6 +1948,8 @@ int main(int argc, char** argv) {
         {"working-dir", required_argument, NULL, 'w'},
         {"framebuffer", no_argument,       NULL, 'f'},
         {"login",       no_argument,       NULL, 'l'},
+        {"dialog",      no_argument,       NULL, 'd'},
+        {"geometry",    required_argument, NULL, 'g'},
         {"help",        no_argument,       NULL, 'h'},
         {"version",     no_argument,       NULL, 'v'},
         {NULL,          0,                 NULL, 0  }
@@ -1769,9 +1958,12 @@ int main(int argc, char** argv) {
     char* cmd = NULL;
     char* pwd = NULL;
     bool windowed = true;
+    int cols      = 80;
+    int rows      = 25;
+    uint32_t flags = 0;
 
     int c, idx;
-    while ((c = getopt_long(argc, argv, "c:w:flvh", long_options, &idx)) != -1) {
+    while ((c = getopt_long(argc, argv, "c:w:fldg:vh", long_options, &idx)) != -1) {
         switch (c) {
             case 'c':
                 cmd = strdup(optarg);
@@ -1784,6 +1976,16 @@ int main(int argc, char** argv) {
                 break;
             case 'l':
                 context.login = true;
+                break;
+            case 'g':
+                if (sscanf(optarg, "%dx%d", &cols, &rows) != 2 || cols < 1 || rows < 1 || cols > 1000 || rows > 1000) {
+                    fprintf(stderr, "%s: invalid geometry '%s'\n", argv[0], optarg);
+                    exit(1);
+                }
+                break;
+            case 'd':
+                context.dialog = true;
+                flags          = UI_WINDOW_BORDERLESS | UI_WINDOW_CENTERED | UI_WINDOW_TRANSLUCENT | UI_WINDOW_BLUR;
                 break;
             case 'v':
                 show_version(argc, argv);
@@ -1799,8 +2001,6 @@ int main(int argc, char** argv) {
 
 
 
-    const int cols = 80;
-    const int rows = 25;
 
     if (pthread_mutex_init(&context.lock, NULL) != 0) {
         ulog_errorf("pthread_mutex_init() failed: %s", strerror(errno));
@@ -1808,6 +2008,7 @@ int main(int argc, char** argv) {
     }
 
     context.windowed = windowed;
+    context.dialog   = context.dialog && windowed;
     ulog_infof("running in %s mode", context.windowed ? "windowed" : "framebuffer");
 
     if (context.windowed) {
@@ -1831,7 +2032,7 @@ int main(int argc, char** argv) {
 
     //* Window initialization
     if (context.windowed) {
-        if ((context.win = ui_window_create(context.conn, cols * context.font.width + 2 * ATERM_PADDING, rows * context.font.height + 2 * ATERM_PADDING, ATERM_TITLE)) == NULL) {
+        if ((context.win = ui_window_create_ex(context.conn, cols * context.font.width + 2 * ATERM_PADDING, rows * context.font.height + 2 * ATERM_PADDING, ATERM_TITLE, flags)) == NULL) {
             ulog_errorf("ui_window_create() failed: %s", strerror(errno));
             exit(1);
         }

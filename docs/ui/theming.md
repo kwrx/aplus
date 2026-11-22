@@ -183,9 +183,12 @@ so its medium and bold would draw the same weight as the regular.
 decides how big a cell is. The built-in theme leaves them `NULL` and `0.0`, and so does a
 theme file that does not name them; each application then falls back on its own, the way the
 window manager falls back on `WM_FONT_PATH` for its titles. The terminal's are the Kconfig
-`ATERM_FONT_PATH`, `ATERM_FONT_BOLD_PATH` and `ATERM_FONT_SIZE`, the editor's
+`ATERM_FONT_PATH`, `ATERM_FONT_BOLD_PATH`, `ATERM_FONT_ITALIC_PATH`, `ATERM_FONT_BOLD_ITALIC_PATH`
+and `ATERM_FONT_SIZE`, the editor's
 `EDITOR_FONT_PATH` and `EDITOR_FONT_SIZE`. A theme that names `font_mono` alone gets it for
-bold as well, and a face that cannot be loaded falls back the same way. Every shipped theme
+bold as well, and a face that cannot be loaded falls back the same way. The terminal takes
+its italic faces from the files next to the theme's (`-Regular` becomes `-Italic`, `-Bold`
+`-BoldItalic`, `-R` `-RI`), and slants the upright face when there are none. Every shipped theme
 names JetBrains Mono at 14:
 
 ```
