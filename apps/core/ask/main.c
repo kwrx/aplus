@@ -32,7 +32,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
+#include <sys/ioctl.h>
 #include <sys/wait.h>
+#include <time.h>
 #include <unistd.h>
 
 #include <aplus/ai.h>
@@ -53,6 +55,7 @@
 #define ASK_PAGE_WIDTH      "768"
 #define ASK_DOCUMENT_MAX    (256 * 1024)
 #define ASK_DOCUMENT_WORDS  16
+#define ASK_THINK_ROWS      5
 
 
 static const char ask_system[] = "You are the assistant of aplus, a small Unix-like operating system that is not Linux.\n"
@@ -78,11 +81,30 @@ typedef struct {
 
     bool thinking;
     char thought;
+    ask_text_t thoughts;
+    size_t rows;
+    double started;
 
     bool progress;
     bool waiting;
 
 } ask_output_t;
+
+
+typedef struct {
+
+    size_t start;
+    size_t end;
+
+} ask_row_t;
+
+
+typedef struct {
+
+    ask_row_t rows[ASK_THINK_ROWS];
+    size_t count;
+
+} ask_window_t;
 
 
 static bool ask_verbose;
@@ -741,6 +763,180 @@ static void ask_progress(size_t done, size_t total, void* user) {
 }
 
 
+static bool ask_blank(const char* data, size_t start, size_t end) {
+
+    for (size_t i = start; i < end; i++) {
+
+        if (!isspace((unsigned char)data[i])) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+
+static bool ask_invisible(unsigned char c) {
+
+    return (c < 0x20 && c != '\t') || c == 0x7F;
+}
+
+
+static double ask_now(void) {
+
+    struct timespec now;
+
+    clock_gettime(CLOCK_MONOTONIC, &now);
+
+    return (double)now.tv_sec + (double)now.tv_nsec / 1e9;
+}
+
+
+static size_t ask_columns(void) {
+
+    struct winsize size;
+
+    if (ioctl(STDERR_FILENO, TIOCGWINSZ, &size) == 0 && size.ws_col > 10) {
+        return size.ws_col - 1;
+    }
+
+    return 79;
+}
+
+
+static void ask_window_push(ask_window_t* window, size_t start, size_t end) {
+
+    if (window->count == ASK_THINK_ROWS) {
+
+        memmove(&window->rows[0], &window->rows[1], sizeof(window->rows[0]) * (ASK_THINK_ROWS - 1));
+        window->count--;
+    }
+
+    window->rows[window->count++] = (ask_row_t){.start = start, .end = end};
+}
+
+
+static void ask_window_layout(ask_window_t* window, const char* data, size_t size, size_t width) {
+
+    size_t start = 0;
+
+    while (start < size) {
+
+        size_t end = start;
+
+        while (end < size && data[end] != '\n') {
+            end++;
+        }
+
+        if (!ask_blank(data, start, end)) {
+
+            size_t row    = start;
+            size_t column = 0;
+
+            for (size_t i = start; i < end; i++) {
+
+                const unsigned char c = (unsigned char)data[i];
+
+                if ((c & 0xC0) == 0x80 || ask_invisible(c)) {
+                    continue;
+                }
+
+                if (column == width) {
+
+                    ask_window_push(window, row, i);
+
+                    row    = i;
+                    column = 0;
+                }
+
+                column++;
+            }
+
+            ask_window_push(window, row, end);
+        }
+
+        start = end + 1;
+    }
+}
+
+
+static void ask_window_draw(ask_output_t* output) {
+
+    ask_text_t* thoughts = &output->thoughts;
+
+    size_t from = thoughts->size;
+
+    for (size_t lines = 0; from > 0 && lines < ASK_THINK_ROWS;) {
+
+        size_t start = from;
+
+        while (start > 0 && thoughts->data[start - 1] != '\n') {
+            start--;
+        }
+
+        if (!ask_blank(thoughts->data, start, from)) {
+            lines++;
+        }
+
+        from = start > 0 ? start - 1 : 0;
+    }
+
+    if (from > 0) {
+
+        thoughts->size -= from;
+
+        memmove(thoughts->data, thoughts->data + from, thoughts->size + 1);
+    }
+
+    ask_window_t window = {0};
+
+    ask_window_layout(&window, thoughts->data, thoughts->size, ask_columns());
+
+    ask_text_t frame = {0};
+
+    char move[48];
+
+    if (output->rows > 1) {
+        snprintf(move, sizeof(move), "\r\033[%zuA\033[J\033[2;3m", output->rows - 1);
+    } else {
+        snprintf(move, sizeof(move), "\r\033[J\033[2;3m");
+    }
+
+    ask_put(&frame, move);
+
+    for (size_t r = 0; r < window.count; r++) {
+
+        if (r > 0) {
+            ask_put(&frame, "\n");
+        }
+
+        for (size_t i = window.rows[r].start; i < window.rows[r].end; i++) {
+
+            const unsigned char c = (unsigned char)thoughts->data[i];
+
+            if (c == '\t') {
+                ask_put(&frame, " ");
+            } else if (!ask_invisible(c)) {
+                ask_append(&frame, (const char*)&c, 1);
+            }
+        }
+    }
+
+    char status[64];
+
+    snprintf(status, sizeof(status), "%s\033[0;2mThinking... %.0fs", window.count > 0 ? "\n\n" : "", ask_now() - output->started);
+
+    ask_put(&frame, status);
+
+    fwrite(frame.data, 1, frame.size, stderr);
+    fflush(stderr);
+
+    free(frame.data);
+
+    output->rows = window.count > 0 ? window.count + 2 : 1;
+}
+
+
 static void ask_reason(const char* text, size_t size, void* user) {
 
     ask_output_t* output = user;
@@ -752,15 +948,53 @@ static void ask_reason(const char* text, size_t size, void* user) {
     ask_settle(output);
 
     if (!output->thinking) {
+        output->started = ask_now();
+    }
 
-        fputs(ask_tty ? "\033[2;3m" : "", stderr);
-        output->thinking = true;
+    output->thinking = true;
+    output->thought  = text[size - 1];
+
+    if (ask_tty) {
+
+        ask_append(&output->thoughts, text, size);
+        ask_window_draw(output);
+
+        return;
     }
 
     fwrite(text, 1, size, stderr);
     fflush(stderr);
+}
 
-    output->thought = text[size - 1];
+
+static void ask_unthink(ask_output_t* output, bool gap) {
+
+    if (!output->thinking) {
+        return;
+    }
+
+    if (ask_tty) {
+
+        fputs("\r\033[K\033[0m", stderr);
+
+    } else {
+
+        if (output->thought != '\n') {
+            fputc('\n', stderr);
+        }
+
+        if (gap) {
+            fputc('\n', stderr);
+        }
+    }
+
+    fflush(stderr);
+
+    free(output->thoughts.data);
+
+    output->thoughts = (ask_text_t){0};
+    output->thinking = false;
+    output->rows     = 0;
 }
 
 
@@ -771,13 +1005,7 @@ static void ask_print(const char* text, size_t size, void* user) {
     if (ask_verbose && !output->printed) {
 
         ask_settle(output);
-
-        if (output->thinking) {
-
-            fputs(output->thought == '\n' ? "" : "\n", stderr);
-            fputs(ask_tty ? "\033[0m\n" : "\n", stderr);
-            fflush(stderr);
-        }
+        ask_unthink(output, true);
     }
 
     fwrite(text, 1, size, stdout);
@@ -830,10 +1058,7 @@ static int ask_chat(const char* model, const char* system, const char* prompt, c
     const int result = ai_chat(&request, &reply);
 
     ask_settle(&output);
-
-    if (ask_verbose && output.thinking && !output.printed) {
-        fputs(ask_tty ? "\033[0m\n" : "\n", stderr);
-    }
+    ask_unthink(&output, false);
 
     if (output.printed && output.last != '\n') {
         putchar('\n');
