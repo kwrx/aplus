@@ -25,6 +25,7 @@
 #include <poll.h>
 #include <stdint.h>
 #include <string.h>
+#include <unistd.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
@@ -995,14 +996,19 @@ long unix_connect(struct unix_sock* sock, const void* addr, uint32_t len) {
 
     inode_t* node __scoped(vfs_inode_cleanup) = path_lookup(cwd, path, 0, 0);
 
-    if (unlikely(!node))
-        return -ECONNREFUSED;
+    if (unlikely(!node)) {
+        return errno == EACCES ? -EACCES : -ECONNREFUSED;
+    }
 
 
     struct stat st;
 
     if (unlikely(node->sb == &sockfs_superblock || vfs_getattr(node, &st) < 0 || !S_ISSOCK(st.st_mode)))
         return -ECONNREFUSED;
+
+    if ((e = attr_access(node, W_OK)) < 0) {
+        return e;
+    }
 
 
     struct unix_sock* listener = __unix_bind_find(node);
