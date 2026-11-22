@@ -38,6 +38,20 @@
 
 
 
+static pid_t procfs_service_ino_pid(ino_t ino) {
+
+    if (ino <= 0xFF) {
+        return 0;
+    }
+
+    if ((ino & 0xFF) == 0xFE) {
+        return (pid_t)(ino >> 24);
+    }
+
+    return (pid_t)(ino >> 8);
+}
+
+
 static ssize_t procfs_service_read(inode_t* inode, void* buf, off_t pos, size_t size) {
 
     DEBUG_ASSERT(inode);
@@ -139,6 +153,18 @@ int procfs_service_getattr(inode_t* inode, struct stat* st) {
     st->st_rdev  = 0;
     st->st_size  = 0;
 
+    pid_t pid = procfs_service_ino_pid(inode->ino);
+
+    if (pid > 0) {
+
+        procfs_task_t t;
+
+        if (procfs_task_snapshot(pid, &t) == 0) {
+            st->st_uid = t.euid;
+            st->st_gid = t.egid;
+        }
+    }
+
     if (S_ISLNK(service->mode) && service->fetch) {
 
         scoped_lock(&procfs_scratch_lock) {
@@ -204,5 +230,3 @@ inode_t* procfs_service_inode(inode_t* parent, const char* name, mode_t mode, in
 
     return inode;
 }
-
-
