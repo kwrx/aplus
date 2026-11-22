@@ -38,6 +38,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/wait.h>
+#include <time.h>
 #include <unistd.h>
 
 #include <aplus/fb.h>
@@ -69,6 +70,10 @@
 
 #if !defined(CONFIG_DEFAULT_SHELL)
     #define CONFIG_DEFAULT_SHELL "/bin/bash"
+#endif
+
+#if !defined(CONFIG_ATERM_GETTY_PATH)
+    #define CONFIG_ATERM_GETTY_PATH "/sbin/getty"
 #endif
 
 
@@ -218,6 +223,9 @@ static struct {
     } input;
 
     bool windowed;
+    bool login;
+
+    struct timespec spawned;
 
 } context = {0};
 
@@ -228,6 +236,7 @@ static void show_usage(int argc, char** argv) {
            "   -c, --command               run command on shell\n"
            "   -w, --working-dir           set current working directory\n"
            "   -f, --framebuffer           use framebuffer instead of window\n"
+           "   -l, --login                 run getty and respawn it when the session ends\n"
            "   -h, --help                  show this help\n"
            "   -v, --version               print version info and exit\n");
 
@@ -1622,12 +1631,136 @@ static void aterm_on_title_changed(GhosttyTerminal terminal, void* userdata) {
 }
 
 
+static pid_t aterm_spawn(const char* cmd, const char* pwd) {
+
+    clock_gettime(CLOCK_MONOTONIC, &context.spawned);
+
+    pid_t pid = fork();
+
+    if (pid != 0) {
+        return pid;
+    }
+
+    if (context.windowed) {
+        close(ui_connection_fd(context.conn));
+    } else {
+        close(context.fb.fd);
+        close(context.input.kbd.fd);
+        if (context.input.rel.fd) {
+            close(context.input.rel.fd);
+        }
+        if (context.input.abs.fd) {
+            close(context.input.abs.fd);
+        }
+    }
+    close(context.masterfd);
+
+    setenv("TERM", "xterm-256color", 1);
+    setenv("COLORTERM", "truecolor", 1);
+    setenv("TERMINFO", "/usr/share/terminfo", 1);
+    setenv("COLORFGBG", "7;0", 1);
+
+    struct passwd* pw = getpwuid(getuid());
+
+    if (pw) {
+        setenv("HOME", pw->pw_dir, 0);
+        setenv("USER", pw->pw_name, 0);
+        setenv("LOGNAME", pw->pw_name, 0);
+
+        if (pw->pw_shell && pw->pw_shell[0] != '\0') {
+            setenv("SHELL", pw->pw_shell, 0);
+        }
+    }
+
+    setenv("SHELL", CONFIG_DEFAULT_SHELL, 0);
+
+
+    if (setsid() < 0) {
+        ulog_errorf("setsid() failed: %s", strerror(errno));
+        _exit(1);
+    }
+
+    if (ioctl(context.slavefd, TIOCSCTTY, 0) < 0) {
+        ulog_errorf("cannot claim the pty as a controlling terminal: %s", strerror(errno));
+        _exit(1);
+    }
+
+    if (dup2(context.slavefd, STDIN_FILENO) < 0) {
+        ulog_errorf("dup2() failed");
+        _exit(1);
+    }
+
+    if (dup2(context.slavefd, STDOUT_FILENO) < 0) {
+        ulog_errorf("dup2() failed");
+        _exit(1);
+    }
+
+    if (dup2(context.slavefd, STDERR_FILENO) < 0) {
+        ulog_errorf("dup2() failed");
+        _exit(1);
+    }
+
+    if (context.slavefd > STDERR_FILENO) {
+        close(context.slavefd);
+    }
+
+
+    if (pwd) {
+        if (chdir(pwd) < 0) {
+            ulog_errorf("chdir() failed: %s", strerror(errno));
+            _exit(1);
+        }
+    }
+
+
+    if (context.login) {
+        execl(CONFIG_ATERM_GETTY_PATH, CONFIG_ATERM_GETTY_PATH, "-L", "38400", "-", "xterm-256color", NULL);
+        ulog_errorf("cannot run %s: %s", CONFIG_ATERM_GETTY_PATH, strerror(errno));
+        _exit(1);
+    }
+
+    const char* shell = getenv("SHELL");
+
+    if (cmd) {
+        execl(shell, shell, "-c", cmd, NULL);
+    } else {
+        execl(shell, shell, NULL);
+    }
+
+    ulog_errorf("cannot run %s: %s", shell, strerror(errno));
+    _exit(1);
+}
+
+
+static void aterm_respawn(const char* pwd) {
+
+    struct timespec now;
+    clock_gettime(CLOCK_MONOTONIC, &now);
+
+    if (now.tv_sec - context.spawned.tv_sec < 2) {
+        sleep(1);
+    }
+
+    pthread_mutex_lock(&context.lock);
+    ghostty_terminal_vt_write(context.term, (const uint8_t*)"\033c", 2);
+    pthread_mutex_unlock(&context.lock);
+
+    aterm_update_screen();
+
+    if ((context.child = aterm_spawn(NULL, pwd)) < 0) {
+        ulog_errorf("fork() failed: %s", strerror(errno));
+        exit(1);
+    }
+}
+
+
 int main(int argc, char** argv) {
 
     static struct option long_options[] = {
         {"command",     required_argument, NULL, 'c'},
         {"working-dir", required_argument, NULL, 'w'},
         {"framebuffer", no_argument,       NULL, 'f'},
+        {"login",       no_argument,       NULL, 'l'},
         {"help",        no_argument,       NULL, 'h'},
         {"version",     no_argument,       NULL, 'v'},
         {NULL,          0,                 NULL, 0  }
@@ -1638,7 +1771,7 @@ int main(int argc, char** argv) {
     bool windowed = true;
 
     int c, idx;
-    while ((c = getopt_long(argc, argv, "c:w:fvh", long_options, &idx)) != -1) {
+    while ((c = getopt_long(argc, argv, "c:w:flvh", long_options, &idx)) != -1) {
         switch (c) {
             case 'c':
                 cmd = strdup(optarg);
@@ -1648,6 +1781,9 @@ int main(int argc, char** argv) {
                 break;
             case 'f':
                 windowed = false;
+                break;
+            case 'l':
+                context.login = true;
                 break;
             case 'v':
                 show_version(argc, argv);
@@ -1858,108 +1994,18 @@ int main(int argc, char** argv) {
         exit(1);
     }
 
-    if (ioctl(context.masterfd, TIOCSCTTY, 0) < 0) {
-        ulog_warnf("cannot claim the pty as a controlling terminal: %s", strerror(errno));
-    }
-
 
     //* 5. Child initialization
-    pid_t pid = fork();
-
-    if (pid < 0) {
-
-        ulog_errorf("fork() failed");
-        exit(1);
-
-    } else if (pid == 0) {
-
-        if (context.windowed) {
-            close(ui_connection_fd(context.conn));
-        } else {
-            close(context.fb.fd);
-            close(context.input.kbd.fd);
-            if (context.input.rel.fd) {
-                close(context.input.rel.fd);
-            }
-            if (context.input.abs.fd) {
-                close(context.input.abs.fd);
-            }
-        }
-        close(context.masterfd);
-
-        setenv("TERM", "xterm-256color", 1);
-        setenv("COLORTERM", "truecolor", 1);
-        setenv("TERMINFO", "/usr/share/terminfo", 1);
-        setenv("COLORFGBG", "7;0", 1);
-
-        struct passwd* pw = getpwuid(getuid());
-
-        if (pw) {
-            setenv("HOME", pw->pw_dir, 0);
-            setenv("USER", pw->pw_name, 0);
-            setenv("LOGNAME", pw->pw_name, 0);
-
-            if (pw->pw_shell && pw->pw_shell[0] != '\0')
-                setenv("SHELL", pw->pw_shell, 0);
-        }
-
-        setenv("SHELL", CONFIG_DEFAULT_SHELL, 0);
-
-
-        pid_t pgrp = getpid();
-
-        if (setpgrp() < 0) {
-            ulog_errorf("setpgrp() failed: %s", strerror(errno));
-            exit(1);
-        }
-
-        if (ioctl(context.slavefd, TIOCSPGRP, &pgrp) < 0) {
-            ulog_errorf("ioctl() failed: %s", strerror(errno));
-            exit(1);
-        }
-
-        if (dup2(context.slavefd, STDIN_FILENO) < 0) {
-            ulog_errorf("dup2() failed");
-            exit(1);
-        }
-
-        if (dup2(context.slavefd, STDOUT_FILENO) < 0) {
-            ulog_errorf("dup2() failed");
-            exit(1);
-        }
-
-        if (dup2(context.slavefd, STDERR_FILENO) < 0) {
-            ulog_errorf("dup2() failed");
-            exit(1);
-        }
-
-
-        if (pwd) {
-            if (chdir(pwd) < 0) {
-                ulog_errorf("chdir() failed: %s", strerror(errno));
-                exit(1);
-            }
-        }
-
-
-        const char* shell = getenv("SHELL");
-
-        if (cmd) {
-            execl(shell, shell, "-c", cmd, NULL);
-        } else {
-            execl(shell, shell, NULL);
-        }
-
-        ulog_errorf("cannot run %s: %s", shell, strerror(errno));
+    if ((context.child = aterm_spawn(cmd, pwd)) < 0) {
+        ulog_errorf("fork() failed: %s", strerror(errno));
         exit(1);
     }
 
-
-    context.child = pid;
-
-    if (close(context.slavefd) < 0) {
-        ulog_errorf("close() failed: %s", strerror(errno));
-        exit(1);
+    if (!context.login) {
+        if (close(context.slavefd) < 0) {
+            ulog_errorf("close() failed: %s", strerror(errno));
+            exit(1);
+        }
     }
 
 
@@ -2019,7 +2065,12 @@ int main(int argc, char** argv) {
                 ;
 
             if (waitpid(context.child, NULL, WNOHANG) != 0) {
-                aterm_quit();
+
+                if (!context.login) {
+                    aterm_quit();
+                }
+
+                aterm_respawn(pwd);
             }
         }
     }
