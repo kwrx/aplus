@@ -94,7 +94,7 @@ server → UI_EV_THEME    { theme }       version 7 and later
 ```
 
 ```c
-#define UI_PROTOCOL_VERSION     9
+#define UI_PROTOCOL_VERSION     10
 #define UI_PROTOCOL_VERSION_MIN 6
 ```
 
@@ -169,6 +169,11 @@ looks for the server at `/tmp/aplus-wm.sock` and never reaches it. The bump mark
 libui knows the new path. The server still accepts 6 through 8, which a client gets only by
 connecting to `/var/run/aplus-wm.sock` explicitly.
 
+Version 10 added the `UI_WINDOW_BOTTOM` creation flag. A server that does not know a flag
+closes the connection, so a client creating a bottom drawer against a version 9 server would
+lose it at `ui_window_create_ex()` instead of at the handshake; the bump moves the refusal to
+the hello. The server still accepts 6 through 9, and none of those clients can send the bit.
+
 Unlike every other read in the client, the hello reply and the theme after it are read without
 skipping unknown messages: nothing else can legitimately arrive before them.
 
@@ -192,7 +197,9 @@ than ignored:
 #define UI_WINDOW_CENTERED    (1 << 1)
 #define UI_WINDOW_TRANSLUCENT (1 << 2)
 #define UI_WINDOW_DRAWER      (1 << 3)
-#define UI_WINDOW_FLAGS_ALL   (UI_WINDOW_BORDERLESS | UI_WINDOW_CENTERED | UI_WINDOW_TRANSLUCENT | UI_WINDOW_DRAWER)
+#define UI_WINDOW_BLUR        (1 << 4)
+#define UI_WINDOW_BOTTOM      (1 << 5)
+#define UI_WINDOW_FLAGS_ALL   (UI_WINDOW_BORDERLESS | UI_WINDOW_CENTERED | UI_WINDOW_TRANSLUCENT | UI_WINDOW_DRAWER | UI_WINDOW_BLUR | UI_WINDOW_BOTTOM)
 ```
 
 A bit the server does not know closes the connection, on the reasoning that a client asking
@@ -210,7 +217,10 @@ right from a window already sitting in that spot. `UI_WINDOW_TRANSLUCENT` asks f
 slide out of the taskbar's rail: the server draws nothing around it, puts it in the top-left
 corner of the work area and never moves it, keeps one at a time — a new drawer has a
 `UI_EV_CLOSE` sent to the one before it — and sends one too when a press lands anywhere but on
-the drawer or the taskbar.
+the drawer or the taskbar. With `UI_WINDOW_BOTTOM` as well, the drawer rises out of the
+taskbar's bottom border instead, centred in the work area. A bottom drawer is a slot of its
+own, so it can be open together with a rail one; a new bottom drawer still closes the one
+before it, but a press outside it does not.
 
 Placement is a creation flag because it is the only point at which a client has any say in
 it: there is no move request and no message carrying the screen size, so a window either

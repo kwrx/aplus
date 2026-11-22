@@ -178,8 +178,10 @@ int wm_animate(uint64_t now) {
 
     bool drawer = false;
 
-    running |= wm_anim_step(&wm.drawer.open, now, &drawer);
-    running |= wm_anim_step(&wm.drawer.height, now, &drawer);
+    for (int i = 0; i < WM_DRAWER_EDGES; i++) {
+        running |= wm_anim_step(&wm.drawers[i].open, now, &drawer);
+        running |= wm_anim_step(&wm.drawers[i].span, now, &drawer);
+    }
 
     if (drawer) {
         wm_drawer_damage();

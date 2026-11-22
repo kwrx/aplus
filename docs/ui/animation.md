@@ -247,7 +247,7 @@ into and nothing to turn off, but a few of these depend on what the client does:
   commits at the new size, so a client that answers the configure promptly morphs into its real
   layout.
 - **A drawer window** (`UI_WINDOW_DRAWER`) slides out of the rail instead of growing in, and does not
-  fade when it closes.
+  fade when it closes. With `UI_WINDOW_BOTTOM` it rises out of the bottom border instead.
 
 ## Cost
 

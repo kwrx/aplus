@@ -240,7 +240,7 @@
 #define WM_TASKBAR_NETWORK_NAME   16
 
 #define WM_TASKBAR_FRAME_STRIPS 4
-#define WM_TASKBAR_GLASS_MAX    (WM_TASKBAR_FRAME_STRIPS + 6)
+#define WM_TASKBAR_GLASS_MAX    (WM_TASKBAR_FRAME_STRIPS + 7)
 
 /**
  * @brief What the taskbar's own items name in place of a window id, and what the launcher's button starts.
@@ -492,6 +492,13 @@ typedef struct {
 /**
  * @brief The drawer: the window slid out of the rail, or a picture of it sliding back in after it has gone.
  */
+typedef enum {
+    WM_DRAWER_RAIL,
+    WM_DRAWER_BOTTOM,
+    WM_DRAWER_EDGES,
+} wm_drawer_edge_t;
+
+
 typedef struct {
 
     wm_window_t* window;
@@ -500,7 +507,7 @@ typedef struct {
     wm_rect_t rect;
 
     ui_anim_t open;
-    ui_anim_t height;
+    ui_anim_t span;
 
     wm_rect_t painted;
     wm_blur_t backdrop;
@@ -851,7 +858,7 @@ typedef struct {
 
     wm_menu_t menu;
 
-    wm_drawer_t drawer;
+    wm_drawer_t drawers[WM_DRAWER_EDGES];
 
     struct {
         uint8_t* data;
@@ -1056,6 +1063,7 @@ void wm_drawer_damage(void);
 void wm_drawer_settle(void);
 void wm_drawer_paint(cairo_t* cr, const wm_rect_t* damage, size_t count);
 void wm_drawer_fini(void);
+wm_rect_t wm_drawer_glass_shape(wm_drawer_edge_t edge);
 
 /**
  * @brief Implemented in window.c.

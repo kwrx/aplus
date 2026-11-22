@@ -52,15 +52,42 @@ static void wm_drawer_outline(cairo_t* cr, double x0, double y0, double x1, doub
 }
 
 
+static void wm_drawer_outline_bottom(cairo_t* cr, double x0, double x1, double y1, double yb, double corner, double fillet, double edge) {
+
+    cairo_arc_negative(cr, x0 - fillet, yb - fillet, WM_MAX(fillet - edge, 0.0), M_PI / 2.0, 0.0);
+    cairo_arc(cr, x0 + corner, y1 + corner, corner + edge, M_PI, 3.0 * M_PI / 2.0);
+    cairo_arc(cr, x1 - corner, y1 + corner, corner + edge, 3.0 * M_PI / 2.0, 2.0 * M_PI);
+    cairo_arc_negative(cr, x1 + fillet, yb - fillet, WM_MAX(fillet - edge, 0.0), M_PI, M_PI / 2.0);
+}
+
+
+static wm_drawer_t* wm_drawer_of(const wm_window_t* win) {
+
+    return &wm.drawers[(win->flags & UI_WINDOW_BOTTOM) ? WM_DRAWER_BOTTOM : WM_DRAWER_RAIL];
+}
+
+
+static wm_drawer_edge_t wm_drawer_edge(const wm_drawer_t* drawer) {
+
+    return (wm_drawer_edge_t)(drawer - wm.drawers);
+}
+
+
+static double wm_drawer_center(const wm_drawer_t* drawer) {
+
+    return drawer->rect.x + drawer->rect.width / 2.0;
+}
+
+
 /**
  * @brief Reports where the drawer is at a moment, with the fillets that join it to the rail and the border.
  *
  * @param now The clock reading.
  * @return Its bounding box, empty while it is all the way in.
  */
-static wm_rect_t wm_drawer_extent(uint64_t now) {
+static wm_rect_t wm_drawer_extent(const wm_drawer_t* drawer, uint64_t now) {
 
-    const double open = ui_anim_value(&wm.drawer.open, now);
+    const double open = ui_anim_value(&drawer->open, now);
 
     if (open <= 0.0) {
 
@@ -70,10 +97,24 @@ static wm_rect_t wm_drawer_extent(uint64_t now) {
     }
 
 
-    const double reveal = wm.drawer.rect.width * open;
-    const double height = ui_anim_value(&wm.drawer.height, now);
+    const double span = ui_anim_value(&drawer->span, now);
 
-    const wm_rect_t r = {wm.drawer.rect.x, wm.drawer.rect.y, (int)ceil(reveal) + WM_TASKBAR_RADIUS + 2, (int)ceil(height) + WM_TASKBAR_RADIUS + 2};
+    if (wm_drawer_edge(drawer) == WM_DRAWER_BOTTOM) {
+
+        const double reveal = drawer->rect.height * open;
+        const double bottom = drawer->rect.y + drawer->rect.height;
+        const double left   = floor(wm_drawer_center(drawer) - span / 2.0) - WM_TASKBAR_RADIUS - 2;
+        const double top    = floor(bottom - reveal) - 2;
+
+        const wm_rect_t r = {(int)left, (int)top, (int)ceil(span) + 2 * WM_TASKBAR_RADIUS + 5, (int)(bottom - top)};
+
+        return wm_taskbar_shadow_extent(r);
+    }
+
+
+    const double reveal = drawer->rect.width * open;
+
+    const wm_rect_t r = {drawer->rect.x, drawer->rect.y, (int)ceil(reveal) + WM_TASKBAR_RADIUS + 2, (int)ceil(span) + WM_TASKBAR_RADIUS + 2};
 
     return wm_taskbar_shadow_extent(r);
 }
@@ -84,22 +125,52 @@ static wm_rect_t wm_drawer_extent(uint64_t now) {
  */
 void wm_drawer_damage(void) {
 
-    const wm_rect_t extent = wm_drawer_extent(wm.frame_time);
+    for (int i = 0; i < WM_DRAWER_EDGES; i++) {
 
-    wm_damage_glass(&wm.drawer.painted);
-    wm_damage_glass(&extent);
+        wm_drawer_t* drawer = &wm.drawers[i];
+
+        const wm_rect_t extent = wm_drawer_extent(drawer, wm.frame_time);
+
+        wm_damage_glass(&drawer->painted);
+        wm_damage_glass(&extent);
+    }
 }
 
 
 /**
  * @brief Drops the picture of a drawer that has gone.
  */
-static void wm_drawer_drop_still(void) {
+static void wm_drawer_drop_still(wm_drawer_t* drawer) {
 
-    if (wm.drawer.still) {
-        cairo_surface_destroy(wm.drawer.still);
-        wm.drawer.still = NULL;
+    if (drawer->still) {
+        cairo_surface_destroy(drawer->still);
+        drawer->still = NULL;
     }
+}
+
+
+static void wm_drawer_place(wm_drawer_t* drawer, wm_window_t* win) {
+
+    const wm_rect_t work = wm_workarea();
+
+    if (wm_drawer_edge(drawer) == WM_DRAWER_BOTTOM) {
+        win->x = work.x + (work.width - win->width) / 2;
+        win->y = work.y + work.height - win->height;
+    } else {
+        win->x = work.x;
+        win->y = work.y;
+    }
+
+    drawer->rect.x      = win->x;
+    drawer->rect.y      = win->y;
+    drawer->rect.width  = win->width;
+    drawer->rect.height = win->height;
+}
+
+
+static double wm_drawer_span_of(const wm_drawer_t* drawer, const wm_window_t* win) {
+
+    return wm_drawer_edge(drawer) == WM_DRAWER_BOTTOM ? win->width : win->height;
 }
 
 
@@ -110,26 +181,20 @@ static void wm_drawer_drop_still(void) {
  */
 void wm_drawer_attach(wm_window_t* win) {
 
-    const wm_rect_t work = wm_workarea();
+    wm_drawer_t* drawer = wm_drawer_of(win);
 
-    win->x = work.x;
-    win->y = work.y;
-
-    if (wm.drawer.window) {
-        wm_window_request_close(wm.drawer.window);
+    if (drawer->window) {
+        wm_window_request_close(drawer->window);
     }
 
-    wm_drawer_drop_still();
+    wm_drawer_drop_still(drawer);
 
 
-    wm.drawer.window = win;
+    drawer->window = win;
 
-    wm.drawer.rect.x      = win->x;
-    wm.drawer.rect.y      = win->y;
-    wm.drawer.rect.width  = win->width;
-    wm.drawer.rect.height = win->height;
+    wm_drawer_place(drawer, win);
 
-    ui_anim_set(&wm.drawer.height, win->height);
+    ui_anim_set(&drawer->span, wm_drawer_span_of(drawer, win));
 
     wm_drawer_damage();
 }
@@ -142,11 +207,13 @@ void wm_drawer_attach(wm_window_t* win) {
  */
 void wm_drawer_reveal(wm_window_t* win) {
 
-    if (win != wm.drawer.window) {
+    wm_drawer_t* drawer = wm_drawer_of(win);
+
+    if (win != drawer->window) {
         return;
     }
 
-    ui_anim_to(&wm.drawer.open, 1.0, UI_MOTION_SLOW, ui_anim_now());
+    ui_anim_to(&drawer->open, 1.0, UI_MOTION_SLOW, ui_anim_now());
 
     wm_drawer_damage();
 }
@@ -159,17 +226,22 @@ void wm_drawer_reveal(wm_window_t* win) {
  */
 void wm_drawer_resized(wm_window_t* win) {
 
-    if (win != wm.drawer.window) {
+    wm_drawer_t* drawer = wm_drawer_of(win);
+
+    if (win != drawer->window) {
         return;
     }
 
-    wm.drawer.rect.width  = win->width;
-    wm.drawer.rect.height = win->height;
+    wm_drawer_damage();
 
-    if (ui_anim_value(&wm.drawer.open, ui_anim_now()) > 0.0) {
-        ui_anim_to(&wm.drawer.height, win->height, UI_MOTION_NORMAL, ui_anim_now());
+    wm_drawer_place(drawer, win);
+
+    const double span = wm_drawer_span_of(drawer, win);
+
+    if (ui_anim_value(&drawer->open, ui_anim_now()) > 0.0) {
+        ui_anim_to(&drawer->span, span, UI_MOTION_NORMAL, ui_anim_now());
     } else {
-        ui_anim_set(&wm.drawer.height, win->height);
+        ui_anim_set(&drawer->span, span);
     }
 
     wm_drawer_damage();
@@ -183,11 +255,13 @@ void wm_drawer_resized(wm_window_t* win) {
  */
 void wm_drawer_detach(wm_window_t* win) {
 
-    if (win != wm.drawer.window) {
+    wm_drawer_t* drawer = wm_drawer_of(win);
+
+    if (win != drawer->window) {
         return;
     }
 
-    wm.drawer.window = NULL;
+    drawer->window = NULL;
 
 
     if (win->committed && win->backstore) {
@@ -195,9 +269,9 @@ void wm_drawer_detach(wm_window_t* win) {
         const int width  = cairo_image_surface_get_width(win->backstore);
         const int height = cairo_image_surface_get_height(win->backstore);
 
-        if ((wm.drawer.still = wm_surface_create(CAIRO_FORMAT_ARGB32, width, height))) {
+        if ((drawer->still = wm_surface_create(CAIRO_FORMAT_ARGB32, width, height))) {
 
-            cairo_t* cr = cairo_create(wm.drawer.still);
+            cairo_t* cr = cairo_create(drawer->still);
 
             cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
             cairo_set_source_surface(cr, win->backstore, 0, 0);
@@ -205,11 +279,11 @@ void wm_drawer_detach(wm_window_t* win) {
 
             cairo_destroy(cr);
 
-            cairo_surface_flush(wm.drawer.still);
+            cairo_surface_flush(drawer->still);
         }
     }
 
-    ui_anim_to(&wm.drawer.open, 0.0, UI_MOTION_NORMAL, ui_anim_now());
+    ui_anim_to(&drawer->open, 0.0, UI_MOTION_NORMAL, ui_anim_now());
 
     wm_drawer_damage();
     wm_taskbar_damage();
@@ -221,11 +295,16 @@ void wm_drawer_detach(wm_window_t* win) {
  */
 void wm_drawer_settle(void) {
 
-    if (wm.drawer.window || ui_anim_running(&wm.drawer.open, wm.frame_time) || ui_anim_value(&wm.drawer.open, wm.frame_time) > 0.0) {
-        return;
-    }
+    for (int i = 0; i < WM_DRAWER_EDGES; i++) {
 
-    wm_drawer_drop_still();
+        wm_drawer_t* drawer = &wm.drawers[i];
+
+        if (drawer->window || ui_anim_running(&drawer->open, wm.frame_time) || ui_anim_value(&drawer->open, wm.frame_time) > 0.0) {
+            continue;
+        }
+
+        wm_drawer_drop_still(drawer);
+    }
 }
 
 
@@ -237,9 +316,35 @@ void wm_drawer_settle(void) {
  */
 void wm_drawer_press(const wm_window_t* win, wm_region_t region) {
 
-    if (wm.drawer.window && win != wm.drawer.window && region != WM_REGION_TASKBAR) {
-        wm_window_request_close(wm.drawer.window);
+    wm_window_t* rail = wm.drawers[WM_DRAWER_RAIL].window;
+
+    if (rail && win != rail && region != WM_REGION_TASKBAR) {
+        wm_window_request_close(rail);
     }
+}
+
+
+static wm_window_t* wm_drawer_hit(const wm_drawer_t* drawer, int x, int y) {
+
+    wm_window_t* win = drawer->window;
+
+    if (!win || !win->committed || ui_anim_target(&drawer->open) < 1.0) {
+        return NULL;
+    }
+
+
+    const int span = (int)ui_anim_value(&drawer->span, wm.frame_time);
+
+    wm_rect_t r = {win->x, win->y, win->width, WM_MIN(win->height, span)};
+
+    if (wm_drawer_edge(drawer) == WM_DRAWER_BOTTOM) {
+
+        r.width  = WM_MIN(win->width, span);
+        r.x      = win->x + (win->width - r.width) / 2;
+        r.height = win->height;
+    }
+
+    return ui_rect_contains_point(&r, x, y) ? win : NULL;
 }
 
 
@@ -252,50 +357,61 @@ void wm_drawer_press(const wm_window_t* win, wm_region_t region) {
  */
 wm_window_t* wm_drawer_at(int x, int y) {
 
-    wm_window_t* win = wm.drawer.window;
+    wm_window_t* win = wm_drawer_hit(&wm.drawers[WM_DRAWER_RAIL], x, y);
 
-    if (!win || !win->committed || ui_anim_target(&wm.drawer.open) < 1.0) {
-        return NULL;
-    }
-
-
-    const wm_rect_t r = {win->x, win->y, win->width, WM_MIN(win->height, (int)ui_anim_value(&wm.drawer.height, wm.frame_time))};
-
-    return ui_rect_contains_point(&r, x, y) ? win : NULL;
+    return win ? win : wm_drawer_hit(&wm.drawers[WM_DRAWER_BOTTOM], x, y);
 }
 
 
-/**
- * @brief Draws the drawer over everything but the pointer: its background flaring into the rail and the border, and its window on top.
- *
- * @param cr The cairo context to draw with, already clipped to the damage.
- * @param damage The damaged rectangles.
- * @param count How many there are.
- */
-void wm_drawer_paint(cairo_t* cr, const wm_rect_t* damage, size_t count) {
+wm_rect_t wm_drawer_glass_shape(wm_drawer_edge_t edge) {
 
-    const wm_rect_t extent = wm_drawer_extent(wm.frame_time);
+    const wm_drawer_t* drawer = &wm.drawers[edge];
 
-    wm.drawer.painted = extent;
+    if (ui_anim_value(&drawer->open, wm.frame_time) <= 0.0) {
 
-    bool visible = false;
+        const wm_rect_t none = {0, 0, 0, 0};
 
-    for (size_t i = 0; i < count && !visible && extent.width > 0; i++) {
-        visible = ui_rect_intersects(&extent, &damage[i]);
-    }
-
-    if (!visible) {
-        return;
+        return none;
     }
 
 
-    const double open   = ui_anim_value(&wm.drawer.open, wm.frame_time);
-    const double reveal = wm.drawer.rect.width * open;
+    const wm_rect_t panel = drawer->rect;
 
-    const double x0 = wm.drawer.rect.x;
-    const double y0 = wm.drawer.rect.y;
+    if (edge == WM_DRAWER_BOTTOM) {
+
+        const int span = WM_MAX(panel.width, (int)ceil(ui_anim_value(&drawer->span, wm.frame_time)));
+        const int left = (int)floor(wm_drawer_center(drawer) - span / 2.0);
+
+        const wm_rect_t r = {left - WM_TASKBAR_RADIUS, panel.y, span + 2 * WM_TASKBAR_RADIUS + 1, panel.height};
+
+        return r;
+    }
+
+
+    const int height  = WM_MAX(panel.height, (int)ceil(ui_anim_value(&drawer->span, wm.frame_time)));
+    const wm_rect_t r = {panel.x, panel.y, panel.width + WM_TASKBAR_RADIUS, height + WM_TASKBAR_RADIUS};
+
+    return r;
+}
+
+
+static cairo_surface_t* wm_drawer_surface(const wm_drawer_t* drawer) {
+
+    const wm_window_t* win = drawer->window;
+
+    return win ? (win->committed ? win->backstore : NULL) : drawer->still;
+}
+
+
+static void wm_drawer_paint_rail(cairo_t* cr, wm_drawer_t* drawer) {
+
+    const double open   = ui_anim_value(&drawer->open, wm.frame_time);
+    const double reveal = drawer->rect.width * open;
+
+    const double x0 = drawer->rect.x;
+    const double y0 = drawer->rect.y;
     const double x1 = x0 + reveal;
-    const double y1 = y0 + round(ui_anim_value(&wm.drawer.height, wm.frame_time));
+    const double y1 = y0 + round(ui_anim_value(&drawer->span, wm.frame_time));
 
     if (reveal < 1.0 || y1 <= y0) {
         return;
@@ -319,19 +435,17 @@ void wm_drawer_paint(cairo_t* cr, const wm_rect_t* damage, size_t count) {
     cairo_close_path(cr);
 
     cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
-    wm_taskbar_glass(cr, &wm.drawer.backdrop);
+    wm_taskbar_glass(cr, &drawer->backdrop);
 
 
-    const wm_window_t* win = wm.drawer.window;
-
-    cairo_surface_t* surface = win ? (win->committed ? win->backstore : NULL) : wm.drawer.still;
+    cairo_surface_t* surface = wm_drawer_surface(drawer);
 
     if (surface) {
 
         cairo_rectangle(cr, x0, y0, reveal, y1 - y0);
         cairo_clip(cr);
 
-        cairo_set_source_surface(cr, surface, x1 - wm.drawer.rect.width, y0);
+        cairo_set_source_surface(cr, surface, x1 - drawer->rect.width, y0);
         cairo_paint(cr);
     }
 
@@ -344,11 +458,103 @@ void wm_drawer_paint(cairo_t* cr, const wm_rect_t* damage, size_t count) {
 }
 
 
+static void wm_drawer_paint_bottom(cairo_t* cr, wm_drawer_t* drawer) {
+
+    const double open   = ui_anim_value(&drawer->open, wm.frame_time);
+    const double reveal = round(drawer->rect.height * open);
+    const double span   = round(ui_anim_value(&drawer->span, wm.frame_time));
+
+    const double x0 = round(wm_drawer_center(drawer) - span / 2.0);
+    const double x1 = x0 + span;
+    const double yb = drawer->rect.y + drawer->rect.height;
+    const double y1 = yb - reveal;
+
+    if (reveal < 1.0 || span < 1.0) {
+        return;
+    }
+
+
+    const double corner = WM_MIN(WM_TASKBAR_RADIUS, WM_MIN(reveal, span) / 2.0);
+    const double fillet = WM_MIN(WM_TASKBAR_RADIUS, reveal - corner);
+
+    const wm_rect_t shape = {(int)x0, (int)y1, (int)span, (int)reveal};
+
+    wm_taskbar_shadow(cr, &shape, open);
+
+    cairo_save(cr);
+
+    cairo_new_path(cr);
+    wm_drawer_outline_bottom(cr, x0, x1, y1, yb, corner, fillet, 0.0);
+    cairo_close_path(cr);
+
+    cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
+    wm_taskbar_glass(cr, &drawer->backdrop);
+
+
+    cairo_surface_t* surface = wm_drawer_surface(drawer);
+
+    if (surface) {
+
+        cairo_rectangle(cr, x0, y1, span, reveal);
+        cairo_clip(cr);
+
+        cairo_set_source_surface(cr, surface, drawer->rect.x, y1);
+        cairo_paint(cr);
+    }
+
+    cairo_restore(cr);
+
+
+    cairo_new_path(cr);
+    wm_drawer_outline_bottom(cr, x0, x1, y1, yb, corner, fillet, 0.5);
+    wm_taskbar_edge(cr);
+}
+
+
+/**
+ * @brief Draws the drawer over everything but the pointer: its background flaring into the rail and the border, and its window on top.
+ *
+ * @param cr The cairo context to draw with, already clipped to the damage.
+ * @param damage The damaged rectangles.
+ * @param count How many there are.
+ */
+void wm_drawer_paint(cairo_t* cr, const wm_rect_t* damage, size_t count) {
+
+    for (int i = WM_DRAWER_EDGES - 1; i >= 0; i--) {
+
+        wm_drawer_t* drawer = &wm.drawers[i];
+
+        const wm_rect_t extent = wm_drawer_extent(drawer, wm.frame_time);
+
+        drawer->painted = extent;
+
+        bool visible = false;
+
+        for (size_t j = 0; j < count && !visible && extent.width > 0; j++) {
+            visible = ui_rect_intersects(&extent, &damage[j]);
+        }
+
+        if (!visible) {
+            continue;
+        }
+
+        if (i == WM_DRAWER_BOTTOM) {
+            wm_drawer_paint_bottom(cr, drawer);
+        } else {
+            wm_drawer_paint_rail(cr, drawer);
+        }
+    }
+}
+
+
 void wm_drawer_fini(void) {
 
-    wm_drawer_drop_still();
+    for (int i = 0; i < WM_DRAWER_EDGES; i++) {
 
-    wm_blur_fini(&wm.drawer.backdrop);
+        wm_drawer_drop_still(&wm.drawers[i]);
 
-    wm.drawer.window = NULL;
+        wm_blur_fini(&wm.drawers[i].backdrop);
+
+        wm.drawers[i].window = NULL;
+    }
 }

@@ -422,8 +422,10 @@ void wm_window_clamp_size(const wm_window_t* win, int* width, int* height) {
     const wm_insets_t in = wm_window_insets(win);
     const wm_rect_t work = wm_workarea();
 
-    const int max_width  = work.width - in.left - in.right;
-    const int max_height = work.height - in.top - in.bottom;
+    const bool bottom = wm_window_drawer(win) && (win->flags & UI_WINDOW_BOTTOM);
+
+    const int max_width  = work.width - in.left - in.right - (bottom ? 2 * WM_TASKBAR_RADIUS : 0);
+    const int max_height = work.height - in.top - in.bottom - (bottom ? WM_TASKBAR_RADIUS : 0);
 
     *width  = WM_MAX(WM_MIN(*width, max_width), WM_WINDOW_MIN_WIDTH);
     *height = WM_MAX(WM_MIN(*height, max_height), WM_WINDOW_MIN_HEIGHT);

@@ -88,6 +88,8 @@ handle for it and the field every event carries.
 #define UI_WINDOW_CENTERED    (1 << 1)
 #define UI_WINDOW_TRANSLUCENT (1 << 2)
 #define UI_WINDOW_DRAWER      (1 << 3)
+#define UI_WINDOW_BLUR        (1 << 4)
+#define UI_WINDOW_BOTTOM      (1 << 5)
 ```
 
 `ui_window_create_ex()` is `ui_window_create()` with the kind of window spelled out;
@@ -132,6 +134,13 @@ borderless window, and does not let it be moved. There is one drawer at a time: 
 closes the one before it, and so does a press anywhere but on the drawer or the taskbar, so a
 drawer is ended by `UI_EVENT_CLOSE` more often than by its own hand. `aplus-launcher --drawer`
 opens in one, translucent, which is how the taskbar's button starts it.
+
+`UI_WINDOW_BOTTOM` turns a drawer into one that rises out of the taskbar's bottom border,
+centred in the work area, its background flaring into the border with the same fillets. It
+is a second slot, so it can share the screen with a rail drawer; a new bottom drawer closes
+the old one, but a press elsewhere leaves it open, and its own client decides when it ends.
+Its size is clamped so the fillets fit inside the work area. `aplus-terminal -d` opens in
+one, translucent, so its default background shows the taskbar's glass.
 
 This is a creation flag rather than a request to move a window because there is no request to
 move a window: a client cannot position itself, does not know how big the display is, and a

@@ -858,13 +858,8 @@ size_t wm_taskbar_glass_shapes(wm_rect_t* shapes, wm_blur_t** backdrops, size_t 
         wm_taskbar_glass_add(shapes, backdrops, max, &count, r, &wm.menu.backdrop);
     }
 
-    if (ui_anim_value(&wm.drawer.open, wm.frame_time) > 0.0) {
-
-        const wm_rect_t panel = wm.drawer.rect;
-        const int height      = WM_MAX(panel.height, (int)ceil(ui_anim_value(&wm.drawer.height, wm.frame_time)));
-        const wm_rect_t r     = {panel.x, panel.y, panel.width + WM_TASKBAR_RADIUS, height + WM_TASKBAR_RADIUS};
-
-        wm_taskbar_glass_add(shapes, backdrops, max, &count, r, &wm.drawer.backdrop);
+    for (int i = 0; i < WM_DRAWER_EDGES; i++) {
+        wm_taskbar_glass_add(shapes, backdrops, max, &count, wm_drawer_glass_shape((wm_drawer_edge_t)i), &wm.drawers[i].backdrop);
     }
 
     return count;
@@ -1723,8 +1718,8 @@ static void wm_taskbar_menu_open(uint32_t item) {
     ui_anim_to(&wm.taskbar.volume.open, 0.0, UI_MOTION_FAST, ui_anim_now());
     ui_anim_to(&wm.taskbar.network.open, 0.0, UI_MOTION_FAST, ui_anim_now());
 
-    if (wm.drawer.window) {
-        wm_window_request_close(wm.drawer.window);
+    if (wm.drawers[WM_DRAWER_RAIL].window) {
+        wm_window_request_close(wm.drawers[WM_DRAWER_RAIL].window);
     }
 
     wm_menu_show(item, at.y, win && win->title[0] ? win->title : app->name, rows, count);
@@ -2133,9 +2128,9 @@ bool wm_taskbar_release(int x, int y) {
  */
 void wm_taskbar_drawer_toggle(void) {
 
-    if (wm.drawer.window) {
+    if (wm.drawers[WM_DRAWER_RAIL].window) {
 
-        wm_window_request_close(wm.drawer.window);
+        wm_window_request_close(wm.drawers[WM_DRAWER_RAIL].window);
 
         return;
     }
@@ -3231,7 +3226,7 @@ void wm_taskbar_paint(cairo_t* cr, const wm_rect_t* damage, size_t count) {
     const wm_rect_t launcher = wm_taskbar_launcher_rect();
 
     const bool held   = wm.taskbar.pressed == WM_TASKBAR_LAUNCHER && wm.taskbar.hover == WM_TASKBAR_LAUNCHER;
-    const double open = ui_anim_value(&wm.drawer.open, wm.frame_time);
+    const double open = ui_anim_value(&wm.drawers[WM_DRAWER_RAIL].open, wm.frame_time);
 
     wm_taskbar_paint_wash(cr, &launcher, ui_anim_value(&wm.taskbar.hover_launcher, wm.frame_time), held, open);
     wm_taskbar_paint_launcher(cr, &launcher, open);

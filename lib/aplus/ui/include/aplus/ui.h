@@ -41,7 +41,7 @@ extern "C" {
 
 #define UI_PATH_PICTURES "Pictures"
 
-#define UI_PROTOCOL_VERSION 9
+#define UI_PROTOCOL_VERSION 10
 #define UI_TITLE_MAX        64
 
 /**
@@ -214,10 +214,12 @@ typedef struct {
  */
 #define UI_WINDOW_BLUR (1 << 4)
 
+#define UI_WINDOW_BOTTOM (1 << 5)
+
 /**
  * @brief Every flag this version knows, which is what both ends validate against.
  */
-#define UI_WINDOW_FLAGS_ALL (UI_WINDOW_BORDERLESS | UI_WINDOW_CENTERED | UI_WINDOW_TRANSLUCENT | UI_WINDOW_DRAWER | UI_WINDOW_BLUR)
+#define UI_WINDOW_FLAGS_ALL (UI_WINDOW_BORDERLESS | UI_WINDOW_CENTERED | UI_WINDOW_TRANSLUCENT | UI_WINDOW_DRAWER | UI_WINDOW_BLUR | UI_WINDOW_BOTTOM)
 
 
 typedef struct {

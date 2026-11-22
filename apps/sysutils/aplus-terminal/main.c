@@ -98,7 +98,6 @@
  * @brief The space between the window's edge and the character cells.
  */
 #define ATERM_PADDING 10
-#define ATERM_DIALOG_ALPHA 0.85
 
 /**
  * @brief The window's name, and the suffix put after any title the shell sets.
@@ -254,7 +253,7 @@ static void show_usage(int argc, char** argv) {
            "   -f, --framebuffer           use framebuffer instead of window\n"
            "   -l, --login                 run getty and respawn it when the session ends\n"
            "   -g, --geometry COLSxROWS    set the initial size in cells (default 80x25)\n"
-           "   -d, --dialog                open a centered, frameless and frosted window that ESC closes\n"
+           "   -d, --dialog                rise out of the taskbar's bottom border as a drawer that ESC closes\n"
            "   -h, --help                  show this help\n"
            "   -v, --version               print version info and exit\n");
 
@@ -777,7 +776,7 @@ static void aterm_set_source(cairo_t* cr, GhosttyColorRgb color) {
 static void aterm_set_back(cairo_t* cr, GhosttyColorRgb color, GhosttyColorRgb base) {
 
     if (context.dialog && color.r == base.r && color.g == base.g && color.b == base.b) {
-        cairo_set_source_rgba(cr, color.r / 255.0, color.g / 255.0, color.b / 255.0, ATERM_DIALOG_ALPHA);
+        cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 0.0);
     } else {
         aterm_set_source(cr, color);
     }
@@ -787,15 +786,7 @@ static void aterm_set_back(cairo_t* cr, GhosttyColorRgb color, GhosttyColorRgb b
 static void aterm_apply_colors(void) {
 
     const GhosttyColorRgb fg = aterm_rgb(ui_theme_dark()->text);
-    GhosttyColorRgb bg = aterm_rgb(ui_theme_dark()->surface_sunken);
-
-    if (context.dialog) {
-
-        ui_color_t well = ui_theme_dark()->surface_sunken;
-        well.a          = 0.5;
-
-        bg = aterm_rgb(ui_color_blend(ui_theme_dark()->background, well));
-    }
+    const GhosttyColorRgb bg = aterm_rgb(ui_theme_dark()->surface_sunken);
 
     if (ghostty_terminal_set(context.term, GHOSTTY_TERMINAL_OPT_COLOR_FOREGROUND, &fg) != GHOSTTY_SUCCESS) {
         ulog_warnf("cannot set the default foreground");
@@ -838,27 +829,6 @@ static void aterm_clear(GhosttyColorRgb bg) {
     cairo_set_operator(context.cr, CAIRO_OPERATOR_SOURCE);
     aterm_set_back(context.cr, bg, bg);
     cairo_paint(context.cr);
-
-    if (context.dialog) {
-
-        ui_color_t edge = ui_theme_dark()->border;
-
-        const double w = aterm_window_width();
-        const double h = aterm_window_height();
-        const double k = UI_WINDOW_RADIUS;
-
-        cairo_new_sub_path(context.cr);
-        cairo_arc(context.cr, w - k, k, k - 0.5, -M_PI / 2, 0);
-        cairo_arc(context.cr, w - k, h - k, k - 0.5, 0, M_PI / 2);
-        cairo_arc(context.cr, k, h - k, k - 0.5, M_PI / 2, M_PI);
-        cairo_arc(context.cr, k, k, k - 0.5, M_PI, 3 * M_PI / 2);
-        cairo_close_path(context.cr);
-
-        cairo_set_operator(context.cr, CAIRO_OPERATOR_OVER);
-        cairo_set_source_rgba(context.cr, edge.r, edge.g, edge.b, edge.a * 2.0 > 1.0 ? 1.0 : edge.a * 2.0);
-        cairo_set_line_width(context.cr, 1.0);
-        cairo_stroke(context.cr);
-    }
 
     cairo_restore(context.cr);
 
@@ -1985,7 +1955,7 @@ int main(int argc, char** argv) {
                 break;
             case 'd':
                 context.dialog = true;
-                flags          = UI_WINDOW_BORDERLESS | UI_WINDOW_CENTERED | UI_WINDOW_TRANSLUCENT | UI_WINDOW_BLUR;
+                flags          = UI_WINDOW_DRAWER | UI_WINDOW_BOTTOM | UI_WINDOW_TRANSLUCENT;
                 break;
             case 'v':
                 show_version(argc, argv);
