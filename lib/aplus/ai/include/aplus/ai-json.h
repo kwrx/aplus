@@ -21,8 +21,8 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _APLUS_LAUNCHER_JSON_H
-#define _APLUS_LAUNCHER_JSON_H
+#ifndef _APLUS_AI_JSON_H
+#define _APLUS_AI_JSON_H
 
 #include <stddef.h>
 
@@ -42,7 +42,7 @@
  * @param key The member name, which is matched as it stands and so may not carry escapes.
  * @return The value, or NULL when the object has no such member.
  */
-const char* json_member(const char* object, const char* key);
+const char* ai_json_member(const char* object, const char* key);
 
 /**
  * @brief Finds one element of an array.
@@ -51,7 +51,7 @@ const char* json_member(const char* object, const char* key);
  * @param index Which element, counting from zero.
  * @return The element, or NULL when the array is shorter than that.
  */
-const char* json_element(const char* array, size_t index);
+const char* ai_json_element(const char* array, size_t index);
 
 /**
  * @brief Decodes a string value, turning its escapes back into the bytes they stand for.
@@ -61,16 +61,6 @@ const char* json_element(const char* array, size_t index);
  * @param max The size of that buffer.
  * @return How long the text is, which is 0 when the value was not a string.
  */
-size_t json_string(const char* value, char* out, size_t max);
-
-/**
- * @brief Encodes text as the body of a JSON string, without the quotes around it.
- *
- * @param out Receives the encoded text, always NUL terminated and truncated to fit.
- * @param max The size of that buffer.
- * @param text What to encode, which may be NULL.
- * @return How long the encoded text is.
- */
-size_t json_escape(char* out, size_t max, const char* text);
+size_t ai_json_string(const char* value, char* out, size_t max);
 
 #endif

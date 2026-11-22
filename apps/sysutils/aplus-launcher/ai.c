@@ -44,10 +44,9 @@
 
 #if defined(CONFIG_HAVE_AI)
 
+    #include <aplus/ai-json.h>
+    #include <aplus/ai.h>
     #include <aplus/ui-control.h>
-    #include <curl/curl.h>
-
-    #include "json.h"
 
 
     /**
@@ -57,9 +56,8 @@
     #define LAUNCHER_AI_TIMEOUT_CONNECT 10
 
     /**
-     * @brief How big a request may get, and how much of a response is read before it is refused.
+     * @brief How much of a response is read before it is refused.
      */
-    #define LAUNCHER_AI_REQUEST_MAX  (24 * 1024)
     #define LAUNCHER_AI_RESPONSE_MAX (64 * 1024)
 
     /**
@@ -71,8 +69,8 @@
     #define LAUNCHER_AI_PROMPT_MAX (12 * 1024)
 
     #define LAUNCHER_AI_TEMPERATURE "0.2"
-    #define LAUNCHER_AI_TOKENS      "256"
-    #define LAUNCHER_AI_WARM_TOKENS "1"
+    #define LAUNCHER_AI_TOKENS      256
+    #define LAUNCHER_AI_WARM_TOKENS 1
     #define LAUNCHER_AI_WARM_PROMPT "hi"
 
     #define LAUNCHER_AI_THEME_SUFFIX ".conf"
@@ -170,16 +168,16 @@ static const struct {
 };
 
 
-static const char launcher_ai_schema[] = "{\"type\":\"json_schema\",\"json_schema\":{\"name\":\"reply\",\"strict\":true,\"schema\":{\"type\":\"object\","
+    #define LAUNCHER_AI_EXAMPLES (sizeof(launcher_ai_examples) / sizeof(launcher_ai_examples[0]))
+
+
+static const char launcher_ai_extras[] = "\"chat_template_kwargs\":{\"enable_thinking\":false},\"response_format\":"
+                                         "{\"type\":\"json_schema\",\"json_schema\":{\"name\":\"reply\",\"strict\":true,\"schema\":{\"type\":\"object\","
                                          "\"properties\":{\"answer\":{\"type\":\"string\"},\"command\":{\"type\":\"string\"}},"
                                          "\"required\":[\"answer\",\"command\"],\"additionalProperties\":false}}}";
 
 
 static pthread_mutex_t launcher_ai_lock = PTHREAD_MUTEX_INITIALIZER;
-
-static pthread_once_t launcher_ai_once = PTHREAD_ONCE_INIT;
-
-static int launcher_ai_ready = -1;
 
 static bool launcher_ai_built;
 static bool launcher_ai_cached;
@@ -214,35 +212,6 @@ static void launcher_ai_put(launcher_ai_text_t* text, const char* raw) {
     memcpy(text->data + text->size, raw, length + 1);
 
     text->size += length;
-}
-
-
-static void launcher_ai_put_escaped(launcher_ai_text_t* text, const char* raw) {
-
-    if (text->full) {
-        return;
-    }
-
-    const size_t room   = text->max - text->size;
-    const size_t length = json_escape(text->data + text->size, room, raw);
-
-    if (length + 1 >= room) {
-
-        text->full = true;
-        return;
-    }
-
-    text->size += length;
-}
-
-
-static void launcher_ai_put_message(launcher_ai_text_t* text, const char* role, const char* content) {
-
-    launcher_ai_put(text, ",{\"role\":\"");
-    launcher_ai_put(text, role);
-    launcher_ai_put(text, "\",\"content\":\"");
-    launcher_ai_put_escaped(text, content);
-    launcher_ai_put(text, "\"}");
 }
 
 
@@ -290,7 +259,7 @@ static uint64_t launcher_ai_fingerprint(void) {
     hash = launcher_ai_hash_text(hash, CONFIG_AI_API_MODEL);
     hash = launcher_ai_hash_text(hash, launcher_ai_system);
     hash = launcher_ai_hash_text(hash, launcher_ai_footer);
-    hash = launcher_ai_hash_text(hash, launcher_ai_schema);
+    hash = launcher_ai_hash_text(hash, launcher_ai_extras);
     hash = launcher_ai_hash_text(hash, launcher_ai_apps);
 
     for (size_t i = 0; i < sizeof(launcher_ai_programs) / sizeof(launcher_ai_programs[0]); i++) {
@@ -501,113 +470,6 @@ static bool launcher_ai_build(void) {
 
 
 /**
- * @brief The response as it arrives, into a buffer that was sized once rather than grown.
- */
-typedef struct {
-
-    char* data;
-    size_t size;
-
-} launcher_ai_body_t;
-
-
-/**
- * @brief Takes what curl has read, and refuses a response too big to be an answer.
- *
- * @param ptr What was read.
- * @param size The size of an item.
- * @param count How many items.
- * @param user The body being filled.
- * @return How much was taken, which is less than offered to make curl stop.
- */
-
-static size_t launcher_ai_collect(char* ptr, size_t size, size_t count, void* user) {
-
-    launcher_ai_body_t* body = user;
-
-    const size_t got = size * count;
-
-    if (body->size + got + 1 > LAUNCHER_AI_RESPONSE_MAX) {
-        return 0;
-    }
-
-    memcpy(body->data + body->size, ptr, got);
-
-    body->size += got;
-    body->data[body->size] = '\0';
-
-    return got;
-}
-
-
-static size_t launcher_ai_request(char* out, size_t max, const char* prompt, const char* tokens, bool structured) {
-
-    launcher_ai_text_t text = {.data = out, .size = 0, .max = max};
-
-    out[0] = '\0';
-
-    launcher_ai_put(&text, "{\"model\":\"");
-    launcher_ai_put_escaped(&text, CONFIG_AI_API_MODEL);
-    launcher_ai_put(&text, "\",\"temperature\":" LAUNCHER_AI_TEMPERATURE ",\"max_tokens\":");
-    launcher_ai_put(&text, tokens);
-    launcher_ai_put(&text, ",");
-
-    if (structured) {
-
-        launcher_ai_put(&text, "\"thinking_budget_tokens\":0,\"response_format\":");
-        launcher_ai_put(&text, launcher_ai_schema);
-        launcher_ai_put(&text, ",");
-    }
-
-    launcher_ai_put(&text, "\"messages\":[{\"role\":\"system\",\"content\":\"");
-    launcher_ai_put_escaped(&text, launcher_ai_prompt);
-    launcher_ai_put(&text, "\"}");
-
-    for (size_t i = 0; i < sizeof(launcher_ai_examples) / sizeof(launcher_ai_examples[0]); i++) {
-
-        launcher_ai_put_message(&text, "user", launcher_ai_examples[i].user);
-        launcher_ai_put_message(&text, "assistant", launcher_ai_examples[i].reply);
-    }
-
-    launcher_ai_put_message(&text, "user", prompt);
-    launcher_ai_put(&text, "]}");
-
-    return text.full ? 0 : text.size;
-}
-
-
-/**
- * @brief Takes the complaint out of a response that carries one.
- *
- * @param json The response.
- * @param out Receives the message.
- * @param max The size of that buffer.
- * @return true when the response was an error rather than an answer.
- */
-
-static bool launcher_ai_failed(const char* json, char* out, size_t max) {
-
-    const char* error = json_member(json, "error");
-
-    if (!error) {
-        return false;
-    }
-
-    if (json_string(error, out, max) > 0) {
-        return true;
-    }
-
-    if (json_string(json_member(error, "message"), out, max) > 0) {
-        return true;
-    }
-
-    snprintf(out, max, "The endpoint refused the request.");
-
-    return true;
-}
-
-
-/**
  * @brief Takes the answer apart, whether or not the model did as it was told.
  *
  * Anything that is not the object it was asked for is shown as it stands: a model that
@@ -620,144 +482,57 @@ static bool launcher_ai_failed(const char* json, char* out, size_t max) {
 static void launcher_ai_split(const char* content, launcher_ai_reply_t* out) {
 
     const char* object  = strchr(content, '{');
-    const char* answer  = json_member(object, "answer");
-    const char* command = json_member(object, "command");
+    const char* answer  = ai_json_member(object, "answer");
+    const char* command = ai_json_member(object, "command");
 
     if (!answer && !command) {
         strncpy(out->answer, content, sizeof(out->answer) - 1);
         return;
     }
 
-    json_string(answer, out->answer, sizeof(out->answer));
-    json_string(command, out->command, sizeof(out->command));
-}
-
-
-/**
- * @brief Finds the answer in a response that has one.
- *
- * @param json The response.
- * @param status What the endpoint answered with, which is all there is to say when the body says nothing.
- * @param out Receives the answer, or the reason there is none.
- * @return 0 when the model answered, -1 otherwise.
- */
-
-static int launcher_ai_parse(const char* json, long status, launcher_ai_reply_t* out) {
-
-    if (launcher_ai_failed(json, out->error, sizeof(out->error))) {
-        return -1;
-    }
-
-
-    const char* choice  = json_element(json_member(json, "choices"), 0);
-    const char* content = json_member(json_member(choice, "message"), "content");
-
-    char text[LAUNCHER_AI_ANSWER_MAX];
-
-    if (json_string(content, text, sizeof(text)) == 0) {
-
-        if (status != 200) {
-            snprintf(out->error, sizeof(out->error), "The endpoint answered %ld.", status);
-        } else {
-            snprintf(out->error, sizeof(out->error), "The model answered with nothing at all.");
-        }
-
-        return -1;
-    }
-
-    launcher_ai_split(text, out);
-
-    return 0;
-}
-
-
-static void launcher_ai_global(void) {
-
-    launcher_ai_ready = curl_global_init(CURL_GLOBAL_DEFAULT) == CURLE_OK ? 0 : -1;
+    ai_json_string(answer, out->answer, sizeof(out->answer));
+    ai_json_string(command, out->command, sizeof(out->command));
 }
 
 
 int launcher_ai_init(void) {
 
-    pthread_once(&launcher_ai_once, launcher_ai_global);
-
-    return launcher_ai_ready;
+    return ai_init();
 }
 
 
-static CURLcode launcher_ai_post(const char* prompt, const char* tokens, launcher_ai_body_t* body, long* status) {
+static int launcher_ai_post(const char* prompt, int tokens, ai_reply_t* reply) {
 
-    *status = 0;
+    ai_message_t messages[2 + 2 * LAUNCHER_AI_EXAMPLES];
 
-    char* request = malloc(LAUNCHER_AI_REQUEST_MAX);
+    size_t count = 0;
 
-    CURL* curl = curl_easy_init();
+    messages[count++] = (ai_message_t){.role = "system", .content = launcher_ai_prompt};
 
-    if (!request || !curl) {
+    for (size_t i = 0; i < LAUNCHER_AI_EXAMPLES; i++) {
 
-        free(request);
-
-        if (curl) {
-            curl_easy_cleanup(curl);
-        }
-
-        return CURLE_OUT_OF_MEMORY;
+        messages[count++] = (ai_message_t){.role = "user", .content = launcher_ai_examples[i].user};
+        messages[count++] = (ai_message_t){.role = "assistant", .content = launcher_ai_examples[i].reply};
     }
 
+    messages[count++] = (ai_message_t){.role = "user", .content = prompt};
 
-    const size_t len = launcher_ai_request(request, LAUNCHER_AI_REQUEST_MAX, prompt, tokens, true);
+    const ai_request_t request = {
+        .url             = CONFIG_AI_PROVIDER_URL,
+        .key             = CONFIG_AI_API_KEY,
+        .model           = CONFIG_AI_API_MODEL,
+        .agent           = LAUNCHER_AI_AGENT,
+        .temperature     = LAUNCHER_AI_TEMPERATURE,
+        .extras          = launcher_ai_extras,
+        .messages        = messages,
+        .count           = count,
+        .tokens          = tokens,
+        .timeout         = LAUNCHER_AI_TIMEOUT,
+        .timeout_connect = LAUNCHER_AI_TIMEOUT_CONNECT,
+        .response_max    = LAUNCHER_AI_RESPONSE_MAX,
+    };
 
-    if (len == 0) {
-
-        free(request);
-        curl_easy_cleanup(curl);
-
-        return CURLE_FILESIZE_EXCEEDED;
-    }
-
-    char auth[512];
-
-    snprintf(auth, sizeof(auth), "Authorization: Bearer %s", CONFIG_AI_API_KEY);
-
-    struct curl_slist* headers = NULL;
-
-    headers = curl_slist_append(headers, auth);
-    headers = curl_slist_append(headers, "Content-Type: application/json");
-
-    curl_easy_setopt(curl, CURLOPT_URL, CONFIG_AI_PROVIDER_URL);
-    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, request);
-    curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, (long)len);
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, launcher_ai_collect);
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, body);
-    curl_easy_setopt(curl, CURLOPT_TIMEOUT, (long)LAUNCHER_AI_TIMEOUT);
-    curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, (long)LAUNCHER_AI_TIMEOUT_CONNECT);
-    curl_easy_setopt(curl, CURLOPT_USERAGENT, LAUNCHER_AI_AGENT);
-    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-    curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1L);
-
-    CURLcode code = curl_easy_perform(curl);
-
-    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, status);
-
-    if (code == CURLE_OK && (*status == 400 || *status == 422)) {
-
-        body->size    = 0;
-        body->data[0] = '\0';
-
-        curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, (long)launcher_ai_request(request, LAUNCHER_AI_REQUEST_MAX, prompt, tokens, false));
-
-        code = curl_easy_perform(curl);
-
-        curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, status);
-    }
-
-    curl_slist_free_all(headers);
-    curl_easy_cleanup(curl);
-
-    free(request);
-
-    return code;
+    return ai_chat(&request, reply);
 }
 
 
@@ -834,14 +609,6 @@ int launcher_ai_warm(const launcher_entry_t* entries, size_t count, char* error,
     launcher_ai_build();
 
 
-    launcher_ai_body_t body = {.data = malloc(LAUNCHER_AI_RESPONSE_MAX), .size = 0};
-
-    if (!body.data) {
-
-        snprintf(error, max, "out of memory");
-        return -1;
-    }
-
     int result = -1;
 
     for (int attempt = 0; attempt < LAUNCHER_AI_WARM_ATTEMPTS; attempt++) {
@@ -850,14 +617,12 @@ int launcher_ai_warm(const launcher_entry_t* entries, size_t count, char* error,
             sleep(LAUNCHER_AI_WARM_DELAY);
         }
 
-        body.size    = 0;
-        body.data[0] = '\0';
+        ai_reply_t reply;
 
-        long status = 0;
+        launcher_ai_post(LAUNCHER_AI_WARM_PROMPT, LAUNCHER_AI_WARM_TOKENS, &reply);
+        ai_reply_release(&reply);
 
-        const CURLcode code = launcher_ai_post(LAUNCHER_AI_WARM_PROMPT, LAUNCHER_AI_WARM_TOKENS, &body, &status);
-
-        if (code == CURLE_OK && status == 200) {
+        if (reply.status == 200) {
 
             launcher_ai_save();
 
@@ -865,18 +630,16 @@ int launcher_ai_warm(const launcher_entry_t* entries, size_t count, char* error,
             break;
         }
 
-        if (code == CURLE_OK) {
-            snprintf(error, max, "%s answered %ld", CONFIG_AI_PROVIDER_URL, status);
+        if (reply.status != 0) {
+            snprintf(error, max, "%s answered %ld", CONFIG_AI_PROVIDER_URL, reply.status);
         } else {
-            snprintf(error, max, "%s: %s", CONFIG_AI_PROVIDER_URL, curl_easy_strerror(code));
+            snprintf(error, max, "%s: %s", CONFIG_AI_PROVIDER_URL, reply.error);
         }
 
-        if (code == CURLE_OK && status < 500 && status != 429) {
+        if (reply.status != 0 && reply.status < 500 && reply.status != 429) {
             break;
         }
     }
-
-    free(body.data);
 
     return result;
 }
@@ -907,40 +670,23 @@ int launcher_ai_ask(const char* prompt, launcher_ai_reply_t* out) {
     launcher_ai_build();
 
 
-    launcher_ai_body_t body = {.data = malloc(LAUNCHER_AI_RESPONSE_MAX), .size = 0};
+    ai_reply_t reply;
 
-    if (!body.data) {
+    if (launcher_ai_post(prompt, LAUNCHER_AI_TOKENS, &reply) < 0) {
 
-        snprintf(out->error, sizeof(out->error), "Out of memory.");
+        snprintf(out->error, sizeof(out->error), "%s", reply.error);
         return -1;
     }
 
-    body.data[0] = '\0';
+    launcher_ai_split(reply.content, out);
 
-
-    long status = 0;
-
-    const CURLcode code = launcher_ai_post(prompt, LAUNCHER_AI_TOKENS, &body, &status);
-
-    int result = 0;
-
-    if (code != CURLE_OK) {
-
-        snprintf(out->error, sizeof(out->error), "%s.", curl_easy_strerror(code));
-        result = -1;
-
-    } else if (launcher_ai_parse(body.data, status, out) < 0) {
-
-        result = -1;
-
-    } else if (status == 200) {
-
+    if (reply.status == 200) {
         launcher_ai_save();
     }
 
-    free(body.data);
+    ai_reply_release(&reply);
 
-    return result;
+    return 0;
 }
 
 #endif

@@ -26,7 +26,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "json.h"
+#include <aplus/ai-json.h>
 
 
 /**
@@ -219,7 +219,7 @@ static size_t json_utf8(unsigned code, char* out, size_t max) {
 }
 
 
-const char* json_member(const char* object, const char* key) {
+const char* ai_json_member(const char* object, const char* key) {
 
     if (!object || !key) {
         return NULL;
@@ -273,7 +273,7 @@ const char* json_member(const char* object, const char* key) {
 }
 
 
-const char* json_element(const char* array, size_t index) {
+const char* ai_json_element(const char* array, size_t index) {
 
     if (!array) {
         return NULL;
@@ -308,7 +308,7 @@ const char* json_element(const char* array, size_t index) {
 }
 
 
-size_t json_string(const char* value, char* out, size_t max) {
+size_t ai_json_string(const char* value, char* out, size_t max) {
 
     if (!out || max == 0) {
         return 0;
@@ -404,77 +404,6 @@ size_t json_string(const char* value, char* out, size_t max) {
                 out[len++] = *p++;
                 break;
         }
-    }
-
-    out[len] = '\0';
-
-    return len;
-}
-
-
-size_t json_escape(char* out, size_t max, const char* text) {
-
-    if (!out || max == 0) {
-        return 0;
-    }
-
-    out[0] = '\0';
-
-
-    size_t len = 0;
-
-    for (const char* p = text; p && *p; p++) {
-
-        const unsigned char c = (unsigned char)*p;
-
-        char seq[8];
-        size_t n = 1;
-
-        switch (c) {
-
-            case '"':
-                memcpy(seq, "\\\"", 2);
-                n = 2;
-                break;
-
-            case '\\':
-                memcpy(seq, "\\\\", 2);
-                n = 2;
-                break;
-
-            case '\n':
-                memcpy(seq, "\\n", 2);
-                n = 2;
-                break;
-
-            case '\r':
-                memcpy(seq, "\\r", 2);
-                n = 2;
-                break;
-
-            case '\t':
-                memcpy(seq, "\\t", 2);
-                n = 2;
-                break;
-
-            default:
-
-                if (c < 0x20) {
-                    n = (size_t)snprintf(seq, sizeof(seq), "\\u%04x", c);
-                } else {
-                    seq[0] = (char)c;
-                }
-
-                break;
-        }
-
-        if (len + n + 1 > max) {
-            break;
-        }
-
-        memcpy(out + len, seq, n);
-
-        len += n;
     }
 
     out[len] = '\0';
