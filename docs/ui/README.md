@@ -76,6 +76,7 @@ its whole frame instead — see
 | `apps/sysutils/aplus-viewer/` | The one that mixes the layers: a toolbar of widgets around a PDF or a picture that mupdf renders a tile at a time straight into the window pixels, and the canvas scrolls, zooms and drags over |
 | `apps/sysutils/aplus-editor/` | The bigger mix: a toolbar, a prompt bar and a status line of widgets around a text area it draws, damages and blinks a caret in by itself |
 | `apps/sysutils/aplus-launcher/` | The one with a search field: an entry driving a list, in a translucent window only as tall as it has results — borderless and centred, or a drawer out of the taskbar's rail with `--drawer` |
+| `apps/sysutils/aplus-terminal/` | libghostty-vt drawn into a window; with `-d` it opens as a translucent drawer out of the taskbar's bottom border, its default background left clear for the taskbar's glass |
 | `tests/ui-test/` | The reference surface-layer application |
 
 ## Building against it
@@ -234,6 +235,12 @@ lists every application rather than an empty field and slides out of the rail as
 the top-left corner instead of opening in the middle. While the drawer is out the button's
 cross turns into a close cross; a second click, `Escape`, or a press anywhere off the drawer
 and the taskbar puts it away.
+
+A second drawer can rise out of the bottom border, centred along it and flaring into it the
+same way. `aplus-terminal -d` opens there, which is how the explorer's AI actions show a
+command running. It can be out together with the launcher's, and a press elsewhere leaves it
+alone: only its own client puts it away, the terminal on `Escape`. Both drawers are drawn
+over the taskbar's glass, so `taskbar_opacity` frosts them along with the rail.
 
 Below the button is an entry for every decorated window, in the order the windows opened,
 with its icon; the active one is lit and marked in the accent against the rail's edge, and its

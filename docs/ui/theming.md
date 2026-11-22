@@ -138,7 +138,9 @@ The greys are chosen to continue the frame `aplus-wm` draws around the window ra
 stand on their own: `#2B2B2B` content against a `#2B2B2B` titlebar, the same `#EEEEEE` on
 top of both. A window whose content started at some other grey would read as a panel bolted
 into the frame instead of as the inside of it. `aplus-terminal` takes its background and its
-default text colour from `surface_sunken` and `text` for the same reason.
+default text colour from `surface_sunken` and `text` for the same reason. Opened with `-d` as
+a bottom drawer it leaves default-background cells clear instead, so what shows behind its
+text is the taskbar's glass and colour.
 
 The chrome is deliberately hueless — the window manager marks the active window with a brighter
 title and a deeper shadow, not a colour — but an application has one thing on screen that is
@@ -334,11 +336,15 @@ section after the shared one wins. A file with no variant sections looks the sam
 `[ui]` holds every role of `ui_theme_t`, under the field's own name. `[wm]` is the server's
 own palette: `desktop_top`, `desktop_bottom`, `title_active`,
 `title_idle`, `outline`, `highlight`, `highlight_idle`, `button`, `button_over`, `button_down`,
-`close_over`, `close_down`, `accent`, the `taskbar` colours, the two shadow strengths
+`close_over`, `close_down`, `accent`, the `taskbar` colours, `taskbar_opacity`, the two shadow strengths
 `shadow_key` and `shadow_ambient`, the titlebar `font` and `font_size`, and the `wallpaper`.
 `taskbar_edge` is the hairline along every edge the taskbar shows the desktop, the rail's and
 those of whatever slides out of it, as one line; `taskbar_shadow` is how dark the shadow under
-the drawer, the session menu and the popout is, against a window's. The rail casts none.
+the drawers, the session menu and the popout is, against a window's. The rail casts none.
+`taskbar_opacity`, from `0.0` to `1.0` and `0.9` by default, is how much of the `taskbar`
+colour lies over the blurred desktop behind the rail, the border and everything that slides
+out of them; at `1.0` the blur is skipped and they are opaque. The settings' *Taskbar opacity*
+slider writes it to the overlay rather than the theme file.
 An empty wallpaper means the gradient between the two desktop colours. There is no frame
 colour: the server paints every titlebar and border with `[ui] background`, focused or not, so
 a window's frame and its content always meet without a seam. An unfocused window is told apart
