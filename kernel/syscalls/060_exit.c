@@ -33,6 +33,7 @@
 #include <aplus/debug.h>
 #include <aplus/errno.h>
 #include <aplus/hal.h>
+#include <aplus/pty.h>
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
 #include <aplus/task.h>
@@ -113,6 +114,57 @@ static void __exit_release(void) {
 }
 
 
+static void __exit_release_ctty(void) {
+
+    if (current_task->tid != current_task->pid || current_task->sid != current_task->pid) {
+        return;
+    }
+
+    if (!current_task->ctty) {
+        return;
+    }
+
+    struct pty* pty = NULL;
+
+    shared_ptr_access(current_task->ctty, ctty, {
+        pty   = *ctty;
+        *ctty = NULL;
+    });
+
+    if (!pty || pty->m_sid != current_task->sid) {
+        return;
+    }
+
+    pid_t pgrp = pty->s_pgrp;
+
+    pty->m_pid  = 0;
+    pty->m_sid  = 0;
+    pty->s_pgrp = 0;
+
+    cpu_foreach (cpu) {
+        scoped_lock(&cpu->sched_lock) {
+            for (task_t* t = cpu->sched_queue; t; t = t->next) {
+
+                if (t->sid != current_task->sid || !t->ctty) {
+                    continue;
+                }
+
+                shared_ptr_access(t->ctty, ctty, {
+                    if (*ctty == pty) {
+                        *ctty = NULL;
+                    }
+                });
+            }
+        }
+    }
+
+    if (pgrp > 0) {
+        sys_kill(-pgrp, SIGHUP);
+        sys_kill(-pgrp, SIGCONT);
+    }
+}
+
+
 SYSCALL(
     60, exit, long sys_exit(int status) {
         PANIC_ASSERT(current_task->tid != 1);
@@ -133,6 +185,7 @@ SYSCALL(
 
         __exit_clear_tid();
         __exit_release();
+        __exit_release_ctty();
 
         do_vfork_release();
 
