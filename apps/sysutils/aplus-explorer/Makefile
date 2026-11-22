@@ -1,6 +1,7 @@
 INCLUDES += $(ROOTDIR)/include
 INCLUDES += $(ROOTDIR)/lib/aplus/ui/include
 INCLUDES += $(ROOTDIR)/lib/aplus/ulog/include
+INCLUDES += $(ROOTDIR)/lib/aplus/ai/include
 
 CFLAGS += -include $(ROOTDIR)/config.h
 CFLAGS += -isystem $(SYSROOT)/usr/include
@@ -10,6 +11,7 @@ CFLAGS += -DNAME_MAX=255
 
 LDFLAGS += -L$(ROOTDIR)/lib/aplus/ui
 LDFLAGS += -L$(ROOTDIR)/lib/aplus/ulog
+LDFLAGS += -L$(ROOTDIR)/lib/aplus/ai
 
 LIBS      += ui ulog cairo pixman-1 freetype png z
 RESOURCES += $(SYSROOT)/usr/share/applications/aplus-explorer.desktop
@@ -20,4 +22,9 @@ $(SYSROOT)/usr/share/applications/aplus-explorer.desktop: assets/aplus-explorer.
 	$(QUIET)install -m 644 $< $@
 
 include $(ROOTDIR)/build/cross.mk
+
+ifeq ($(CONFIG_HAVE_AI),y)
+	LIBS  += ai
+endif
+
 include $(ROOTDIR)/build/build-binary.mk

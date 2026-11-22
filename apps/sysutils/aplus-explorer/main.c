@@ -30,6 +30,7 @@
 
 #include <dirent.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <ftw.h>
 #include <limits.h>
 #include <pwd.h>
@@ -44,6 +45,10 @@
 #include <aplus/input.h>
 #include <aplus/ui-widgets.h>
 #include <aplus/ui.h>
+
+#if defined(CONFIG_HAVE_AI)
+#include <aplus/ai.h>
+#endif
 #include <aplus/ulog.h>
 
 
@@ -102,6 +107,12 @@
 #define EXPLORER_WINDOW  "aplus-explorer"
 #define EXPLORER_CONSOLE "aplus-terminal"
 
+#define EXPLORER_ASK        "ask"
+#define EXPLORER_ASK_ICON   "system-ai"
+#define EXPLORER_ASK_GEOMETRY "120x24"
+#define EXPLORER_ASK_SNIFF  4096
+#define EXPLORER_ASK_SCRIPT (PATH_MAX * 4 + 512)
+
 /**
  * @brief How long an icon name read out of a .desktop file may be.
  */
@@ -142,8 +153,20 @@ typedef enum {
     EXPLORER_MENU_CONSOLE,
     EXPLORER_MENU_REFRESH,
     EXPLORER_MENU_DELETE,
+    EXPLORER_MENU_SUMMARIZE,
+    EXPLORER_MENU_EXPLAIN,
+    EXPLORER_MENU_TRANSCRIBE,
 
 } explorer_menu_t;
+
+
+typedef enum {
+
+    EXPLORER_AI_NONE,
+    EXPLORER_AI_TEXT,
+    EXPLORER_AI_MEDIA,
+
+} explorer_ai_t;
 
 
 /**
@@ -188,6 +211,7 @@ static struct {
         char name[NAME_MAX + 1];
         char path[PATH_MAX];
         bool directory;
+        explorer_ai_t ai;
     } menu;
 
 } explorer = {0};
@@ -1099,6 +1123,111 @@ static int explorer_delete(const char* path, bool directory) {
 }
 
 
+#if defined(CONFIG_HAVE_AI)
+
+static explorer_ai_t explorer_ai_kind(const explorer_entry_t* entry, const char* path) {
+
+    if (!entry || entry->directory || entry->size <= 0 || !*CONFIG_AI_PROVIDER_URL) {
+        return EXPLORER_AI_NONE;
+    }
+
+    switch (ai_kind(path)) {
+
+        case AI_KIND_IMAGE:
+        case AI_KIND_DOCUMENT:
+            return EXPLORER_AI_TEXT;
+
+        case AI_KIND_AUDIO:
+        case AI_KIND_VIDEO:
+            return EXPLORER_AI_MEDIA;
+
+        default:
+            break;
+    }
+
+    const int fd = open(path, O_RDONLY);
+
+    if (fd < 0) {
+        return EXPLORER_AI_NONE;
+    }
+
+    char sniff[EXPLORER_ASK_SNIFF];
+
+    const ssize_t got = read(fd, sniff, sizeof(sniff));
+
+    close(fd);
+
+    if (got <= 0 || memchr(sniff, '\0', (size_t)got)) {
+        return EXPLORER_AI_NONE;
+    }
+
+    return EXPLORER_AI_TEXT;
+}
+
+
+static bool explorer_quote(char* out, size_t max, size_t* used, const char* text) {
+
+    size_t n = *used;
+
+    if (n + 2 >= max) {
+        return false;
+    }
+
+    out[n++] = '\'';
+
+    for (; *text; text++) {
+
+        const size_t length = *text == '\'' ? 4 : 1;
+
+        if (n + length + 2 > max) {
+            return false;
+        }
+
+        if (*text == '\'') {
+            memcpy(out + n, "'\\''", 4);
+        } else {
+            out[n] = *text;
+        }
+
+        n += length;
+    }
+
+    out[n++] = '\'';
+    out[n]   = '\0';
+
+    *used = n;
+
+    return true;
+}
+
+
+static int explorer_ask(const char* path, const char* question) {
+
+    char script[EXPLORER_ASK_SCRIPT];
+    size_t used = 0;
+
+    used += (size_t)snprintf(script, sizeof(script), "%s -t -r -f ", EXPLORER_ASK);
+
+    if (!explorer_quote(script, sizeof(script), &used, path)) {
+        return (errno = ENAMETOOLONG, -1);
+    }
+
+    script[used++] = ' ';
+
+    if (!explorer_quote(script, sizeof(script), &used, question)) {
+        return (errno = ENAMETOOLONG, -1);
+    }
+
+    snprintf(script + used, sizeof(script) - used, "; printf '\\n[Press Enter to close]'; read _");
+
+    char* argv[] = {(char*)EXPLORER_CONSOLE, (char*)"-d", (char*)"-g", (char*)EXPLORER_ASK_GEOMETRY, (char*)"-w", explorer.directory, (char*)"-c", script, NULL};
+
+    return explorer_spawn(argv);
+}
+
+#endif
+
+
 /**
  * @brief Does what a row of the listing's context menu says, for the row it was opened on.
  *
@@ -1135,6 +1264,22 @@ static void explorer_on_menu(ui_view_t* view, uint32_t id, void* user) {
         case EXPLORER_MENU_REFRESH:
             explorer_open(explorer.directory);
             return;
+
+#if defined(CONFIG_HAVE_AI)
+
+        case EXPLORER_MENU_SUMMARIZE:
+            e = explorer_ask(path, "Summarize this file.");
+            break;
+
+        case EXPLORER_MENU_EXPLAIN:
+            e = explorer_ask(path, "Explain this file: what it is, what it contains and, if it is code or configuration, what it does.");
+            break;
+
+        case EXPLORER_MENU_TRANSCRIBE:
+            e = explorer_ask(path, "Transcribe what is spoken in this recording word by word, and write nothing else. If nobody speaks in it, only say that there is no speech and describe what can be heard instead.");
+            break;
+
+#endif
 
         case EXPLORER_MENU_DELETE: {
 
@@ -1192,6 +1337,12 @@ static void explorer_on_context(ui_widget_t* widget, int index, void* user) {
 
     explorer_join(explorer.directory, index == 0 ? ".." : entry ? entry->name : ".", explorer.menu.path, sizeof(explorer.menu.path));
 
+#if defined(CONFIG_HAVE_AI)
+    explorer.menu.ai = index > 0 ? explorer_ai_kind(entry, explorer.menu.path) : EXPLORER_AI_NONE;
+#else
+    explorer.menu.ai = EXPLORER_AI_NONE;
+#endif
+
 
     ui_menu_item_t items[UI_MENU_ITEMS_MAX];
 
@@ -1208,6 +1359,17 @@ static void explorer_on_context(ui_widget_t* widget, int index, void* user) {
         items[count++] = (ui_menu_item_t){.id = EXPLORER_MENU_CONSOLE, .label = "Open in Console", .icon = "aplus-terminal"};
     } else {
         items[count++] = (ui_menu_item_t){.id = EXPLORER_MENU_CONSOLE, .label = "Open Console Here", .icon = "aplus-terminal"};
+    }
+
+    if (explorer.menu.ai != EXPLORER_AI_NONE) {
+
+        items[count++] = (ui_menu_item_t){.flags = UI_MENU_SEPARATOR};
+        items[count++] = (ui_menu_item_t){.id = EXPLORER_MENU_SUMMARIZE, .label = "Summarize", .icon = EXPLORER_ASK_ICON};
+        items[count++] = (ui_menu_item_t){.id = EXPLORER_MENU_EXPLAIN, .label = "Explain", .icon = EXPLORER_ASK_ICON};
+
+        if (explorer.menu.ai == EXPLORER_AI_MEDIA) {
+            items[count++] = (ui_menu_item_t){.id = EXPLORER_MENU_TRANSCRIBE, .label = "Transcribe", .icon = EXPLORER_ASK_ICON};
+        }
     }
 
     items[count++] = (ui_menu_item_t){.flags = UI_MENU_SEPARATOR};
