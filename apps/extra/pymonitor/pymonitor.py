@@ -3966,7 +3966,7 @@ def main():
     args = parser.parse_args()
 
     handler = logging.StreamHandler()
-    handler.setFormatter(ColorFormatter("\033[1;30m%(asctime)s\033[0m \033[1;36m%(name)s[%(process)d]:\033[0m %(levelcolor)s%(levelname)s:\033[1;37m %(message)s", datefmt="%Y-%m-%dT%H:%M:%S%z"))
+    handler.setFormatter(ColorFormatter("\033[0;37m%(asctime)s\033[0m \033[1;36m%(name)s[%(process)d]:\033[0m %(levelcolor)s%(levelname)s:\033[1;37m %(message)s", datefmt="%Y-%m-%dT%H:%M:%S%z"))
     logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO, handlers=[handler])
 
     sampler = Sampler(clamp(args.interval, 0.2, 60.0))

@@ -126,7 +126,7 @@ int ulogf(const ulog_level_t level, const char* fmt, ...) {
     flockfile(output);
 
     int count = -1;
-    int prefix = fprintf(output, "\033[1;30m%s\033[0m \033[1;36m%s[%d]:\033[0m %s%s:\033[1;37m ", when, appname, (int)getpid(), colors[level], names[level]);
+    int prefix = fprintf(output, "\033[0;37m%s\033[0m \033[1;36m%s[%d]:\033[0m %s%s:\033[1;37m ", when, appname, (int)getpid(), colors[level], names[level]);
 
     if (prefix >= 0) {
         va_list ap;
