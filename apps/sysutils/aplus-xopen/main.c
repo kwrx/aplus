@@ -85,7 +85,7 @@
 
 #define XOPEN_AUDIO_PLAYER "aplus-player"
 
-#define XOPEN_BROWSER "odyssey"
+#define XOPEN_BROWSER "aplus-browser"
 
 #define XOPEN_BROWSER_ENV "BROWSER"
 
