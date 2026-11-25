@@ -188,7 +188,7 @@ multiboot_header_end:
         .word 0
         .word KERNEL_CS
         .byte 0x01    // IST1
-        .byte 0x8F    // Trap Gate;       DPL=0
+        .byte 0x8E    // Interrupt Gate;  DPL=0
         .quad 0
         .word 0
       .endr
