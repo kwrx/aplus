@@ -208,7 +208,7 @@ stage_3() {
         packages="$packages harfbuzz"
         packages="$packages libpsl"
         packages="$packages libxslt"
-        packages="$packages aplus-odyssey"
+        packages="$packages aplus-browser"
     fi
 
     die python ./scripts/get-pkg.py --repo $REPO_PACKAGES --repo-version $REPO_PACKAGES_VERSION --prefix $CONFIG_SYSTEM_PATH_SYSROOT --db $CONFIG_SYSTEM_PATH_SYSROOT/var/lib/pkg/pkg.db -i $packages
