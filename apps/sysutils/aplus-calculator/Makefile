@@ -9,7 +9,7 @@ CFLAGS += -isystem $(SYSROOT)/usr/include/freetype2
 LDFLAGS += -L$(ROOTDIR)/lib/aplus/ui
 LDFLAGS += -L$(ROOTDIR)/lib/aplus/ulog
 
-LIBS      += ui ulog cairo pixman-1 freetype png z
+LIBS      += ui ulog cairo fontconfig expat pixman-1 freetype png z
 RESOURCES += $(SYSROOT)/usr/share/applications/aplus-calculator.desktop
 
 $(SYSROOT)/usr/share/applications/aplus-calculator.desktop: assets/aplus-calculator.desktop

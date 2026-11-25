@@ -10,7 +10,7 @@ CFLAGS   += -isystem $(SYSROOT)/usr/include/freetype2
 LDFLAGS += -L$(ROOTDIR)/lib/aplus/ui
 LDFLAGS += -L$(ROOTDIR)/lib/aplus/ulog
 
-LIBS     += ui ulog cairo pixman-1 freetype png webp z
+LIBS     += ui ulog cairo fontconfig expat pixman-1 freetype png webp z
 
 RESOURCES 	+= $(SYSROOT)/etc/init.d/01-aplus-wm.sh
 RESOURCES 	+= $(patsubst assets/%,$(SYSROOT)/%,$(wildcard assets/usr/share/themes/*.conf))

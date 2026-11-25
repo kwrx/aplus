@@ -10,7 +10,7 @@ CFLAGS += -DPATH_MAX=4096
 LDFLAGS += -L$(ROOTDIR)/lib/aplus/ui
 LDFLAGS += -L$(ROOTDIR)/lib/aplus/ulog
 
-LIBS      += ui ulog cairo pixman-1 freetype png z
+LIBS      += ui ulog cairo fontconfig expat pixman-1 freetype png z
 RESOURCES += $(SYSROOT)/usr/share/applications/aplus-editor.desktop
 
 $(SYSROOT)/usr/share/applications/aplus-editor.desktop: assets/aplus-editor.desktop

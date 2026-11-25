@@ -13,7 +13,7 @@ LDFLAGS += -L$(ROOTDIR)/lib/aplus/ui
 LDFLAGS += -L$(ROOTDIR)/lib/aplus/ulog
 LDFLAGS += -L$(ROOTDIR)/lib/aplus/ai
 
-LIBS      += ui ulog cairo pixman-1 freetype png z
+LIBS      += ui ulog cairo fontconfig expat pixman-1 freetype png z
 RESOURCES += $(SYSROOT)/usr/share/applications/aplus-explorer.desktop
 
 $(SYSROOT)/usr/share/applications/aplus-explorer.desktop: assets/aplus-explorer.desktop

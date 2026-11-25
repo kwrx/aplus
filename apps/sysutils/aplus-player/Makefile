@@ -11,7 +11,7 @@ LDFLAGS += -L$(ROOTDIR)/lib/aplus/audio
 LDFLAGS += -L$(ROOTDIR)/lib/aplus/ui
 LDFLAGS += -L$(ROOTDIR)/lib/aplus/ulog
 
-LIBS      += audio ui ulog avformat avcodec swresample avutil cairo pixman-1 freetype png lzma bz2 z m
+LIBS      += audio ui ulog avformat avcodec swresample avutil cairo fontconfig expat pixman-1 freetype png lzma bz2 z m
 RESOURCES += $(SYSROOT)/usr/share/applications/aplus-player.desktop
 
 $(SYSROOT)/usr/share/applications/aplus-player.desktop: assets/aplus-player.desktop
