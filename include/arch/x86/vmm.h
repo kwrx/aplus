@@ -54,6 +54,9 @@
     #define X86_MMU_PG_AP_TP_SHARED (3ULL << 10)
     #define X86_MMU_PG_AP_TP_MASK (3ULL << 10)
 
+    #define X86_MMU_PG_AP_LAZY (1ULL << 52)
+    #define X86_MMU_PG_AP_NONE (1ULL << 53)
+
 
     #define X86_PF_P   (1ULL << 0)
     #define X86_PF_W   (1ULL << 1)
@@ -196,7 +199,8 @@ void x86_vmm_tlb_collect(vmm_tlb_batch_t**, uintptr_t, uintptr_t) __nonnull(1);
 void x86_vmm_tlb_retire(vmm_address_space_t*, vmm_tlb_batch_t*, uint64_t) __nonnull(1);
 void x86_vmm_tlb_drain(vmm_address_space_t*) __nonnull(1);
 
-int x86_vmm_resolve(uintptr_t pm, uintptr_t virtaddr, uint64_t err, const char** reason);
+int x86_vmm_resolve(vmm_address_space_t* space, uintptr_t pm, uintptr_t virtaddr, uint64_t err, const char** reason);
+bool x86_vmm_populate(vmm_address_space_t* space, x86_page_t* d);
 
 int pagefault_handle(interrupt_frame_t*, uintptr_t);
 

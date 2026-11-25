@@ -55,7 +55,7 @@ __nonnull(1) void arch_vmm_lock(vmm_address_space_t* space, uintptr_t virtaddr, 
 
                 for (uintptr_t p = s; p < e && p >= s; p += X86_MMU_PAGESIZE) {
 
-                    if (x86_vmm_resolve(space->pm, p, X86_PF_U | X86_PF_W, NULL) == 0)
+                    if (x86_vmm_resolve(space, space->pm, p, X86_PF_U | X86_PF_W, NULL) == 0)
                         arch_vmm_flush(space, p);
                 }
             }

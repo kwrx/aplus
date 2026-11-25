@@ -79,6 +79,8 @@ __nonnull(1) uintptr_t arch_vmm_unmap(vmm_address_space_t* space, uintptr_t virt
 
     for (; s < e; s += pagesize) {
 
+        bool lazy = false;
+
         pagesize = X86_MMU_WALK_ANY;
 
         x86_page_t* d = x86_vmm_walk(space->pm, s, &pagesize, 0, 0, NULL);
@@ -97,6 +99,8 @@ __nonnull(1) uintptr_t arch_vmm_unmap(vmm_address_space_t* space, uintptr_t virt
                 continue;
             }
 
+            lazy = !!(*d & X86_MMU_PG_AP_LAZY);
+
             if (*d & X86_MMU_PG_AP_PFB)
                 x86_vmm_tlb_collect(&batches, *d & X86_MMU_ADDRESS_MASK, pagesize);
 
@@ -108,6 +112,10 @@ __nonnull(1) uintptr_t arch_vmm_unmap(vmm_address_space_t* space, uintptr_t virt
             *d = X86_MMU_CLEAR;
         }
 
+
+        if (lazy) {
+            continue;
+        }
 
         arch_vmm_flush(space, s);
 

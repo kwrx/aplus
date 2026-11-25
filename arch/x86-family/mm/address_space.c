@@ -129,7 +129,7 @@ static void __mm_copy_page(x86_page_t* __s, x86_page_t* __d, size_t* size, int l
         if (flags & ARCH_VMM_CLONE_USERSPACE) {
 
 
-            if ((*__s & X86_MMU_PG_AP_TP_MASK) == X86_MMU_PG_AP_TP_SHARED) {
+            if ((*__s & X86_MMU_PG_AP_TP_MASK) == X86_MMU_PG_AP_TP_SHARED || (*__s & X86_MMU_PG_AP_LAZY)) {
 
                 *__d = *__s;
 

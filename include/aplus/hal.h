@@ -228,6 +228,7 @@ uintptr_t arch_vmm_v2p(uintptr_t, int);
 uintptr_t arch_vmm_map(vmm_address_space_t*, uintptr_t, uintptr_t, size_t, int) __nonnull(1);
 uintptr_t arch_vmm_unmap(vmm_address_space_t*, uintptr_t, size_t) __nonnull(1);
 uintptr_t arch_vmm_mprotect(vmm_address_space_t*, uintptr_t, size_t, int) __nonnull(1);
+uintptr_t arch_vmm_discard(vmm_address_space_t*, uintptr_t, size_t) __nonnull(1);
 int arch_vmm_access(vmm_address_space_t*, uintptr_t, int) __nonnull(1);
 uintptr_t arch_vmm_getphysaddr(vmm_address_space_t*, uintptr_t) __nonnull(1);
 void arch_vmm_lock(vmm_address_space_t*, uintptr_t, size_t) __nonnull(1);

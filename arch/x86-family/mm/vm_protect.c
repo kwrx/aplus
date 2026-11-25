@@ -159,7 +159,12 @@ __nonnull(1) uintptr_t arch_vmm_mprotect(vmm_address_space_t* space, uintptr_t v
 
         /* Page Table */
         {
-            *d = (*d & X86_MMU_ADDRESS_MASK) | (*d & X86_MMU_PG_AP_TP_MASK) | (*d & X86_MMU_PG_AP_PFB) | b;
+            if (*d & X86_MMU_PG_AP_LAZY) {
+                *d = (*d & X86_MMU_PG_AP_TP_MASK) | X86_MMU_PG_AP_LAZY | (b & ~X86_MMU_PG_P) | ((b & X86_MMU_PG_P) ? 0 : X86_MMU_PG_AP_NONE);
+                continue;
+            } else {
+                *d = (*d & X86_MMU_ADDRESS_MASK) | (*d & X86_MMU_PG_AP_TP_MASK) | (*d & X86_MMU_PG_AP_PFB) | b;
+            }
 
 
 

@@ -92,7 +92,9 @@ __nonnull(1) int arch_vmm_access(vmm_address_space_t* space, uintptr_t virtaddr,
         check_or_fail(*d != X86_MMU_CLEAR);
 
 
-        uint64_t perm = (effective & (*d | ~(X86_MMU_PG_U | X86_MMU_PG_RW))) | ((effective | *d) & X86_MMU_PT_NX) | (*d & X86_MMU_PG_P);
+        const bool demand = (*d & X86_MMU_PG_AP_LAZY) && !(*d & X86_MMU_PG_AP_NONE);
+
+        uint64_t perm = (effective & (*d | ~(X86_MMU_PG_U | X86_MMU_PG_RW))) | ((effective | *d) & X86_MMU_PT_NX) | (demand ? X86_MMU_PG_P : (*d & X86_MMU_PG_P));
 
 
         /* Page Table */

@@ -61,7 +61,36 @@ static inline bool __vmm_stale_fault(x86_page_t e, uint64_t err) {
 }
 
 
-int x86_vmm_resolve(uintptr_t pm, uintptr_t virtaddr, uint64_t err, const char** reason) {
+bool x86_vmm_populate(vmm_address_space_t* space, x86_page_t* d) {
+
+    DEBUG_ASSERT(d);
+
+    if (!(*d & X86_MMU_PG_AP_LAZY) || (*d & X86_MMU_PG_AP_NONE)) {
+        return false;
+    }
+
+    uintptr_t frame = __try_alloc_frame(X86_MMU_PAGESIZE, true);
+
+    if (unlikely(frame == X86_MMU_FRAME_NONE)) {
+        return false;
+    }
+
+    *d = frame | X86_MMU_PG_AP_PFB | X86_MMU_PG_P | (*d & ~(X86_MMU_ADDRESS_MASK | X86_MMU_PG_AP_LAZY | X86_MMU_PG_AP_NONE));
+
+    if (likely(space)) {
+
+        space->size++;
+
+        if (space->size > space->size_peak) {
+            space->size_peak = space->size;
+        }
+    }
+
+    return true;
+}
+
+
+int x86_vmm_resolve(vmm_address_space_t* space, uintptr_t pm, uintptr_t virtaddr, uint64_t err, const char** reason) {
 
 #define FAIL(r)              \
     {                        \
@@ -86,6 +115,33 @@ int x86_vmm_resolve(uintptr_t pm, uintptr_t virtaddr, uint64_t err, const char**
 
     if (__vmm_stale_fault(*d, err))
         return 0;
+
+    if ((*d & X86_MMU_PG_AP_LAZY) && !(*d & X86_MMU_PG_AP_NONE)) {
+
+        if (err & X86_PF_R) {
+            FAIL("reserved bit set in a page table entry");
+        }
+
+        if ((err & X86_PF_U) && !(*d & X86_MMU_PG_U)) {
+            FAIL("user access to a supervisor page");
+        }
+
+#if defined(__x86_64__)
+        if ((err & X86_PF_I) && (*d & X86_MMU_PT_NX)) {
+            FAIL("instruction fetch from a no-execute page");
+        }
+#endif
+
+        if ((err & X86_PF_W) && !(*d & X86_MMU_PG_RW)) {
+            FAIL("write to a read-only page");
+        }
+
+        if (!x86_vmm_populate(space, d)) {
+            FAIL("out of memory populating a demand-zero page");
+        }
+
+        return 0;
+    }
 
     if (!(*d & X86_MMU_PG_P))
         FAIL("page not present");
@@ -120,7 +176,7 @@ __nonnull(1) int pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
     if (likely(space))
         spinlock_lock(&space->lock);
 
-    e = x86_vmm_resolve(x86_get_cr3(), cr2, frame->errno, &reason);
+    e = x86_vmm_resolve(space && space->pm == x86_get_cr3() ? space : NULL, x86_get_cr3(), cr2, frame->errno, &reason);
 
     if (likely(e == 0)) {
 

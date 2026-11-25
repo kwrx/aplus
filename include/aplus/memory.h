@@ -72,6 +72,7 @@
     #define ARCH_VMM_MAP_UNCACHED      (1 << 3)
     #define ARCH_VMM_MAP_SHARED        (1 << 4)
     #define ARCH_VMM_MAP_FIXED         (1 << 5)
+    #define ARCH_VMM_MAP_LAZY          (1 << 6)
     #define ARCH_VMM_MAP_DISABLED      (1 << 7)
     #define ARCH_VMM_MAP_VIDEO_MEMORY  (1 << 8)
     #define ARCH_VMM_MAP_WRITE_THROUGH (1 << 9)
@@ -246,6 +247,8 @@ uint64_t kheap_get_used_memory();
 
 uintptr_t vmm_mmap_find(vmm_address_space_t*, size_t, uintptr_t);
 void vmm_mmap_update_top(vmm_address_space_t*);
+bool vmm_mmap_overlaps(vmm_address_space_t*, uintptr_t, uintptr_t, bool);
+long vmm_mmap_unmap(vmm_address_space_t*, uintptr_t, uintptr_t);
 
 __END_DECLS
 

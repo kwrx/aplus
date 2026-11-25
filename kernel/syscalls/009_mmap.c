@@ -64,13 +64,10 @@ SYSCALL(
 
 
         const bool shared = (flags & MAP_TYPE) == MAP_SHARED || (flags & MAP_TYPE) == MAP_SHARED_VALIDATE;
+        const bool fixed  = !!(flags & (MAP_FIXED | MAP_FIXED_NOREPLACE));
 
         vmobj_t* obj = NULL;
 
-
-        if (unlikely(flags & (MAP_FIXED | MAP_FIXED_NOREPLACE))) {
-            return -ENOTSUP;
-        }
 
         if (unlikely(flags & MAP_GROWSDOWN)) {
             return -ENOTSUP;
@@ -117,7 +114,6 @@ SYSCALL(
 
         // Silenty ignored
         DEBUG_ASSERT(!(flags & MAP_SYNC));
-        DEBUG_ASSERT(!(flags & MAP_NORESERVE));
         DEBUG_ASSERT(!(flags & MAP_32BIT));
         DEBUG_ASSERT(!(flags & MAP_NONBLOCK));
 
@@ -173,6 +169,10 @@ SYSCALL(
         }
 
 
+        if (!fixed && (addr & (pagesize - 1))) {
+            addr = 0;
+        }
+
         if (unlikely((addr & (pagesize - 1)) || (offset & (pagesize - 1)) || offset < 0)) {
             if (obj) {
                 vmobj_put(obj);
@@ -206,22 +206,60 @@ SYSCALL(
         }
 
 
+        vmm_address_space_t* space = current_task->address_space;
+
+        const bool in_window = addr >= space->mmap.heap_start && addr + len > addr && addr + len <= space->mmap.heap_limit;
+
+        if (unlikely(fixed && !in_window)) {
+            if (obj) {
+                vmobj_put(obj);
+            }
+
+            return -ENOMEM;
+        }
+
+
         int i;
 
-        spinlock_lock(&current_task->address_space->lock);
+        spinlock_lock(&space->lock);
 
         {
-            uintptr_t cursor = vmm_mmap_find(current_task->address_space, len, pagesize);
+            long fail = 0;
 
-            if (unlikely(!cursor)) {
+            uintptr_t cursor = 0;
 
-                spinlock_unlock(&current_task->address_space->lock);
+            if (fixed) {
+
+                if (vmm_mmap_overlaps(space, addr, addr + len, !!(flags & MAP_FIXED_NOREPLACE))) {
+                    fail = (flags & MAP_FIXED_NOREPLACE) ? -EEXIST : -ENOMEM;
+                } else if (!(flags & MAP_FIXED_NOREPLACE)) {
+                    fail = vmm_mmap_unmap(space, addr, addr + len);
+                }
+
+                cursor = addr;
+
+            } else if (addr && in_window && !vmm_mmap_overlaps(space, addr, addr + len, true)) {
+
+                cursor = addr;
+
+            } else {
+
+                cursor = vmm_mmap_find(space, len, pagesize);
+
+                if (unlikely(!cursor)) {
+                    fail = -ENOMEM;
+                }
+            }
+
+            if (unlikely(fail)) {
+
+                spinlock_unlock(&space->lock);
 
                 if (obj) {
                     vmobj_put(obj);
                 }
 
-                return -ENOMEM;
+                return fail;
             }
 
 
@@ -277,7 +315,7 @@ SYSCALL(
 
 
 
-        const int map_flags = (flags & MAP_ANONYMOUS) ? arch_flags : ((arch_flags | ARCH_VMM_MAP_RDWR) & ~ARCH_VMM_MAP_DISABLED);
+        const int map_flags = ARCH_VMM_MAP_LAZY | ((flags & MAP_ANONYMOUS) ? arch_flags : ((arch_flags | ARCH_VMM_MAP_RDWR) & ~ARCH_VMM_MAP_DISABLED));
 
         uintptr_t ret = arch_vmm_map(current_task->address_space, start, -1, len, map_flags);
 
@@ -302,7 +340,7 @@ SYSCALL(
                     break;
             }
 
-            if (likely(e >= 0) && map_flags != arch_flags && arch_vmm_mprotect(current_task->address_space, start, len, arch_flags) == ARCH_VMM_MAP_FAILED)
+            if (likely(e >= 0) && (map_flags & ~ARCH_VMM_MAP_LAZY) != arch_flags && arch_vmm_mprotect(current_task->address_space, start, len, arch_flags) == ARCH_VMM_MAP_FAILED)
                 e = -ENOMEM;
 
             if (unlikely(e < 0)) {

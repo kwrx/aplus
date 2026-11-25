@@ -163,6 +163,17 @@ __nonnull(1) uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtad
     }
 
 
+    const bool lazy = (flags & ARCH_VMM_MAP_LAZY) && !(flags & (ARCH_VMM_MAP_FIXED | ARCH_VMM_MAP_HUGETLB));
+
+    if (lazy) {
+        b = (b & ~X86_MMU_PG_P) | X86_MMU_PG_AP_LAZY;
+
+        if (flags & ARCH_VMM_MAP_DISABLED) {
+            b |= X86_MMU_PG_AP_NONE;
+        }
+    }
+
+
     bool failed = false;
 
 
@@ -193,7 +204,12 @@ __nonnull(1) uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtad
             }
 
 
-            if (flags & ARCH_VMM_MAP_FIXED) {
+            if (lazy) {
+
+                *d = b;
+                continue;
+
+            } else if (flags & ARCH_VMM_MAP_FIXED) {
 
                 *d = p | b;
 

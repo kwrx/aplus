@@ -83,80 +83,16 @@ SYSCALL(
             return -EINVAL;
 
 
-        if (unlikely(start < current_task->address_space->mmap.heap_start || end > current_task->address_space->mmap.heap_end))
+        if (unlikely(start < current_task->address_space->mmap.heap_start || end > current_task->address_space->mmap.heap_limit)) {
             return -EINVAL;
-
-
-        scoped_lock(&current_task->address_space->lock) {
-
-            mmap_mapping_t* m = current_task->address_space->mmap.mappings;
-
-            for (int i = 0; i < CONFIG_MMAP_MAX; i++) {
-
-                if (m[i].start == 0UL)
-                    continue;
-
-                if (m[i].end <= start || m[i].start >= end)
-                    continue;
-
-
-                const uintptr_t lo = m[i].start > start ? m[i].start : start;
-                const uintptr_t hi = m[i].end < end ? m[i].end : end;
-
-                int j = -1;
-
-                if (m[i].start < start && m[i].end > end) {
-
-                    for (j = 0; j < CONFIG_MMAP_MAX; j++) {
-
-                        if (m[j].start == 0UL)
-                            break;
-                    }
-
-                    if (unlikely(j == CONFIG_MMAP_MAX))
-                        return -ENOMEM;
-                }
-
-                arch_vmm_unmap(current_task->address_space, lo, hi - lo);
-
-
-                if (m[i].start >= start && m[i].end <= end) {
-
-                    if (m[i].obj) {
-                        arch_vmm_release_vmobj(current_task->address_space, m[i].obj);
-                    }
-
-                    memset(&m[i], 0, sizeof(mmap_mapping_t));
-
-                } else if (j >= 0) {
-
-                    m[j].start  = end;
-                    m[j].end    = m[i].end;
-                    m[j].fd     = m[i].fd;
-                    m[j].offset = m[i].offset + (end - m[i].start);
-                    m[j].obj    = m[i].obj;
-
-                    if (m[j].obj) {
-                        vmobj_map_get(m[j].obj);
-                    }
-
-                    m[i].end = start;
-
-                } else if (m[i].start < start) {
-
-                    m[i].end = start;
-
-                } else {
-
-                    m[i].offset += end - m[i].start;
-                    m[i].start = end;
-                }
-            }
-
-
-            vmm_mmap_update_top(current_task->address_space);
         }
 
 
-        return 0;
+        long e = 0;
+
+        scoped_lock(&current_task->address_space->lock) {
+            e = vmm_mmap_unmap(current_task->address_space, start, end);
+        }
+
+        return e;
     });

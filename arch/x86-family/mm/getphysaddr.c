@@ -53,7 +53,11 @@ __nonnull(1) uintptr_t arch_vmm_getphysaddr(vmm_address_space_t* space, uintptr_
     {
         x86_page_t* d = x86_vmm_walk(space->pm, s, &pagesize, 0, 0, NULL);
 
-        if (likely(d && *d != X86_MMU_CLEAR)) {
+        if (likely(d && (*d & X86_MMU_PG_AP_LAZY))) {
+            x86_vmm_populate(space, d);
+        }
+
+        if (likely(d && *d != X86_MMU_CLEAR && !(*d & X86_MMU_PG_AP_LAZY))) {
 
             e = (*d & X86_MMU_ADDRESS_MASK) + (virtaddr & (pagesize - 1));
         }
